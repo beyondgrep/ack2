@@ -22,19 +22,24 @@ ack will still:
 
 * try to be as switch-compatible with GNU grep as possible
 
+* be purely Perl
+
 
 # New features in ack 2.0
 
 ack 2.0 will have:
 
 * improved flexibility in defining filetypes
-    * glob-style matching (\*.pod is POD)
-    * regex-style matching (/\.pod$/ is POD)
+    * glob-style matching (`*.pl` is Perl)
+    * regex-style matching (`/\.pl$/` is Perl)
+    * shebang-line matching (shebang line matching `/usr/bin/perl/` is Perl)
 
 
 # Incompatibilities with ack 1.x
 
 * Drop the --binary flag, and some other default filetypes
+
+* May require Perl 5.10
 
 
 # Possible new features in ack 2.0
