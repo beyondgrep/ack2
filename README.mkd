@@ -12,6 +12,24 @@ ack will still:
 
 * be distributed through CPAN
 
+* never be a file editor
+
+* use Perl regular expressions
+
+* support a global ackrc and local ~/.ackrc
+
+* sniff shebang lines to detect language
+
+* try to be as switch-compatible with GNU grep as possible
+
+
+# New features in ack 2.0
+
+ack 2.0 will have:
+
+* improved flexibility in defining filetypes
+    * glob-style matching (\*.pod is POD)
+    * regex-style matching (/\.pod$/ is POD)
 
 
 # Incompatibilities with ack 1.x
@@ -25,4 +43,6 @@ ack may:
 
 * allow sticking default switches after the __END__ marker
 
-* allow filetype-based plugins for searching arbitrary filetypes, such as PDFs or Excel files.
+* allow filetype-based plugins for searching arbitrary filetypes,
+such as PDFs or Excel files (although this will probably be ack
+2.1)
