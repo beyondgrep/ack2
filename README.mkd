@@ -1,0 +1,28 @@
+# Continuting design principles of ack 2.0
+
+ack will still:
+
+* only search files of types it recognizes.
+
+* ignore version control directories, core dumps and other large files
+
+* allow user-specified filetype detection
+
+* be distributed as a standalone
+
+* be distributed through CPAN
+
+
+
+# Incompatibilities with ack 1.x
+
+* Drop the --binary flag, and some other default filetypes
+
+
+# Possible new features in ack 2.0
+
+ack may:
+
+* allow sticking default switches after the __END__ marker
+
+* allow filetype-based plugins for searching arbitrary filetypes, such as PDFs or Excel files.
