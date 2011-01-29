@@ -1,4 +1,4 @@
-# Continuting design principles of ack 2.0
+# Usage principles of ack 2.0 that stay the same
 
 ack will still:
 
@@ -8,21 +8,26 @@ ack will still:
 
 * allow user-specified filetype detection
 
-* be distributed through CPAN
-
-* be distributed as a standalone
-    * No modules other than File::Next can be required except for what comes with core Perl.
-    * Plugins can require whatever they want, like Archive::Tar
-
 * never be a file editor
-
-* be purely Perl 5, and use Perl 5 regular expressions
 
 * support a local ~/.ackrc
 
 * sniff shebang lines to detect language
 
 * try to be as switch-compatible with GNU grep as possible
+
+
+# Continuing design principles of ack 2.0
+
+ack will still:
+
+* be distributed through CPAN
+
+* be distributed as a standalone
+    * No modules other than File::Next can be required except for what comes with core Perl.
+    * Plugins can require whatever they want, like Archive::Tar
+
+* be purely Perl 5, and use Perl 5 regular expressions
 
 * be taint-safe
 
