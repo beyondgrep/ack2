@@ -8,9 +8,11 @@ ack will still:
 
 * allow user-specified filetype detection
 
-* be distributed as a standalone
-
 * be distributed through CPAN
+
+* be distributed as a standalone
+    * No modules other than File::Next can be required except for what comes with core Perl.
+    * Plugins can require whatever they want, like Archive::Tar
 
 * never be a file editor
 
