@@ -27,7 +27,7 @@ ack will still:
 * run on Windows as well as Linux/Unix/etc
 
 
-# New features in ack 2.0
+# Definite new features in ack 2.0
 
 ack 2.0 will have:
 
@@ -36,25 +36,26 @@ ack 2.0 will have:
     * regex-style matching (`/\.pl$/i` is Perl)
     * shebang-line matching (shebang line matching `/usr/bin/perl/` is Perl)
 
-
-# Incompatibilities with ack 1.x
-
-* Drop the --binary flag, and some other default filetypes
-
-* May require Perl 5.10
+* support for a global ackrc
+    * https://github.com/petdance/ack/issues/#issue/79
 
 
 # Possible new features in ack 2.0
 
 ack may:
 
-* allow sticking default switches after the __END__ marker
+* allow sticking default switches after the `__END__` marker
 
 * allow filetype-based plugins for searching arbitrary filetypes,
 such as PDFs or Excel files (although this will probably be ack
 2.1)
 
 * Add an --also-in-file for matching two matches in the same file
-(https://github.com/petdance/ack/issues#issue/153)
+    * https://github.com/petdance/ack/issues#issue/153
 
-* Support a global ackrc (https://github.com/petdance/ack/issues/#issue/79)
+
+# Incompatibilities with ack 1.x
+
+* Drop the --binary flag, and some other default filetypes
+
+* May require Perl 5.10
