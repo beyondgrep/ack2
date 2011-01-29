@@ -2,7 +2,7 @@
 
 ack will still:
 
-* only search files of types it recognizes.
+* only search files of types it recognizes
 
 * ignore version control directories, core dumps and other large files
 
@@ -14,15 +14,17 @@ ack will still:
 
 * never be a file editor
 
-* use Perl regular expressions
+* be purely Perl 5, and use Perl 5 regular expressions
 
-* support a global ackrc and local ~/.ackrc
+* support a local ~/.ackrc
 
 * sniff shebang lines to detect language
 
 * try to be as switch-compatible with GNU grep as possible
 
-* be purely Perl
+* be taint-safe
+
+* run on Windows as well as Linux/Unix/etc
 
 
 # New features in ack 2.0
@@ -31,7 +33,7 @@ ack 2.0 will have:
 
 * improved flexibility in defining filetypes
     * glob-style matching (`*.pl` is Perl)
-    * regex-style matching (`/\.pl$/` is Perl)
+    * regex-style matching (`/\.pl$/i` is Perl)
     * shebang-line matching (shebang line matching `/usr/bin/perl/` is Perl)
 
 
@@ -51,3 +53,8 @@ ack may:
 * allow filetype-based plugins for searching arbitrary filetypes,
 such as PDFs or Excel files (although this will probably be ack
 2.1)
+
+* Add an --also-in-file for matching two matches in the same file
+(https://github.com/petdance/ack/issues#issue/153)
+
+* Support a global ackrc (https://github.com/petdance/ack/issues/#issue/79)
