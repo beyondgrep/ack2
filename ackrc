@@ -7,6 +7,7 @@
 # firstlinematch: Match the first 80 characters of the first line
 #   of text against a Perl regular expression
 
+
 # Directories to ignore
 --ignore-directory=is,.bzr            # Bazaar
 --ignore-directory=is,.cdv            # Codeville
@@ -29,6 +30,7 @@
 --ignore-directory=is,cover_db        # Devel::Cover
 --ignore-directory=is,_build          # Module::Build
 
+
 # Files to ignore
 --ignore-file=ext,.bak             # Backup files
 --ignore-file=match,/~$/           # Backup files
@@ -45,6 +47,8 @@
 --type-add=perl,firstlinematch,/perl/
 
 --type-add=make,ext,mk
---type-add=make,match,/^Makefile$/i
+--type-add=make,ext,mak
+--type-add=make,is,makefile
+--type-add=make,is,gnumakefile
 
 --type-add=rake,is,Rakefile
