@@ -19,3 +19,11 @@
 --ignore-directory=autom4te.cache # autoconf
 --ignore-directory=cover_db       # Devel::Cover
 --ignore-directory=_build         # Module::Build
+
+# Filetypes defined
+--type-add=perl,ext,pod,pl,pm
+--type-add=perl,match,/perl.*/
+--type-add=perl,firstline,/perl/
+
+--type-add=make,ext,mk
+--type-add=make,match,/^Makefile$/i

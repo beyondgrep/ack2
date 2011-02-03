@@ -72,6 +72,7 @@ such as PDFs or Excel files (although this will probably be ack
 
 # Incompatibilities with ack 1.x
 
-* Drop the --binary flag, and some other default filetypes
+* Drop the --binary, --text and --skipped flags, and some other
+default filetypes
 
 * May require Perl 5.10
