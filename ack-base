@@ -3,6 +3,8 @@
 use strict;
 use warnings;
 
+use 5.8.0;
+
 use App::Ack ();
 
 our $VERSION = '2.00a01';
@@ -72,10 +74,3 @@ sub main {
     close $App::Ack::fh;
     App::Ack::exit_from_ack( $nmatches );
 }
-
-
-package App::Ack;
-
-
-
-1;

@@ -1,0 +1,9 @@
+ack
+ack2
+Makefile
+Makefile.old
+blib/
+pm_to_blib
+tmon.out
+nytprof/
+nytprof.out

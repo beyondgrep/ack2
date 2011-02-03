@@ -1,0 +1,66 @@
+#!perl
+
+# Squashes together the parts of ack into the single ack app.
+use warnings;
+use strict;
+
+use File::Next;
+
+# make clear that ack is not supposed to be edited
+my $NO_EDIT_COMMENT = <<'EOCOMMENT';
+#
+# This file, ack, is generated code.
+# Please DO NOT EDIT or send patches for it.
+#
+# Please take a look at the source from
+# http://github.com/petdance/ack
+# and submit patches against the individual files
+# that build ack.
+#
+EOCOMMENT
+
+my $code;
+for my $arg ( @ARGV ) {
+    my $filename = $arg;
+    if ( $arg =~ /::/ ) {
+        my $key = "$arg.pm";
+        $key =~ s{::}{/}g;
+        $filename = $INC{$key} or die "Can't find the file for $arg";
+    }
+
+    warn "Reading $filename\n";
+    open( my $fh, '<', $filename ) or die "Can't open $filename: $!";
+    my $in_pod = 0;
+    while ( <$fh> ) {
+        next if /^use (File::Next|App::Ack)/;
+
+        # See if we're in module POD blocks
+        if ( $filename ne 'ack-base' ) {
+            if ( /^=(\w+)/ ) {
+                $in_pod = ($1 ne 'cut');
+                next;
+            }
+            elsif ( $in_pod ) {
+                next;
+            }
+        }
+
+        # Replace the shebang line and append 'no edit' comment
+        if ( s{^#!.+}{#!/usr/bin/env perl} ) {
+            $_ .= $NO_EDIT_COMMENT;
+        }
+
+        # Remove Perl::Critic comments.
+        # I'd like to remove all comments, but this is a start
+        s{\s*##.+critic.*}{};
+        $code .= $_;
+    }
+    close $fh;
+}
+
+for my $unused_func ( qw( dirs everything ) ) {
+    $code =~ s/^sub $unused_func\b.*?^}//sm; # It's OK if we can't find it
+}
+print $code;
+
+exit 0;
