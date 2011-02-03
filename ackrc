@@ -22,7 +22,6 @@
 
 --ignore-file=ext,.bak             # Backup files
 --ignore-file=match,/~$/           # Backup files
---ignore-file=match,/~$/           # Unix backup files
 --ignore-file=match,/#.+#$/        # Emacs swap files
 --ignore-file=match,/[._].*\.swp$/ # Vi(m) swap files
 --ignore-file=match,/core\.\d+$/   # core dumps
