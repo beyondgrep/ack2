@@ -15,7 +15,7 @@ my %parms = (
         'Ack.pm'        => '$(INST_LIBDIR)/App/Ack.pm',
         'Resource.pm'   => '$(INST_LIBDIR)/App/Ack/Resource.pm',
     },
-    EXE_FILES           => [ 'ack2' ],
+    EXE_FILES           => [ 'ack' ],
     PREREQ_PM => {
         'Test::Harness'     => 2.50, # Something reasonably newish
         'Term::ANSIColor'   => 0,
@@ -61,7 +61,7 @@ sub MY::top_targets {
 sub MY::postamble {
     my $file_next_filename = qx(perldoc -l File::Next);
     my $postamble = <<'MAKE_FRAG';
-ACK             = ack2
+ACK             = ack
 BASE            = ack-base
 ACK_PM          = Ack.pm
 RESOURCE_PM     = Resource.pm
