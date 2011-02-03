@@ -46,6 +46,10 @@ ack 2.0 will have:
 * support for a global ackrc
     * https://github.com/petdance/ack/issues/#issue/79
 
+* no hardcoded filetypes or directories
+    * Everyone has different needs.  ack will ship with a default
+    ackrc, but without that, there will be no exclusions.
+
 
 # Possible new features in ack 2.0
 
