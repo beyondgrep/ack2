@@ -1,0 +1,81 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use App::Ack ();
+
+our $VERSION = '2.00a01';
+# Check http://betterthangrep.com/ for updates
+
+# These are all our globals.
+
+MAIN: {
+    if ( $App::Ack::VERSION ne $main::VERSION ) {
+        App::Ack::die( "Program/library version mismatch\n\t$0 is $main::VERSION\n\t$INC{'App/Ack.pm'} is $App::Ack::VERSION" );
+    }
+
+    # Do preliminary arg checking;
+    my $env_is_usable = 1;
+    for ( @ARGV ) {
+        last if ( $_ eq '--' );
+
+        # Get the --thpppt checking out of the way.
+        /^--th[pt]+t+$/ && App::Ack::_thpppt($_);
+
+        # See if we want to ignore the environment. (Don't tell Al Gore.)
+        if ( /^--(no)?env$/ ) {
+            $env_is_usable = defined $1 ? 0 : 1;
+        }
+    }
+    if ( $env_is_usable ) {
+        unshift( @ARGV, App::Ack::read_rc_files() ); # XXX This is multiple rc files now
+    }
+    else {
+        my @keys = ( 'ACKRC', grep { /^ACK_/ } keys %ENV );
+        delete @ENV{@keys};
+    }
+    App::Ack::load_colors();
+
+    if ( !@ARGV ) {
+        App::Ack::show_help();
+        exit 1;
+    }
+
+    main();
+}
+
+sub main {
+    my $opt = process_command_line_arguments();
+    my $filter_mode = figure_if_we_are_in_filter_mode();
+
+    # XXX Resource = source of lines, typically a text file
+    my $resources;
+    if ( $filter_mode ) {
+        $resources = App::Ack::resources_iterator_for_standard_input_only();
+    }
+    else {
+        $resources = App::Ack::resources_iterator_based_on_argv( $opt, [ @ARGV ] );
+    }
+
+    App::Ack::set_up_pager( $opt->{pager} ) if defined $opt->{pager};
+    my $nmatches;
+    if ( $opt->{f} ) {
+        $nmatches = App::Ack::print_resources( $resources, $opt );
+    }
+    elsif ( $opt->{l} || $opt->{count} ) {
+        $nmatches = App::Ack::print_resources_with_matches( $resources, $opt );
+    }
+    else {
+        $nmatches = App::Ack::print_matches( $resources, $opt );
+    }
+    close $App::Ack::fh;
+    App::Ack::exit_from_ack( $nmatches );
+}
+
+
+package App::Ack;
+
+
+
+1;
