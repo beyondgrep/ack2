@@ -38,7 +38,9 @@
 
 
 # Filetypes defined
---type-add=perl,ext,pod,pl,pm
+--type-add=perl,ext,pod
+--type-add=perl,ext,pl
+--type-add=perl,ext,pm
 --type-add=perl,match,/perl.*/
 --type-add=perl,firstlinematch,/perl/
 
