@@ -55,7 +55,9 @@ ack 2.0 will have:
 
 ack may:
 
-* allow sticking default switches after the `__END__` marker
+* search up the directory paths to see if there are parent ackrc
+files, so a given tree or project could have a tree-specific ackrc
+file.
 
 * allow filetype-based plugins for searching arbitrary filetypes,
 such as PDFs or Excel files (although this will probably be ack
