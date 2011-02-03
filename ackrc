@@ -1,24 +1,32 @@
 # Directories to ignore
---ignore-directory=.bzr           # Bazaar
---ignore-directory=.cdv           # Codeville
---ignore-directory=~.dep          # Interface Builder
---ignore-directory=~.dot          # Interface Builder
---ignore-directory=~.nib          # Interface Builder
---ignore-directory=~.plst         # Interface Builder
---ignore-directory=.git           # Git
---ignore-directory=.hg            # Mercurial
---ignore-directory=.pc            # quilt
---ignore-directory=.svn           # Subversion
---ignore-directory=_MTN           # Monotone
---ignore-directory=blib           # Perl module building
---ignore-directory=CVS            # CVS
---ignore-directory=RCS            # RCS
---ignore-directory=SCCS           # SCCS
---ignore-directory=_darcs         # darcs
---ignore-directory=_sgbak         # Vault/Fortress
---ignore-directory=autom4te.cache # autoconf
---ignore-directory=cover_db       # Devel::Cover
---ignore-directory=_build         # Module::Build
+--ignore-directory=.bzr            # Bazaar
+--ignore-directory=.cdv            # Codeville
+--ignore-directory=~.dep           # Interface Builder
+--ignore-directory=~.dot           # Interface Builder
+--ignore-directory=~.nib           # Interface Builder
+--ignore-directory=~.plst          # Interface Builder
+--ignore-directory=.git            # Git
+--ignore-directory=.hg             # Mercurial
+--ignore-directory=.pc             # quilt
+--ignore-directory=.svn            # Subversion
+--ignore-directory=_MTN            # Monotone
+--ignore-directory=blib            # Perl module building
+--ignore-directory=CVS             # CVS
+--ignore-directory=RCS             # RCS
+--ignore-directory=SCCS            # SCCS
+--ignore-directory=_darcs          # darcs
+--ignore-directory=_sgbak          # Vault/Fortress
+--ignore-directory=autom4te.cache  # autoconf
+--ignore-directory=cover_db        # Devel::Cover
+--ignore-directory=_build          # Module::Build
+
+--ignore-file=ext,.bak             # Backup files
+--ignore-file=match,/~$/           # Backup files
+--ignore-file=match,/~$/           # Unix backup files
+--ignore-file=match,/#.+#$/        # Emacs swap files
+--ignore-file=match,/[._].*\.swp$/ # Vi(m) swap files
+--ignore-file=match,/core\.\d+$/   # core dumps
+
 
 # Filetypes defined
 --type-add=perl,ext,pod,pl,pm
