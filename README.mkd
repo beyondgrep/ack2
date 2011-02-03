@@ -63,8 +63,11 @@ file.
 such as PDFs or Excel files (although this will probably be ack
 2.1)
 
-* Add an --also-in-file for matching two matches in the same file
+* add an --also-in-file for matching two matches in the same file
     * https://github.com/petdance/ack/issues#issue/153
+
+* have profiles that are collections of arguments, so you can say
+--profile=web, --profile=programming, --profile=sysadmin or whatever.
 
 
 # Incompatibilities with ack 1.x
