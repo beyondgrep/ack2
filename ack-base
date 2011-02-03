@@ -51,7 +51,6 @@ sub main {
     my $opt = process_command_line_arguments();
     my $filter_mode = figure_if_we_are_in_filter_mode();
 
-    # XXX Resource = source of lines, typically a text file
     my $resources;
     if ( $filter_mode ) {
         $resources = App::Ack::resources_iterator_for_standard_input_only();
