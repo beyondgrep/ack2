@@ -1,25 +1,35 @@
-# Directories to ignore
---ignore-directory=.bzr            # Bazaar
---ignore-directory=.cdv            # Codeville
---ignore-directory=~.dep           # Interface Builder
---ignore-directory=~.dot           # Interface Builder
---ignore-directory=~.nib           # Interface Builder
---ignore-directory=~.plst          # Interface Builder
---ignore-directory=.git            # Git
---ignore-directory=.hg             # Mercurial
---ignore-directory=.pc             # quilt
---ignore-directory=.svn            # Subversion
---ignore-directory=_MTN            # Monotone
---ignore-directory=blib            # Perl module building
---ignore-directory=CVS             # CVS
---ignore-directory=RCS             # RCS
---ignore-directory=SCCS            # SCCS
---ignore-directory=_darcs          # darcs
---ignore-directory=_sgbak          # Vault/Fortress
---ignore-directory=autom4te.cache  # autoconf
---ignore-directory=cover_db        # Devel::Cover
---ignore-directory=_build          # Module::Build
+# This is the default ackrc for ack 2.0
 
+# There are four different ways to match
+# is:  Match the filename exactly
+# ext: Match the extension
+# regex: Match against a Perl regular expression
+# firstlinematch: Match the first 80 characters of the first line
+#   of text against a Perl regular expression
+
+# Directories to ignore
+--ignore-directory=is,.bzr            # Bazaar
+--ignore-directory=is,.cdv            # Codeville
+--ignore-directory=is,~.dep           # Interface Builder
+--ignore-directory=is,~.dot           # Interface Builder
+--ignore-directory=is,~.nib           # Interface Builder
+--ignore-directory=is,~.plst          # Interface Builder
+--ignore-directory=is,.git            # Git
+--ignore-directory=is,.hg             # Mercurial
+--ignore-directory=is,.pc             # quilt
+--ignore-directory=is,.svn            # Subversion
+--ignore-directory=is,_MTN            # Monotone
+--ignore-directory=is,blib            # Perl module building
+--ignore-directory=is,CVS             # CVS
+--ignore-directory=is,RCS             # RCS
+--ignore-directory=is,SCCS            # SCCS
+--ignore-directory=is,_darcs          # darcs
+--ignore-directory=is,_sgbak          # Vault/Fortress
+--ignore-directory=is,autom4te.cache  # autoconf
+--ignore-directory=is,cover_db        # Devel::Cover
+--ignore-directory=is,_build          # Module::Build
+
+# Files to ignore
 --ignore-file=ext,.bak             # Backup files
 --ignore-file=match,/~$/           # Backup files
 --ignore-file=match,/#.+#$/        # Emacs swap files
@@ -30,7 +40,9 @@
 # Filetypes defined
 --type-add=perl,ext,pod,pl,pm
 --type-add=perl,match,/perl.*/
---type-add=perl,firstline,/perl/
+--type-add=perl,firstlinematch,/perl/
 
 --type-add=make,ext,mk
 --type-add=make,match,/^Makefile$/i
+
+--type-add=rake,is,Rakefile
