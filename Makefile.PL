@@ -13,6 +13,7 @@ my %parms = (
     VERSION_FROM        => 'Ack.pm',
     PM                  => {
         'Ack.pm'        => '$(INST_LIBDIR)/App/Ack.pm',
+        'Resource.pm'   => '$(INST_LIBDIR)/App/Ack/Resource.pm',
     },
     EXE_FILES           => [ 'ack2' ],
     PREREQ_PM => {
@@ -63,7 +64,8 @@ sub MY::postamble {
 ACK             = ack2
 BASE            = ack-base
 ACK_PM          = Ack.pm
-ALL_PM          = $(ACK_PM)
+RESOURCE_PM     = Resource.pm
+ALL_PM          = $(ACK_PM) $(RESOURCE_PM)
 ACK_HELP        = ack-help.txt
 ACK_HELP_TYPES  = ack-help-types.txt
 ACK_HELP_DIRS   = ack-help-dirs.txt
