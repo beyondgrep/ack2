@@ -61,16 +61,30 @@ sub main {
     }
 
     App::Ack::set_up_pager( $opt->{pager} ) if defined $opt->{pager};
-    my $nmatches;
-    if ( $opt->{f} ) {
-        $nmatches = App::Ack::print_resources( $resources, $opt );
+
+    my $nmatches = 0;
+    for my $resource ( $resources->next ) {
+        if ( $opt->{f} ) {
+            print $resource->name, "\n";
+            ++$nmatches;
+        }
+        elsif ( $opt->{g} ) {
+            if ( App::Ack::resource_name_matches( $resource, $opt ) ) {
+                print $resource->name, "\n";
+                ++$nmatches;
+            }
+        }
+        elsif ( $opt->{l} || $opt->{count} ) {
+            if ( App::Ack::resource_has_match( $resource, $opt ) ) {
+                print $resource->name, "\n";
+                ++$nmatches;
+            }
+        }
+        else {
+            $nmatches += App::Ack::print_matches_in_resource( $resources, $opt );
+        }
     }
-    elsif ( $opt->{l} || $opt->{count} ) {
-        $nmatches = App::Ack::print_resources_with_matches( $resources, $opt );
-    }
-    else {
-        $nmatches = App::Ack::print_matches( $resources, $opt );
-    }
+
     close $App::Ack::fh;
     App::Ack::exit_from_ack( $nmatches );
 }
