@@ -51,7 +51,7 @@ ack 2.0 will have:
     ackrc, but without that, there will be no exclusions.
 
 
-# Possible new features in ack 2.0
+# Possible new features in ack 2.0, but probably ack 2.1
 
 ack may:
 
