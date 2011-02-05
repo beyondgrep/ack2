@@ -37,7 +37,7 @@ MAIN: {
         my @keys = ( 'ACKRC', grep { /^ACK_/ } keys %ENV );
         delete @ENV{@keys};
     }
-#   App::Ack::load_colors();
+    App::Ack::load_colors();
 
 #   if ( !@ARGV ) {
 #       App::Ack::show_help();
