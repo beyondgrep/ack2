@@ -37,29 +37,29 @@ MAIN: {
         my @keys = ( 'ACKRC', grep { /^ACK_/ } keys %ENV );
         delete @ENV{@keys};
     }
-    App::Ack::load_colors();
+#   App::Ack::load_colors();
 
-    if ( !@ARGV ) {
-        App::Ack::show_help();
-        exit 1;
-    }
+#   if ( !@ARGV ) {
+#       App::Ack::show_help();
+#       exit 1;
+#   }
 
     main();
 }
 
 sub main {
-    my $opt = process_command_line_arguments();
-    my $filter_mode = figure_if_we_are_in_filter_mode();
+    my $opt = App::Ack::process_command_line_arguments();
+    my $filter_mode = 0; # XXX App::Ack::figure_if_we_are_in_filter_mode();
 
     my $resources;
     if ( $filter_mode ) {
-        $resources = App::Ack::resources_iterator_for_standard_input_only();
+        # XXX $resources = App::Ack::resources_iterator_for_standard_input_only();
     }
     else {
         $resources = App::Ack::resources_iterator_based_on_argv( $opt, [ @ARGV ] );
     }
 
-    App::Ack::set_up_pager( $opt->{pager} ) if defined $opt->{pager};
+    # XXX App::Ack::set_up_pager( $opt->{pager} ) if defined $opt->{pager};
 
     my $nmatches = 0;
     for my $resource ( $resources->next ) {
@@ -67,21 +67,21 @@ sub main {
             print $resource->name, "\n";
             ++$nmatches;
         }
-        elsif ( $opt->{g} ) {
-            if ( App::Ack::resource_name_matches( $resource, $opt ) ) {
-                print $resource->name, "\n";
-                ++$nmatches;
-            }
-        }
-        elsif ( $opt->{l} || $opt->{count} ) {
-            if ( App::Ack::resource_has_match( $resource, $opt ) ) {
-                print $resource->name, "\n";
-                ++$nmatches;
-            }
-        }
-        else {
-            $nmatches += App::Ack::print_matches_in_resource( $resources, $opt );
-        }
+#       elsif ( $opt->{g} ) {
+#           if ( App::Ack::resource_name_matches( $resource, $opt ) ) {
+#               print $resource->name, "\n";
+#               ++$nmatches;
+#           }
+#       }
+#       elsif ( $opt->{l} || $opt->{count} ) {
+#           if ( App::Ack::resource_has_match( $resource, $opt ) ) {
+#               print $resource->name, "\n";
+#               ++$nmatches;
+#           }
+#       }
+#       else {
+#           $nmatches += App::Ack::print_matches_in_resource( $resources, $opt );
+#       }
     }
 
     close $App::Ack::fh;
