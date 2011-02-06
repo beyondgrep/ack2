@@ -100,6 +100,350 @@ sub read_ackrc {
     return;
 }
 
+=head2 get_command_line_options()
+
+Gets command-line arguments and does the Ack-specific tweaking.
+
+=cut
+
+sub get_command_line_options {
+    my %opt = (
+        pager => $ENV{ACK_PAGER_COLOR} || $ENV{ACK_PAGER},
+    );
+
+    my $getopt_specs = {
+        1                       => sub { $opt{1} = $opt{m} = 1 },
+        'A|after-context=i'     => \$opt{after_context},
+        'B|before-context=i'    => \$opt{before_context},
+        'C|context:i'           => sub { shift; my $val = shift; $opt{before_context} = $opt{after_context} = ($val || 2) },
+        'a|all-types'           => \$opt{all},
+        'break!'                => \$opt{break},
+        c                       => \$opt{count},
+        'color|colour!'         => \$opt{color},
+        'color-match=s'         => \$ENV{ACK_COLOR_MATCH},
+        'color-filename=s'      => \$ENV{ACK_COLOR_FILENAME},
+        'color-lineno=s'        => \$ENV{ACK_COLOR_LINENO},
+        'column!'               => \$opt{column},
+        count                   => \$opt{count},
+        'env!'                  => sub { }, # ignore this option, it is handled beforehand
+        f                       => \$opt{f},
+        flush                   => \$opt{flush},
+        'follow!'               => \$opt{follow},
+        'g=s'                   => sub { shift; $opt{G} = shift; $opt{f} = 1 },
+        'G=s'                   => \$opt{G},
+        'group!'                => sub { shift; $opt{heading} = $opt{break} = shift },
+        'heading!'              => \$opt{heading},
+        'h|no-filename'         => \$opt{h},
+        'H|with-filename'       => \$opt{H},
+        'i|ignore-case'         => \$opt{i},
+        'invert-file-match'     => \$opt{invert_file_match},
+        'lines=s'               => sub { shift; my $val = shift; push @{$opt{lines}}, $val },
+        'l|files-with-matches'  => \$opt{l},
+        'L|files-without-matches' => sub { $opt{l} = $opt{v} = 1 },
+        'm|max-count=i'         => \$opt{m},
+        'match=s'               => \$opt{regex},
+        'n|no-recurse'          => \$opt{n},
+        o                       => sub { $opt{output} = '$&' },
+        'output=s'              => \$opt{output},
+        'pager=s'               => \$opt{pager},
+        'nopager'               => sub { $opt{pager} = undef },
+        'passthru'              => \$opt{passthru},
+        'print0'                => \$opt{print0},
+        'Q|literal'             => \$opt{Q},
+        'r|R|recurse'           => sub { $opt{n} = 0 },
+        'show-types'            => \$opt{show_types},
+        'smart-case!'           => \$opt{smart_case},
+        'sort-files'            => \$opt{sort_files},
+        'u|unrestricted'        => \$opt{u},
+        'v|invert-match'        => \$opt{v},
+        'w|word-regexp'         => \$opt{w},
+
+        'ignore-dirs=s'         => sub { shift; my $dir = remove_dir_sep( shift ); $ignore_dirs{$dir} = '--ignore-dirs' },
+        'noignore-dirs=s'       => sub { shift; my $dir = remove_dir_sep( shift ); delete $ignore_dirs{$dir} },
+
+        'version'   => sub { print_version_statement(); exit; },
+        'help|?:s'  => sub { shift; show_help(@_); exit; },
+        'help-types'=> sub { show_help_types(); exit; },
+        'man'       => sub {
+            require Pod::Usage;
+            Pod::Usage::pod2usage({
+                -verbose => 2,
+                -exitval => 0,
+            });
+        },
+
+        'type=s'    => sub {
+            # Whatever --type=xxx they specify, set it manually in the hash
+            my $dummy = shift;
+            my $type = shift;
+            my $wanted = ($type =~ s/^no//) ? 0 : 1; # must not be undef later
+
+            if ( exists $type_wanted{ $type } ) {
+                $type_wanted{ $type } = $wanted;
+            }
+            else {
+                App::Ack::die( qq{Unknown --type "$type"} );
+            }
+        }, # type sub
+    };
+
+    # Stick any default switches at the beginning, so they can be overridden
+    # by the command line switches.
+    unshift @ARGV, split( ' ', $ENV{ACK_OPTIONS} ) if defined $ENV{ACK_OPTIONS};
+
+    # first pass through options, looking for type definitions
+    def_types_from_ARGV();
+
+    for my $i ( filetypes_supported() ) {
+        $getopt_specs->{ "$i!" } = \$type_wanted{ $i };
+    }
+
+
+    my $parser = Getopt::Long::Parser->new();
+    $parser->configure( 'bundling', 'no_ignore_case', );
+    $parser->getoptions( %{$getopt_specs} ) or
+        App::Ack::die( 'See ack --help, ack --help-types or ack --man for options.' );
+
+    my $to_screen = not output_to_pipe();
+    my %defaults = (
+        all            => 0,
+        color          => $to_screen,
+        follow         => 0,
+        break          => $to_screen,
+        heading        => $to_screen,
+        before_context => 0,
+        after_context  => 0,
+    );
+    if ( $is_windows && $defaults{color} && not $ENV{ACK_PAGER_COLOR} ) {
+        if ( $ENV{ACK_PAGER} || not eval { require Win32::Console::ANSI } ) {
+            $defaults{color} = 0;
+        }
+    }
+    if ( $to_screen && $ENV{ACK_PAGER_COLOR} ) {
+        $defaults{color} = 1;
+    }
+
+    while ( my ($key,$value) = each %defaults ) {
+        if ( not defined $opt{$key} ) {
+            $opt{$key} = $value;
+        }
+    }
+
+    if ( defined $opt{m} && $opt{m} <= 0 ) {
+        App::Ack::die( '-m must be greater than zero' );
+    }
+
+    for ( qw( before_context after_context ) ) {
+        if ( defined $opt{$_} && $opt{$_} < 0 ) {
+            App::Ack::die( "--$_ may not be negative" );
+        }
+    }
+
+    if ( defined( my $val = $opt{output} ) ) {
+        $opt{output} = eval qq[ sub { "$val" } ];
+    }
+    if ( defined( my $l = $opt{lines} ) ) {
+        # --line=1 --line=5 is equivalent to --line=1,5
+        my @lines = split( /,/, join( ',', @{$l} ) );
+
+        # --line=1-3 is equivalent to --line=1,2,3
+        @lines = map {
+            my @ret;
+            if ( /-/ ) {
+                my ($from, $to) = split /-/, $_;
+                if ( $from > $to ) {
+                    App::Ack::warn( "ignoring --line=$from-$to" );
+                    @ret = ();
+                }
+                else {
+                    @ret = ( $from .. $to );
+                }
+            }
+            else {
+                @ret = ( $_ );
+            };
+            @ret
+        } @lines;
+
+        if ( @lines ) {
+            my %uniq;
+            @uniq{ @lines } = ();
+            $opt{lines} = [ sort { $a <=> $b } keys %uniq ];   # numerical sort and each line occurs only once!
+        }
+        else {
+            # happens if there are only ignored --line directives
+            App::Ack::die( 'All --line options are invalid.' );
+        }
+    }
+
+    return \%opt;
+}
+
+=head2 def_types_from_ARGV
+
+Go through the command line arguments and look for
+I<--type-set foo=.foo,.bar> and I<--type-add xml=.rdf>.
+Remove them from @ARGV and add them to the supported filetypes,
+i.e. into %mappings, etc.
+
+=cut
+
+sub def_types_from_ARGV {
+    my @typedef;
+
+    my $parser = Getopt::Long::Parser->new();
+        # pass_through   => leave unrecognized command line arguments alone
+        # no_auto_abbrev => otherwise -c is expanded and not left alone
+    $parser->configure( 'no_ignore_case', 'pass_through', 'no_auto_abbrev' );
+    $parser->getoptions(
+        'type-set=s' => sub { shift; push @typedef, ['c', shift] },
+        'type-add=s' => sub { shift; push @typedef, ['a', shift] },
+    ) or App::Ack::die( 'See ack --help or ack --man for options.' );
+
+    for my $td (@typedef) {
+        my ($type, $ext) = split /=/, $td->[1];
+
+        if ( $td->[0] eq 'c' ) {
+            # type-set
+            if ( exists $mappings{$type} ) {
+                # can't redefine types 'make', 'skipped', 'text' and 'binary'
+                App::Ack::die( qq{--type-set: Builtin type "$type" cannot be changed.} )
+                    if ref $mappings{$type} ne 'ARRAY';
+
+                delete_type($type);
+            }
+        }
+        else {
+            # type-add
+
+            # can't append to types 'make', 'skipped', 'text' and 'binary'
+            App::Ack::die( qq{--type-add: Builtin type "$type" cannot be changed.} )
+                if exists $mappings{$type} && ref $mappings{$type} ne 'ARRAY';
+
+            App::Ack::warn( qq{--type-add: Type "$type" does not exist, creating with "$ext" ...} )
+                unless exists $mappings{$type};
+        }
+
+        my @exts = split /,/, $ext;
+        s/^\.// for @exts;
+
+        if ( !exists $mappings{$type} || ref($mappings{$type}) eq 'ARRAY' ) {
+            push @{$mappings{$type}}, @exts;
+            for my $e ( @exts ) {
+                push @{$types{$e}}, $type;
+            }
+        }
+        else {
+            App::Ack::die( qq{Cannot append to type "$type".} );
+        }
+    }
+
+    return;
+}
+
+=head2 remove_dir_sep( $path )
+
+This functions removes a trailing path separator, if there is one, from its argument
+
+=cut
+
+sub remove_dir_sep {
+    my $path = shift;
+    $path =~ s/[$dir_sep_chars]$//;
+
+    return $path;
+}
+
+=head2 build_regex( $str, \%opts )
+
+Returns a regex object based on a string and command-line options.
+
+Dies when the regex $str is undefinied (i.e. not given on command line).
+
+=cut
+
+sub build_regex {
+    my $str = shift;
+    my $opt = shift;
+
+    defined $str or App::Ack::die( 'No regular expression found.' );
+
+    $str = quotemeta( $str ) if $opt->{Q};
+    if ( $opt->{w} ) {
+        $str = "\\b$str" if $str =~ /^\w/;
+        $str = "$str\\b" if $str =~ /\w$/;
+    }
+
+    my $regex_is_lc = $str eq lc $str;
+    if ( $opt->{i} || ($opt->{smart_case} && $regex_is_lc) ) {
+        $str = "(?i)$str";
+    }
+
+    return $str;
+}
+
+=head2 check_regex( $regex_str )
+
+Checks that the $regex_str can be compiled into a perl regular expression.
+Dies with the error message if this is not the case.
+
+No return value.
+
+=cut
+
+sub check_regex {
+    my $regex = shift;
+
+    return unless defined $regex;
+
+    eval { qr/$regex/ };
+    if ($@) {
+        (my $error = $@) =~ s/ at \S+ line \d+.*//;
+        chomp($error);
+        App::Ack::die( "Invalid regex '$regex':\n  $error" );
+    }
+
+    return;
+}
+
+
+
+=head2 warn( @_ )
+
+Put out an ack-specific warning.
+
+=cut
+
+sub warn { ## no critic (ProhibitBuiltinHomonyms)
+    return CORE::warn( _my_program(), ': ', @_, "\n" );
+}
+
+=head2 die( @_ )
+
+Die in an ack-specific way.
+
+=cut
+
+sub die { ## no critic (ProhibitBuiltinHomonyms)
+    return CORE::die( _my_program(), ': ', @_, "\n" );
+}
+
+sub _my_program {
+    require File::Basename;
+    return File::Basename::basename( $0 );
+}
+
+
+=head2 filetypes_supported()
+
+Returns a list of all the types that we can detect.
+
+=cut
+
+sub filetypes_supported {
+    return keys %mappings;
+}
+
 sub _get_thpppt {
     my $y = q{_   /|,\\'!.x',=(www)=,   U   };
     $y =~ tr/,x!w/\nOo_/;
@@ -158,6 +502,57 @@ END_OF_HELP
     return;
  }
 
+
+=head2 show_help_types()
+
+Display the filetypes help subpage.
+
+=cut
+
+sub show_help_types {
+    App::Ack::print( <<'END_OF_HELP' );
+Usage: ack [OPTION]... PATTERN [FILES]
+
+The following is the list of filetypes supported by ack.  You can
+specify a file type with the --type=TYPE format, or the --TYPE
+format.  For example, both --type=perl and --perl work.
+
+Note that some extensions may appear in multiple types.  For example,
+.pod files are both Perl and Parrot.
+
+END_OF_HELP
+
+    my @types = filetypes_supported();
+    my $maxlen = 0;
+    for ( @types ) {
+        $maxlen = length if $maxlen < length;
+    }
+    for my $type ( sort @types ) {
+        next if $type =~ /^-/; # Stuff to not show
+        my $ext_list = $mappings{$type};
+
+        if ( ref $ext_list ) {
+            $ext_list = join( ' ', map { ".$_" } @{$ext_list} );
+        }
+        App::Ack::print( sprintf( "    --[no]%-*.*s %s\n", $maxlen, $maxlen, $type, $ext_list ) );
+    }
+
+    return;
+}
+
+sub _listify {
+    my @whats = @_;
+
+    return '' if !@whats;
+
+    my $end = pop @whats;
+    my $str = @whats ? join( ', ', @whats ) . " and $end" : $end;
+
+    no warnings 'once';
+    require Text::Wrap;
+    $Text::Wrap::columns = 75;
+    return Text::Wrap::wrap( '', '    ', $str );
+}
 
 =head2 get_version_statement
 
