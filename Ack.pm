@@ -492,6 +492,10 @@ File finding:
 File inclusion/exclusion:
 
 Miscellaneous:
+  --noenv               Ignore environment variables and ~/.ackrc
+  --help                This help
+  --man                 Man page
+  --version             Display version & copyright
   --thpppt              Bill the Cat
 
 Exit status is 0 if match, 1 if no match.
