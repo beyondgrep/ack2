@@ -87,11 +87,14 @@ sub read_ackrc {
             chomp @lines;
             close $fh or App::Ack::die( "$filename: $!\n" );
 
-            # get rid of leading and trailing whitespaces
+            # get rid of leading and trailing whitespaces and comments
             for ( @lines ) {
                s/^\s+//;
                s/\s+$//;
+               s/#.*//;
             }
+
+            @lines = grep { /./ } @lines;
 
             return @lines;
         }
