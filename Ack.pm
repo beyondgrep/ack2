@@ -115,55 +115,6 @@ sub get_command_line_options {
     );
 
     my $getopt_specs = {
-        1                       => sub { $opt{1} = $opt{m} = 1 },
-        'A|after-context=i'     => \$opt{after_context},
-        'B|before-context=i'    => \$opt{before_context},
-        'C|context:i'           => sub { shift; my $val = shift; $opt{before_context} = $opt{after_context} = ($val || 2) },
-        'a|all-types'           => \$opt{all},
-        'break!'                => \$opt{break},
-        c                       => \$opt{count},
-        'color|colour!'         => \$opt{color},
-        'color-match=s'         => \$ENV{ACK_COLOR_MATCH},
-        'color-filename=s'      => \$ENV{ACK_COLOR_FILENAME},
-        'color-lineno=s'        => \$ENV{ACK_COLOR_LINENO},
-        'column!'               => \$opt{column},
-        count                   => \$opt{count},
-        'env!'                  => sub { }, # ignore this option, it is handled beforehand
-        f                       => \$opt{f},
-        flush                   => \$opt{flush},
-        'follow!'               => \$opt{follow},
-        'g=s'                   => sub { shift; $opt{G} = shift; $opt{f} = 1 },
-        'G=s'                   => \$opt{G},
-        'group!'                => sub { shift; $opt{heading} = $opt{break} = shift },
-        'heading!'              => \$opt{heading},
-        'h|no-filename'         => \$opt{h},
-        'H|with-filename'       => \$opt{H},
-        'i|ignore-case'         => \$opt{i},
-        'invert-file-match'     => \$opt{invert_file_match},
-        'lines=s'               => sub { shift; my $val = shift; push @{$opt{lines}}, $val },
-        'l|files-with-matches'  => \$opt{l},
-        'L|files-without-matches' => sub { $opt{l} = $opt{v} = 1 },
-        'm|max-count=i'         => \$opt{m},
-        'match=s'               => \$opt{regex},
-        'n|no-recurse'          => \$opt{n},
-        o                       => sub { $opt{output} = '$&' },
-        'output=s'              => \$opt{output},
-        'pager=s'               => \$opt{pager},
-        'nopager'               => sub { $opt{pager} = undef },
-        'passthru'              => \$opt{passthru},
-        'print0'                => \$opt{print0},
-        'Q|literal'             => \$opt{Q},
-        'r|R|recurse'           => sub { $opt{n} = 0 },
-        'show-types'            => \$opt{show_types},
-        'smart-case!'           => \$opt{smart_case},
-        'sort-files'            => \$opt{sort_files},
-        'u|unrestricted'        => \$opt{u},
-        'v|invert-match'        => \$opt{v},
-        'w|word-regexp'         => \$opt{w},
-
-        'ignore-dirs=s'         => sub { shift; my $dir = remove_dir_sep( shift ); $ignore_dirs{$dir} = '--ignore-dirs' },
-        'noignore-dirs=s'       => sub { shift; my $dir = remove_dir_sep( shift ); delete $ignore_dirs{$dir} },
-
         'version'   => sub { print_version_statement(); exit; },
         'help|?:s'  => sub { shift; show_help(@_); exit; },
         'help-types'=> sub { show_help_types(); exit; },
@@ -173,21 +124,7 @@ sub get_command_line_options {
                 -verbose => 2,
                 -exitval => 0,
             });
-        },
-
-        'type=s'    => sub {
-            # Whatever --type=xxx they specify, set it manually in the hash
-            my $dummy = shift;
-            my $type = shift;
-            my $wanted = ($type =~ s/^no//) ? 0 : 1; # must not be undef later
-
-            if ( exists $type_wanted{ $type } ) {
-                $type_wanted{ $type } = $wanted;
-            }
-            else {
-                App::Ack::die( qq{Unknown --type "$type"} );
-            }
-        }, # type sub
+        }, # man sub
     };
 
     # Stick any default switches at the beginning, so they can be overridden
