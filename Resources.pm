@@ -14,14 +14,16 @@ for App::Ack::Resource objects.
 
 =head1 METHODS
 
-=head2 from_argv( $opt, \@ARGV )
+=head2 from_starting( $opt, \@starting_points )
+
+Return an iterator 
 
 =cut
 
 sub from_argv {
     my $class = shift;
-    my $opt  = shift;
-    my $argv = shift;
+    my $opt   = shift;
+    my $start = shift;
 
     my $self = bless {}, $class;
 
@@ -35,7 +37,7 @@ sub from_argv {
             error_handler   => sub { my $msg = shift; App::Ack::warn( $msg ) },
             sort_files      => $opt->{sort_files},
             follow_symlinks => $opt->{follow},
-        }, @{$argv} );
+        }, @{$start} );
 
     return $self;
 }
