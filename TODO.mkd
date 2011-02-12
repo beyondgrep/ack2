@@ -7,3 +7,5 @@
 * Filtering for directories
 
 * Filtering for files
+
+* Has to be able to handle multiple starting points, i.e. qw( t/ foo/ foo.txt )
