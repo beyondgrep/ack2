@@ -115,10 +115,13 @@ sub get_command_line_options {
     );
 
     my $getopt_specs = {
-        'version'   => sub { print_version_statement(); exit; },
-        'help|?:s'  => sub { shift; show_help(@_); exit; },
-        'help-types'=> sub { show_help_types(); exit; },
-        'man'       => sub {
+        'env!'       => sub { }, # ignore this option, it is handled beforehand
+        f            => \$opt{f},
+
+        'version'    => sub { print_version_statement(); exit; },
+        'help|?:s'   => sub { shift; show_help(@_); exit; },
+        'help-types' => sub { show_help_types(); exit; },
+        'man'        => sub {
             require Pod::Usage;
             Pod::Usage::pod2usage({
                 -verbose => 2,
@@ -659,7 +662,7 @@ sub exit_from_ack {
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2005-2010 Andy Lester.
+Copyright 2005-2011 Andy Lester.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the Artistic License v2.0.

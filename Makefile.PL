@@ -14,6 +14,8 @@ my %parms = (
     PM                  => {
         'Ack.pm'        => '$(INST_LIBDIR)/App/Ack.pm',
         'Resource.pm'   => '$(INST_LIBDIR)/App/Ack/Resource.pm',
+        'Resources.pm'  => '$(INST_LIBDIR)/App/Ack/Resources.pm',
+        'Basic.pm'      => '$(INST_LIBDIR)/App/Ack/Resource/Basic.pm',
     },
     EXE_FILES           => [ 'ack' ],
     PREREQ_PM => {
@@ -61,15 +63,17 @@ sub MY::top_targets {
 sub MY::postamble {
     my $file_next_filename = qx(perldoc -l File::Next);
     my $postamble = <<'MAKE_FRAG';
-ACK             = ack
-BASE            = ack-base
-ACK_PM          = Ack.pm
-RESOURCE_PM     = Resource.pm
-ALL_PM          = $(ACK_PM) $(RESOURCE_PM)
-ACK_HELP        = ack-help.txt
-ACK_HELP_TYPES  = ack-help-types.txt
-ACK_HELP_DIRS   = ack-help-dirs.txt
-PERL_T          = $(PERL) -T
+ACK            = ack
+BASE           = ack-base
+ACK_PM         = Ack.pm
+RESOURCE_PM    = Resource.pm
+RESOURCES_PM   = Resources.pm
+BASIC_PM       = Basic.pm
+ALL_PM         = $(ACK_PM) $(RESOURCE_PM) $(RESOURCES_PM) $(BASIC_PM)
+ACK_HELP       = ack-help.txt
+ACK_HELP_TYPES = ack-help-types.txt
+ACK_HELP_DIRS  = ack-help-dirs.txt
+PERL_T         = $(PERL) -T
 
 .PHONY: tags critic
 

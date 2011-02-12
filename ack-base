@@ -56,8 +56,10 @@ sub main {
         # XXX $resources = App::Ack::resources_iterator_for_standard_input_only();
     }
     else {
-        $resources = App::Ack::resources_iterator_based_on_argv( $opt, [ @ARGV ] );
+        $resources = App::Ack::Resources->from_argv( $opt, [ @ARGV ] );
     }
+    {use Data::Dumper; local $Data::Dumper::Sortkeys=1;
+        print Dumper( $resources )}
 
     # XXX App::Ack::set_up_pager( $opt->{pager} ) if defined $opt->{pager};
 
