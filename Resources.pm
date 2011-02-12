@@ -43,7 +43,7 @@ sub from_argv {
 sub next {
     my $self = shift;
 
-    my $file = $self->{iter}->next or return;
+    my $file = $self->{iter}->() or return;
 
     return App::Ack::Resource::Basic->new( $file );
 }
