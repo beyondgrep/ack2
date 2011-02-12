@@ -1,3 +1,9 @@
 # Questions
 
 * Should resources be "sources"?
+
+# Tasks
+
+* Filtering for directories
+
+* Filtering for files
