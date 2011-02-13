@@ -48,7 +48,9 @@ MAIN: {
 }
 
 sub main {
-    my $opt = App::Ack::get_command_line_options();
+    my $defaults = App::Ack::get_defaults();
+
+    my $opt = App::Ack::get_command_line_options( %{$opt} );
     my $filter_mode = 0; # XXX App::Ack::figure_if_we_are_in_filter_mode();
 
     my $resources;

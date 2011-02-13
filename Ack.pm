@@ -103,14 +103,19 @@ sub read_ackrc {
     return;
 }
 
-=head2 get_command_line_options()
+=head2 get_command_line_options( %defaults )
 
 Gets command-line arguments and does the Ack-specific tweaking.
+
+This assumes that the --ignore-dir, --ignore-file, etc have all
+been removed and processed previously and are now in %defaults.
 
 =cut
 
 sub get_command_line_options {
+    my %defaults = @_;
     my %opt = (
+        %defaults,
         pager => $ENV{ACK_PAGER_COLOR} || $ENV{ACK_PAGER},
     );
 
@@ -232,56 +237,65 @@ i.e. into %mappings, etc.
 =cut
 
 sub def_types_from_ARGV {
-    my @typedef;
-
     my $parser = Getopt::Long::Parser->new();
         # pass_through   => leave unrecognized command line arguments alone
         # no_auto_abbrev => otherwise -c is expanded and not left alone
     $parser->configure( 'no_ignore_case', 'pass_through', 'no_auto_abbrev' );
     $parser->getoptions(
+        'ignore-directory=s' => sub { shift; push @idirs,  shift; },
+        'ignore-file=s'      => sub { shift; push @ifiles, shift; },
+        'type-add=s'         => sub { shift; push @types,  shift; },
+
         'type-set=s' => sub { shift; push @typedef, ['c', shift] },
         'type-add=s' => sub { shift; push @typedef, ['a', shift] },
     ) or App::Ack::die( 'See ack --help or ack --man for options.' );
 
-    for my $td (@typedef) {
-        my ($type, $ext) = split /=/, $td->[1];
+    my %idirs  = create_match_rules( \@idirs, 1 );
+    my %ifiles = create_match_rules( \@ifiles );
 
-        if ( $td->[0] eq 'c' ) {
-            # type-set
-            if ( exists $mappings{$type} ) {
-                # can't redefine types 'make', 'skipped', 'text' and 'binary'
-                App::Ack::die( qq{--type-set: Builtin type "$type" cannot be changed.} )
-                    if ref $mappings{$type} ne 'ARRAY';
 
-                delete_type($type);
+    return;
+}
+
+=head2 create_ignore_rules( $what, $where, \@opts )
+
+Takes an array of options passed in on the command line and returns
+a hashref of information about them:
+
+* 
+# is:  Match the filename exactly
+# ext: Match the extension
+# regex: Match against a Perl regular expression
+
+=cut
+
+sub create_ignore_rules {
+    my $what  = shift;
+    my $where = shift;
+    my $opts  = shift;
+
+    my @opts = @{$opts};
+
+    my %rules = {
+    };
+
+    for my $opt ( @opts ) {
+        if ( $opt =~ /^(is|ext|regex),(.+)$/ ) {
+            my $method = $1;
+            my $arg    = $2;
+            if ( $method eq 'regex' ) {
+                push( @{$rules{regex}}, qr/$arg/ );
+            }
+            else {
+                ++$rules{$method}{$arg};
             }
         }
         else {
-            # type-add
-
-            # can't append to types 'make', 'skipped', 'text' and 'binary'
-            App::Ack::die( qq{--type-add: Builtin type "$type" cannot be changed.} )
-                if exists $mappings{$type} && ref $mappings{$type} ne 'ARRAY';
-
-            App::Ack::warn( qq{--type-add: Type "$type" does not exist, creating with "$ext" ...} )
-                unless exists $mappings{$type};
-        }
-
-        my @exts = split /,/, $ext;
-        s/^\.// for @exts;
-
-        if ( !exists $mappings{$type} || ref($mappings{$type}) eq 'ARRAY' ) {
-            push @{$mappings{$type}}, @exts;
-            for my $e ( @exts ) {
-                push @{$types{$e}}, $type;
-            }
-        }
-        else {
-            App::Ack::die( qq{Cannot append to type "$type".} );
+            App::Ack::die( "Invalid argument for --$what: $opt" );
         }
     }
 
-    return;
+    return \%rules;
 }
 
 =head2 remove_dir_sep( $path )
