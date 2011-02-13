@@ -9,34 +9,73 @@
 
 
 # Directories to ignore
---ignore-directory=is,.bzr            # Bazaar
---ignore-directory=is,.cdv            # Codeville
---ignore-directory=is,~.dep           # Interface Builder
---ignore-directory=is,~.dot           # Interface Builder
---ignore-directory=is,~.nib           # Interface Builder
---ignore-directory=is,~.plst          # Interface Builder
---ignore-directory=is,.git            # Git
---ignore-directory=is,.hg             # Mercurial
---ignore-directory=is,.pc             # quilt
---ignore-directory=is,.svn            # Subversion
---ignore-directory=is,_MTN            # Monotone
---ignore-directory=is,blib            # Perl module building
---ignore-directory=is,CVS             # CVS
---ignore-directory=is,RCS             # RCS
---ignore-directory=is,SCCS            # SCCS
---ignore-directory=is,_darcs          # darcs
---ignore-directory=is,_sgbak          # Vault/Fortress
---ignore-directory=is,autom4te.cache  # autoconf
---ignore-directory=is,cover_db        # Devel::Cover
---ignore-directory=is,_build          # Module::Build
+# Bazaar
+--ignore-directory=is,.bzr
+
+# Codeville
+--ignore-directory=is,.cdv
+
+# Interface Builder
+--ignore-directory=is,~.dep
+--ignore-directory=is,~.dot
+--ignore-directory=is,~.nib
+--ignore-directory=is,~.plst
+
+# Git
+--ignore-directory=is,.git
+
+# Mercurial
+--ignore-directory=is,.hg
+
+# quilt
+--ignore-directory=is,.pc
+
+# Subversion
+--ignore-directory=is,.svn
+
+# Monotone
+--ignore-directory=is,_MTN
+
+# CVS
+--ignore-directory=is,CVS
+
+# RCS
+--ignore-directory=is,RCS
+
+# SCCS
+--ignore-directory=is,SCCS
+
+# darcs
+--ignore-directory=is,_darcs
+
+# Vault/Fortress
+--ignore-directory=is,_sgbak
+
+# autoconf
+--ignore-directory=is,autom4te.cache
+
+# Perl module building
+--ignore-directory=is,blib
+--ignore-directory=is,_build
+
+# Perl Devel::Cover module
+--ignore-directory=is,cover_db
+
 
 
 # Files to ignore
---ignore-file=ext,.bak             # Backup files
---ignore-file=match,/~$/           # Backup files
---ignore-file=match,/#.+#$/        # Emacs swap files
---ignore-file=match,/[._].*\.swp$/ # Vi(m) swap files
---ignore-file=match,/core\.\d+$/   # core dumps
+# Backup files
+--ignore-file=ext,.bak
+--ignore-file=match,/~$/
+
+# Emacs swap files
+--ignore-file=match,/#.+#$/
+
+# vi/vim swap files
+--ignore-file=match,/[._].*\.swp$/
+
+# core dumpes
+--ignore-file=match,/core\.\d+$/
 
 
 # Filetypes defined
