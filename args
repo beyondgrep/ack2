@@ -10,6 +10,78 @@ use Getopt::Long;
 MAIN: {
     my @arg_sources = retrieve_arg_sources();
 
+    my $opt = process_args( @arg_sources );
+}
+
+
+sub process_args {
+    my @arg_sources = @_;
+
+    # First get the argtypes
+
+    Getopt::Long::Configure( 'no_ignore_case', 'pass_through', 'no_auto_abbrev' );
+    # pass_through   => leave unrecognized command line arguments alone
+    # no_auto_abbrev => otherwise -c is expanded and not left alone
+
+    my @idirs;
+    my @ifiles;
+    my @types;
+
+    my %type_arg_specs = (
+        'type-add=s' => sub { shift; push @types,  shift; },
+    );
+    my @leftovers;
+    while ( @arg_sources ) {
+        my ($source_name, $args) = splice( @arg_sources, 0, 2 );
+
+        my $ret;
+        if ( ref($args) ) {
+            $ret = Getopt::Long::GetOptionsFromArray( $args, %type_arg_specs );
+        }
+        else {
+            ($ret, $args) = Getopt::Long::GetOptionsFromString( $args, %type_arg_specs );
+        }
+        push( @leftovers, $source_name, $args );
+    }
+
+    Getopt::Long::Configure( 'no_pass_through' );
+
+    my %opt;
+    my %arg_specs = (
+        'env!'               => sub { }, # ignore this option, it is handled beforehand
+        f                    => \$opt{f},
+        'ignore-directory=s' => sub { shift; push @idirs,  shift; },
+        'ignore-file=s'      => sub { shift; push @ifiles, shift; },
+
+        'version'            => sub { App::Ack::print_version_statement(); exit; },
+        'help|?:s'           => sub { shift; App::Ack::show_help(@_); exit; },
+        'help-types'         => sub { App::Ack::show_help_types(); exit; },
+        'man'                => sub {
+            require Pod::Usage;
+            Pod::Usage::pod2usage({
+                -verbose => 2,
+                -exitval => 0,
+            });
+        }, # man sub
+    );
+    {use Data::Dumper; local $Data::Dumper::Sortkeys=1;
+        print Dumper( \@idirs, \@ifiles, \@types, \@leftovers ) }
+
+    while ( @leftovers ) {
+        my ($source_name, $args) = splice( @leftovers, 0, 2 );
+
+        my $ret;
+        if ( ref($args) ) {
+            $ret = Getopt::Long::GetOptionsFromArray( $args, %arg_specs );
+        }
+        else {
+            $ret = Getopt::Long::GetOptionsFromString( $args, %arg_specs );
+        }
+        if ( !$ret ) {
+            my $preposition = $source_name eq 'command line' ? 'on' : 'in';
+            App::Ack::die( "Invalid option $preposition $source_name" );
+        }
+    }
 }
 
 
