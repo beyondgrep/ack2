@@ -1,0 +1,56 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use blib;
+use App::Ack;
+use Getopt::Long;
+
+MAIN: {
+    my @arg_sources = retrieve_arg_sources();
+
+}
+
+
+sub retrieve_arg_sources {
+    my @arg_sources;
+
+    my @files = ( './ackrc', "$ENV{HOME}/.ackrc" );
+    for my $file ( @files ) {
+        my @lines = read_rcfile( $file );
+        if ( @lines ) {
+            push( @arg_sources, $file, \@lines );
+        }
+    }
+
+    if ( $ENV{ACK_OPTIONS} ) {
+        push( @arg_sources, 'ACK_OPTIONS', $ENV{ACK_OPTIONS} );
+    }
+
+    push( @arg_sources, 'command line', [ @ARGV ] );
+
+    return @arg_sources;
+}
+
+sub read_rcfile {
+    my $file = shift;
+
+    return unless -e $file;
+
+    my @lines;
+
+    open( my $fh, '<', $file ) or App::Ack::die( "Unable to open $file: $!" );
+    while ( my $line = <$fh> ) {
+        chomp $line;
+        $line =~ s/^\s+//;
+        $line =~ s/\s+$//;
+
+        next if $line eq '';
+        next if $line =~ /^#/;
+
+        push( @lines, $line );
+    }
+
+    return @lines;
+}
