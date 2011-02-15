@@ -141,19 +141,25 @@ sub retrieve_arg_sources {
     my @arg_sources;
 
     my @files = ( $ENV{ACKRC} );
-    my @dirs =
-        $App::Ack::is_windows
-            ? ( $ENV{HOME}, $ENV{USERPROFILE} )
-            : ( '~', $ENV{HOME} );
-    for my $dir ( grep { defined } @dirs ) {
-        for my $file ( '.ackrc', '_ackrc' ) {
-            push( @files, bsd_glob( "$dir/$file", GLOB_TILDE ) );
-        }
+
+    my @maybe_dirs;
+    my @maybe_files;
+    if ( $App::Ack::is_windows ) {
+        @maybe_dirs  = ( $ENV{HOME}, $ENV{USERPROFILE} );
+        @maybe_files = ( '.ackrc', '_ackrc' );
     }
-    for my $file ( @files ) {
-        my @lines = read_rcfile( $file );
-        if ( @lines ) {
-            push( @arg_sources, $file, \@lines );
+    else {
+        @maybe_dirs  = ( '~', $ENV{HOME} );
+        @maybe_files = ( '.ackrc' );
+    }
+    CHECK_FILES: for my $maybe_dir ( grep { defined } @maybe_dirs ) {
+        for my $maybe_file ( @maybe_files ) {
+            my $file = "$maybe_dir/$maybe_file";
+            my @lines = read_rcfile( $file );
+            if ( @lines ) {
+                push( @arg_sources, $file, \@lines );
+                last CHECK_FILES;
+            }
         }
     }
 
@@ -169,11 +175,11 @@ sub retrieve_arg_sources {
 sub read_rcfile {
     my $file = shift;
 
-    return unless -e $file;
+    return unless defined $file && -e $file;
 
     my @lines;
 
-    open( my $fh, '<', $file ) or App::Ack::die( "Unable to open $file: $!" );
+    open( my $fh, '<', $file ) or App::Ack::die( "Unable to read $file: $!" );
     while ( my $line = <$fh> ) {
         chomp $line;
         $line =~ s/^\s+//;
