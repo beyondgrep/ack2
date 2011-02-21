@@ -113,6 +113,22 @@ been removed and processed previously and are now in %defaults.
 =cut
 
 sub get_command_line_options {
+    my @idirs;
+    my @ifiles;
+    my @types;
+
+    my $parser = Getopt::Long::Parser->new();
+        # pass_through   => leave unrecognized command line arguments alone
+        # no_auto_abbrev => otherwise -c is expanded and not left alone
+    $parser->configure( 'no_ignore_case', 'pass_through', 'no_auto_abbrev' );
+    $parser->getoptions(
+        'ignore-directory=s' => sub { shift; push @idirs,  shift; },
+        'ignore-file=s'      => sub { shift; push @ifiles, shift; },
+        'type-add=s'         => sub { shift; push @types,  shift; },
+    ) or App::Ack::die( 'See ack --help or ack --man for options.' );
+
+    my %idirs  = create_ignore_rules( \@idirs, 1 );
+    my %ifiles = create_ignore_rules( \@ifiles );
     my %defaults = @_;
     my %opt = (
         %defaults,
@@ -237,21 +253,6 @@ i.e. into %mappings, etc.
 =cut
 
 sub def_types_from_ARGV {
-    my $parser = Getopt::Long::Parser->new();
-        # pass_through   => leave unrecognized command line arguments alone
-        # no_auto_abbrev => otherwise -c is expanded and not left alone
-    $parser->configure( 'no_ignore_case', 'pass_through', 'no_auto_abbrev' );
-    $parser->getoptions(
-        'ignore-directory=s' => sub { shift; push @idirs,  shift; },
-        'ignore-file=s'      => sub { shift; push @ifiles, shift; },
-        'type-add=s'         => sub { shift; push @types,  shift; },
-
-        'type-set=s' => sub { shift; push @typedef, ['c', shift] },
-        'type-add=s' => sub { shift; push @typedef, ['a', shift] },
-    ) or App::Ack::die( 'See ack --help or ack --man for options.' );
-
-    my %idirs  = create_match_rules( \@idirs, 1 );
-    my %ifiles = create_match_rules( \@ifiles );
 
 
     return;
