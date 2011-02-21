@@ -1,0 +1,3 @@
+This is a file
+with three lines of text
+but no new line on the last line!

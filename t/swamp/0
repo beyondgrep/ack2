@@ -1,0 +1,3 @@
+#!/usr/bin/perl -w
+
+print "Every Perl programmer knows that 0 evaluates to false, and that it is a recipe for DANGER!\n";

@@ -1,0 +1,64 @@
+require 'rubygems'
+require 'hoe'
+
+def announce(msg='')
+  STDERR.puts msg
+end
+
+PKG_BUILD = ENV['PKG_BUILD'] ? '.' + ENV['PKG_BUILD'] : ''
+PKG_NAME = 'mechanize'
+PKG_VERSION = '0.6.4' + PKG_BUILD
+
+Hoe.new(PKG_NAME, PKG_VERSION) do |p|
+  p.rubyforge_name  = PKG_NAME
+  p.author          = 'Aaron Patterson'
+  p.email           = 'aaronp@rubyforge.org'
+  p.summary         = "Mechanize provides automated web-browsing"
+  p.description     = p.paragraphs_of('README.txt', 3).join("\n\n")
+  p.url             = p.paragraphs_of('README.txt', 1).first.strip
+  p.changes         = p.paragraphs_of('CHANGELOG.txt', 0..2).join("\n\n")
+  files = 
+    (p.test_globs + ['test/**/tc_*.rb',
+     "test/htdocs/**/*.{html,jpg}",
+     'test/data/server.*']).map { |x|
+    Dir.glob(x)
+  }.flatten + ['test/data/htpasswd']
+  p.extra_deps      = ['hpricot']
+  p.spec_extras     = { :test_files => files }
+end
+
+task :update_version do
+  announce "Updating Mechanize Version to #{PKG_VERSION}"
+  File.open("lib/mechanize/mech_version.rb", "w") do |f|
+    f.puts "module WWW"
+    f.puts "  class Mechanize"
+    f.puts "    Version = '#{PKG_VERSION}'"
+    f.puts "  end"
+    f.puts "end"
+  end
+  sh 'svn commit -m"updating version" lib/mechanize/mech_version.rb'
+end
+
+desc "Tag code"
+Rake::Task.define_task("tag") do |p|
+  baseurl = "svn+ssh://#{ENV['USER']}@rubyforge.org//var/svn/#{PKG_NAME}"
+  sh "svn cp -m 'tagged #{ PKG_VERSION }' . #{ baseurl }/tags/REL-#{ PKG_VERSION }"
+end
+
+desc "Branch code"
+Rake::Task.define_task("branch") do |p|
+  baseurl = "svn+ssh://#{ENV['USER']}@rubyforge.org/var/svn/#{PKG_NAME}"
+  sh "svn cp -m 'branched #{ PKG_VERSION }' #{baseurl}/trunk #{ baseurl }/branches/RB-#{ PKG_VERSION }"
+end
+
+desc "Update SSL Certificate"
+Rake::Task.define_task('ssl_cert') do |p|
+  sh "openssl genrsa -des3 -out server.key 1024"
+  sh "openssl req -new -key server.key -out server.csr"
+  sh "cp server.key server.key.org"
+  sh "openssl rsa -in server.key.org -out server.key"
+  sh "openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt"
+  sh "cp server.key server.pem"
+  sh "mv server.key server.csr server.crt server.pem test/data/"
+  sh "rm server.key.org"
+end
