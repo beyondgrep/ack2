@@ -69,193 +69,187 @@ Reads the contents of the .ackrc file and returns the arguments.
 
 =cut
 
-sub read_ackrc {
+sub retrieve_arg_sources {
+    my @arg_sources;
+
     my @files = ( $ENV{ACKRC} );
-    my @dirs =
-        $is_windows
-            ? ( $ENV{HOME}, $ENV{USERPROFILE} )
-            : ( '~', $ENV{HOME} );
-    for my $dir ( grep { defined } @dirs ) {
-        for my $file ( '.ackrc', '_ackrc' ) {
-            push( @files, bsd_glob( "$dir/$file", GLOB_TILDE ) );
-        }
-    }
-    for my $filename ( @files ) {
-        if ( defined $filename && -e $filename ) {
-            open( my $fh, '<', $filename ) or App::Ack::die( "$filename: $!\n" );
-            my @lines = grep { /./ && !/^\s*#/ } <$fh>;
-            chomp @lines;
-            close $fh or App::Ack::die( "$filename: $!\n" );
 
-            # get rid of leading and trailing whitespaces and comments
-            for ( @lines ) {
-               s/^\s+//;
-               s/\s+$//;
-               s/#.*//;
+    my @maybe_dirs;
+    my @maybe_files;
+    if ( $App::Ack::is_windows ) {
+        @maybe_dirs  = ( $ENV{HOME}, $ENV{USERPROFILE} );
+        @maybe_files = ( '.ackrc', '_ackrc' );
+    }
+    else {
+        @maybe_dirs  = ( '~', $ENV{HOME} );
+        @maybe_files = ( '.ackrc' );
+    }
+    CHECK_FILES: for my $maybe_dir ( grep { defined } @maybe_dirs ) {
+        for my $maybe_file ( @maybe_files ) {
+            my $file = "$maybe_dir/$maybe_file";
+            my @lines = read_rcfile( $file );
+            if ( @lines ) {
+                push( @arg_sources, $file, \@lines );
+                last CHECK_FILES;
             }
-
-            @lines = grep { /./ } @lines;
-
-            return @lines;
         }
     }
 
-    return;
+    if ( $ENV{ACK_OPTIONS} ) {
+        push( @arg_sources, 'ACK_OPTIONS', $ENV{ACK_OPTIONS} );
+    }
+
+    push( @arg_sources, 'ARGV', [ @ARGV ] );
+
+    return @arg_sources;
 }
 
-=head2 get_command_line_options( %defaults )
+sub read_rcfile {
+    my $file = shift;
 
-Gets command-line arguments and does the Ack-specific tweaking.
+    return unless defined $file && -e $file;
 
-This assumes that the --ignore-dir, --ignore-file, etc have all
-been removed and processed previously and are now in %defaults.
+    my @lines;
 
-=cut
+    open( my $fh, '<', $file ) or App::Ack::die( "Unable to read $file: $!" );
+    while ( my $line = <$fh> ) {
+        chomp $line;
+        $line =~ s/^\s+//;
+        $line =~ s/\s+$//;
 
-sub get_command_line_options {
+        next if $line eq '';
+        next if $line =~ /^#/;
+
+        push( @lines, $line );
+    }
+    close $fh;
+
+    return @lines;
+}
+
+sub process_args {
+    my @arg_sources = @_;
+
+    # First get the argtypes
+
+    Getopt::Long::Configure( 'no_ignore_case', 'pass_through', 'no_auto_abbrev' );
+    # pass_through   => leave unrecognized command line arguments alone
+    # no_auto_abbrev => otherwise -c is expanded and not left alone
+
     my @idirs;
     my @ifiles;
     my @types;
 
-    my $parser = Getopt::Long::Parser->new();
-        # pass_through   => leave unrecognized command line arguments alone
-        # no_auto_abbrev => otherwise -c is expanded and not left alone
-    $parser->configure( 'no_ignore_case', 'pass_through', 'no_auto_abbrev' );
-    $parser->getoptions(
-        'ignore-directory=s' => sub { shift; push @idirs,  shift; },
-        'ignore-file=s'      => sub { shift; push @ifiles, shift; },
-        'type-add=s'         => sub { shift; push @types,  shift; },
-    ) or App::Ack::die( 'See ack --help or ack --man for options.' );
-
-    my %idirs  = create_ignore_rules( \@idirs, 1 );
-    my %ifiles = create_ignore_rules( \@ifiles );
-    my %defaults = @_;
-    my %opt = (
-        %defaults,
-        pager => $ENV{ACK_PAGER_COLOR} || $ENV{ACK_PAGER},
+    my %type_arg_specs = (
+        'type-add=s' => sub { shift; push @types, shift; },
+        'type-set=s' => sub { shift; push @types, shift; },
     );
+    my @leftovers;
+    while ( @arg_sources ) {
+        my ($source_name, $args) = splice( @arg_sources, 0, 2 );
 
-    my $getopt_specs = {
-        'env!'       => sub { }, # ignore this option, it is handled beforehand
-        f            => \$opt{f},
+        my $ret;
+        if ( ref($args) ) {
+            $ret = Getopt::Long::GetOptionsFromArray( $args, %type_arg_specs );
+        }
+        else {
+            ($ret, $args) = Getopt::Long::GetOptionsFromString( $args, %type_arg_specs );
+        }
+        $ret || die "Return code $ret is false, but never should be";
+        push( @leftovers, $source_name, $args );
+    }
 
-        'version'    => sub { print_version_statement(); exit; },
-        'help|?:s'   => sub { shift; show_help(@_); exit; },
-        'help-types' => sub { show_help_types(); exit; },
-        'man'        => sub {
+    Getopt::Long::Configure( 'no_pass_through' );
+
+    my %opt;
+    my %arg_specs = (
+        1                   => sub { $opt{1} = $opt{m} = 1 },
+        'A|after-context=i' => \$opt{after_context},
+        'B|before-context=i'
+                            => \$opt{before_context},
+        'C|context:i'       => sub { shift; my $val = shift; $opt{before_context} = $opt{after_context} = ($val || 2) },
+        'a|all-types'       => \$opt{all},
+        'break!'            => \$opt{break},
+        c                   => \$opt{count},
+        'color|colour!'     => \$opt{color},
+        'color-match=s'     => \$ENV{ACK_COLOR_MATCH},
+        'color-filename=s'  => \$ENV{ACK_COLOR_FILENAME},
+        'color-lineno=s'    => \$ENV{ACK_COLOR_LINENO},
+        'column!'           => \$opt{column},
+        count               => \$opt{count},
+        'env!'              => sub { }, # ignore this option, it is handled beforehand
+        f                   => \$opt{f},
+        flush               => \$opt{flush},
+        'follow!'           => \$opt{follow},
+        'g=s'               => sub { shift; $opt{G} = shift; $opt{f} = 1 },
+        'G=s'               => \$opt{G},
+        'group!'            => sub { shift; $opt{heading} = $opt{break} = shift },
+        'heading!'          => \$opt{heading},
+        'h|no-filename'     => \$opt{h},
+        'H|with-filename'   => \$opt{H},
+        'i|ignore-case'     => \$opt{i},
+        'ignore-directory|ignore-dir=s'
+                            => sub { shift; push @idirs,  shift; },
+        'ignore-file=s'     => sub { shift; push @ifiles, shift; },
+        'invert-file-match' => \$opt{invert_file_match},
+        'lines=s'           => sub { shift; my $val = shift; push @{$opt{lines}}, $val },
+        'l|files-with-matches'
+                            => \$opt{l},
+        'L|files-without-matches'
+                            => sub { $opt{l} = $opt{v} = 1 },
+        'm|max-count=i'     => \$opt{m},
+        'match=s'           => \$opt{regex},
+        'n|no-recurse'      => \$opt{n},
+        o                   => sub { $opt{output} = '$&' },
+        'output=s'          => \$opt{output},
+        'pager=s'           => \$opt{pager},
+        'nopager'           => sub { $opt{pager} = undef },
+        'passthru'          => \$opt{passthru},
+        'print0'            => \$opt{print0},
+        'Q|literal'         => \$opt{Q},
+        'r|R|recurse'       => sub { $opt{n} = 0 },
+        'show-types'        => \$opt{show_types},
+        'smart-case!'       => \$opt{smart_case},
+        'sort-files'        => \$opt{sort_files},
+        'u|unrestricted'    => \$opt{u},
+        'v|invert-match'    => \$opt{v},
+        'w|word-regexp'     => \$opt{w},
+
+        'version'           => sub { App::Ack::print_version_statement(); exit; },
+        'help|?:s'          => sub { shift; App::Ack::show_help(@_); exit; },
+        'help-types'        => sub { App::Ack::show_help_types(); exit; },
+        'man'               => sub {
             require Pod::Usage;
             Pod::Usage::pod2usage({
                 -verbose => 2,
                 -exitval => 0,
             });
         }, # man sub
-    };
-
-    # Stick any default switches at the beginning, so they can be overridden
-    # by the command line switches.
-    unshift @ARGV, split( ' ', $ENV{ACK_OPTIONS} ) if defined $ENV{ACK_OPTIONS};
-
-    # first pass through options, looking for type definitions
-    def_types_from_ARGV();
-
-    for my $i ( filetypes_supported() ) {
-        $getopt_specs->{ "$i!" } = \$type_wanted{ $i };
-    }
-
-
-    my $parser = Getopt::Long::Parser->new();
-    $parser->configure( 'bundling', 'no_ignore_case', );
-    $parser->getoptions( %{$getopt_specs} ) or
-        App::Ack::die( 'See ack --help, ack --help-types or ack --man for options.' );
-
-    my $to_screen = not output_to_pipe();
-    my %defaults = (
-        all            => 0,
-        color          => $to_screen,
-        follow         => 0,
-        break          => $to_screen,
-        heading        => $to_screen,
-        before_context => 0,
-        after_context  => 0,
     );
-    if ( $is_windows && $defaults{color} && not $ENV{ACK_PAGER_COLOR} ) {
-        if ( $ENV{ACK_PAGER} || not eval { require Win32::Console::ANSI } ) {
-            $defaults{color} = 0;
-        }
-    }
-    if ( $to_screen && $ENV{ACK_PAGER_COLOR} ) {
-        $defaults{color} = 1;
-    }
 
-    while ( my ($key,$value) = each %defaults ) {
-        if ( not defined $opt{$key} ) {
-            $opt{$key} = $value;
-        }
-    }
+    while ( @leftovers ) {
+        my ($source_name, $args) = splice( @leftovers, 0, 2 );
 
-    if ( defined $opt{m} && $opt{m} <= 0 ) {
-        App::Ack::die( '-m must be greater than zero' );
-    }
-
-    for ( qw( before_context after_context ) ) {
-        if ( defined $opt{$_} && $opt{$_} < 0 ) {
-            App::Ack::die( "--$_ may not be negative" );
-        }
-    }
-
-    if ( defined( my $val = $opt{output} ) ) {
-        $opt{output} = eval qq[ sub { "$val" } ];
-    }
-    if ( defined( my $l = $opt{lines} ) ) {
-        # --line=1 --line=5 is equivalent to --line=1,5
-        my @lines = split( /,/, join( ',', @{$l} ) );
-
-        # --line=1-3 is equivalent to --line=1,2,3
-        @lines = map {
-            my @ret;
-            if ( /-/ ) {
-                my ($from, $to) = split /-/, $_;
-                if ( $from > $to ) {
-                    App::Ack::warn( "ignoring --line=$from-$to" );
-                    @ret = ();
-                }
-                else {
-                    @ret = ( $from .. $to );
-                }
-            }
-            else {
-                @ret = ( $_ );
-            };
-            @ret
-        } @lines;
-
-        if ( @lines ) {
-            my %uniq;
-            @uniq{ @lines } = ();
-            $opt{lines} = [ sort { $a <=> $b } keys %uniq ];   # numerical sort and each line occurs only once!
+        my $ret;
+        if ( ref($args) ) {
+            $ret = Getopt::Long::GetOptionsFromArray( $args, %arg_specs );
         }
         else {
-            # happens if there are only ignored --line directives
-            App::Ack::die( 'All --line options are invalid.' );
+            $ret = Getopt::Long::GetOptionsFromString( $args, %arg_specs );
+        }
+        if ( !$ret ) {
+            my $where = $source_name eq 'ARGV' ? 'on command line' : "in $source_name";
+            App::Ack::die( "Invalid option $where" );
         }
     }
 
+    # XXX
+    # At this point, none of the sources should have unparsed args except for @ARGV.
+    # If any sources other than @ARGV have stuff in them, then throw an error.
+    # Otherwise, put what's left from @ARGV source into @ARGV.
+    # Also we need to check on a -- in the middle of a non-ARGV source
+
     return \%opt;
-}
-
-=head2 def_types_from_ARGV
-
-Go through the command line arguments and look for
-I<--type-set foo=.foo,.bar> and I<--type-add xml=.rdf>.
-Remove them from @ARGV and add them to the supported filetypes,
-i.e. into %mappings, etc.
-
-=cut
-
-sub def_types_from_ARGV {
-
-
-    return;
 }
 
 =head2 create_ignore_rules( $what, $where, \@opts )

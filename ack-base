@@ -45,7 +45,12 @@ MAIN: {
 }
 
 sub main {
-    my $opt = App::Ack::get_command_line_options();
+    my @arg_sources = App::Ack::retrieve_arg_sources();
+
+    my $opt = App::Ack::process_args( @arg_sources );
+    {use Data::Dumper; local $Data::Dumper::Sortkeys=1;
+        print Dumper( $opt, \@ARGV )}
+    exit;
     my $filter_mode = 0; # XXX App::Ack::figure_if_we_are_in_filter_mode();
 
     my $resources;
