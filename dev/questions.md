@@ -39,6 +39,9 @@ Here are sample lines for matching a makefile:
 These rules would match the files `foo.mk`, `foo.mak` and `makefile`,
 but would not match `makefile.in` or `test.makefile`.
 
+**Q:** What if I want to search all files in a directory structure with no extension?  Can
+I do `--type-add=plain,ext,`?
+
 # FatPacker (2011-08-16)
 
 **Q:** Have you looked into using FatPacker at all?  I don't see
