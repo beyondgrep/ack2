@@ -42,6 +42,12 @@ but would not match `makefile.in` or `test.makefile`.
 **Q:** What if I want to search all files in a directory structure with no extension?  Can
 I do `--type-add=plain,ext,`?
 
+**A:** In ack 2.0, the default will be to search all text files.
+Filetypes only come into it if you want to exclude or include by
+type.
+
+That said, I'm wondering if we need a meta-type of "unknown".
+
 # FatPacker (2011-08-16)
 
 **Q:** Have you looked into using FatPacker at all?  I don't see
