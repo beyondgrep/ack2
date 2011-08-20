@@ -23,8 +23,9 @@
 
 # Configuration Files
 
-- /etc/ackrc, ~/.ackrc, look up directory hierarchy for .ackrcs?
+- /etc/ackrc, ~/.ackrc, look up directory hierarchy for .ackrcs? (the last one is probably for 2.1)
 - Option to suppress loading of various ack rc files (--no-system-rc, --no-home-rc, or something)
+  - If we did, this, could you put --no-system-rc in ~/.ackrc?
 
 # Bikeshedding
 
