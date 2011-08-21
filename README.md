@@ -39,9 +39,9 @@ ack will still:
 ack 2.0 will have:
 
 * improved flexibility in defining filetypes
-    * glob-style matching (`*.pl` is Perl)
-    * regex-style matching (`/\.pl$/i` is Perl)
-    * shebang-line matching (shebang line matching `/usr/bin/perl/` is Perl)
+    * glob-style matching (`*.pl` identifies a Perl file)
+    * regex-style matching (`/\.pl$/i` identifies a Perl file)
+    * shebang-line matching (shebang line matching `/usr/bin/perl/` identifies a Perl file)
 
 * support for a global ackrc
     * https://github.com/petdance/ack/issues/#issue/79
