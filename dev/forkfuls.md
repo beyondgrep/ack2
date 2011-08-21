@@ -7,6 +7,7 @@ An old joke: How do you eat an elephant?  One forkful at a time.
     * "filetype"
     * "resource"
     * "rule"
+* Look at glark and see if there's anything we want to steal
 * Filetype detection
 * ackrc finding
     * Define the rules in exact English.
