@@ -1,11 +1,12 @@
-# Old joke
+# Forkfuls
 
-How do you eat an elephant?  One forkful at a time.
+An old joke: How do you eat an elephant?  One forkful at a time.
 
 * Write a glossary
     * Many terms thrown around, need to understand them all
     * "filetype"
     * "resource"
+    * "rule"
 * Filetype detection
 * ackrc finding
     * Define the rules in exact English.
@@ -14,6 +15,9 @@ How do you eat an elephant?  One forkful at a time.
     * Define the syntax in exact English.
     * Track the source of every rule.
     * Code it.
+* Default /etc/ackrc
+    * Create, annotate and document it
+    * Will need strong revision control
 * File iteration
 * File searching
 * Results displaying
