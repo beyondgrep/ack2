@@ -17,5 +17,6 @@ How do you eat an elephant?  One forkful at a time.
 * File searching
 * Results displaying
 * Installation
+    * Define the rules for placement of /etc/ackrc on all platforms
     * CPAN installer has to install /etc/ackrc
     * ack --install-ackrc
