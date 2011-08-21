@@ -26,10 +26,11 @@ ack 2.0 will:
     * regex-style matching (`/\.pl$/i` identifies a Perl file)
     * shebang-line matching (shebang line matching `/usr/bin/perl/` identifies a Perl file)
 
-* support for a global ackrc
-    * https://github.com/petdance/ack/issues/#issue/79
-
-* support for per-project ackrc files
+* support for multiple ackrc files
+    * global ackrc (/etc/ackrc)
+        * https://github.com/petdance/ack/issues/#issue/79
+    * user-specific ackrc (~/.ackrc)
+    * per-project ackrc files (~/myproject/ackrc)
 
 * all inclusion/exclusion rules will be in the ackrc files
     * ack 2.0 will have no hardcoded filetype specifications,
