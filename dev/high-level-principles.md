@@ -33,6 +33,8 @@ ack will still:
 
 * run on Windows as well as Linux/Unix/etc
 
+* use Perl's default file-handling as far as dealing with files of different encodings
+
 
 # Definite new features in ack 2.0
 
