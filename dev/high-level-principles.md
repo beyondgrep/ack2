@@ -77,3 +77,5 @@ such as PDFs or Excel files
 
 * Allow file-wide type detection, instead of just looking at just
 the shebang.
+
+* Multiple ackrc files in a location, like `/etc/ackrc.d/`
