@@ -56,7 +56,11 @@ ack will still:
 
 * run on Windows as well as Linux/Unix/etc
 
-* use Perl's default file-handling as far as dealing with files of different encodings
+* use Perl's default file-handling as far as dealing with files of
+different encodings
+
+* be configured entirely from the command-line.  ackrc files will
+still be merely collections of command-line switches.
 
 
 # Incompatibilities with ack 1.x
