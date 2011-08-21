@@ -8,7 +8,14 @@ How do you eat an elephant?  One forkful at a time.
 * Filetype detection
 * ackrc finding
     * Define the rules in exact English.
-    * Code it
+    * Code it.
+* ackrc parsing
+    * Define the syntax in exact English.
+    * Track the source of every rule.
+    * Code it.
 * File iteration
 * File searching
 * Results displaying
+* Installation
+    * CPAN installer has to install /etc/ackrc
+    * ack --install-ackrc
