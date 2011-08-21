@@ -9,6 +9,12 @@ An old joke: How do you eat an elephant?  One forkful at a time.
     * "rule"
 * Look at glark and rak and see if there's anything we want to steal
 * Filetype detection
+    * Define and document the types of detection
+        * is
+        * ext
+        * match
+        * firstlinematch
+    * Code it
 * ackrc finding
     * Define the rules in exact English.
         * This includes ACK\_OPTIONS
