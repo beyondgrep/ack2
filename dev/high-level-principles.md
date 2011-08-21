@@ -55,13 +55,12 @@ ack 2.0 will:
     ackrc, but without that, there will be no exclusions.
 
 
-# Possible new features in ack 2.0, but probably ack 2.1
+# Incompatibilities with ack 1.x
 
-ack may:
+* Drop the --binary and --skipped flags, and some default filetypes.
 
-* search up the directory paths to see if there are parent ackrc
-files, so a given tree or project could have a tree-specific ackrc
-file.
+
+# Features that may get added in ack 2.1+, but definitely not in 2.0
 
 * allow filetype-based plugins for searching arbitrary filetypes,
 such as PDFs or Excel files (although this will probably be ack
@@ -73,7 +72,5 @@ such as PDFs or Excel files (although this will probably be ack
 * have profiles that are collections of arguments, so you can say
 --profile=web, --profile=programming, --profile=sysadmin or whatever.
 
-
-# Incompatibilities with ack 1.x
-
-* Drop the --binary and --skipped flags, and some default filetypes.
+* Allow file-wide type detection, instead of just looking at just
+the shebang.
