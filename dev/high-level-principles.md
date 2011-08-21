@@ -15,6 +15,28 @@ ack will still:
 * try to be as switch-compatible with GNU grep as possible
 
 
+# Definite new features in ack 2.0
+
+ack 2.0 will:
+
+* by default search all text files, as identified by Perl's -T operator
+
+* improved flexibility in defining filetypes
+    * glob-style matching (`*.pl` identifies a Perl file)
+    * regex-style matching (`/\.pl$/i` identifies a Perl file)
+    * shebang-line matching (shebang line matching `/usr/bin/perl/` identifies a Perl file)
+
+* support for a global ackrc
+    * https://github.com/petdance/ack/issues/#issue/79
+
+* support for per-project ackrc files
+
+* all inclusion/exclusion rules will be in the ackrc files
+    * ack 2.0 will have no hardcoded filetype specifications,
+    directories to include or exclude, and so on.  It will ship
+    with a default global ackrc, but does not need it.
+
+
 # Continuing design principles of ack 2.0
 
 ack will still:
@@ -34,27 +56,6 @@ ack will still:
 * run on Windows as well as Linux/Unix/etc
 
 * use Perl's default file-handling as far as dealing with files of different encodings
-
-
-# Definite new features in ack 2.0
-
-ack 2.0 will:
-
-* by default search all text files, as identified by Perl's -T operator
-
-* improved flexibility in defining filetypes
-    * glob-style matching (`*.pl` identifies a Perl file)
-    * regex-style matching (`/\.pl$/i` identifies a Perl file)
-    * shebang-line matching (shebang line matching `/usr/bin/perl/` identifies a Perl file)
-
-* support for a global ackrc
-    * https://github.com/petdance/ack/issues/#issue/79
-
-* support for per-project ackrc files
-
-* no hardcoded filetypes or directories
-    * Everyone has different needs.  ack will ship with a default
-    ackrc, but without that, there will be no exclusions.
 
 
 # Incompatibilities with ack 1.x
