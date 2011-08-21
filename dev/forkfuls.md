@@ -20,7 +20,7 @@ An old joke: How do you eat an elephant?  One forkful at a time.
     * Create, annotate and document it
     * Will need strong revision control
 * Debug mode
-    * Dump all rules
+    * ack --dump-rules
 * File iteration
 * File searching
 * Results displaying
