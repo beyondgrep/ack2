@@ -63,8 +63,7 @@ ack 2.0 will:
 # Features that may get added in ack 2.1+, but definitely not in 2.0
 
 * allow filetype-based plugins for searching arbitrary filetypes,
-such as PDFs or Excel files (although this will probably be ack
-2.1)
+such as PDFs or Excel files
 
 * add an --also-in-file for matching two matches in the same file
     * https://github.com/petdance/ack/issues#issue/153
