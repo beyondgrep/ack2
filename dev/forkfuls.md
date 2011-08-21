@@ -10,6 +10,7 @@ An old joke: How do you eat an elephant?  One forkful at a time.
 * Filetype detection
 * ackrc finding
     * Define the rules in exact English.
+        * This includes ACK\_OPTIONS
     * Code it.
 * ackrc parsing
     * Define the syntax in exact English.
