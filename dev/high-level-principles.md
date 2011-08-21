@@ -6,8 +6,6 @@ ack will still:
 
 * ignore version control directories, core dumps and other large files
 
-* allow user-specified filetype detection
-
 * never be a file editor
 
 * support a local ~/.ackrc
@@ -15,6 +13,8 @@ ack will still:
 * sniff shebang lines to detect language
 
 * try to be as switch-compatible with GNU grep as possible
+
+* run on Perl 5.8
 
 
 # Continuing design principles of ack 2.0
@@ -48,6 +48,8 @@ ack 2.0 will:
 * support for a global ackrc
     * https://github.com/petdance/ack/issues/#issue/79
 
+* support for per-project ackrc files
+
 * no hardcoded filetypes or directories
     * Everyone has different needs.  ack will ship with a default
     ackrc, but without that, there will be no exclusions.
@@ -75,5 +77,3 @@ such as PDFs or Excel files (although this will probably be ack
 # Incompatibilities with ack 1.x
 
 * Drop the --binary and --skipped flags, and some default filetypes.
-
-* May require Perl 5.10
