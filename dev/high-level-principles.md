@@ -14,12 +14,12 @@ ack will still:
 
 * try to be as switch-compatible with GNU grep as possible
 
-* run on Perl 5.8
-
 
 # Continuing design principles of ack 2.0
 
 ack will still:
+
+* run on Perl 5.8.8
 
 * be distributed through CPAN
 
