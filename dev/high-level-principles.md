@@ -2,7 +2,7 @@
 
 ack will still:
 
-* only search files of types it recognizes
+* have a system for recognizing types of files, to allow including and excluding certain types of files.
 
 * ignore version control directories, core dumps and other large files
 
@@ -36,7 +36,9 @@ ack will still:
 
 # Definite new features in ack 2.0
 
-ack 2.0 will have:
+ack 2.0 will:
+
+* by default search all text files, as identified by Perl's -T operator
 
 * improved flexibility in defining filetypes
     * glob-style matching (`*.pl` identifies a Perl file)
