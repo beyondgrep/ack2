@@ -54,13 +54,21 @@ sub test_loader {
         close $file;
         push @tempfiles, $file;
     }
-    my $finder = MockFinder->new(map { $_->filename } @tempfiles);
-    my $loader = App::Ack::ConfigLoader->new(
-        finder => $finder,
-    );
 
-    my $got_opts    = $loader->options;
-    my $got_targets = $loader->targets;
+    my ( $got_opts, $got_targets );
+
+    do {
+        local $ENV{'ACK_OPTIONS'} = $env;
+        local @ARGV               = @$argv;
+
+        my $finder = MockFinder->new(map { $_->filename } @tempfiles);
+        my $loader = App::Ack::ConfigLoader->new(
+            finder => $finder,
+        );
+
+        $got_opts    = $loader->options;
+        $got_targets = $loader->targets;
+    };
 
     my $diag_prefix    = 'Options did not match';
     my ( $ok, $stack ) = cmp_details($got_opts, $expected_opts);
