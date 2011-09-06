@@ -5,7 +5,7 @@ use Cwd qw(getcwd realpath);
 use File::Spec;
 use File::Temp;
 use Test::Builder;
-use Test::More tests => 11;
+use Test::More tests => 21;
 
 sub touch_ackrc {
     my ( $filename ) = @_;
@@ -103,6 +103,45 @@ touch_ackrc;
 expect_ackrcs [ @global_files, File::Spec->rel2abs('.ackrc')], 'a project file in the same directory should be detected, even with another one above it';
 no_home {
     expect_ackrcs [ $global_files[0], File::Spec->rel2abs('.ackrc')], 'a project file in the same directory should be detected, even with another one above it';
+};
+
+unlink '.ackrc';
+unlink $project_file;
+
+touch_ackrc '_ackrc';
+expect_ackrcs [ @global_files, File::Spec->rel2abs('_ackrc')], 'a project file in the same directory should be detected';
+no_home {
+    expect_ackrcs [ $global_files[0], File::Spec->rel2abs('_ackrc')], 'a project file in the same directory should be detected';
+};
+
+unlink '_ackrc';
+
+$project_file = File::Spec->catfile($tempdir->dirname, 'foo', '_ackrc');
+touch_ackrc $project_file;
+expect_ackrcs [ @global_files, $project_file ], 'a project file in the grandparent directory should be detected';
+no_home {
+    expect_ackrcs [ $global_files[0], $project_file ], 'a project file in the grandparent directory should be detected';
+};
+
+touch_ackrc '_ackrc';
+expect_ackrcs [ @global_files, File::Spec->rel2abs('_ackrc')], 'a project file in the same directory should be detected, even with another one above it';
+no_home {
+    expect_ackrcs [ $global_files[0], File::Spec->rel2abs('_ackrc')], 'a project file in the same directory should be detected, even with another one above it';
+};
+
+unlink $project_file;
+touch_ackrc;
+expect_ackrcs [ @global_files, File::Spec->rel2abs('.ackrc')], '.ackrc should be preferred to _ackrc';
+no_home {
+    expect_ackrcs [ $global_files[0], File::Spec->rel2abs('.ackrc')], '.ackrc should be preferred to _ackrc';
+};
+
+unlink '.ackrc';
+$project_file = File::Spec->catfile($tempdir->dirname, 'foo', '.ackrc');
+touch_ackrc $project_file;
+expect_ackrcs [ @global_files, File::Spec->rel2abs('_ackrc')], 'a lower-level _ackrc should be preferred to a higher-level .ackrc';
+no_home {
+    expect_ackrcs [ $global_files[0], File::Spec->rel2abs('_ackrc')], 'a lower-level _ackrc should be preferred to a higher-level .ackrc';
 };
 
 chdir $wd;
