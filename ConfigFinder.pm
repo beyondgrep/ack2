@@ -8,7 +8,7 @@ First, ack looks for a global ackrc.
 
 =over
 
-=item On Windows, this is `ackrc` in either COMMON\_APPDATA or APPDATA.
+=item On Windows, this is `ackrc` in either COMMON_APPDATA or APPDATA.
 
 =item On a non-Windows OS, this is `/etc/ackrc`.
 
