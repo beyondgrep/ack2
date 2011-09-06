@@ -35,7 +35,7 @@ our %type_wanted;
 our %mappings;
 our %ignore_dirs;
 
-our $input_from_pipe;
+our $is_filter_mode;
 our $output_to_pipe;
 
 our $dir_sep_chars;
@@ -49,7 +49,7 @@ use Getopt::Long ();
 BEGIN {
     # These have to be checked before any filehandle diddling.
     $output_to_pipe  = not -t *STDOUT;
-    $input_from_pipe = -p STDIN;
+    $is_filter_mode = -p STDIN;
 
     $is_cygwin       = ($^O eq 'cygwin');
     $is_windows      = ($^O =~ /MSWin32/);
@@ -490,17 +490,6 @@ sub set_up_pager {
 
     return;
 }
-
-=head2 input_from_pipe()
-
-Returns true if ack's input is coming from a pipe.
-
-=cut
-
-sub input_from_pipe {
-    return $input_from_pipe;
-}
-
 
 =head2 output_to_pipe()
 
