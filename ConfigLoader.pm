@@ -8,6 +8,7 @@ use strict;
 use warnings;
 
 use Carp ();
+use Getopt::Long ();
 
 =head1 METHODS
 
@@ -22,8 +23,16 @@ sub new {
 
     my $finder = $opts{'finder'} || Carp::croak "option finder required";
 
+    my %options;
+
+    Getopt::Long::GetOptions(
+        'A|after-context=i' => \$options{'after_context'},
+    );
+
     return bless {
-        _finder => $finder,
+        _finder  => $finder,
+        _options => \%options,
+        _targets => [],
     }, $class;
 }
 
@@ -48,7 +57,7 @@ The possible options are:
 sub options {
     my ( $self ) = @_;
 
-    return {};
+    return $self->{'_options'};
 }
 
 =head2 targets
@@ -61,7 +70,7 @@ sources.
 sub targets {
     my ( $self ) = @_;
 
-    return [];
+    return $self->{'_targets'};
 }
 
 1;
