@@ -4,7 +4,7 @@ use lib 't';
 
 use Test::Builder;
 use Test::Deep::NoTest qw(cmp_details deep_diag); # ditch this eventually (?)
-use Test::More tests => 4;
+use Test::More tests => 6;
 
 use Carp qw(croak);
 use File::Temp;
@@ -81,7 +81,8 @@ sub test_loader {
 }
 
 my %defaults = (
-    after_context => undef,
+    after_context  => undef,
+    before_context => undef,
 );
 
 use_ok 'App::Ack::ConfigLoader';
@@ -102,3 +103,15 @@ test_loader
     expected_opts    => { %defaults, after_context => 15 },
     expected_targets => [],
     '--after-context should set after_context';
+
+test_loader
+    argv             => ['-B', '15'],
+    expected_opts    => { %defaults, before_context => 15 },
+    expected_targets => [],
+    '-B should set before_context';
+
+test_loader
+    argv             => ['--before-context=15'],
+    expected_opts    => { %defaults, before_context => 15 },
+    expected_targets => [],
+    '--before-context should set before_context';
