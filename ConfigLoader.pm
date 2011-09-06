@@ -41,6 +41,7 @@ sub process_args {
         count               => \$opt{count},
         'env!'              => sub { }, # ignore this option, it is handled beforehand
         f                   => \$opt{f},
+        'filter!'           => \$App::Ack::is_filter_mode,
         flush               => \$opt{flush},
         'follow!'           => \$opt{follow},
         'g=s'               => sub { shift; $opt{G} = shift; $opt{f} = 1 },
