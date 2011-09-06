@@ -30,20 +30,12 @@ my $finder;
 sub expect_ackrcs {
     my ( $expected, $name ) = @_;
 
+    local $Test::Builder::Level += 1;
+
     my @got  = $finder->find_config_files;
-    my $ok   = @got == @$expected;
-    my $diag = sprintf("lengths do not match up\n  # got:      %d\n  # expected: %d",
-        scalar(@got), scalar(@$expected));
-
-    for(my $i = 0; $i < @got && $ok; $i++) {
-        $ok &&= (realpath($got[$i]) eq realpath($expected->[$i]));
-        $diag = sprintf("elements do not match up\n  # \$got[$i]:      %s\n  # \$expected[$i]: %s",
-            defined($got[$i])        ? $got[$i]        : 'undef',
-            defined($expected->[$i]) ? $expected->[$i] : 'undef');
-    }
-
-    my $tb = Test::Builder->new;
-    $tb->ok($ok, $name) || $tb->diag($diag);
+    @$expected = map { realpath($_) } @$expected;
+    @got       = map { realpath($_) } @got;
+    is_deeply \@got, $expected;
 }
 
 my @global_files;
