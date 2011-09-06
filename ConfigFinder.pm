@@ -93,6 +93,11 @@ sub find_config_files {
             push @config_files, $ackrc;
             last;
         }
+        $ackrc = File::Spec->catfile(@dirs, '_ackrc');
+        if(-f $ackrc) {
+            push @config_files, $ackrc;
+            last;
+        }
         pop @dirs;
     }
 
