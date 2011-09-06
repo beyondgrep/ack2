@@ -51,10 +51,9 @@ sub main {
     my $opt = App::Ack::ConfigLoader::process_args( @arg_sources );
     {use Data::Show; show( $opt, \@ARGV )}
     exit;
-    my $filter_mode = 0; # XXX App::Ack::figure_if_we_are_in_filter_mode();
 
     my $resources;
-    if ( $filter_mode ) {
+    if ( $App::Ack::is_filter_mode ) {
         # XXX $resources = App::Ack::resources_iterator_for_standard_input_only();
     }
     else {
