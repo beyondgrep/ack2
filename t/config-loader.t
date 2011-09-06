@@ -4,7 +4,7 @@ use lib 't';
 
 use Test::Builder;
 use Test::Deep::NoTest qw(cmp_details deep_diag); # ditch this eventually (?)
-use Test::More tests => 2;
+use Test::More tests => 4;
 
 use Carp qw(croak);
 use File::Temp;
@@ -80,9 +80,25 @@ sub test_loader {
     return $tb->ok($ok, $name) || $tb->diag("$diag_prefix\n" . indent(deep_diag($stack), 2));
 }
 
+my %defaults = (
+    after_context => undef,
+);
+
 use_ok 'App::Ack::ConfigLoader';
 
 test_loader
-    expected_opts    => {},
+    expected_opts    => { %defaults },
     expected_targets => [],
-    'empty inputs should result in empty outputs';
+    'empty inputs should result in default outputs';
+
+test_loader
+    argv             => ['-A', '15'],
+    expected_opts    => { %defaults, after_context => 15 },
+    expected_targets => [],
+    '-A should set after_context';
+
+test_loader
+    argv             => ['--after-context=15'],
+    expected_opts    => { %defaults, after_context => 15 },
+    expected_targets => [],
+    '--after-context should set after_context';
