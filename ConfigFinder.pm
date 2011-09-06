@@ -2,6 +2,37 @@ package App::Ack::ConfigFinder;
 
 =head1 App::Ack::ConfigFinder
 
+=head1 LOCATING CONFIG FILES
+
+First, ack looks for a global ackrc.
+
+=over
+
+=item On Windows, this is `ackrc` in either COMMON\_APPDATA or APPDATA.
+
+=item On a non-Windows OS, this is `/etc/ackrc`.
+
+=back
+
+Then, ack looks for a user-specific ackrc.
+
+=over
+
+=item On Windows, this is `$HOME/_ackrc`, if the HOME environment variable is set.
+
+=item On non-Windows systems, this is `$HOME/.ackrc`.
+
+=back
+
+Then, ack looks for a project-specific ackrc file.  ack searches
+up the directory hierarchy for the first .ackrc or _ackrc file this is not
+one of the ackrc files found in the previous steps.
+
+After ack loads the options from the found ackrc files, ack looks
+at the ACKRC_OPTIONS environment variable.
+
+Finally, ack takes settings from the command line.
+
 =cut
 
 use strict;
