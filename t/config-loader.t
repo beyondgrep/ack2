@@ -36,6 +36,9 @@ sub test_loader {
     my ( $env, $argv, $expected_opts, $expected_targets ) =
         delete @opts{qw/env argv expected_opts expected_targets/};
 
+    $env  = '' unless defined $env;
+    $argv = [] unless defined $argv;
+
     my @files = map {
         $opts{$_}
     } sort { 
@@ -72,9 +75,6 @@ sub test_loader {
 use_ok 'App::Ack::ConfigLoader';
 
 test_loader
-    env              => '',
-    argv             => '',
-    file1            => '',
     expected_opts    => {},
     expected_targets => [],
     'empty inputs should result in empty outputs';
