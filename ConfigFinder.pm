@@ -41,16 +41,18 @@ sub find_config_files {
 
     if($App::Ack::is_windows) {
         no strict 'subs';
-        push @config_files, (
+        push @config_files, map { File::Spec->catfile($_, 'ackrc') } (
             Win32::GetFolderPath(Win32::CSIDL_COMMON_APPDATA),
             Win32::GetFolderPath(Win32::CSIDL_APPDATA),
         );
+        if(defined(my $home = $ENV{'HOME'})) {
+            push @config_files, File::Spec->catfile($home, '_ackrc');
+        }
     } else {
         push @config_files, '/etc/ackrc';
-    }
-
-    if(defined(my $home = $ENV{'HOME'})) {
-        push @config_files, File::Spec->catfile($home, '.ackrc');
+        if(defined(my $home = $ENV{'HOME'})) {
+            push @config_files, File::Spec->catfile($home, '.ackrc');
+        }
     }
 
     my @dirs = File::Spec->splitdir(Cwd::getcwd());
