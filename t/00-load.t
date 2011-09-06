@@ -2,11 +2,13 @@
 
 use warnings;
 use strict;
-use Test::More tests => 3;
+use Test::More tests => 5;
 
 BEGIN {
     use_ok( 'App::Ack' );
     use_ok( 'App::Ack::Resource' );
+    use_ok( 'App::Ack::ConfigFinder' );
+    use_ok( 'App::Ack::ConfigLoader' );
     use_ok( 'File::Next' );
 }
 
