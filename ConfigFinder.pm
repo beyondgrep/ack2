@@ -7,10 +7,11 @@ package App::Ack::ConfigFinder;
 use strict;
 use warnings;
 
+use App::Ack ();
 use Cwd ();
 use File::Spec;
 
-my $has_win32 = eval {
+if($App::Ack::is_windows) {
     require Win32;
 };
 
@@ -38,14 +39,14 @@ a list of them.
 sub find_config_files {
     my @config_files;
 
-    if($has_win32) {
+    if($App::Ack::is_windows) {
         no strict 'subs';
         push @config_files, (
             Win32::GetFolderPath(Win32::CSIDL_COMMON_APPDATA),
             Win32::GetFolderPath(Win32::CSIDL_APPDATA),
         );
     } else {
-        push @config_files, '/etc/ackrc' if $^O ne 'MSWin32';
+        push @config_files, '/etc/ackrc' unless $App::Ack::is_windows;
         if(defined(my $home = $ENV{'HOME'})) {
             push @config_files, File::Spec->catfile($home, '.ackrc');
         }
