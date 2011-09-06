@@ -3,6 +3,7 @@ package App::Ack;
 use warnings;
 use strict;
 
+use App::Ack::ConfigFinder;
 use File::Next 0.40;
 
 =head1 NAME
@@ -72,27 +73,11 @@ Reads the contents of the .ackrc file and returns the arguments.
 sub retrieve_arg_sources {
     my @arg_sources;
 
-    my @files = ( $ENV{ACKRC} );
-
-    my @maybe_dirs;
-    my @maybe_files;
-    if ( $App::Ack::is_windows ) {
-        @maybe_dirs  = ( $ENV{HOME}, $ENV{USERPROFILE} );
-        @maybe_files = ( '.ackrc', '_ackrc' );
-    }
-    else {
-        @maybe_dirs  = ( '~', $ENV{HOME} );
-        @maybe_files = ( '.ackrc' );
-    }
-    CHECK_FILES: for my $maybe_dir ( grep { defined } @maybe_dirs ) {
-        for my $maybe_file ( @maybe_files ) {
-            my $file = "$maybe_dir/$maybe_file";
-            my @lines = read_rcfile( $file );
-            if ( @lines ) {
-                push( @arg_sources, $file, \@lines );
-                last CHECK_FILES;
-            }
-        }
+    my $finder = App::Ack::ConfigFinder->new;
+    my @files  = $finder->find_config_files;
+    foreach my $file ( @files) {
+        my @lines = read_rcfile($file);
+        push ( @arg_sources, $file, \@lines ) if @lines;
     }
 
     if ( $ENV{ACK_OPTIONS} ) {
