@@ -67,6 +67,8 @@ still be merely collections of command-line switches.
 
 * Drop the --binary and --skipped flags, and some default filetypes.
 
+* Drop support for $ACKRC.
+
 
 # Features that may get added in ack 2.1+, but definitely not in 2.0
 
