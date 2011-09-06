@@ -46,10 +46,11 @@ sub find_config_files {
             Win32::GetFolderPath(Win32::CSIDL_APPDATA),
         );
     } else {
-        push @config_files, '/etc/ackrc' unless $App::Ack::is_windows;
-        if(defined(my $home = $ENV{'HOME'})) {
-            push @config_files, File::Spec->catfile($home, '.ackrc');
-        }
+        push @config_files, '/etc/ackrc';
+    }
+
+    if(defined(my $home = $ENV{'HOME'})) {
+        push @config_files, File::Spec->catfile($home, '.ackrc');
     }
 
     my @dirs = File::Spec->splitdir(Cwd::getcwd());
