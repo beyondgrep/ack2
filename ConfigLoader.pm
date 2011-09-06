@@ -26,7 +26,8 @@ sub new {
     my %options;
 
     Getopt::Long::GetOptions(
-        'A|after-context=i' => \$options{'after_context'},
+        'A|after-context=i'  => \$options{'after_context'},
+        'B|before-context=i' => \$options{'before_context'},
     );
 
     return bless {
