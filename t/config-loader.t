@@ -2,9 +2,7 @@ use strict;
 use warnings;
 use lib 't';
 
-use Test::Builder;
-use Test::Deep::NoTest qw(cmp_details deep_diag); # ditch this eventually (?)
-use Test::More tests => 6;
+use Test::More tests => 11;
 
 use Carp qw(croak);
 use File::Temp;
@@ -31,7 +29,7 @@ sub test_loader {
     my $name = pop if @_ % 2;
     my %opts = @_;
 
-    my $tb = Test::Builder->new;
+    local $Test::Builder::Level += 1;
 
     my ( $env, $argv, $expected_opts, $expected_targets ) =
         delete @opts{qw/env argv expected_opts expected_targets/};
@@ -70,14 +68,8 @@ sub test_loader {
         $got_targets = $loader->targets;
     };
 
-    my $diag_prefix    = 'Options did not match';
-    my ( $ok, $stack ) = cmp_details($got_opts, $expected_opts);
-    if($ok) {
-        $diag_prefix = 'Targets did not match';
-        ( $ok, $stack ) = cmp_details($got_targets, $expected_targets);
-    }
-
-    return $tb->ok($ok, $name) || $tb->diag("$diag_prefix\n" . indent(deep_diag($stack), 2));
+    is_deeply($got_opts, $expected_opts)       or diag "Options did not match";
+    is_deeply($got_targets, $expected_targets) or diag "Targets did not match";
 }
 
 my %defaults = (
