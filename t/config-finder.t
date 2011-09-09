@@ -30,7 +30,7 @@ my $finder;
 sub expect_ackrcs {
     my ( $expected, $name ) = @_;
 
-    local $Test::Builder::Level += 1;
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
 
     my @got  = $finder->find_config_files;
     @$expected = map { realpath($_) } @$expected;

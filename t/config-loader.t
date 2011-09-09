@@ -29,7 +29,7 @@ sub test_loader {
     my $name = pop if @_ % 2;
     my %opts = @_;
 
-    local $Test::Builder::Level += 1;
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
 
     my ( $env, $argv, $expected_opts, $expected_targets ) =
         delete @opts{qw/env argv expected_opts expected_targets/};
