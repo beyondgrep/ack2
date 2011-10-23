@@ -19,8 +19,8 @@ use Getopt::Long ();
 sub process_filter_spec {
     my ( $spec ) = @_;
 
-    if($spec =~ /^(\w+),(.*)/) {
-        return ( $1, [ $2 ] );
+    if($spec =~ /^(\w+),(\w+),(.*)/) {
+        return ( $1, $2 );
     } else {
         Carp::croak "invalid filter specification '$spec'";
     }
@@ -41,9 +41,9 @@ sub process_filetypes {
     my $add_spec = sub {
         my ( undef, $spec ) = @_;
 
-        my ( $name, $filters ) = process_filter_spec($spec);
+        my ( $name, $filter ) = process_filter_spec($spec);
 
-        push @{ $type_filters{$name} }, @$filters;
+        push @{ $type_filters{$name} }, $filter;
 
         $additional_specs{$name} = sub {
             push @{ $opt->{'filters'} }, @{ $type_filters{$name} };
@@ -53,9 +53,9 @@ sub process_filetypes {
     my $set_spec = sub {
         my ( undef, $spec ) = @_;
 
-        my ( $name, $filters ) = process_filter_spec($spec);
+        my ( $name, $filter ) = process_filter_spec($spec);
 
-        $type_filters{$name} = $filters;
+        $type_filters{$name} = [ $filter ];
 
         $additional_specs{$name} = sub {
             push @{ $opt->{'filters'} }, @{ $type_filters{$name} };
