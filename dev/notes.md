@@ -13,3 +13,5 @@
 * Error reporting on arguments has to specify where the argument
 is.  If there's an error in the /etc/ackrc, we need to say that,
 vs. on the command line.
+
+* Clarify the -f/-g/-G relationship
