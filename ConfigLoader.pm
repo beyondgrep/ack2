@@ -16,6 +16,16 @@ use Getopt::Long ();
 
 =cut
 
+sub process_filter_spec {
+    my ( $spec ) = @_;
+
+    if($spec =~ /^(\w+)=/) {
+        return ( $1 );
+    } else {
+        Carp::croak "invalid filter specification '$spec'";
+    }
+}
+
 sub process_filetypes {
     my @arg_sources = @_;
 
