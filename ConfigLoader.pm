@@ -135,17 +135,16 @@ sub process_other {
         %$extra_specs,
     ); # arg_specs
 
-    my @leftovers = @arg_sources;
-
-    while ( @leftovers ) {
-        my ($source_name, $args) = splice( @leftovers, 0, 2 );
+    for(my $i = 0; $i < @arg_sources; $i += 2) {
+        my ($source_name, $args) = @arg_sources[$i, $i + 1];
 
         my $ret;
         if ( ref($args) ) {
             $ret = Getopt::Long::GetOptionsFromArray( $args, %arg_specs );
         }
         else {
-            $ret = Getopt::Long::GetOptionsFromString( $args, %arg_specs );
+            ( $ret, $arg_sources[$i + 1] ) =
+                Getopt::Long::GetOptionsFromString( $args, %arg_specs );
         }
         if ( !$ret ) {
             my $where = $source_name eq 'ARGV' ? 'on command line' : "in $source_name";
