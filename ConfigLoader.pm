@@ -64,7 +64,7 @@ sub process_filetypes {
         }
     }
 
-    return ( \@arg_sources, \%additional_specs );
+    return ( \@arg_sources, \%additional_specs, \%type_filters  );
 }
 
 sub process_other {
@@ -170,7 +170,7 @@ sub process_other {
 }
 
 sub process_args {
-    my ( $arg_sources, $type_specs ) = process_filetypes(@_);
+    my ( $arg_sources, $type_specs, $type_filters ) = process_filetypes(@_);
     my $opt = process_other($type_specs, @$arg_sources);
     while( @$arg_sources ) {
         my ( $source_name, $args ) = splice( @$arg_sources, 0, 2 );
