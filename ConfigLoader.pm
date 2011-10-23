@@ -152,18 +152,30 @@ sub process_other {
         }
     }
 
-    # XXX
-    # At this point, none of the sources should have unparsed args except for @ARGV.
-    # If any sources other than @ARGV have stuff in them, then throw an error.
-    # Otherwise, put what's left from @ARGV source into @ARGV.
-    # Also we need to check on a -- in the middle of a non-ARGV source
+    # XXX We need to check on a -- in the middle of a non-ARGV source
 
     return \%opt;
 }
 
 sub process_args {
     my ( $arg_sources, $type_specs ) = process_filetypes(@_);
-    return process_other($type_specs, @$arg_sources);
+    my $opt = process_other($type_specs, @$arg_sources);
+    while( @$arg_sources ) {
+        my ( $source_name, $args ) = splice( @$arg_sources, 0, 2 );
+
+        # by this point in time, all of our sources should be transformed
+        # into an array ref
+        if( ref($args) ) {
+            if($source_name eq 'ARGV') {
+                @ARGV = @$args;
+            } elsif(@$args) {
+                Carp::croak "source '$source_name' has extra arguments!";
+            }
+        } else {
+            Carp::croak "The impossible has occurred!";
+        };
+    }
+    return $opt;
 }
 
 1;
