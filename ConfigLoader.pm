@@ -16,12 +16,32 @@ use Getopt::Long ();
 
 =cut
 
-sub process_args {
+sub process_filetypes {
+    Getopt::Long::Configure('default'); # start with default options
+    Getopt::Long::Configure(
+        'no_ignore_case',
+        'no_auto_abbrev',
+        'pass_through',
+    );
+    my @types;
+
+    my %type_arg_specs = (
+        'type-add=s' => sub { shift; push @types, shift; },
+        'type-set=s' => sub { shift; push @types, shift; },
+    );
+}
+
+sub process_other {
     my @arg_sources = @_;
+
+    Getopt::Long::Configure('default'); # start with default options
+    Getopt::Long::Configure(
+        'no_ignore_case',
+        'no_auto_abbrev',
+    );
 
     my @idirs;
     my @ifiles;
-    my @types;
 
     my %opt;
     my %arg_specs = (
@@ -89,32 +109,18 @@ sub process_args {
             });
         }, # man sub
     ); # arg_specs
-    my %type_arg_specs = (
-        'type-add=s' => sub { shift; push @types, shift; },
-        'type-set=s' => sub { shift; push @types, shift; },
-    );
-
-    my $parser_for_types = Getopt::Long::Parser->new();
-    $parser_for_types->configure( 'no_ignore_case' );
-    $parser_for_types->configure( 'no_auto_abbrev' );
-    $parser_for_types->configure( 'pass_through' );
-
-    my $parser_for_other = Getopt::Long::Parser->new();
-    $parser_for_other->configure( 'no_ignore_case' );
-    $parser_for_other->configure( 'no_auto_abbrev' );
 
     # XXX Have to update arg_specs based on new types
-
-    my @leftovers;
+    my @leftovers = @arg_sources;
     while ( @leftovers ) {
         my ($source_name, $args) = splice( @leftovers, 0, 2 );
 
         my $ret;
         if ( ref($args) ) {
-            $ret = $parser_for_other->GetOptionsFromArray( $args, %arg_specs );
+            $ret = Getopt::Long::GetOptionsFromArray( $args, %arg_specs );
         }
         else {
-            $ret = $parser_for_other->GetOptionsFromString( $args, %arg_specs );
+            $ret = Getopt::Long::GetOptionsFromString( $args, %arg_specs );
         }
         if ( !$ret ) {
             my $where = $source_name eq 'ARGV' ? 'on command line' : "in $source_name";
@@ -129,6 +135,10 @@ sub process_args {
     # Also we need to check on a -- in the middle of a non-ARGV source
 
     return \%opt;
+}
+
+sub process_args {
+    return process_other(@_);
 }
 
 1;
