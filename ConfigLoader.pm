@@ -36,6 +36,7 @@ sub process_filetypes {
         'pass_through',
     );
     my %additional_specs;
+    my %type_filters;
 
     my $add_spec = sub {
         my ( undef, $spec ) = @_;
