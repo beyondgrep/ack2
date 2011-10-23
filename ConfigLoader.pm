@@ -27,7 +27,7 @@ sub process_filter_spec {
 }
 
 sub process_filetypes {
-    my @arg_sources = @_;
+    my ( $arg_sources ) = @_;
 
     Getopt::Long::Configure('default'); # start with default options
     Getopt::Long::Configure(
@@ -53,23 +53,23 @@ sub process_filetypes {
         'type-set=s' => $set_spec,
     );
 
-    for(my $i = 0; $i < @arg_sources; $i += 2) {
-        my ( $source_name, $args ) = @arg_sources[ $i, $i + 1];
+    for(my $i = 0; $i < @$arg_sources; $i += 2) {
+        my ( $source_name, $args ) = @$arg_sources[ $i, $i + 1];
 
         if( ref($args) ) {
-            # $args are modified in place, so no need to munge @arg_sources
+            # $args are modified in place, so no need to munge $arg_sources
             Getopt::Long::GetOptionsFromArray($args, %type_arg_specs);
         } else {
-            ( undef, $arg_sources[$i + 1] ) =
+            ( undef, $arg_sources->[$i + 1] ) =
                 Getopt::Long::GetOptionsFromString($args, %type_arg_specs);
         }
     }
 
-    return ( \@arg_sources, \%additional_specs, \%type_filters  );
+    return ( \%additional_specs, \%type_filters  );
 }
 
 sub process_other {
-    my ( $extra_specs, @arg_sources ) = @_;
+    my ( $extra_specs, $arg_sources ) = @_;
 
     Getopt::Long::Configure('default'); # start with default options
     Getopt::Long::Configure(
@@ -148,15 +148,15 @@ sub process_other {
         %$extra_specs,
     ); # arg_specs
 
-    for(my $i = 0; $i < @arg_sources; $i += 2) {
-        my ($source_name, $args) = @arg_sources[$i, $i + 1];
+    for(my $i = 0; $i < @$arg_sources; $i += 2) {
+        my ($source_name, $args) = @$arg_sources[$i, $i + 1];
 
         my $ret;
         if ( ref($args) ) {
             $ret = Getopt::Long::GetOptionsFromArray( $args, %arg_specs );
         }
         else {
-            ( $ret, $arg_sources[$i + 1] ) =
+            ( $ret, $arg_sources->[$i + 1] ) =
                 Getopt::Long::GetOptionsFromString( $args, %arg_specs );
         }
         if ( !$ret ) {
@@ -171,8 +171,10 @@ sub process_other {
 }
 
 sub process_args {
-    my ( $arg_sources, $type_specs, $type_filters ) = process_filetypes(@_);
-    my $opt = process_other($type_specs, @$arg_sources);
+    my $arg_sources = \@_;
+
+    my ( $type_specs, $type_filters ) = process_filetypes($arg_sources);
+    my $opt = process_other($type_specs, $arg_sources);
     while( @$arg_sources ) {
         my ( $source_name, $args ) = splice( @$arg_sources, 0, 2 );
 
