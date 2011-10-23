@@ -17,22 +17,46 @@ use Getopt::Long ();
 =cut
 
 sub process_filetypes {
+    my @arg_sources = @_;
+
     Getopt::Long::Configure('default'); # start with default options
     Getopt::Long::Configure(
         'no_ignore_case',
         'no_auto_abbrev',
         'pass_through',
     );
-    my @types;
+    my %additional_specs;
+
+    my $add_spec = sub {
+        my ( undef, $spec ) = @_;
+
+        if($spec =~ /^(\w+)=/) {
+            $additional_specs{$1} = sub {}; # XXX do something about it!
+        }
+    };
 
     my %type_arg_specs = (
-        'type-add=s' => sub { shift; push @types, shift; },
-        'type-set=s' => sub { shift; push @types, shift; },
+        'type-add=s' => $add_spec,
+        'type-set=s' => $add_spec, # XXX same as add (for now)
     );
+
+    for(my $i = 0; $i < @arg_sources; $i += 2) {
+        my ( $source_name, $args ) = @arg_sources[ $i, $i + 1];
+
+        if( ref($args) ) {
+            # $args are modified in place, so no need to munge @arg_sources
+            Getopt::Long::GetOptionsFromArray($args, %type_arg_specs);
+        } else {
+            ( undef, $arg_sources[$i + 1] ) =
+                Getopt::Long::GetOptionsFromString($args, %type_arg_specs);
+        }
+    }
+
+    return ( \@arg_sources, \%additional_specs );
 }
 
 sub process_other {
-    my @arg_sources = @_;
+    my ( $extra_specs, @arg_sources ) = @_;
 
     Getopt::Long::Configure('default'); # start with default options
     Getopt::Long::Configure(
@@ -108,10 +132,11 @@ sub process_other {
                 -exitval => 0,
             });
         }, # man sub
+        %$extra_specs,
     ); # arg_specs
 
-    # XXX Have to update arg_specs based on new types
     my @leftovers = @arg_sources;
+
     while ( @leftovers ) {
         my ($source_name, $args) = splice( @leftovers, 0, 2 );
 
@@ -138,7 +163,8 @@ sub process_other {
 }
 
 sub process_args {
-    return process_other(@_);
+    my ( $arg_sources, $type_specs ) = process_filetypes(@_);
+    return process_other($type_specs, @$arg_sources);
 }
 
 1;
