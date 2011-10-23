@@ -40,14 +40,16 @@ sub process_filetypes {
     my $add_spec = sub {
         my ( undef, $spec ) = @_;
 
-        if($spec =~ /^(\w+)=/) {
-            $additional_specs{$1} = sub {}; # XXX do something about it!
-        }
+    };
+
+    my $set_spec = sub {
+        my ( undef, $spec ) = @_;
+
     };
 
     my %type_arg_specs = (
         'type-add=s' => $add_spec,
-        'type-set=s' => $add_spec, # XXX same as add (for now)
+        'type-set=s' => $set_spec,
     );
 
     for(my $i = 0; $i < @arg_sources; $i += 2) {
