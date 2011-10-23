@@ -203,7 +203,7 @@ sub process_args {
             Carp::croak "The impossible has occurred!";
         };
     }
-    return ( \%opt, $type_filters );
+    return \%opt;
 }
 
 1;
