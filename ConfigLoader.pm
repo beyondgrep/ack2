@@ -3,6 +3,7 @@ package App::Ack::ConfigLoader;
 use strict;
 use warnings;
 
+use App::Ack::Filter;
 use Carp ();
 use Getopt::Long ();
 
@@ -20,7 +21,7 @@ sub process_filter_spec {
     my ( $spec ) = @_;
 
     if($spec =~ /^(\w+),(\w+),(.*)/) {
-        return ( $1, $2 );
+        return ( $1, App::Ack::Filter->create_filter($2, split(/,/, $3)) );
     } else {
         Carp::croak "invalid filter specification '$spec'";
     }
