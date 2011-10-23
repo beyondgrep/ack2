@@ -6,6 +6,8 @@ use strict;
 use warnings;
 use ExtUtils::MakeMaker;
 
+my $debug_mode = (grep { $_ eq '--debug' } @ARGV) ? 'DEBUG=1': 'DEBUG=0';
+
 my %parms = (
     NAME                => 'ack',
     AUTHOR              => 'Andy Lester <andy@petdance.com>',
@@ -64,7 +66,7 @@ sub MY::top_targets {
 
 sub MY::postamble {
     my $file_next_filename = qx(perldoc -l File::Next);
-    my $postamble = <<'MAKE_FRAG';
+    my $postamble = sprintf(<<'MAKE_FRAG', $debug_mode);
 ACK              = ack
 BASE             = ack-base
 ACK_PM           = Ack.pm
@@ -90,7 +92,7 @@ tags:
 		--languages=Perl --langmap=Perl:+.t \
 
 $(ACK) : $(BASE) $(ALL_PM) squash Makefile
-	$(PERL) squash ack-base File::Next $(ALL_PM) > $(ACK)
+	%s $(PERL) squash ack-base File::Next $(ALL_PM) > $(ACK)
 	$(CHMOD) 0755 $(ACK)
 	$(PERL_T) -c $(ACK)
 
