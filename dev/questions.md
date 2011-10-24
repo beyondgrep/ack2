@@ -57,3 +57,14 @@ familiar with FatPacker.
 **A:** I know of it, but unless there's benefit in using it over
 the existing squash, I don't want to use it.  The only external
 dependency ack should have is on File::Next.
+
+**Q:** When adding a filetype to match a file by extension, regex, or name,
+is this comparison case-insenstive? (I'm assuming yes)
+
+**Q:** How about a --check option to just validate that your ackrc is ok?
+
+**Q:** Some people might want to install ack via cpan, and sometimes in a perlbrew.  Maybe
+another "global" location is needed for ackrc in cases like these? (see File::ShareDir)
+
+**Q:** Should we worry about character encodings in filenames when adding file types? I'm thinking
+this might be something for Ack 2.1.
