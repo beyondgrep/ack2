@@ -12,6 +12,7 @@ my @test_files = (
     'foo',
     'testpl',
     'test.txt',
+    'test.pl.txt',
 );
 
 my $filter = eval {
