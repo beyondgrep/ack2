@@ -7,6 +7,45 @@ use Carp ();
 
 my %filter_types;
 
+=head1 NAME
+
+App::Ack::Filter - Filter objects to filter files
+
+=head1 SYNOPSIS
+
+  # filter implementation
+  package MyFilter;
+
+  use strict;
+  use warnings;
+  use base 'App::Ack::Filter';
+
+  sub filter {
+    my ( $self, @filenames ) = @_;
+  }
+
+  App::Ack::Filter->register_filter('mine' => __PACKAGE__);
+
+  1;
+
+  # users
+  App::Ack::Filter->create_filter('mine', @args);
+
+
+=head1 DESCRIPTION
+
+App::Ack::Filter implementations are responsible for filtering filenames
+to be searched.
+
+=head1 METHODS
+
+=head2 App::Ack:Filter->create_filter($type, @args)
+
+Creates a filter implementation, registered as C<$type>.  C<@args>
+are provided as additional arguments to the implementation's constructor.
+
+=cut
+
 sub create_filter {
     my ( undef, $type, @args ) = @_;
 
@@ -17,10 +56,24 @@ sub create_filter {
     }
 }
 
+=head2 App::Ack:Filter->register_filter($type, $package)
+
+Registers a filter implementation package C<$package> under
+the name C<$type>.
+
+=cut
+
 sub register_filter {
     my ( undef, $type, $package ) = @_;
 
     $filter_types{$type} = $package;
 }
+
+=head2 $filter->filter(@filenames)
+
+Must be implementated by filter implementations.  Returns
+a list of filenames that apply to the filter.
+
+=cut
 
 1;
