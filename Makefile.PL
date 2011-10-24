@@ -21,6 +21,7 @@ my %parms = (
         'ConfigFinder.pm' => '$(INST_LIBDIR)/App/Ack/ConfigFinder.pm',
         'ConfigLoader.pm' => '$(INST_LIBDIR)/App/Ack/ConfigLoader.pm',
         'Filter.pm'       => '$(INST_LIBDIR)/App/Ack/Filter.pm',
+        'Extension.pm'    => '$(INST_LIBDIR)/App/Ack/Filter/Extension.pm',
     },
     EXE_FILES           => [ 'ack' ],
     PREREQ_PM => {
@@ -77,7 +78,8 @@ BASIC_PM         = Basic.pm
 CONFIG_FINDER_PM = ConfigFinder.pm
 CONFIG_LOADER_PM = ConfigLoader.pm
 FILTER_PM        = Filter.pm
-ALL_PM           = $(ACK_PM) $(RESOURCE_PM) $(RESOURCES_PM) $(BASIC_PM) $(FILTER_PM) $(CONFIG_FINDER_PM) $(CONFIG_LOADER_PM)
+EXT_FILTER_PM    = Extension.pm
+ALL_PM           = $(ACK_PM) $(RESOURCE_PM) $(RESOURCES_PM) $(BASIC_PM) $(FILTER_PM) $(EXT_FILTER_PM) $(CONFIG_FINDER_PM) $(CONFIG_LOADER_PM)
 ACK_HELP         = ack-help.txt
 ACK_HELP_TYPES   = ack-help-types.txt
 ACK_HELP_DIRS    = ack-help-dirs.txt
