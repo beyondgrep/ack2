@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 2;
+use Test::More tests => 3;
 
 use_ok 'App::Ack::Filter::Extension';
 
@@ -23,8 +23,8 @@ ok $filter, 'creating an "ext" filter should succeed' or diag($@);
 
 my @matches = $filter->filter(@test_files);
 
-is_deeply @matches, [
+is_deeply \@matches, [
     'test.pl',
     'test.pod',
     't/filter.t',
-];
+], 'only the given extensions should be matched';
