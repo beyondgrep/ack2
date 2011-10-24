@@ -189,22 +189,24 @@ sub process_args {
 
     my ( $type_specs, $type_filters ) = process_filetypes(\%opt, $arg_sources);
     process_other(\%opt, $type_specs, $arg_sources);
-    while( @$arg_sources ) {
+    while ( @{$arg_sources} ) {
         my ( $source_name, $args ) = splice( @$arg_sources, 0, 2 );
 
         # by this point in time, all of our sources should be transformed
         # into an array ref
-        if( ref($args) ) {
-            if($source_name eq 'ARGV') {
-                @ARGV = @$args;
-            } elsif(@$args) {
+        if ( ref($args) ) {
+            if ($source_name eq 'ARGV') {
+                @ARGV = @{$args};
+            }
+            elsif (@{$args}) {
                 Carp::croak "source '$source_name' has extra arguments!";
             }
-        } else {
+        }
+        else {
             Carp::croak "The impossible has occurred!";
         };
     }
     return \%opt;
 }
 
-1;
+1; # End of App::Ack::ConfigLoader
