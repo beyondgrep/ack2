@@ -19,7 +19,7 @@ my $filter = eval {
     App::Ack::Filter->create_filter('ext', 'pl', 'pod', 't');
 };
 
-ok $filter, 'creating an "ext" filter should succeed';
+ok $filter, 'creating an "ext" filter should succeed' or diag($@);
 
 my @matches = $filter->filter(@test_files);
 
