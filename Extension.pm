@@ -21,6 +21,8 @@ sub filter {
     return grep { /$re/ } @filenames;
 }
 
-App::Ack::Filter->register_filter(ext => __PACKAGE__);
+BEGIN {
+    App::Ack::Filter->register_filter(ext => __PACKAGE__);
+}
 
 1;
