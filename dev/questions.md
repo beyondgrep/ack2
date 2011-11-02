@@ -68,3 +68,5 @@ another "global" location is needed for ackrc in cases like these? (see File::Sh
 
 **Q:** Should we worry about character encodings in filenames when adding file types? I'm thinking
 this might be something for Ack 2.1.
+
+**Q:** Should --noenv be allowed in config files/ACK\_OPTIONS (ex. if I want to skip my .ackrc, or /etc/ackrc)
