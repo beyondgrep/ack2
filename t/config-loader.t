@@ -6,7 +6,6 @@ use Test::More;
 
 use Carp qw(croak);
 use File::Temp;
-use MockFinder;
 
 sub indent {
     my ( $s ) = @_;
@@ -14,6 +13,18 @@ sub indent {
     $s =~ s/^/  /gm;
 
     return $s;
+}
+
+sub read_file {
+    my ( $filename ) = @_;
+
+    local $/;
+
+    my $fh;
+    open $fh, '<', $filename or croak $!;
+    my $contents = <$fh>;
+    close $fh;
+    return $contents;
 }
 
 sub write_file {
@@ -57,15 +68,17 @@ sub test_loader {
 
     do {
         local $ENV{'ACK_OPTIONS'} = $env;
-        local @ARGV               = @$argv;
+        local @ARGV;
 
-        my $finder = MockFinder->new(map { $_->filename } @tempfiles);
-        my $loader = App::Ack::ConfigLoader->new(
-            finder => $finder,
+        my @arg_sources = (
+            ARGV => $argv,
+            map {
+                $_ => read_file($_),
+            } @files,
         );
 
-        $got_opts    = $loader->options;
-        $got_targets = $loader->targets;
+        $got_opts    = App::Ack::ConfigLoader::process_args( @arg_sources );
+        $got_targets = [ @ARGV ];
     };
 
     is_deeply($got_opts, $expected_opts)       or diag "Options did not match";
@@ -73,8 +86,37 @@ sub test_loader {
 }
 
 my %defaults = (
-    after_context  => undef,
-    before_context => undef,
+    after_context     => undef,
+    all               => undef,
+    before_context    => undef,
+    'break'           => undef,
+    color             => undef,
+    column            => undef,
+    count             => undef,
+    f                 => undef,
+    flush             => undef,
+    follow            => undef,
+    G                 => undef,
+    h                 => undef,
+    H                 => undef,
+    heading           => undef,
+    i                 => undef,
+    invert_file_match => undef,
+    l                 => undef,
+    m                 => undef,
+    n                 => undef,
+    output            => undef,
+    pager             => undef,
+    passthru          => undef,
+    print0            => undef,
+    Q                 => undef,
+    regex             => undef,
+    show_types        => undef,
+    smart_case        => undef,
+    sort_files        => undef,
+    u                 => undef,
+    v                 => undef,
+    w                 => undef,
 );
 
 use_ok 'App::Ack::ConfigLoader';
