@@ -22,12 +22,15 @@ close $fh;
 
 do {
     local @ARGV = ('-f', 'lib/');
+    local $ENV{'ACK_OPTIONS'} = '--perl';
 
     my @sources = App::Ack::retrieve_arg_sources();
 
-    is_deeply [ @sources[-4..-1] ], [
+    is_deeply [ @sources[-6..-1] ], [
         File::Spec->catfile($tempdir->dirname, '.ackrc'),
         [ '--type-add=perl,ext,pl,t,pm' ],
+        'ACK_OPTIONS',
+        '--perl',
         'ARGV',
         ['-f', 'lib/'],
     ];
@@ -35,6 +38,7 @@ do {
 
 do {
     local @ARGV = ('--noenv', '-f', 'lib/');
+    local $ENV{'ACK_OPTIONS'} = '--perl';
 
     my @sources = App::Ack::retrieve_arg_sources();
 
