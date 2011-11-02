@@ -1,6 +1,8 @@
 use strict;
 use warnings;
+use lib 't';
 
+use MockResource;
 use Test::More tests => 3;
 
 use_ok 'App::Ack::Filter::Extension';
@@ -21,7 +23,13 @@ my $filter = eval {
 
 ok $filter, 'creating an "ext" filter should succeed' or diag($@);
 
-my @matches = $filter->filter(@test_files);
+my @matches = map {
+    $_->name
+} grep {
+    $filter->filter($_)
+} map {
+    MockResource->new($_)
+} @test_files;
 
 is_deeply \@matches, [
     'test.pl',
