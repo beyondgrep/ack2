@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use lib 't';
 
-use Test::More tests => 11;
+use Test::More;
 
 use Carp qw(croak);
 use File::Temp;
@@ -107,3 +107,5 @@ test_loader
     expected_opts    => { %defaults, before_context => 15 },
     expected_targets => [],
     '--before-context should set before_context';
+
+done_testing;
