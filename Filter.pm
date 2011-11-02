@@ -21,7 +21,7 @@ App::Ack::Filter - Filter objects to filter files
   use base 'App::Ack::Filter';
 
   sub filter {
-    my ( $self, @filenames ) = @_;
+    my ( $self, $resource ) = @_;
   }
 
   App::Ack::Filter->register_filter('mine' => __PACKAGE__);
@@ -69,10 +69,10 @@ sub register_filter {
     $filter_types{$type} = $package;
 }
 
-=head2 $filter->filter(@filenames)
+=head2 $filter->filter($resource)
 
 Must be implementated by filter implementations.  Returns
-a list of filenames that apply to the filter.
+true if the filter passes, false otherwise.
 
 =cut
 

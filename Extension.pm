@@ -14,11 +14,11 @@ sub new {
 };
 
 sub filter {
-    my ( $self, @filenames ) = @_;
+    my ( $self, $resource ) = @_;
 
     my $re = $$self;
 
-    return grep { /$re/ } @filenames;
+    return $resource->name =~ /$re/;
 }
 
 BEGIN {
