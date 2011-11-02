@@ -6,6 +6,8 @@ use strict;
 use warnings;
 use ExtUtils::MakeMaker;
 
+my $debug_mode = (grep { $_ eq '--debug' } @ARGV) ? 'DEBUG=1': 'DEBUG=0';
+
 my %parms = (
     NAME                => 'ack',
     AUTHOR              => 'Andy Lester <andy@petdance.com>',
@@ -18,6 +20,8 @@ my %parms = (
         'Basic.pm'        => '$(INST_LIBDIR)/App/Ack/Resource/Basic.pm',
         'ConfigFinder.pm' => '$(INST_LIBDIR)/App/Ack/ConfigFinder.pm',
         'ConfigLoader.pm' => '$(INST_LIBDIR)/App/Ack/ConfigLoader.pm',
+        'Filter.pm'       => '$(INST_LIBDIR)/App/Ack/Filter.pm',
+        'Extension.pm'    => '$(INST_LIBDIR)/App/Ack/Filter/Extension.pm',
     },
     EXE_FILES           => [ 'ack' ],
     PREREQ_PM => {
@@ -42,9 +46,9 @@ if ( $ExtUtils::MakeMaker::VERSION ge '6.46' ) {
     $parms{META_MERGE} = {
         resources => {
             homepage    => 'http://betterthangrep.com/',
-            bugtracker  => 'http://github.com/petdance/ack',
+            bugtracker  => 'http://github.com/petdance/ack2',
             license     => 'http://www.opensource.org/licenses/artistic-license-2.0.php',
-            repository  => 'git://github.com/petdance/ack.git',
+            repository  => 'git://github.com/petdance/ack2.git',
             MailingList => 'http://groups.google.com/group/ack-users',
         }
     };
@@ -64,7 +68,7 @@ sub MY::top_targets {
 
 sub MY::postamble {
     my $file_next_filename = qx(perldoc -l File::Next);
-    my $postamble = <<'MAKE_FRAG';
+    my $postamble = sprintf(<<'MAKE_FRAG', $debug_mode);
 ACK              = ack
 BASE             = ack-base
 ACK_PM           = Ack.pm
@@ -73,7 +77,9 @@ RESOURCES_PM     = Resources.pm
 BASIC_PM         = Basic.pm
 CONFIG_FINDER_PM = ConfigFinder.pm
 CONFIG_LOADER_PM = ConfigLoader.pm
-ALL_PM           = $(ACK_PM) $(RESOURCE_PM) $(RESOURCES_PM) $(BASIC_PM) $(CONFIG_FINDER_PM) $(CONFIG_LOADER_PM)
+FILTER_PM        = Filter.pm
+EXT_FILTER_PM    = Extension.pm
+ALL_PM           = $(ACK_PM) $(RESOURCE_PM) $(RESOURCES_PM) $(BASIC_PM) $(FILTER_PM) $(EXT_FILTER_PM) $(CONFIG_FINDER_PM) $(CONFIG_LOADER_PM)
 ACK_HELP         = ack-help.txt
 ACK_HELP_TYPES   = ack-help-types.txt
 ACK_HELP_DIRS    = ack-help-dirs.txt
@@ -90,7 +96,7 @@ tags:
 		--languages=Perl --langmap=Perl:+.t \
 
 $(ACK) : $(BASE) $(ALL_PM) squash Makefile
-	$(PERL) squash ack-base File::Next $(ALL_PM) > $(ACK)
+	%s $(PERL) squash ack-base File::Next $(ALL_PM) > $(ACK)
 	$(CHMOD) 0755 $(ACK)
 	$(PERL_T) -c $(ACK)
 

@@ -17,4 +17,6 @@
 
 * Create file/resource objects
 
-# Make sure all previous command options are supported (this clearly needs fleshing out)
+## Make sure all previous command options are supported (this clearly needs fleshing out)
+
+## Add --check option (for verifying that your ackrc is OK)

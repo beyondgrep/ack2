@@ -49,8 +49,6 @@ sub main {
     my @arg_sources = App::Ack::retrieve_arg_sources();
 
     my $opt = App::Ack::ConfigLoader::process_args( @arg_sources );
-    {use Data::Show; show( $opt, \@ARGV )}
-    exit;
 
     my $resources;
     if ( $App::Ack::is_filter_mode ) {
@@ -64,7 +62,11 @@ sub main {
     App::Ack::set_up_pager( $opt->{pager} ) if defined $opt->{pager};
 
     my $nmatches = 0;
+RESOURCES:
     while ( my $resource = $resources->next ) {
+        foreach my $filter (@{ $opt->{'filters'} }) {
+            next RESOURCES unless $filter->filter($resource);
+        }
         if ( $opt->{f} ) {
             print $resource->name, "\n";
             ++$nmatches;

@@ -13,11 +13,13 @@ my $NO_EDIT_COMMENT = <<'EOCOMMENT';
 # Please DO NOT EDIT or send patches for it.
 #
 # Please take a look at the source from
-# http://github.com/petdance/ack
+# http://github.com/petdance/ack2
 # and submit patches against the individual files
 # that build ack.
 #
 EOCOMMENT
+
+my $debug_mode = $ENV{'DEBUG'};
 
 my $code;
 for my $arg ( @ARGV ) {
@@ -30,12 +32,23 @@ for my $arg ( @ARGV ) {
 
     warn "Reading $filename\n";
     open( my $fh, '<', $filename ) or die "Can't open $filename: $!";
-    my $in_pod = 0;
+    my $was_in_pod = 0;
+    my $in_pod     = 0;
+    $code .= "#line 1 '$filename'\n" if $debug_mode && $filename ne 'ack-base';
     while ( <$fh> ) {
         next if /^use (File::Next|App::Ack)/;
 
+        if($was_in_pod && !$in_pod) {
+            $was_in_pod = 0;
+            if($debug_mode) {
+                $code .= "#line $. '$filename'\n";
+            }
+        }
+
         # See if we're in module POD blocks
         if ( $filename ne 'ack-base' ) {
+            $was_in_pod = $in_pod;
+
             if ( /^=(\w+)/ ) {
                 $in_pod = ($1 ne 'cut');
                 next;
