@@ -4,6 +4,7 @@ use warnings;
 use strict;
 
 use App::Ack::ConfigFinder;
+use Getopt::Long;
 use File::Next 0.40;
 
 =head1 NAME
@@ -73,15 +74,28 @@ Reads the contents of the .ackrc file and returns the arguments.
 sub retrieve_arg_sources {
     my @arg_sources;
 
-    my $finder = App::Ack::ConfigFinder->new;
-    my @files  = $finder->find_config_files;
-    foreach my $file ( @files) {
-        my @lines = read_rcfile($file);
-        push ( @arg_sources, $file, \@lines ) if @lines;
-    }
+    my $noenv = 0;
 
-    if ( $ENV{ACK_OPTIONS} ) {
-        push( @arg_sources, 'ACK_OPTIONS', $ENV{ACK_OPTIONS} );
+    Getopt::Long::Configure('default');
+    Getopt::Long::Configure('pass_through');
+
+    GetOptions(
+        'noenv' => \$noenv,
+    );
+
+    Getopt::Long::Configure('default');
+
+    unless($noenv) {
+        my $finder = App::Ack::ConfigFinder->new;
+        my @files  = $finder->find_config_files;
+        foreach my $file ( @files) {
+            my @lines = read_rcfile($file);
+            push ( @arg_sources, $file, \@lines ) if @lines;
+        }
+
+        if ( $ENV{ACK_OPTIONS} ) {
+            push( @arg_sources, 'ACK_OPTIONS', $ENV{ACK_OPTIONS} );
+        }
     }
 
     push( @arg_sources, 'ARGV', [ @ARGV ] );
