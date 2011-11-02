@@ -1,0 +1,34 @@
+[-CodeLayout::ProhibitParensWithBuiltins]
+[CodeLayout::ProhibitHardTabs]
+allow_leading_tabs = 0
+[-CodeLayout::RequireTidyCode]
+# Never works for me.
+
+[-ControlStructures::ProhibitPostfixControls]
+
+[-Documentation::RequirePodAtEnd]
+[-Documentation::RequirePodSections]
+
+[-ErrorHandling::RequireCarping]
+
+[-InputOutput::ProhibitInteractiveTest]
+[-InputOutput::ProhibitBacktickOperators]
+[-InputOutput::RequireCheckedSyscalls]
+functions = open opendir read readline readdir close closedir
+
+[-Miscellanea::RequireRcsKeywords]
+
+[-Modules::RequireVersionVar]
+
+[-RegularExpressions::RequireExtendedFormatting]
+[-RegularExpressions::RequireLineBoundaryMatching]
+
+[-Subroutines::RequireArgUnpacking]
+
+[-ValuesAndExpressions::ProhibitNoisyQuotes]
+[-ValuesAndExpressions::ProhibitEmptyQuotes]
+[-ValuesAndExpressions::ProhibitMagicNumbers]
+
+
+[-Variables::ProhibitPackageVars]
+[-Variables::ProhibitPunctuationVars]

@@ -1,0 +1,25 @@
+--maximum-line-length=120
+--indent-columns=4
+--preserve-line-endings
+--no-tabs
+
+--continuation-indentation=4
+
+--paren-tightness=1
+--brace-tightness=1
+--block-brace-tightness=0
+--square-bracket-tightness=1
+--space-keyword-paren
+--nocuddled-else
+--opening-token-right
+--delete-old-newlines
+--comma-arrow-breakpoints=0
+--nobreak-at-old-ternary-breakpoints
+
+--noblanks-before-comments
+--blanks-before-subs
+--blanks-before-blocks
+
+-asc   # allows perltidy to add a ';' when missing (default)
+-dsm   # allows perltidy to delete an unnecessary ';'  (default)
+
