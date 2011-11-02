@@ -21,7 +21,7 @@ ACKRC
 close $fh;
 
 do {
-    local @ARGV = ('-f');
+    local @ARGV = ('-f', 'lib/');
 
     my @sources = App::Ack::retrieve_arg_sources();
 
@@ -29,18 +29,18 @@ do {
         File::Spec->catfile($tempdir->dirname, '.ackrc'),
         [ '--type-add=perl,ext,pl,t,pm' ],
         'ARGV',
-        ['-f'],
+        ['-f', 'lib/'],
     ];
 };
 
 do {
-    local @ARGV = ('--noenv', '-f');
+    local @ARGV = ('--noenv', '-f', 'lib/');
 
     my @sources = App::Ack::retrieve_arg_sources();
 
     is_deeply \@sources, [
         'ARGV',
-        ['-f'],
+        ['-f', 'lib/'],
     ];
 };
 
