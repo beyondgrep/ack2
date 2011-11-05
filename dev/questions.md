@@ -58,6 +58,8 @@ familiar with FatPacker.
 the existing squash, I don't want to use it.  The only external
 dependency ack should have is on File::Next.
 
+# More Questions (2011-11-04)
+
 **Q:** When adding a filetype to match a file by extension, regex, or name,
 is this comparison case-insenstive? (I'm assuming yes)
 
