@@ -72,3 +72,5 @@ another "global" location is needed for ackrc in cases like these? (see File::Sh
 this might be something for Ack 2.1.
 
 **Q:** Should --noenv be allowed in config files/ACK\_OPTIONS (ex. if I want to skip my .ackrc, or /etc/ackrc)
+
+**Q:** Should we have a --config option for manually adding config files?
