@@ -57,6 +57,8 @@ DEFAULT_DIR_EXCLUSIONS: {
         't/swamp/not-an-#emacs-workfile#',
     );
 
+    my @expected; # XXX FILL ME IN!
+
     my @args = ( '-f', 't/swamp' );
     my @results = run_ack( @args, @files );
 
