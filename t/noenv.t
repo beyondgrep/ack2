@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 
 use App::Ack;
-use Cwd qw(getcwd);
+use Cwd qw(getcwd realpath);
 use File::Spec;
 use File::Temp;
 
@@ -26,8 +26,8 @@ do {
 
     my @sources = App::Ack::retrieve_arg_sources();
 
-    is_deeply [ @sources[-6..-1] ], [
-        File::Spec->catfile($tempdir->dirname, '.ackrc'),
+    is_deeply [ realpath($sources[-6]), @sources[-5..-1] ], [
+        realpath(File::Spec->catfile($tempdir->dirname, '.ackrc')),
         [ '--type-add=perl,ext,pl,t,pm' ],
         'ACK_OPTIONS',
         '--perl',
