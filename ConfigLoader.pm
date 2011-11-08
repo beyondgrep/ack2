@@ -92,9 +92,6 @@ sub process_other {
         'no_auto_abbrev',
     );
 
-    my @idirs;
-    my @ifiles;
-
     my %arg_specs = (
         1                   => sub { $opt->{1} = $opt->{m} = 1 },
         'A|after-context=i' => \$opt->{after_context},
@@ -122,9 +119,9 @@ sub process_other {
         'h|no-filename'     => \$opt->{h},
         'H|with-filename'   => \$opt->{H},
         'i|ignore-case'     => \$opt->{i},
-        'ignore-directory|ignore-dir=s'
-                            => sub { shift; push @idirs,  shift; },
-        'ignore-file=s'     => sub { shift; push @ifiles, shift; },
+        'ignore-directory|ignore-dir=s@' 
+                            => \$opt->{idirs},
+        'ignore-file=s@'    => \$opt->{ifiles},
         'invert-file-match' => \$opt->{invert_file_match},
         'lines=s'           => sub { shift; my $val = shift; push @{$opt->{lines}}, $val },
         'l|files-with-matches'
