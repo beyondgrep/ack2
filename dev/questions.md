@@ -63,14 +63,31 @@ dependency ack should have is on File::Next.
 **Q:** When adding a filetype to match a file by extension, regex, or name,
 is this comparison case-insenstive? (I'm assuming yes)
 
+**A:** I think that we have to go with case-insensitive, yes.  I
+think anything that would rely on something other than that is just
+asking for disaster.
+
 **Q:** How about a --check option to just validate that your ackrc is ok?
+
+**A:** Yes, please.
 
 **Q:** Some people might want to install ack via cpan, and sometimes in a perlbrew.  Maybe
 another "global" location is needed for ackrc in cases like these? (see File::ShareDir)
 
+**A:** We have to have one ackrc to start with.  I don't think we
+want it as a compile-time option or anything like that.  It has to
+be /etc/ackrc, and then overrideable via some environment option.
+
 **Q:** Should we worry about character encodings in filenames when adding file types? I'm thinking
 this might be something for Ack 2.1.
 
+**A:** No, leave for later.
+
 **Q:** Should --noenv be allowed in config files/ACK\_OPTIONS (ex. if I want to skip my .ackrc, or /etc/ackrc)
 
+**A:** No, --noenv should only be allowed on the command line.  We
+should have a test for that.
+
 **Q:** Should we have a --config option for manually adding config files?
+
+**A:** I can imagine a need, but let's not do it if nobody asks for it.
