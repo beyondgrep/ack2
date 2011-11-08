@@ -83,16 +83,10 @@ sub process_filetypes {
     return ( \%additional_specs, \%type_filters  );
 }
 
-sub process_other {
-    my ( $opt, $extra_specs, $arg_sources ) = @_;
+sub get_arg_spec {
+    my ( $opt, $extra_specs ) = @_;
 
-    Getopt::Long::Configure('default'); # start with default options
-    Getopt::Long::Configure(
-        'no_ignore_case',
-        'no_auto_abbrev',
-    );
-
-    my %arg_specs = (
+    return {
         1                   => sub { $opt->{1} = $opt->{m} = 1 },
         'A|after-context=i' => \$opt->{after_context},
         'B|before-context=i'
@@ -156,19 +150,31 @@ sub process_other {
                 -exitval => 0,
             });
         }, # man sub
-        %$extra_specs,
-    ); # arg_specs
+        $extra_specs ? %$extra_specs : (),
+    }; # arg_specs
+}
+
+sub process_other {
+    my ( $opt, $extra_specs, $arg_sources ) = @_;
+
+    Getopt::Long::Configure('default'); # start with default options
+    Getopt::Long::Configure(
+        'no_ignore_case',
+        'no_auto_abbrev',
+    );
+
+    my $arg_specs = get_arg_spec($opt, $extra_specs);
 
     for(my $i = 0; $i < @$arg_sources; $i += 2) {
         my ($source_name, $args) = @$arg_sources[$i, $i + 1];
 
         my $ret;
         if ( ref($args) ) {
-            $ret = Getopt::Long::GetOptionsFromArray( $args, %arg_specs );
+            $ret = Getopt::Long::GetOptionsFromArray( $args, %{$arg_specs} );
         }
         else {
             ( $ret, $arg_sources->[$i + 1] ) =
-                Getopt::Long::GetOptionsFromString( $args, %arg_specs );
+                Getopt::Long::GetOptionsFromString( $args, %{$arg_specs} );
         }
         if ( !$ret ) {
             my $where = $source_name eq 'ARGV' ? 'on command line' : "in $source_name";
