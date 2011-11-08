@@ -6,6 +6,7 @@ use warnings;
 use App::Ack::Filter;
 use Carp ();
 use Getopt::Long ();
+use Text::ParseWords ();
 
 =head1 App::Ack::ConfigLoader
 
@@ -185,10 +186,85 @@ sub process_other {
     # XXX We need to check on a -- in the middle of a non-ARGV source
 }
 
+sub should_dump_options {
+    my ( $sources ) = @_;
+
+    for(my $i = 0; $i < @{$sources}; $i += 2) {
+        my ( $name, $options ) = @{$sources}[$i, $i + 1];
+        if($name eq 'ARGV') {
+            my $dump;
+            Getopt::Long::Configure('default', 'pass_through');
+            Getopt::Long::GetOptionsFromArray($options,
+                'dump' => \$dump,
+            );
+            return $dump;
+        }
+    }
+    return;
+}
+
+sub explode_sources {
+    my ( $sources ) = @_;
+
+    my @new_sources;
+
+    Getopt::Long::Configure('default', 'pass_through');
+
+    my %opt;
+    my $arg_spec = get_arg_spec(\%opt);
+
+    my $add_type = sub {
+        my ( undef, $arg ) = @_;
+
+        ( $arg ) = split /,/, $arg;
+        $arg_spec->{$arg} = sub {};
+    };
+
+    for(my $i = 0; $i < @{$sources}; $i += 2) {
+        my ( $name, $options ) = @{$sources}[$i, $i + 1];
+        unless(ref($options) eq 'ARRAY') {
+            $sources->[$i + 1] = $options =
+                [ Text::ParseWords::shellwords($options) ];
+        }
+        for(my $j = 0; $j < @{$options}; $j++) {
+            next unless $options->[$j] =~ /^-/;
+            my @chunk = ( $options->[$j] );
+            push @chunk, $options->[$j] while ++$j < @{$options} && $options->[$j] !~ /^-/;
+            $j--;
+
+            my @copy = @chunk;
+            Getopt::Long::GetOptionsFromArray(\@chunk,
+                'type-add=s' => $add_type,
+                'type-set=s' => $add_type,
+            );
+            Getopt::Long::GetOptionsFromArray(\@chunk, %{$arg_spec});
+
+            splice @copy, -1 * @chunk if @chunk; # XXX explain this
+            push @new_sources, $name, \@copy;
+        }
+    }
+
+    return \@new_sources;
+}
+
+sub dump_options {
+    my ( $sources ) = @_;
+
+    $sources = explode_sources($sources);
+
+    use Data::Dumper::Concise;
+    print Dumper($sources);
+}
+
 sub process_args {
     my $arg_sources = \@_;
 
     my %opt;
+
+    if(should_dump_options($arg_sources)) {
+        dump_options($arg_sources);
+        exit(0);
+    }
 
     my ( $type_specs, $type_filters ) = process_filetypes(\%opt, $arg_sources);
     process_other(\%opt, $type_specs, $arg_sources);
