@@ -88,7 +88,7 @@ PERL_T           = $(PERL) -T
 .PHONY: tags critic
 
 tags:
-	ctags -f tags --recurse --totals \
+	/usr/local/bin/ctags -f tags --recurse --totals \
 		--exclude=blib \
 		--exclude=.git \
 		--exclude='*~' \
