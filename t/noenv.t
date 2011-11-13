@@ -4,23 +4,22 @@ use warnings;
 use Test::More;
 
 use App::Ack;
-use Cwd qw(getcwd realpath);
-use File::Spec;
-use File::Temp;
+use Cwd qw( realpath );
+use File::Spec ();
+use File::Temp ();
 
-my $wd      = getcwd;
 my $tempdir = File::Temp->newdir;
 
-chdir $tempdir->dirname;
+chdir $tempdir->dirname or die;
 
 my $fh;
 open $fh, '>', '.ackrc';
-print $fh <<ACKRC;
+print {$fh} <<'ACKRC';
 --type-add=perl,ext,pl,t,pm
 ACKRC
 close $fh;
 
-do {
+subtest 'without --noenv' => sub {
     local @ARGV = ('-f', 'lib/');
     local $ENV{'ACK_OPTIONS'} = '--perl';
 
@@ -36,7 +35,7 @@ do {
     ];
 };
 
-do {
+subtest 'with --noenv' => sub {
     local @ARGV = ('--noenv', '-f', 'lib/');
     local $ENV{'ACK_OPTIONS'} = '--perl';
 
@@ -48,6 +47,4 @@ do {
     ];
 };
 
-chdir $wd;
-
-done_testing;
+done_testing();
