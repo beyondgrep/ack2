@@ -247,13 +247,42 @@ sub explode_sources {
     return \@new_sources;
 }
 
+sub compare_opts {
+    my ( $a, $b ) = @_;
+
+    my $first_a = $a->[0];
+    my $first_b = $b->[0];
+
+    $first_a =~ s/^--?//;
+    $first_b =~ s/^--?//;
+
+    return $first_a cmp $first_b;
+}
+
 sub dump_options {
     my ( $sources ) = @_;
 
     $sources = explode_sources($sources);
 
-    use Data::Dumper::Concise;
-    print Dumper($sources);
+    my %opts_by_source;
+    my @source_names;
+
+    for(my $i = 0; $i < @{$sources}; $i += 2) {
+        my ( $name, $contents ) = @{$sources}[$i, $i + 1];
+        unless($opts_by_source{$name}) {
+            $opts_by_source{$name} = [];
+            push @source_names, $name;
+        }
+        push @{$opts_by_source{$name}}, $contents;
+    }
+
+    foreach my $name (@source_names) {
+        my $contents = $opts_by_source{$name};
+
+        print $name, "\n";
+        print '=' x length($name), "\n";
+        print "  ", join(' ', @{$_}), "\n" foreach sort { compare_opts($a, $b) } @{$contents};
+    }
 }
 
 sub process_args {
