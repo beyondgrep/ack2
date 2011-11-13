@@ -4,9 +4,11 @@ use warnings;
 use Test::More tests => 2;
 
 use App::Ack;
-use Cwd qw( realpath );
+use Cwd qw( realpath getcwd );
 use File::Spec ();
 use File::Temp ();
+
+my $wd = getcwd() or die;
 
 my $tempdir = File::Temp->newdir;
 
@@ -46,5 +48,7 @@ subtest 'with --noenv' => sub {
         ['-f', 'lib/'],
     ], 'Short list comes back because of --noenv' );
 };
+
+chdir $wd or die; # Go back to the original directory to avoid warnings
 
 done_testing();
