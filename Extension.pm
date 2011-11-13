@@ -8,7 +8,7 @@ sub new {
     my ( $class, @extensions ) = @_;
 
     my $exts = join('|', map { "\Q$_\E"} @extensions);
-    my $re   = qr/\.(?:$exts)$/;
+    my $re   = qr/\.(?:$exts)$/i;
 
     return bless \$re, $class;
 };
