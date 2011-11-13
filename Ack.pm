@@ -74,31 +74,39 @@ Reads the contents of the .ackrc file and returns the arguments.
 sub retrieve_arg_sources {
     my @arg_sources;
 
-    my $noenv = 0;
+    my $noenv;
+    my $ackrc;
 
     Getopt::Long::Configure('default');
     Getopt::Long::Configure('pass_through');
 
     GetOptions(
-        'noenv' => \$noenv,
+        'noenv'   => \$noenv,
+        'ackrc=s' => \$ackrc,
     );
 
     Getopt::Long::Configure('default');
 
-    unless($noenv) {
-        my $finder = App::Ack::ConfigFinder->new;
-        my @files  = $finder->find_config_files;
-        foreach my $file ( @files) {
-            my @lines = read_rcfile($file);
-            push ( @arg_sources, $file, \@lines ) if @lines;
-        }
+    my @files;
 
-        if ( $ENV{ACK_OPTIONS} ) {
-            push( @arg_sources, 'ACK_OPTIONS', $ENV{ACK_OPTIONS} );
-        }
+    if ( !$noenv ) {
+        my $finder = App::Ack::ConfigFinder->new;
+        @files  = $finder->find_config_files;
+    }
+    if ( $ackrc ) {
+        push( @files, $ackrc );
     }
 
-    push( @arg_sources, 'ARGV', [ @ARGV ] );
+    foreach my $file ( @files) {
+        my @lines = read_rcfile($file);
+        push ( @arg_sources, $file, \@lines ) if @lines;
+    }
+
+    if ( $ENV{ACK_OPTIONS} && !$noenv ) {
+        push( @arg_sources, 'ACK_OPTIONS' => $ENV{ACK_OPTIONS} );
+    }
+
+    push( @arg_sources, 'ARGV' => [ @ARGV ] );
 
     return @arg_sources;
 }
@@ -318,7 +326,8 @@ File finding:
 File inclusion/exclusion:
 
 Miscellaneous:
-  --noenv               Ignore environment variables and ~/.ackrc
+  --noenv               Ignore environment variables and global ackrc files
+  --ackrc=filename      Specify an ackrc file to use
   --help                This help
   --man                 Man page
   --version             Display version & copyright

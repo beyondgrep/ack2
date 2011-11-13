@@ -96,11 +96,10 @@ DEFAULT_DIR_EXCLUSIONS: {
         t/swamp/sample.rake
         t/swamp/solution8.tar
         ),
-        't/swamp/#emacs-workfile.pl#',
         't/swamp/not-an-#emacs-workfile#',
     );
 
-    my @args = ( '-f', 't/swamp' );
+    my @args = qw( --ackrc=./ackrc -f t/swamp );
     my @results = run_ack( @args );
 
     sets_match( \@results, \@expected );
