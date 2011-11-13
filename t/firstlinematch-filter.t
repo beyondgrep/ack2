@@ -22,5 +22,5 @@ filter_test(
         't/swamp/perl.pm',
         't/swamp/blib/ignore.pm',
         't/swamp/blib/ignore.pod',
-    ], 'only the given extensions should be matched'
+    ], 'only files with "perl" in their first line should be matched'
 );
