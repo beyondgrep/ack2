@@ -24,6 +24,7 @@ my %parms = (
         'Extension.pm'      => '$(INST_LIBDIR)/App/Ack/Filter/Extension.pm',
         'FirstLineMatch.pm' => '$(INST_LIBDIR)/App/Ack/Filter/FirstLineMatch.pm',
         'Is.pm'             => '$(INST_LIBDIR)/App/Ack/Filter/Is.pm',
+        'Match.pm'          => '$(INST_LIBDIR)/App/Ack/Filter/Match.pm',
     },
     EXE_FILES           => [ 'ack' ],
     PREREQ_PM => {
@@ -83,7 +84,8 @@ FILTER_PM        = Filter.pm
 EXT_FILTER_PM    = Extension.pm
 FIRST_FILTER_PM  = FirstLineMatch.pm
 IS_FILTER_PM     = Is.pm
-ALL_PM           = $(ACK_PM) $(RESOURCE_PM) $(RESOURCES_PM) $(BASIC_PM) $(FILTER_PM) $(EXT_FILTER_PM) $(FIRST_FILTER_PM) $(IS_FILTER_PM) $(CONFIG_FINDER_PM) $(CONFIG_LOADER_PM)
+MATCH_FILTER_PM  = Match.pm
+ALL_PM           = $(ACK_PM) $(RESOURCE_PM) $(RESOURCES_PM) $(BASIC_PM) $(FILTER_PM) $(EXT_FILTER_PM) $(FIRST_FILTER_PM) $(IS_FILTER_PM) $(MATCH_FILTER_PM) $(CONFIG_FINDER_PM) $(CONFIG_LOADER_PM)
 ACK_HELP         = ack-help.txt
 ACK_HELP_TYPES   = ack-help-types.txt
 ACK_HELP_DIRS    = ack-help-dirs.txt
