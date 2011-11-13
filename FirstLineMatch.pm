@@ -15,7 +15,7 @@ sub new {
 sub filter {
     my ( $self, $resource ) = @_;
 
-    my $re         = $$self;
+    my $re = $$self;
 
     local $_;
     $resource->next_text;
