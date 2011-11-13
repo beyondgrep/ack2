@@ -13,23 +13,23 @@ App::Ack::Filter - Filter objects to filter files
 
 =head1 SYNOPSIS
 
-  # filter implementation
-  package MyFilter;
+    # filter implementation
+    package MyFilter;
 
-  use strict;
-  use warnings;
-  use base 'App::Ack::Filter';
+    use strict;
+    use warnings;
+    use base 'App::Ack::Filter';
 
-  sub filter {
-    my ( $self, $resource ) = @_;
-  }
+    sub filter {
+        my ( $self, $resource ) = @_;
+    }
 
-  App::Ack::Filter->register_filter('mine' => __PACKAGE__);
+    App::Ack::Filter->register_filter('mine' => __PACKAGE__);
 
-  1;
+    1;
 
-  # users
-  App::Ack::Filter->create_filter('mine', @args);
+    # users
+    App::Ack::Filter->create_filter('mine', @args);
 
 
 =head1 DESCRIPTION
