@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use base 'App::Ack::Filter';
 
-use File::Spec;
+use File::Spec ();
 
 sub new {
     my ( $class, $filename ) = @_;
