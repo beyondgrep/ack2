@@ -49,11 +49,10 @@ are provided as additional arguments to the implementation's constructor.
 sub create_filter {
     my ( undef, $type, @args ) = @_;
 
-    if(my $package = $filter_types{$type}) {
+    if ( my $package = $filter_types{$type} ) {
         return $package->new(@args);
-    } else {
-        Carp::croak "Unknown filter type '$type'";
     }
+    Carp::croak "Unknown filter type '$type'";
 }
 
 =head2 App::Ack:Filter->register_filter($type, $package)
