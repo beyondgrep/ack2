@@ -91,3 +91,13 @@ should have a test for that.
 **Q:** Should we have a --config option for manually adding config files?
 
 **A:** I can imagine a need, but let's not do it if nobody asks for it.
+
+# Ignore Rules (2011-11-13)
+
+**Q:** When a user (or config file) says --ignore-dir=CVS, I'm assuming Ack ignores ./CVS/, ./foo/CVS/, ./foo/bar/CVS/, etc?
+
+**Q:** When a user (or config file) says --ignore-dir=t/swamp, does Ack ignore ./t/swamp/, ./foo/t/swamp/, ./foo/bar/t/swamp/, etc?
+
+**Q:** When a user (or config file) says --ignore-file=foo.txt, does Ack ignore ./foo.txt, ./bar/foo.txt, etc?
+
+**Q:** When a user (or config file) says --ignore-file=docs/foo.txt, does Ack ignore ./docs/foo.txt, ./bar/docs/foo.txt, etc?
