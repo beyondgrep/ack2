@@ -7,6 +7,10 @@ use 5.8.0;
 
 use App::Ack ();
 use App::Ack::ConfigLoader ();
+use App::Ack::Filter ();
+use App::Ack::Resource::Basic ();
+
+use Carp ();
 
 our $VERSION = '2.00a01';
 # Check http://betterthangrep.com/ for updates
@@ -51,10 +55,23 @@ sub _compile_descend_filter {
     my $idirs = $opt->{idirs};
     return unless $idirs && @{$idirs};
 
-    my %idirs_set = map { $_ => 1 } @{$idirs};
+    my @idirs_filters = map {
+        my $filter;
+
+        if($_ =~ /^(\w+),(.*)/) {
+            $filter = App::Ack::Filter->create_filter($1, split(/,/, $2));
+        } else {
+            Carp::croak "invalid filter specification '$_'";
+        }
+        $filter;
+    } @{$idirs};
 
     return sub {
-        return !exists $idirs_set{$_};
+        my $resource = App::Ack::Resource::Basic->new($File::Next::dir);
+        foreach my $filter (@idirs_filters) {
+            return 0 if $filter->filter($resource);
+        }
+        return 1;
     };
 }
 
