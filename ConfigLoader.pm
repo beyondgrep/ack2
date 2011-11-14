@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use App::Ack::Filter;
+use App::Ack::Filter::Default;
 use Carp ();
 use Getopt::Long ();
 use Text::ParseWords ();
@@ -313,6 +314,11 @@ sub process_args {
         else {
             Carp::croak "The impossible has occurred!";
         };
+    }
+    # throw the default filter in if no others are selected
+    my $filters = $opt{'filters'};
+    unless($filters && @{$filters}) {
+        $opt{'filters'} = [ App::Ack::Filter::Default->new() ];
     }
     return \%opt;
 }
