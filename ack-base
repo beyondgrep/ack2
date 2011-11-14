@@ -45,6 +45,19 @@ MAIN: {
     main();
 }
 
+sub _compile_descend_filter {
+    my ( $opt ) = @_;
+
+    my $idirs = $opt->{idirs};
+    return unless $idirs && @{$idirs};
+
+    my %idirs_set = map { $_ => 1 } @{$idirs};
+
+    return sub {
+        return !exists $idirs_set{$_};
+    };
+}
+
 sub main {
     my @arg_sources = App::Ack::retrieve_arg_sources();
 
@@ -57,6 +70,9 @@ sub main {
     else {
         my @start = @ARGV;
         @start = ('.') if not @start;
+
+        $opt->{descend_filter} = _compile_descend_filter($opt);
+
         $resources = App::Ack::Resources->from_argv( $opt, \@start );
     }
     App::Ack::set_up_pager( $opt->{pager} ) if defined $opt->{pager};
