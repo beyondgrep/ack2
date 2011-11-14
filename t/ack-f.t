@@ -90,11 +90,9 @@ DEFAULT_DIR_EXCLUSIONS: {
         t/swamp/perl.pl
         t/swamp/perl.pm
         t/swamp/perl.pod
-        t/swamp/perl.tar.gz
         t/swamp/pipe-stress-freaks.F
         t/swamp/Rakefile
         t/swamp/sample.rake
-        t/swamp/solution8.tar
         ),
         't/swamp/not-an-#emacs-workfile#',
     );
