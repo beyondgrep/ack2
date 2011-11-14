@@ -75,6 +75,32 @@ sub _compile_descend_filter {
     };
 }
 
+sub _compile_file_filter {
+    my ( $opt ) = @_;
+
+    my $ifiles = $opt->{ifiles};
+    return unless $ifiles && @{$ifiles};
+
+    my @ifiles_filters = map {
+        my $filter;
+
+        if($_ =~ /^(\w+),(.*)/) {
+            $filter = App::Ack::Filter->create_filter($1, split(/,/, $2));
+        } else {
+            Carp::croak "invalid filter specification '$_'";
+        }
+        $filter
+    } @{$ifiles};
+
+    return sub {
+        my $resource = App::Ack::Resource::Basic->new($File::Next::name);
+        foreach my $filter (@ifiles_filters) {
+            return 0 if $filter->filter($resource);
+        }
+        return 1;
+    };
+}
+
 sub main {
     my @arg_sources = App::Ack::retrieve_arg_sources();
 
@@ -88,6 +114,7 @@ sub main {
         my @start = @ARGV;
         @start = ('.') if not @start;
 
+        $opt->{file_filter}    = _compile_file_filter($opt);
         $opt->{descend_filter} = _compile_descend_filter($opt);
 
         $resources = App::Ack::Resources->from_argv( $opt, \@start );
