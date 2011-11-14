@@ -70,7 +70,7 @@
 --ignore-file=match,/~$/
 
 # Emacs swap files
---ignore-file=match,/#.+#$/
+--ignore-file=match,/^#.+#$/
 
 # vi/vim swap files
 --ignore-file=match,/[._].*\.swp$/
