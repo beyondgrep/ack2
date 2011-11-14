@@ -32,8 +32,8 @@ sub from_argv {
 
     $self->{iter} =
         File::Next::files( {
-            file_filter     => $file_filter,
-            descend_filter  => $descend_filter,
+            file_filter     => $opt->{file_filter},
+            descend_filter  => $opt->{descend_filter},
             error_handler   => sub { my $msg = shift; App::Ack::warn( $msg ) },
             sort_files      => $opt->{sort_files},
             follow_symlinks => $opt->{follow},
