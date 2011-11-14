@@ -7,6 +7,8 @@ use Test::More;
 use Carp qw(croak);
 use File::Temp;
 
+use App::Ack::Filter::Default;
+
 sub indent {
     my ( $s ) = @_;
 
@@ -94,6 +96,7 @@ my %defaults = (
     column            => undef,
     count             => undef,
     f                 => undef,
+    filters           => [ App::Ack::Filter::Default->new ],
     flush             => undef,
     follow            => undef,
     G                 => undef,
