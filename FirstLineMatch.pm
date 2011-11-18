@@ -23,7 +23,7 @@ sub filter {
     my $re = $$self;
 
     local $_;
-    $resource->next_text;
+    return unless $resource->next_text;
 
     return /$re/;
 }
