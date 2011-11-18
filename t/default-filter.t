@@ -63,5 +63,7 @@ filter_test(
         't/swamp/groceries/subdir/fruit',
         't/swamp/groceries/subdir/junk',
         't/swamp/groceries/subdir/meat',
+        't/swamp/stuff.cmake',
+        't/swamp/CMakeLists.txt',
     ], 'only non-binary files should be matched'
 );

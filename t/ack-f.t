@@ -47,6 +47,8 @@ DEFAULT_DIR_EXCLUSIONS: {
         t/swamp/pipe-stress-freaks.F
         t/swamp/Rakefile
         t/swamp/sample.rake
+        t/swamp/stuff.cmake
+        t/swamp/CMakeLists.txt
         ),
         't/swamp/not-an-#emacs-workfile#',
     );

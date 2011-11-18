@@ -79,6 +79,8 @@ UNFILTERED: {
             t/swamp/Rakefile
             t/swamp/sample.rake
             t/swamp/solution8.tar
+            t/swamp/stuff.cmake
+            t/swamp/CMakeLists.txt
             ),
             't/swamp/#emacs-workfile.pl#',
             't/swamp/not-an-#emacs-workfile#',
