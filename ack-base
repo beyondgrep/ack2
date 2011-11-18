@@ -124,8 +124,18 @@ sub main {
     my $nmatches = 0;
 RESOURCES:
     while ( my $resource = $resources->next ) {
-        foreach my $filter (@{ $opt->{'filters'} }) {
-            next RESOURCES unless $filter->filter($resource);
+        if(my $filters = $opt->{'filters'}) {
+            if(@{$filters}) {
+                my $match_found = 0;
+
+                foreach my $filter (@{$filters}) {
+                    if($filter->filter($resource)) {
+                        $match_found = 1;
+                        last;
+                    }
+                }
+                next RESOURCES unless $match_found;
+            }
         }
         if ( $opt->{f} ) {
             print $resource->name, "\n";
