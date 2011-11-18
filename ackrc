@@ -83,8 +83,7 @@
 --type-add=perl,ext,pod
 --type-add=perl,ext,pl
 --type-add=perl,ext,pm
---type-add=perl,match,/perl.*/
---type-add=perl,firstlinematch,/perl/
+--type-add=perl,firstlinematch,/perl($|\s)/
 
 --type-add=make,ext,mk
 --type-add=make,ext,mak
