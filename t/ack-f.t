@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 2;
+use Test::More tests => 4;
 
 use lib 't';
 use Util;
@@ -55,6 +55,27 @@ DEFAULT_DIR_EXCLUSIONS: {
 
     my @args = qw( --ackrc=./ackrc -f t/swamp );
     my @results = run_ack( @args );
+
+    sets_match( \@results, \@expected );
+}
+
+COMBINED_FILTERS: {
+    my @expected = qw(
+        t/swamp/0
+        t/swamp/perl.pm
+        t/swamp/Rakefile
+        t/swamp/options.pl
+        t/swamp/options.pl.bak
+        t/swamp/perl-without-extension
+        t/swamp/perl.cgi
+        t/swamp/Makefile.PL
+        t/swamp/perl-test.t
+        t/swamp/perl.pl
+        t/swamp/perl.pod
+    );
+
+    my @args = qw( --ackrc=./ackrc -f t/swamp --perl --rake );
+    my @results = run_ack ( @args );
 
     sets_match( \@results, \@expected );
 }
