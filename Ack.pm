@@ -545,9 +545,10 @@ sub print_matches_in_resource {
 
     my $re       = $opt->{regex};
     my $nmatches = 0;
+    my $invert   = $opt->{v};
 
     while($resource->next_text()) {
-        if(/$re/) {
+        if($invert ? !/$re/ : /$re/) {
             App::Ack::print(join(':', $resource->name, $., $_));
             $nmatches++;
         }
