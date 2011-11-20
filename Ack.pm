@@ -543,14 +543,16 @@ sub exit_from_ack {
 sub print_matches_in_resource {
     my ( $resource, $opt ) = @_;
 
-    my $re = $opt->{regex};
+    my $re       = $opt->{regex};
+    my $nmatches = 0;
 
     while($resource->next_text()) {
         if(/$re/) {
             App::Ack::print(join(':', $resource->name, $., $_));
+            $nmatches++;
         }
     }
-    return 0;
+    return $nmatches;
 }
 
 
