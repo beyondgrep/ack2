@@ -112,6 +112,7 @@ sub main {
     }
     else {
         my @start = @ARGV;
+        $opt->{regex} = shift @ARGV;
         @start = ('.') if not @start;
 
         $opt->{file_filter}    = _compile_file_filter($opt);
@@ -141,6 +142,7 @@ RESOURCES:
             print $resource->name, "\n";
             ++$nmatches;
         }
+        $nmatches += App::Ack::print_matches_in_resource( $resource, $opt );
 #       elsif ( $opt->{g} ) {
 #           if ( App::Ack::resource_name_matches( $resource, $opt ) ) {
 #               print $resource->name, "\n";
@@ -154,7 +156,6 @@ RESOURCES:
 #           }
 #       }
 #       else {
-#           $nmatches += App::Ack::print_matches_in_resource( $resources, $opt );
 #       }
     }
 

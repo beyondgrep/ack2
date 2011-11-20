@@ -540,6 +540,19 @@ sub exit_from_ack {
     exit $rc;
 }
 
+sub print_matches_in_resource {
+    my ( $resource, $opt ) = @_;
+
+    my $re = $opt->{regex};
+
+    while($resource->next_text()) {
+        if(/$re/) {
+            App::Ack::print(join(':', $resource->name, $., $_));
+        }
+    }
+    return 0;
+}
+
 
 =head1 COPYRIGHT & LICENSE
 
