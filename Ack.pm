@@ -568,7 +568,6 @@ sub resource_has_match {
 
     my $re          = $opt->{regex};
     my $nmatches    = 0;
-    my $invert      = $opt->{v};
     my $ignore_case = $opt->{i};
 
     if($ignore_case) {
@@ -576,7 +575,7 @@ sub resource_has_match {
     }
 
     while($resource->next_text()) {
-        if($invert ? !/$re/ : /$re/) {
+        if(/$re/) {
             return 1;
         }
     }

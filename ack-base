@@ -143,7 +143,10 @@ RESOURCES:
             ++$nmatches;
         }
         if( $opt->{l} ) {
-            if( App::Ack::resource_has_match( $resource, $opt ) ) {
+            my $matches = App::Ack::resource_has_match( $resource, $opt );
+            my $invert  = $opt->{v};
+
+            if( $invert ? !$matches : $matches ) {
                 print $resource->name, "\n";
                 ++$nmatches;
             }
