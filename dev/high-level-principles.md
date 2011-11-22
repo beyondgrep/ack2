@@ -20,6 +20,7 @@ ack will still:
 ack 2.0 will:
 
 * by default search all text files, as identified by Perl's -T operator
+    * We will no longer have a `-a` switch.
 
 * improved flexibility in defining filetypes
     * glob-style matching (`*.pl` identifies a Perl file)
@@ -68,6 +69,8 @@ still be merely collections of command-line switches.
 * Drop the --binary and --skipped flags, and some default filetypes.
 
 * Drop support for $ACKRC.
+
+* No more -a or -u flags.
 
 
 # Features that may get added in ack 2.1+, but definitely not in 2.0
