@@ -184,14 +184,6 @@ RESOURCES:
 #               ++$nmatches;
 #           }
 #       }
-#       elsif ( $opt->{l} || $opt->{count} ) {
-#           if ( App::Ack::resource_has_match( $resource, $opt ) ) {
-#               print $resource->name, "\n";
-#               ++$nmatches;
-#           }
-#       }
-#       else {
-#       }
     }
 
     close $App::Ack::fh;
