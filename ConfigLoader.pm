@@ -161,8 +161,8 @@ sub process_other {
 
     Getopt::Long::Configure('default'); # start with default options
     Getopt::Long::Configure(
+        'bundling',
         'no_ignore_case',
-        'no_auto_abbrev',
     );
 
     my $arg_specs = get_arg_spec($opt, $extra_specs);
