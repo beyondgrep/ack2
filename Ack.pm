@@ -541,60 +541,12 @@ sub exit_from_ack {
     exit $rc;
 }
 
-sub print_matches_in_resource {
-    my ( $resource, $opt ) = @_;
-
-    my $re             = $opt->{regex};
-    my $nmatches       = 0;
-    my $invert         = $opt->{v};
-    my $ignore_case    = $opt->{i};
-    my $print_filename = $opt->{H} && !$opt->{h};
-
-    if($ignore_case) {
-        $re = qr/$re/i;
-    }
-
-    while($resource->next_text()) {
-        if($invert ? !/$re/ : /$re/) {
-            my @line_parts;
-            if($print_filename) {
-                push @line_parts, $resource->name, $.;
-            }
-            push @line_parts, $_;
-            App::Ack::print(join(':', @line_parts));
-            $nmatches++;
-        }
-    }
-    return $nmatches;
-}
-
-sub count_matches_in_resource {
-    my ( $resource, $opt ) = @_;
-
-    my $re             = $opt->{regex};
-    my $nmatches       = 0;
-    my $invert         = $opt->{v};
-    my $ignore_case    = $opt->{i};
-
-    if($ignore_case) {
-        $re = qr/$re/i;
-    }
-
-    while($resource->next_text()) {
-        if($invert ? !/$re/ : /$re/) {
-            $nmatches++;
-        }
-    }
-    return $nmatches;
-}
-
-# XXX there can be a lot of duplicate logic between
-# this sub and print_matches_in_resource
-sub resource_has_match {
-    my ( $resource, $opt ) = @_;
+sub process_matches {
+    my ( $resource, $opt, $func ) = @_;
 
     my $re          = $opt->{regex};
     my $nmatches    = 0;
+    my $invert      = $opt->{v};
     my $ignore_case = $opt->{i};
 
     if($ignore_case) {
@@ -602,11 +554,44 @@ sub resource_has_match {
     }
 
     while($resource->next_text()) {
-        if(/$re/) {
-            return 1;
+        if($invert ? !/$re/ : /$re/) {
+            $func->($_) if $func;
+            $nmatches++;
         }
     }
-    return;
+
+    return $nmatches;
+}
+
+sub print_matches_in_resource {
+    my ( $resource, $opt ) = @_;
+
+    my $print_filename = $opt->{H} && !$opt->{h};
+
+    return process_matches($resource, $opt, sub {
+        my ( $matching_line ) = @_;
+
+        my @line_parts;
+        if($print_filename) {
+            push @line_parts, $resource->name, $.; # XXX should we pass $. in?
+        }
+        push @line_parts, $matching_line;
+        App::Ack::print(join(':', @line_parts));
+    });
+}
+
+sub count_matches_in_resource {
+    my ( $resource, $opt ) = @_;
+
+    return process_matches($resource, $opt);
+}
+
+sub resource_has_match {
+    my ( $resource, $opt ) = @_;
+
+    local $opt->{v} = 0;
+
+    return count_matches_in_resource($resource, $opt) > 0;
 }
 
 
