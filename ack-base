@@ -148,6 +148,7 @@ RESOURCES:
             }
         }
         if ( $opt->{f} ) {
+            # XXX printing should probably happen inside of App::Ack
             print $resource->name, "\n";
             ++$nmatches;
         }
@@ -155,9 +156,11 @@ RESOURCES:
             my $matches_for_this_file = App::Ack::count_matches_in_resource( $resource, $opt );
             if( !$opt->{l} || $matches_for_this_file > 0) {
                 if($print_filenames) {
+                    # XXX printing should probably happen inside of App::Ack
                     print $resource->name, ':', $matches_for_this_file, "\n";
                 }
                 else {
+                    # XXX printing should probably happen inside of App::Ack
                     print $matches_for_this_file, "\n";
                 }
             }
@@ -167,6 +170,7 @@ RESOURCES:
             my $invert  = $opt->{v};
 
             if( $invert ? !$matches : $matches ) {
+                # XXX printing should probably happen inside of App::Ack
                 print $resource->name, "\n";
                 ++$nmatches;
             }
