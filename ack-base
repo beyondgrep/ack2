@@ -134,6 +134,8 @@ sub main {
     my $nmatches = 0;
 RESOURCES:
     while ( my $resource = $resources->next ) {
+        # XXX this variable name combined with what we're trying
+        # to do makes no sense.
         if(!$App::Ack::is_filter_mode && (my $filters = $opt->{'filters'})) {
             if(@{$filters}) {
                 my $match_found = 0;
