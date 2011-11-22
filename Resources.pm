@@ -42,6 +42,25 @@ sub from_argv {
     return $self;
 }
 
+sub from_stdin {
+    my $class = shift;
+    my $opt   = shift;
+
+    my $self  = bless {}, $class;
+
+    my $has_been_called = 0;
+
+    $self->{iter} = sub {
+        unless($has_been_called) {
+            $has_been_called = 1;
+            return '-';
+        }
+        return;
+    };
+
+    return $self;
+}
+
 sub next {
     my $self = shift;
 
