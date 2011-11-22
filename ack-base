@@ -108,7 +108,8 @@ sub main {
 
     my $resources;
     if ( $App::Ack::is_filter_mode ) {
-        # XXX $resources = App::Ack::resources_iterator_for_standard_input_only();
+        $resources    = App::Ack::Resources->from_stdin( $opt );
+        $opt->{regex} = shift @ARGV;
     }
     else {
         unless( $opt->{f} ) {
