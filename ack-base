@@ -151,6 +151,11 @@ RESOURCES:
             }
         }
         if ( $opt->{f} ) {
+            if( my $re = $opt->{G} ) {
+                unless($resource->name =~ /$re/) {
+                    next RESOURCES;
+                }
+            }
             # XXX printing should probably happen inside of App::Ack
             print $resource->name, "\n";
             ++$nmatches;
