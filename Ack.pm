@@ -79,6 +79,7 @@ sub retrieve_arg_sources {
 
     Getopt::Long::Configure('default');
     Getopt::Long::Configure('pass_through');
+    Getopt::Long::Configure('no_auto_abbrev');
 
     GetOptions(
         'noenv'   => \$noenv,
