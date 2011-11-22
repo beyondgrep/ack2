@@ -568,6 +568,8 @@ sub print_matches_in_resource {
 
     my $print_filename = $opt->{H} && !$opt->{h};
 
+    my $max_count = $opt->{m} || -1;
+
     return process_matches($resource, $opt, sub {
         my ( $matching_line ) = @_;
 
@@ -577,7 +579,7 @@ sub print_matches_in_resource {
         }
         push @line_parts, $matching_line;
         App::Ack::print(join(':', @line_parts));
-        return 1;
+        return --$max_count != 0;
     });
 }
 
