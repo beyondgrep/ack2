@@ -68,8 +68,6 @@ still be merely collections of command-line switches.
 
 * Drop the --binary and --skipped flags, and some default filetypes.
 
-* Drop support for $ACKRC.
-
 * No more -a or -u flags.
 
 
