@@ -134,7 +134,7 @@ sub main {
     my $nmatches = 0;
 RESOURCES:
     while ( my $resource = $resources->next ) {
-        if(my $filters = $opt->{'filters'}) {
+        if(!$App::Ack::is_filter_mode && (my $filters = $opt->{'filters'})) {
             if(@{$filters}) {
                 my $match_found = 0;
 
