@@ -147,7 +147,8 @@ RESOURCES:
         if ( $opt->{f} ) {
             print $resource->name, "\n";
             ++$nmatches;
-        } elsif( $opt->{l} ) {
+        }
+        elsif( $opt->{l} ) {
             my $matches = App::Ack::resource_has_match( $resource, $opt );
             my $invert  = $opt->{v};
 
@@ -155,7 +156,8 @@ RESOURCES:
                 print $resource->name, "\n";
                 ++$nmatches;
             }
-        } else {
+        }
+        else {
             $nmatches += App::Ack::print_matches_in_resource( $resource, $opt );
         }
 #       elsif ( $opt->{g} ) {
