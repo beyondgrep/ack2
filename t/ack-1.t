@@ -16,7 +16,7 @@ SINGLE_TEXT_MATCH: {
     );
 
     my @files = qw( t/text );
-    my @args = qw( Sue -1 -h --text );
+    my @args = qw( Sue -1 -h );
     my @results = run_ack( @args, @files );
 
     lists_match( \@results, \@expected, 'Looking for first instance of Sue!' );
@@ -29,7 +29,7 @@ DASH_V: {
     );
 
     my @files = qw( t/text/boy-named-sue.txt );
-    my @args = qw( Sue -1 -h -v --text );
+    my @args = qw( Sue -1 -h -v );
     my @results = run_ack( @args, @files );
 
     lists_match( \@results, \@expected, 'Looking for first non-match' );
