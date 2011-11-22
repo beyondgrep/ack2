@@ -2,19 +2,65 @@ use strict;
 use warnings;
 use lib 't';
 
+use File::Next;
 use Util;
-use Test::More tests => 2;
+use Test::More tests => 12;
 
-my @expected = (
-    't/swamp/groceries/fruit:1:apple',
-    't/swamp/groceries/junk:1:apple fritters',
-);
+prep_environment();
 
-my @targets = map {
-    "t/swamp/groceries/$_"
-} qw/fruit junk meat/;
+NO_SWITCHES_ONE_FILE: {
+    my @expected = split( /\n/, <<'EOF' );
+use strict;
+EOF
 
-my @args    = ( qw( --ackrc=./ackrc --nocolor apple ), @targets );
-my @results = run_ack( @args );
+    my @files = qw( t/swamp/options.pl );
+    my @args = qw( strict );
+    my @results = run_ack( @args, @files );
 
-lists_match( \@results, \@expected );
+    lists_match( \@results, \@expected, 'Looking for strict in one file' );
+}
+
+
+NO_SWITCHES_MULTIPLE_FILES: {
+    my $target_file = File::Next::reslash( 't/swamp/options.pl' );
+    my @expected = split( /\n/, <<"EOF" );
+$target_file:2:use strict;
+EOF
+
+    my @files = qw( t/swamp/options.pl t/swamp/pipe-stress-freaks.F );
+    my @args = qw( strict );
+    my @results = run_ack( @args, @files );
+
+    lists_match( \@results, \@expected, 'Looking for strict in multiple files' );
+}
+
+
+WITH_SWITCHES_ONE_FILE: {
+    my $target_file = File::Next::reslash( 't/swamp/options.pl' );
+    for my $opt ( qw( -H --with-filename ) ) {
+        my @expected = split( /\n/, <<"EOF" );
+$target_file:2:use strict;
+EOF
+
+        my @files = qw( t/swamp/options.pl );
+        my @args = ( $opt, qw( strict ) );
+        my @results = run_ack( @args, @files );
+
+        lists_match( \@results, \@expected, "Looking for strict in one file with $opt" );
+    }
+}
+
+
+WITH_SWITCHES_MULTIPLE_FILES: {
+    for my $opt ( qw( -h --no-filename ) ) {
+        my @expected = split( /\n/, <<"EOF" );
+use strict;
+EOF
+
+        my @files = qw( t/swamp/options.pl t/swamp/crystallography-weenies.f );
+        my @args = ( $opt, qw( strict ) );
+        my @results = run_ack( @args, @files );
+
+        lists_match( \@results, \@expected, "Looking for strict in multiple files with $opt" );
+    }
+}
