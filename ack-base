@@ -129,6 +129,8 @@ sub main {
     }
     App::Ack::set_up_pager( $opt->{pager} ) if defined $opt->{pager};
 
+    my $print_filenames = $opt->{H};
+
     my $nmatches = 0;
 RESOURCES:
     while ( my $resource = $resources->next ) {
@@ -148,6 +150,17 @@ RESOURCES:
         if ( $opt->{f} ) {
             print $resource->name, "\n";
             ++$nmatches;
+        }
+        elsif( $opt->{count} ) {
+            my $matches_for_this_file = App::Ack::count_matches_in_resource( $resource, $opt );
+            if( !$opt->{l} || $matches_for_this_file > 0) {
+                if($print_filenames) {
+                    print $resource->name, ':', $matches_for_this_file, "\n";
+                }
+                else {
+                    print $matches_for_this_file, "\n";
+                }
+            }
         }
         elsif( $opt->{l} ) {
             my $matches = App::Ack::resource_has_match( $resource, $opt );
