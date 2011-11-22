@@ -116,14 +116,14 @@ sub main {
             $opt->{regex} = shift @ARGV;
         }
         my @start = @ARGV;
+        unless(@start == 1 && -f $start[0]) {
+            $opt->{H} = 1;
+        }
         @start = ('.') if not @start;
 
         $opt->{file_filter}    = _compile_file_filter($opt);
         $opt->{descend_filter} = _compile_descend_filter($opt);
 
-        if(@start > 1) {
-            $opt->{H} = 1;
-        }
 
         $resources = App::Ack::Resources->from_argv( $opt, \@start );
     }
