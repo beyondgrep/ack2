@@ -92,10 +92,23 @@ sub _compile_file_filter {
         $filter
     } @{$ifiles};
 
+    my $filters = $opt->{'filters'} || [];
+
     return sub {
         my $resource = App::Ack::Resource::Basic->new($File::Next::name);
         foreach my $filter (@ifiles_filters) {
             return 0 if $filter->filter($resource);
+        }
+        if(@{$filters}) {
+            my $match_found = 0;
+
+            foreach my $filter (@{$filters}) {
+                if($filter->filter($resource)) {
+                    $match_found = 1;
+                    last;
+                }
+            }
+            return $match_found;
         }
         return 1;
     };
@@ -137,19 +150,6 @@ RESOURCES:
     while ( my $resource = $resources->next ) {
         # XXX this variable name combined with what we're trying
         # to do makes no sense.
-        if(!$App::Ack::is_filter_mode && (my $filters = $opt->{'filters'})) {
-            if(@{$filters}) {
-                my $match_found = 0;
-
-                foreach my $filter (@{$filters}) {
-                    if($filter->filter($resource)) {
-                        $match_found = 1;
-                        last;
-                    }
-                }
-                next RESOURCES unless $match_found;
-            }
-        }
         if ( $opt->{f} ) {
             if( my $re = $opt->{G} ) {
                 unless($resource->name =~ /$re/) {
