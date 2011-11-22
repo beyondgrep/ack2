@@ -130,6 +130,7 @@ sub main {
     App::Ack::set_up_pager( $opt->{pager} ) if defined $opt->{pager};
 
     my $print_filenames = $opt->{H};
+    my $max_count       = $opt->{m};
 
     my $nmatches = 0;
 RESOURCES:
@@ -153,6 +154,7 @@ RESOURCES:
             # XXX printing should probably happen inside of App::Ack
             print $resource->name, "\n";
             ++$nmatches;
+            last RESOURCES if defined($max_count) && $nmatches >= $max_count;
         }
         elsif( $opt->{count} ) {
             my $matches_for_this_file = App::Ack::count_matches_in_resource( $resource, $opt );
