@@ -555,8 +555,8 @@ sub process_matches {
 
     while($resource->next_text()) {
         if($invert ? !/$re/ : /$re/) {
-            $func->($_) if $func;
             $nmatches++;
+            last if $func && !$func->($_);
         }
     }
 
@@ -577,6 +577,7 @@ sub print_matches_in_resource {
         }
         push @line_parts, $matching_line;
         App::Ack::print(join(':', @line_parts));
+        return 1;
     });
 }
 
