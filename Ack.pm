@@ -568,6 +568,26 @@ sub print_matches_in_resource {
     return $nmatches;
 }
 
+sub count_matches_in_resource {
+    my ( $resource, $opt ) = @_;
+
+    my $re             = $opt->{regex};
+    my $nmatches       = 0;
+    my $invert         = $opt->{v};
+    my $ignore_case    = $opt->{i};
+
+    if($ignore_case) {
+        $re = qr/$re/i;
+    }
+
+    while($resource->next_text()) {
+        if($invert ? !/$re/ : /$re/) {
+            $nmatches++;
+        }
+    }
+    return $nmatches;
+}
+
 # XXX there can be a lot of duplicate logic between
 # this sub and print_matches_in_resource
 sub resource_has_match {
