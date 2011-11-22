@@ -111,12 +111,18 @@ sub main {
         # XXX $resources = App::Ack::resources_iterator_for_standard_input_only();
     }
     else {
+        unless( $opt->{f} ) {
+            $opt->{regex} = shift @ARGV;
+        }
         my @start = @ARGV;
-        $opt->{regex} = shift @ARGV;
         @start = ('.') if not @start;
 
         $opt->{file_filter}    = _compile_file_filter($opt);
         $opt->{descend_filter} = _compile_descend_filter($opt);
+
+        if(@start > 1) {
+            $opt->{H} = 1;
+        }
 
         $resources = App::Ack::Resources->from_argv( $opt, \@start );
     }
@@ -141,8 +147,7 @@ RESOURCES:
         if ( $opt->{f} ) {
             print $resource->name, "\n";
             ++$nmatches;
-        }
-        if( $opt->{l} ) {
+        } elsif( $opt->{l} ) {
             my $matches = App::Ack::resource_has_match( $resource, $opt );
             my $invert  = $opt->{v};
 

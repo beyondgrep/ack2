@@ -543,10 +543,11 @@ sub exit_from_ack {
 sub print_matches_in_resource {
     my ( $resource, $opt ) = @_;
 
-    my $re          = $opt->{regex};
-    my $nmatches    = 0;
-    my $invert      = $opt->{v};
-    my $ignore_case = $opt->{i};
+    my $re             = $opt->{regex};
+    my $nmatches       = 0;
+    my $invert         = $opt->{v};
+    my $ignore_case    = $opt->{i};
+    my $print_filename = $opt->{H} && !$opt->{h};
 
     if($ignore_case) {
         $re = qr/$re/i;
@@ -554,7 +555,12 @@ sub print_matches_in_resource {
 
     while($resource->next_text()) {
         if($invert ? !/$re/ : /$re/) {
-            App::Ack::print(join(':', $resource->name, $., $_));
+            my @line_parts;
+            if($print_filename) {
+                push @line_parts, $resource->name, $.;
+            }
+            push @line_parts, $_;
+            App::Ack::print(join(':', @line_parts));
             $nmatches++;
         }
     }
