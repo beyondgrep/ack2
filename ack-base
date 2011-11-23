@@ -170,6 +170,7 @@ sub main {
 
     my $print_filenames = $opt->{H};
     my $max_count       = $opt->{m};
+    my $ors             = $opt->{print0} ? "\0" : "\n";
 
     my $nmatches = 0;
 RESOURCES:
@@ -178,7 +179,7 @@ RESOURCES:
         # to do makes no sense.
         if ( $opt->{f} ) {
             # XXX printing should probably happen inside of App::Ack
-            print $resource->name, "\n";
+            print $resource->name, $ors;
             ++$nmatches;
             last RESOURCES if defined($max_count) && $nmatches >= $max_count;
         }
@@ -187,11 +188,11 @@ RESOURCES:
             if( !$opt->{l} || $matches_for_this_file > 0) {
                 if($print_filenames) {
                     # XXX printing should probably happen inside of App::Ack
-                    print $resource->name, ':', $matches_for_this_file, "\n";
+                    print $resource->name, ':', $matches_for_this_file, $ors;
                 }
                 else {
                     # XXX printing should probably happen inside of App::Ack
-                    print $matches_for_this_file, "\n";
+                    print $matches_for_this_file, $ors;
                 }
             }
         }
@@ -201,7 +202,7 @@ RESOURCES:
 
             if( $invert ? !$matches : $matches ) {
                 # XXX printing should probably happen inside of App::Ack
-                print $resource->name, "\n";
+                print $resource->name, $ors;
                 ++$nmatches;
             }
         }

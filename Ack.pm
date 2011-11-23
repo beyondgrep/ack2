@@ -569,16 +569,19 @@ sub print_matches_in_resource {
     my $print_filename = $opt->{H} && !$opt->{h};
 
     my $max_count = $opt->{m} || -1;
+    my $ors       = $opt->{print0} ? "\0" : "\n";
 
     return process_matches($resource, $opt, sub {
         my ( $matching_line ) = @_;
+
+        chomp $matching_line;
 
         my @line_parts;
         if($print_filename) {
             push @line_parts, $resource->name, $.; # XXX should we pass $. in?
         }
         push @line_parts, $matching_line;
-        App::Ack::print(join(':', @line_parts));
+        App::Ack::print(join(':', @line_parts), $ors);
         return --$max_count != 0;
     });
 }
