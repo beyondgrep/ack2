@@ -8,11 +8,10 @@ use Test::More tests => 2;
 use_ok 'App::Ack::Filter::FirstLineMatch';
 
 filter_test(
-    [ firstlinematch => '/perl/' ], [
+    [ firstlinematch => '/^#!.*perl/' ], [
         't/swamp/#emacs-workfile.pl#',
         't/swamp/0',
         't/swamp/Makefile.PL',
-        't/swamp/c-header.h',
         't/swamp/options.pl',
         't/swamp/options.pl.bak',
         't/swamp/perl-test.t',
