@@ -98,7 +98,8 @@ sub _compile_file_filter {
         $_ => 1
     } @{$start};
 
-    my $filter_re = $opt->{G} ? qr/$opt->{G}/ : undef;
+    my $filter_re         = $opt->{G} ? qr/$opt->{G}/ : undef;
+    my $invert_file_match = $opt->{invert_file_match};
 
     return sub {
         return 1 if $is_member_of_starting_set{ $File::Next::name };
@@ -120,6 +121,9 @@ sub _compile_file_filter {
         }
         if($match_found && defined($filter_re)) {
             $match_found = $File::Next::name =~ /$filter_re/;
+            if($invert_file_match) {
+                $match_found = !$match_found;
+            }
         }
         return $match_found;
     };
