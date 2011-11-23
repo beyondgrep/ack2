@@ -94,3 +94,5 @@
 
 --type-add=cmake,is,CMakeLists.txt
 --type-add=cmake,ext,.cmake
+
+--type-add=html,ext,html
