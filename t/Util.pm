@@ -119,6 +119,10 @@ sub run_ack_with_stderr {
     if ( !grep { /^--(no)?env$/ } @args ) {
         unshift( @args, '--noenv' );
     }
+    # --ackrc makes sure we pull in "default" definitions
+    if( !grep { /^--ackrc=/ } @args) {
+        unshift( @args, '--ackrc=./ackrc' );
+    }
 
     my $cmd = build_ack_command_line( @args );
 
