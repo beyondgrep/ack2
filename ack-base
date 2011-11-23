@@ -140,7 +140,13 @@ sub main {
         $opt->{regex} = shift @ARGV;
     }
     else {
-        unless( $opt->{f} ) {
+        if( $opt->{f} ) {
+            if( $opt->{regex} ) {
+                App::Ack::warn( "regex ($opt->{regex}) specified with -f or -g" );
+                App::Ack::exit_from_ack( 0 ); # XXX the 0 is misleading
+            }
+        }
+        else {
             $opt->{regex} = shift @ARGV;
         }
         my @start = @ARGV;
