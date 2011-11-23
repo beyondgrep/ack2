@@ -118,8 +118,10 @@ sub _compile_file_filter {
                 }
             }
         }
-        return $match_found &&
-            ( defined($filter_re) ? $File::Next::name =~ /$filter_re/ : 1 );
+        if($match_found && defined($filter_re)) {
+            $match_found = $File::Next::name =~ /$filter_re/;
+        }
+        return $match_found;
     };
 }
 
