@@ -139,6 +139,11 @@ sub main {
             $opt->{H} = 1;
         }
         @start = ('.') if not @start;
+        foreach my $target (@start) {
+            unless(-e $target) {
+                App::Ack::warn( "$target: No such file or directory" );
+            }
+        }
 
         $opt->{file_filter}    = _compile_file_filter($opt, \@start);
         $opt->{descend_filter} = _compile_descend_filter($opt);
