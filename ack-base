@@ -76,7 +76,7 @@ sub _compile_descend_filter {
 }
 
 sub _compile_file_filter {
-    my ( $opt ) = @_;
+    my ( $opt, $start ) = @_;
 
     my $ifiles = $opt->{ifiles};
     return unless $ifiles && @{$ifiles};
@@ -94,7 +94,13 @@ sub _compile_file_filter {
 
     my $filters = $opt->{'filters'} || [];
 
+    my %is_member_of_starting_set = map {
+        $_ => 1
+    } @{$start};
+
     return sub {
+        return 1 if $is_member_of_starting_set{ $File::Next::name };
+
         my $resource = App::Ack::Resource::Basic->new($File::Next::name);
         foreach my $filter (@ifiles_filters) {
             return 0 if $filter->filter($resource);
@@ -134,7 +140,7 @@ sub main {
         }
         @start = ('.') if not @start;
 
-        $opt->{file_filter}    = _compile_file_filter($opt);
+        $opt->{file_filter}    = _compile_file_filter($opt, \@start);
         $opt->{descend_filter} = _compile_descend_filter($opt);
 
 
