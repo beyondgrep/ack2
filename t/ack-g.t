@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 57;
+use Test::More tests => 55;
 
 use lib 't';
 use Util;
@@ -28,6 +28,7 @@ NO_METACHARCTERS: {
     my @expected = qw(
         t/swamp/Makefile
         t/swamp/Makefile.PL
+        t/swamp/notaMakefile
     );
     my $regex = 'Makefile';
 
@@ -56,9 +57,9 @@ METACHARACTERS: {
 
 FRONT_ANCHOR: {
     my @expected = qw(
-        t/standalone.t
+        t/filter.t
     );
-    my $regex = '^t.st';
+    my $regex = '^t.fil';
 
     my @files = qw( t );
     my @args = ( '-g', $regex );
@@ -70,12 +71,13 @@ FRONT_ANCHOR: {
 
 BACK_ANCHOR: {
     my @expected = qw(
-        t/swamp/moose-andy.jpg
+        t/swamp/options.pl
+        t/swamp/perl.pl
     );
-    my $regex = 'pg$';
+    my $regex = 'pl$';
 
     my @files = qw( t );
-    my @args = ( '-a', '-g', $regex );
+    my @args = ( '-g', $regex );
     my @results = run_ack( @args, @files );
 
     sets_match( \@results, \@expected, "Looking for $regex" );
@@ -132,6 +134,7 @@ FILE_ON_COMMAND_LINE_IS_ALWAYS_SEARCHED_EVEN_WITH_WRONG_TYPE: {
 
     sets_match( \@results, \@expected, 'File on command line is always searched, even with wrong type.' );
 }
+
 
 ONLY_MAKEFILES: {
     my @expected = (
@@ -211,26 +214,10 @@ ALL_AND_DASH_G_INTERACTION: {
     my $file_regex = 'swamp.*[fb][oa][or]';
 
     my @files = qw( t/swamp );
-    my @args = ( '-a', '-G', $file_regex, $content_regex, '-l' );
+    my @args = ( '-G', $file_regex, $content_regex, '-l' );
     my @results = run_ack( @args, @files );
 
     sets_match( \@results, \@expected, "Looking for $content_regex in all files matching $file_regex" );
-}
-
-UNRESTRICTED_AND_DASH_G_INTERACTION: {
-    my @expected = (
-        't/swamp/#emacs-workfile.pl#',
-        't/swamp/options.pl',
-        't/swamp/options.pl.bak',
-    );
-    my $content_regex = 'file';
-    my $file_regex = 'swamp[\\\\/][^\\\\/]+\.pl';
-
-    my @files = qw( t/swamp );
-    my @args = ( '-u', '-G', $file_regex, $content_regex, '-l' );
-    my @results = run_ack( @args, @files );
-
-    sets_match( \@results, \@expected, "Looking for $content_regex in unrestricted files matching $file_regex" );
 }
 
 QUOTEMETA_FILE_NOT: {
@@ -279,7 +266,7 @@ WORDS_FILE_NOT: {
     my $regex = 'free';
 
     my @files = qw( t/text/ );
-    my @args = ( '-a', '-w', '-g', $regex );
+    my @args = ( '-w', '-g', $regex );
     my @results = run_ack( @args, @files );
 
     sets_match( \@results, \@expected, "Looking for $regex with '-w'." );
@@ -295,7 +282,7 @@ INVERT_MATCH_FILE_NOT: {
     my $regex = 'of';
 
     my @files = qw( t/text/ );
-    my @args = ( '-a', '-v', '-g', $regex );
+    my @args = ( '-v', '-g', $regex );
     my @results = run_ack( @args, @files );
 
     sets_match( \@results, \@expected, "Looking for filenames NOT matching $regex." );
@@ -309,7 +296,7 @@ INVERT_MATCH_CONTENT: {
     my $content_regex = 'are';
 
     my @files = qw( t/text/ );
-    my @args = ( '-a', '-l', '-G', $file_regex, '-v', $content_regex );
+    my @args = ( '-l', '-G', $file_regex, '-v', $content_regex );
     my @results = run_ack( @args, @files );
 
     sets_match( \@results, \@expected, "Looking for files without $content_regex in files matching $file_regex" );
@@ -323,7 +310,7 @@ INVERT_MATCH_CONTENT_SWAPPED: {
     my $content_regex = 'are';
 
     my @files = qw( t/text/ );
-    my @args = ( '-a', '-l', '-v', $content_regex, '-G', $file_regex );
+    my @args = ( '-l', '-v', $content_regex, '-G', $file_regex );
     my @results = run_ack( @args, @files );
 
     sets_match( \@results, \@expected, "Looking for files without $content_regex in files matching $file_regex - swapped" );
@@ -338,7 +325,7 @@ INVERT_FILE_MATCH: {
     my $file_regex = 'of';
 
     my @files = qw( t/text/ );
-    my @args = ( '-a', '--invert-file-match', '-g', $file_regex );
+    my @args = ( '--invert-file-match', '-g', $file_regex );
     my @results = run_ack( @args, @files );
 
     sets_match( \@results, \@expected, "Looking for file names that do not match $file_regex" );
