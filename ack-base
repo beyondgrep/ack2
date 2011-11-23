@@ -98,6 +98,8 @@ sub _compile_file_filter {
         $_ => 1
     } @{$start};
 
+    my $filter_re = $opt->{G} ? qr/$opt->{G}/ : undef;
+
     return sub {
         return 1 if $is_member_of_starting_set{ $File::Next::name };
 
@@ -105,8 +107,9 @@ sub _compile_file_filter {
         foreach my $filter (@ifiles_filters) {
             return 0 if $filter->filter($resource);
         }
+        my $match_found = 1;
         if(@{$filters}) {
-            my $match_found = 0;
+            $match_found = 0;
 
             foreach my $filter (@{$filters}) {
                 if($filter->filter($resource)) {
@@ -114,9 +117,9 @@ sub _compile_file_filter {
                     last;
                 }
             }
-            return $match_found;
         }
-        return 1;
+        return $match_found &&
+            ( defined($filter_re) ? $File::Next::name =~ /$filter_re/ : 1 );
     };
 }
 
@@ -162,11 +165,6 @@ RESOURCES:
         # XXX this variable name combined with what we're trying
         # to do makes no sense.
         if ( $opt->{f} ) {
-            if( my $re = $opt->{G} ) {
-                unless($resource->name =~ /$re/) {
-                    next RESOURCES;
-                }
-            }
             # XXX printing should probably happen inside of App::Ack
             print $resource->name, "\n";
             ++$nmatches;
