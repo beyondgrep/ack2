@@ -129,15 +129,6 @@ sub _compile_file_filter {
     };
 }
 
-sub _get_regex {
-    my ( $opt ) = @_;
-
-    return $opt->{regex} if $opt->{regex};
-
-    my $re = shift @ARGV;
-    return $re;
-}
-
 sub main {
     my @arg_sources = App::Ack::retrieve_arg_sources();
 
@@ -146,7 +137,7 @@ sub main {
     my $resources;
     if ( $App::Ack::is_filter_mode ) {
         $resources    = App::Ack::Resources->from_stdin( $opt );
-        $opt->{regex} = _get_regex($opt);
+        $opt->{regex} = App::Ack::build_regex(shift @ARGV, $opt);
     }
     else {
         if( $opt->{f} ) {
@@ -156,7 +147,7 @@ sub main {
             }
         }
         else {
-            $opt->{regex} = _get_regex($opt);
+            $opt->{regex} = App::Ack::build_regex(shift @ARGV, $opt);
         }
         my @start = @ARGV;
         unless(@start == 1 && -f $start[0]) {
