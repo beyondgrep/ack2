@@ -547,11 +547,6 @@ sub process_matches {
     my $re          = $opt->{regex};
     my $nmatches    = 0;
     my $invert      = $opt->{v};
-    my $ignore_case = $opt->{i};
-
-    if($ignore_case) {
-        $re = qr/$re/i;
-    }
 
     while($resource->next_text()) {
         if($invert ? !/$re/ : /$re/) {
