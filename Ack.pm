@@ -565,6 +565,7 @@ sub print_matches_in_resource {
 
     my $max_count = $opt->{m} || -1;
     my $ors       = $opt->{print0} ? "\0" : "\n";
+    my $color     = $opt->{color};
 
     return process_matches($resource, $opt, sub {
         my ( $matching_line ) = @_;
@@ -572,9 +573,24 @@ sub print_matches_in_resource {
         chomp $matching_line;
 
         my @line_parts;
+        my $filename = $resource->name;
+        my $line_no  = $.; # XXX should we pass $. in?
+
         if($print_filename) {
-            push @line_parts, $resource->name, $.; # XXX should we pass $. in?
+            if($color) {
+                $filename = Term::ANSIColor::colored($filename,
+                    $ENV{ACK_COLOR_FILENAME});
+                $line_no  = Term::ANSIColor::colored($line_no,
+                    $ENV{ACK_COLOR_LINENO});
+            }
+            push @line_parts, $filename, $line_no;
         }
+
+        if($color) {
+            $matching_line = Term::ANSIColor::colored($matching_line,
+                $ENV{ACK_COLOR_MATCH});
+        }
+
         push @line_parts, $matching_line;
         App::Ack::print(join(':', @line_parts), $ors);
         return --$max_count != 0;
