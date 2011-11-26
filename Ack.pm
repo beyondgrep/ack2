@@ -607,15 +607,9 @@ sub print_matches_in_resource {
             }
         }
         elsif($color) {
-            if( $match_word ) {
-                # XXX I know $& is a no-no; fix it later
-                $matching_line  =~ s/$re/Term::ANSIColor::colored($&, $ENV{ACK_COLOR_MATCH})/ge;
-                $matching_line .= "\033[0m\033[K";
-            }
-            else {
-                $matching_line = Term::ANSIColor::colored($matching_line,
-                    $ENV{ACK_COLOR_MATCH});
-            }
+            # XXX I know $& is a no-no; fix it later
+            $matching_line  =~ s/$re/Term::ANSIColor::colored($&, $ENV{ACK_COLOR_MATCH})/ge;
+            $matching_line .= "\033[0m\033[K";
         }
 
         push @line_parts, $matching_line;
