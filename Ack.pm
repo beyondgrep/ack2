@@ -588,7 +588,25 @@ sub print_matches_in_resource {
             push @line_parts, $filename, $line_no;
         }
 
-        if($color) {
+        if(@- > 1) {
+            my $offset = 0; # additional offset for when we add stuff
+
+            for(my $i = 1; $i < @-; $i++) {
+                my $match_start = $-[$i];
+                my $match_end   = $+[$i];
+
+                my $substring = substr( $matching_line,
+                    $offset + $match_start, $match_end - $match_start );
+                my $substitution = Term::ANSIColor::colored( $substring,
+                    $ENV{ACK_COLOR_MATCH} );
+
+                substr( $matching_line, $offset + $match_start,
+                    $match_end - $match_start, $substitution );
+
+                $offset += length( $substitution ) - length( $substring );
+            }
+        }
+        elsif($color) {
             if( $match_word ) {
                 # XXX I know $& is a no-no; fix it later
                 $matching_line  =~ s/$re/Term::ANSIColor::colored($&, $ENV{ACK_COLOR_MATCH})/ge;
