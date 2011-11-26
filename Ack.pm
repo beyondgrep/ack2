@@ -563,9 +563,11 @@ sub print_matches_in_resource {
 
     my $print_filename = $opt->{H} && !$opt->{h};
 
-    my $max_count = $opt->{m} || -1;
-    my $ors       = $opt->{print0} ? "\0" : "\n";
-    my $color     = $opt->{color};
+    my $max_count  = $opt->{m} || -1;
+    my $ors        = $opt->{print0} ? "\0" : "\n";
+    my $color      = $opt->{color};
+    my $match_word = $opt->{w};
+    my $re         = $opt->{regex};
 
     return process_matches($resource, $opt, sub {
         my ( $matching_line ) = @_;
@@ -587,8 +589,15 @@ sub print_matches_in_resource {
         }
 
         if($color) {
-            $matching_line = Term::ANSIColor::colored($matching_line,
-                $ENV{ACK_COLOR_MATCH});
+            if( $match_word ) {
+                # XXX I know $& is a no-no; fix it later
+                $matching_line  =~ s/$re/Term::ANSIColor::colored($&, $ENV{ACK_COLOR_MATCH})/ge;
+                $matching_line .= "\033[0m\033[K";
+            }
+            else {
+                $matching_line = Term::ANSIColor::colored($matching_line,
+                    $ENV{ACK_COLOR_MATCH});
+            }
         }
 
         push @line_parts, $matching_line;
