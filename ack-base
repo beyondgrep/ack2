@@ -134,6 +134,10 @@ sub main {
 
     my $opt = App::Ack::ConfigLoader::process_args( @arg_sources );
 
+    unless( defined $opt->{color} ) {
+        $opt->{color} = !App::Ack::output_to_pipe();
+    }
+
     my $resources;
     if ( $App::Ack::is_filter_mode ) {
         $resources    = App::Ack::Resources->from_stdin( $opt );
