@@ -12,4 +12,7 @@ BEGIN {
     use_ok( 'File::Next' );
 }
 
+use Test::Harness;
+
 diag( "Testing App::Ack $App::Ack::VERSION, File::Next $File::Next::VERSION, Perl $], $^X" );
+diag( "Using Test::More $Test::More::VERSION and Test::Harness $Test::Harness::VERSION" );
