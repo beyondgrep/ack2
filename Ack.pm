@@ -95,6 +95,13 @@ sub retrieve_arg_sources {
         @files  = $finder->find_config_files;
     }
     if ( $ackrc ) {
+        # we explicitly use open so we get a nice error message
+        # XXX this is a potential race condition!
+        if(open my $fh, '<', $ackrc) {
+            close $fh;
+        } else {
+            die "Unable to load ackrc '$ackrc': $!"
+        }
         push( @files, $ackrc );
     }
 
