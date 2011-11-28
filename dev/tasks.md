@@ -37,3 +37,7 @@
 * standalone.t
 * tar.t
 * zero.t
+
+# Maintenance
+
+* Get all tests running under -T
