@@ -36,11 +36,13 @@ for my $arg ( @ARGV ) {
     my $in_pod     = 0;
     $code .= "#line 1 '$filename'\n" if $debug_mode && $filename ne 'ack-base';
     while ( <$fh> ) {
-        next if /^use (File::Next|App::Ack)/;
+        next if /^use (?:File::Next|App::Ack)/;
 
-        if($was_in_pod && !$in_pod) {
+        s/^use base (.+)/our \@ISA = $1/;
+
+        if ( $was_in_pod && !$in_pod ) {
             $was_in_pod = 0;
-            if($debug_mode) {
+            if ($debug_mode) {
                 $code .= "#line $. '$filename'\n";
             }
         }
