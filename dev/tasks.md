@@ -41,3 +41,4 @@
 # Maintenance
 
 * Get all tests running under -T
+* Add flags to the usage as we get them working.
