@@ -59,7 +59,7 @@
 --ignore-directory=is,blib
 --ignore-directory=is,_build
 
-# Perl Devel::Cover module
+# Perl Devel::Cover module's output directory
 --ignore-directory=is,cover_db
 
 
@@ -80,19 +80,25 @@
 
 
 # Filetypes defined
+
+# Perl http://perl.org/
 --type-add=perl,ext,pod
 --type-add=perl,ext,pl
 --type-add=perl,ext,pm
 --type-add=perl,firstlinematch,/perl($|\s)/
 
+# Makefiles http://www.gnu.org/s/make/
 --type-add=make,ext,mk
 --type-add=make,ext,mak
 --type-add=make,is,makefile
 --type-add=make,is,gnumakefile
 
+# Rakefiles http://rake.rubyforge.org/
 --type-add=rake,is,Rakefile
 
+# CMake http://www.cmake.org/
 --type-add=cmake,is,CMakeLists.txt
 --type-add=cmake,ext,cmake
 
+# HTML
 --type-add=html,ext,html
