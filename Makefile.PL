@@ -119,6 +119,10 @@ $(ACK_HELP_TYPES) : $(ACK)
 $(ACK_HELP_DIRS) : $(ACK)
 	$(PERL_T) $(ACK) --noenv --help=dirs > $(ACK_HELP_DIRS) || perl -e0
 
+bininst : $(ACK)
+	$(CP) $(ACK) ~/bin
+	$(CP) ackrc ~/.ack2rc
+
 MAKE_FRAG
 
     return $postamble;
