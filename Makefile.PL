@@ -26,6 +26,7 @@ my %parms = (
         'Is.pm'             => '$(INST_LIBDIR)/App/Ack/Filter/Is.pm',
         'Match.pm'          => '$(INST_LIBDIR)/App/Ack/Filter/Match.pm',
         'Default.pm'        => '$(INST_LIBDIR)/App/Ack/Filter/Default.pm',
+        'Inverse.pm'        => '$(INST_LIBDIR)/App/Ack/Filter/Inverse.pm',
     },
     EXE_FILES           => [ 'ack' ],
     PREREQ_PM => {
@@ -87,7 +88,8 @@ FIRST_FILTER_PM   = FirstLineMatch.pm
 IS_FILTER_PM      = Is.pm
 MATCH_FILTER_PM   = Match.pm
 DEFAULT_FILTER_PM = Default.pm
-ALL_PM            = $(ACK_PM) $(RESOURCE_PM) $(RESOURCES_PM) $(BASIC_PM) $(FILTER_PM) $(EXT_FILTER_PM) $(FIRST_FILTER_PM) $(IS_FILTER_PM) $(MATCH_FILTER_PM) $(DEFAULT_FILTER_PM) $(CONFIG_FINDER_PM) $(CONFIG_LOADER_PM)
+INVERSE_FILTER_PM = Inverse.pm
+ALL_PM            = $(ACK_PM) $(RESOURCE_PM) $(RESOURCES_PM) $(BASIC_PM) $(FILTER_PM) $(EXT_FILTER_PM) $(FIRST_FILTER_PM) $(IS_FILTER_PM) $(MATCH_FILTER_PM) $(DEFAULT_FILTER_PM) $(INVERSE_FILTER_PM) $(CONFIG_FINDER_PM) $(CONFIG_LOADER_PM)
 ACK_HELP          = ack-help.txt
 ACK_HELP_TYPES    = ack-help-types.txt
 ACK_HELP_DIRS     = ack-help-dirs.txt
