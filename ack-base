@@ -92,7 +92,9 @@ sub _compile_file_filter {
         $filter
     } @{$ifiles};
 
-    my $filters = $opt->{'filters'} || [];
+    my $filters         = $opt->{'filters'} || [];
+    my $inverse_filters = [ grep {  $_->is_inverted() } @{$filters} ];
+    @{$filters}         =   grep { !$_->is_inverted() } @{$filters};
 
     my %is_member_of_starting_set = map {
         $_ => 1
@@ -115,6 +117,16 @@ sub _compile_file_filter {
             foreach my $filter (@{$filters}) {
                 if($filter->filter($resource)) {
                     $match_found = 1;
+                    last;
+                }
+            }
+        }
+        # don't bother invoking inverse filters unless
+        # we consider the current resource a match
+        if( $match_found && @{$inverse_filters} ) {
+            foreach my $filter ( @{$inverse_filters} ) {
+                unless( $filter->filter( $resource ) ) {
+                    $match_found = 0;
                     last;
                 }
             }
