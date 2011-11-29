@@ -60,6 +60,25 @@ sub new {
     return bless {}, $class;
 }
 
+sub _remove_redundancies {
+    my ( @configs ) = @_;
+
+    my %dev_and_inode_seen;
+
+    foreach my $path ( @configs ) {
+        my ( $dev, $inode ) = (stat $path)[0, 1];
+
+        if( defined( $dev ) ) { # files that can't be read don't matter
+            if( $dev_and_inode_seen{"$dev:$inode"} ) {
+                undef $path;
+            } else {
+                $dev_and_inode_seen{"$dev:$inode"} = 1;
+            }
+        }
+    }
+    return grep { defined() } @configs;
+}
+
 =head2 $finder->find_config_files
 
 Locates config files, and returns
@@ -101,7 +120,7 @@ sub find_config_files {
         pop @dirs;
     }
 
-    return @config_files;
+    return _remove_redundancies( @config_files );
 }
 
 1;
