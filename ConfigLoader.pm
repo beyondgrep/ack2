@@ -329,10 +329,11 @@ sub process_args {
             Carp::croak "The impossible has occurred!";
         };
     }
+    $opt{'filters'} ||= [];
+    my $filters       = $opt{'filters'};
     # throw the default filter in if no others are selected
-    my $filters = $opt{'filters'};
-    unless($filters && @{$filters}) {
-        $opt{'filters'} = [ App::Ack::Filter::Default->new() ];
+    unless(grep { !$_->is_inverted() } @{$filters}) {
+        push @{$filters}, App::Ack::Filter::Default->new();
     }
     return \%opt;
 }
