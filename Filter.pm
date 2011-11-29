@@ -3,6 +3,7 @@ package App::Ack::Filter;
 use strict;
 use warnings;
 
+use App::Ack::Filter::Inverse ();
 use Carp ();
 
 my %filter_types;
@@ -73,6 +74,26 @@ sub register_filter {
 Must be implementated by filter implementations.  Returns
 true if the filter passes, false otherwise.
 
+=head2 $filter->invert()
+
+Returns a filter whose L</filter> method returns the opposite of this filter.
+
 =cut
+
+sub invert {
+    my ( $self ) = @_;
+
+    return App::Ack::Filter::Inverse->new( $self );
+}
+
+=head2 $filter->is_inverted()
+
+Returns true if this filter is an inverted filter; false otherwise.
+
+=cut
+
+sub is_inverted {
+    return 0;
+}
 
 1;
