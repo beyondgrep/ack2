@@ -68,6 +68,7 @@ sub _compile_descend_filter {
 
     return sub {
         my $resource = App::Ack::Resource::Basic->new($File::Next::dir);
+        return unless $resource;
         foreach my $filter (@idirs_filters) {
             return 0 if $filter->filter($resource);
         }
