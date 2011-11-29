@@ -48,8 +48,15 @@ sub process_filetypes {
 
         push @{ $type_filters{$name} }, $filter;
 
-        $additional_specs{$name} = sub {
-            push @{ $opt->{'filters'} }, @{ $type_filters{$name} };
+        $additional_specs{$name . '!'} = sub {
+            my ( undef, $value ) = @_;
+
+            my @filters = @{ $type_filters{$name} };
+            unless( $value ) {
+                @filters = map { $_->invert() } @filters;
+            }
+
+            push @{ $opt->{'filters'} }, @filters;
         };
     };
 
@@ -60,8 +67,15 @@ sub process_filetypes {
 
         $type_filters{$name} = [ $filter ];
 
-        $additional_specs{$name} = sub {
-            push @{ $opt->{'filters'} }, @{ $type_filters{$name} };
+        $additional_specs{$name . '!'} = sub {
+            my ( undef, $value ) = @_;
+
+            my @filters = @{ $type_filters{$name} };
+            unless( $value ) {
+                @filters = map { $_->invert() } @filters;
+            }
+
+            push @{ $opt->{'filters'} }, @filters;
         };
     };
 
