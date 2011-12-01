@@ -2,12 +2,6 @@
 
 An old joke: How do you eat an elephant?  One forkful at a time.
 
-* Write a glossary
-    * Many terms thrown around, need to understand them all
-    * "filetype"
-    * "resource"
-    * "rule"
-* Look at glark and rak and see if there's anything we want to steal
 * Filetype detection
     * Define and document the types of detection
         * is
