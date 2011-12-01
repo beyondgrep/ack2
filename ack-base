@@ -55,24 +55,24 @@ sub _compile_descend_filter {
     my $idirs = $opt->{idirs};
     return unless $idirs && @{$idirs};
 
-    my @idirs_filters = map {
-        my $filter;
+    my %ignore_dirs;
 
-        if($_ =~ /^(\w+),(.*)/) {
-            $filter = App::Ack::Filter->create_filter($1, split(/,/, $2));
-        } else {
+    foreach my $idir (@{$idirs}) {
+        if( $idir =~ /^(\w+),(.*)/ ) {
+            if( $1 eq 'is') {
+                $ignore_dirs{$2} = 1;
+            }
+            else {
+                Carp::croak "Non-is filters are not yet supported for --ignore-dir";
+            }
+        }
+        else {
             Carp::croak "invalid filter specification '$_'";
         }
-        $filter;
-    } @{$idirs};
+    }
 
     return sub {
-        my $resource = App::Ack::Resource::Basic->new($File::Next::dir);
-        return unless $resource;
-        foreach my $filter (@idirs_filters) {
-            return 0 if $filter->filter($resource);
-        }
-        return 1;
+        return !exists $ignore_dirs{$_} && !exists $ignore_dirs{$File::Next::dir};
     };
 }
 
