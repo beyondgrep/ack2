@@ -94,6 +94,8 @@ ACK_HELP          = ack-help.txt
 ACK_HELP_TYPES    = ack-help-types.txt
 ACK_HELP_DIRS     = ack-help-dirs.txt
 PERL_T            = $(PERL) -T
+%s
+export DEBUG
 
 .PHONY: tags critic
 
@@ -106,7 +108,7 @@ tags:
 		--languages=Perl --langmap=Perl:+.t \
 
 $(ACK) : $(BASE) $(ALL_PM) squash Makefile
-	%s $(PERL) squash ack-base File::Next $(ALL_PM) > $(ACK)
+	$(PERL) squash ack-base File::Next $(ALL_PM) > $(ACK)
 	$(CHMOD) 0755 $(ACK)
 	$(PERL_T) -c $(ACK)
 
