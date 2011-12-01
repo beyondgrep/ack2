@@ -19,7 +19,8 @@ my $NO_EDIT_COMMENT = <<'EOCOMMENT';
 #
 EOCOMMENT
 
-my $debug_mode = $ENV{'DEBUG'};
+my $debug_mode = grep { $_ eq '--debug' } @ARGV;
+@ARGV          = grep { $_ ne '--debug' } @ARGV;
 
 my $code;
 for my $arg ( @ARGV ) {
