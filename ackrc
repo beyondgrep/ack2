@@ -102,3 +102,6 @@
 
 # HTML
 --type-add=html,ext,html
+
+# C
+--type-add=cc,ext,c,h
