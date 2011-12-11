@@ -104,7 +104,7 @@
 --type-add=html,ext,html
 
 # C
---type-add=cc,ext,c,h
+--type-add=cc,ext,c,h,xs
 
 # Actionscript
 --type-add=actionscript,ext,as,mxml
