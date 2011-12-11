@@ -157,7 +157,7 @@ sub main {
         $opt->{regex} = App::Ack::build_regex(shift @ARGV, $opt);
     }
     else {
-        if( $opt->{f} ) {
+        if( $opt->{f} || $opt->{lines} ) {
             if( $opt->{regex} ) {
                 App::Ack::warn( "regex ($opt->{regex}) specified with -f or -g" );
                 App::Ack::exit_from_ack( 0 ); # XXX the 0 is misleading
@@ -199,6 +199,33 @@ RESOURCES:
             print $resource->name, $ors;
             ++$nmatches;
             last RESOURCES if defined($max_count) && $nmatches >= $max_count;
+        }
+        elsif( $opt->{lines} ) {
+            my $print_filename = $opt->{H} && !$opt->{h};
+
+            my %line_numbers;
+            foreach my $line ( @{ $opt->{lines} } ) {
+                my @lines             = split /,/, $line;
+                @lines                = map {
+                    /^(\d+)-(\d+)$/
+                        ? ( $1 .. $2 )
+                        : $_
+                } @lines;
+                @line_numbers{@lines} = (1) x @lines;
+            }
+            while( $resource->next_text ) {
+                chomp;
+
+                if( $line_numbers{$.} ) {
+                    my @line_parts;
+
+                    if($print_filename) {
+                        push @line_parts, $resource->name, $.;
+                    }
+                    push @line_parts, $_;
+                    App::Ack::print( join( ':', @line_parts ), $ors );
+                }
+            }
         }
         elsif( $opt->{count} ) {
             my $matches_for_this_file = App::Ack::count_matches_in_resource( $resource, $opt );
