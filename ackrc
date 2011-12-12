@@ -100,12 +100,6 @@
 --type-add=cmake,is,CMakeLists.txt
 --type-add=cmake,ext,cmake
 
-# HTML
---type-add=html,ext,html
-
-# C
---type-add=cc,ext,c,h,xs
-
 # Actionscript
 --type-add=actionscript,ext,as,mxml
 
@@ -123,6 +117,13 @@
 
 # Clojure http://clojure.org/
 --type-add=clojure,ext,clj
+
+# C
+# .xs are Perl C files
+--type-add=cc,ext,c,h,xs
+
+# C header files
+--type-add=hh,ext,h
 
 # C++
 --type-add=cpp,ext,cpp,cc,cxx,m,hpp,hh,h,hxx
@@ -154,7 +155,8 @@
 # Haskell http://www.haskell.org/
 --type-add=haskell,ext,hs,lhs
 
---type-add=hh,ext,h
+# HTML
+--type-add=html,ext,html
 
 # Java http://www.oracle.com/technetwork/java/index.html
 --type-add=java,ext,java,properties
@@ -170,9 +172,6 @@
 
 # Lua http://www.lua.org/
 --type-add=lua,ext,lua
-
-# Mason http://www.masonhq.com/
---type-add=mason,ext,mas,mhtml,mpl,mtxt
 
 # Objective-C
 --type-add=objc,ext,m,h
