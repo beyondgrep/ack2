@@ -606,13 +606,14 @@ sub print_matches_in_resource {
 
     my $print_filename = $opt->{H} && !$opt->{h};
 
-    my $max_count       = $opt->{m} || -1;
-    my $ors             = $opt->{print0} ? "\0" : "\n";
-    my $color           = $opt->{color};
-    my $match_word      = $opt->{w};
-    my $re              = $opt->{regex};
-    my $last_printed    = -1;
-    my $is_first_match  = 1;
+    my $max_count           = $opt->{m} || -1;
+    my $ors                 = $opt->{print0} ? "\0" : "\n";
+    my $color               = $opt->{color};
+    my $match_word          = $opt->{w};
+    my $re                  = $opt->{regex};
+    my $last_printed        = -1;
+    my $is_first_match      = 1;
+    my $is_tracking_context = $opt->{after_context} || $opt->{before_context};
 
     return process_matches($resource, $opt, sub {
         my ( $matching_line ) = @_;
@@ -628,6 +629,9 @@ sub print_matches_in_resource {
         if($before_context) {
             my $first_line = $. - @{$before_context};
             if( !$is_first_match && $last_printed != $first_line - 1 ) {
+                if( $first_line == 10 ) {
+                    print $last_printed, ' ', $first_line, "\n";
+                }
                 App::Ack::print('--', $ors);
             }
             $last_printed = $.; # XXX unless --after-context
@@ -637,12 +641,18 @@ sub print_matches_in_resource {
                 my @line_parts;
 
                 if( $print_filename) {
-                    push @line_parts, $filename, $. - $offset--;
+                    push @line_parts, $filename, $. - $offset;
                 }
                 push @line_parts, $line;
 
+                $last_printed = $. - $offset;
+                $offset--;
                 App::Ack::print( join('-', @line_parts), $ors );
             }
+        }
+
+        if( $is_tracking_context && !$is_first_match && $last_printed != $. - 1 ) {
+            App::Ack::print('--', $ors);
         }
 
         if($print_filename) {
@@ -681,6 +691,24 @@ sub print_matches_in_resource {
 
         push @line_parts, $matching_line;
         App::Ack::print(join(':', @line_parts), $ors);
+        $last_printed = $.;
+
+        if($after_context) {
+            my $offset = 1;
+            foreach my $line (@{$after_context}) {
+                chomp $line;
+                my @line_parts;
+
+                if( $print_filename ) {
+                    push @line_parts, $filename, $. + $offset;
+                }
+                push @line_parts, $line;
+                $last_printed = $. + $offset;
+                $offset++;
+                App::Ack::print( join('-', @line_parts), $ors );
+            }
+        }
+
         $is_first_match = 0;
         return --$max_count != 0;
     });
