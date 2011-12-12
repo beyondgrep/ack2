@@ -570,10 +570,27 @@ sub process_matches {
     @after_context_lines  = ();
     @before_context_lines = ();
 
-    while($resource->next_text()) {
+    while(@after_context_lines || $resource->next_text()) {
+        if( @after_context_lines ) {
+            $_ = shift @after_context_lines;
+            $.++;
+        }
         if($invert ? !/$re/ : /$re/) {
             $nmatches++;
-            last if $func && !$func->($_);
+
+            my $matching_line = $_;
+
+            if( $after_context ) {
+                local $. = $.; # we want to make sure we base $. off of its
+                               # current value when we start flushing
+                               # @after_context_lines
+
+                while( @after_context_lines < $after_context && $resource->next_text() ) {
+                    push @after_context_lines, $_;
+                }
+            }
+
+            last if $func && !$func->($matching_line);
         }
         if($before_context) {
             push @before_context_lines, $_;
