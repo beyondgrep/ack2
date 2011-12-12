@@ -43,6 +43,9 @@ our $dir_sep_chars;
 our $is_cygwin;
 our $is_windows;
 
+my @before_context_lines;
+my @after_context_lines;
+
 use File::Spec ();
 use File::Glob ':glob';
 use Getopt::Long ();
@@ -548,17 +551,33 @@ sub exit_from_ack {
     exit $rc;
 }
 
+sub get_context {
+    return (
+        scalar(@before_context_lines) ? \@before_context_lines : undef,
+        scalar(@after_context_lines)  ? \@after_context_lines  : undef,
+    );
+}
+
 sub process_matches {
     my ( $resource, $opt, $func ) = @_;
 
-    my $re          = $opt->{regex};
-    my $nmatches    = 0;
-    my $invert      = $opt->{v};
+    my $re             = $opt->{regex};
+    my $nmatches       = 0;
+    my $invert         = $opt->{v};
+    my $after_context  = $opt->{after_context};
+    my $before_context = $opt->{before_context};
+
+    @after_context_lines  = ();
+    @before_context_lines = ();
 
     while($resource->next_text()) {
         if($invert ? !/$re/ : /$re/) {
             $nmatches++;
             last if $func && !$func->($_);
+        }
+        if($before_context) {
+            push @before_context_lines, $_;
+            shift @before_context_lines if @before_context_lines > $before_context;
         }
     }
 
