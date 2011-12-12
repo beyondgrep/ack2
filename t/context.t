@@ -137,6 +137,8 @@ HIGHLIGHTING: {
 
 # grouping works with context (single file)
 GROUPING_SINGLE_FILE: {
+    local $TODO = 'grouping not yet implemented';
+
     my $target_file = File::Next::reslash( 't/etc/shebang.py.xxx' );
     my @expected = split( /\n/, <<"EOF" );
 $target_file
@@ -153,6 +155,8 @@ EOF
 # grouping works with context and multiple files
 # i.e. a separator line between different matches in the same file and no separator between files
 GROUPING_MULTIPLE_FILES: {
+    local $TODO = 'grouping not yet implemented';
+
     my @target_file = (
         File::Next::reslash( 't/text/boy-named-sue.txt' ),
         File::Next::reslash( 't/text/me-and-bobbie-mcgee.txt' ),
@@ -202,6 +206,8 @@ ACK_G: {
 
 # ack -o disables context
 WITH_O: {
+    local $TODO = '--output not yet implemented';
+
     my @files = qw( t/text/boy-named-sue.txt );
     my @args = qw( the\\s+\\S+ -o -C2 );
     my @expected = split( /\n/, <<'EOF' );
