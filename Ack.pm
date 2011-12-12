@@ -589,11 +589,13 @@ sub print_matches_in_resource {
 
     my $print_filename = $opt->{H} && !$opt->{h};
 
-    my $max_count  = $opt->{m} || -1;
-    my $ors        = $opt->{print0} ? "\0" : "\n";
-    my $color      = $opt->{color};
-    my $match_word = $opt->{w};
-    my $re         = $opt->{regex};
+    my $max_count       = $opt->{m} || -1;
+    my $ors             = $opt->{print0} ? "\0" : "\n";
+    my $color           = $opt->{color};
+    my $match_word      = $opt->{w};
+    my $re              = $opt->{regex};
+    my $last_printed    = -1;
+    my $is_first_match  = 1;
 
     return process_matches($resource, $opt, sub {
         my ( $matching_line ) = @_;
@@ -603,6 +605,28 @@ sub print_matches_in_resource {
         my @line_parts;
         my $filename = $resource->name;
         my $line_no  = $.; # XXX should we pass $. in?
+
+        my ( $before_context, $after_context ) = get_context();
+
+        if($before_context) {
+            my $first_line = $. - @{$before_context};
+            if( !$is_first_match && $last_printed != $first_line - 1 ) {
+                App::Ack::print('--', $ors);
+            }
+            $last_printed = $.; # XXX unless --after-context
+            my $offset = @{$before_context};
+            foreach my $line (@{$before_context}) {
+                chomp $line;
+                my @line_parts;
+
+                if( $print_filename) {
+                    push @line_parts, $filename, $. - $offset--;
+                }
+                push @line_parts, $line;
+
+                App::Ack::print( join('-', @line_parts), $ors );
+            }
+        }
 
         if($print_filename) {
             if($color) {
@@ -640,6 +664,7 @@ sub print_matches_in_resource {
 
         push @line_parts, $matching_line;
         App::Ack::print(join(':', @line_parts), $ors);
+        $is_first_match = 0;
         return --$max_count != 0;
     });
 }
