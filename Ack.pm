@@ -759,6 +759,20 @@ sub iterate {
 
 }
 
+sub print_line_with_options {
+    my ( $opt, $filename, $line, $line_no, $separator ) = @_;
+
+    my $print_filename = $opt->{H} && !$opt->{h};
+    my $ors            = $opt->{print0} ? "\0" : "\n";
+
+    my @line_parts;
+
+    if($print_filename) {
+        push @line_parts, $filename, $line_no;
+    }
+    push @line_parts, $line;
+    App::Ack::print( join( $separator, @line_parts ), $ors );
+}
 
 
 =head1 COPYRIGHT & LICENSE
