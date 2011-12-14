@@ -756,20 +756,14 @@ sub print_line_with_options {
     App::Ack::print( join( $separator, @line_parts ), $ors );
 }
 
-{
+my $last_line_printed;
 
-my $last_line_printed = 0;
+BEGIN {
+    $last_line_printed = 0;
+}
 
 sub print_line_with_context {
     my ( $opt, $filename, $line, $line_no ) = @_;
-
-    unless(defined $last_line_printed) {
-        $last_line_printed = 0; # I don't know why this is happening, but
-                                # somehow $last_line_printed is being set to
-                                # undef on the first call to this function
-                                # *very* seldom.  Try removing this conditional
-                                # and running t/ack-line.t
-    }
 
     my $ors = $opt->{print0} ? "\0" : "\n";
 
@@ -808,8 +802,6 @@ sub print_line_with_context {
             $after_line_no++;
         }
     }
-}
-
 }
 
 =head1 COPYRIGHT & LICENSE
