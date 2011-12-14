@@ -189,8 +189,6 @@ sub main {
     my $max_count       = $opt->{m};
     my $ors             = $opt->{print0} ? "\0" : "\n";
 
-    my $last_line_printed = 0;
-
     my $nmatches = 0;
 RESOURCES:
     while ( my $resource = $resources->next ) {
@@ -220,41 +218,7 @@ RESOURCES:
                 chomp;
 
                 if( $line_numbers{$.} ) {
-                    my ( $before_context, $after_context ) = App::Ack::get_context();
-
-                    if($before_context) {
-                        my $line_no = $. - @{$before_context};
-
-                        if($last_line_printed != $line_no - 1) {
-                            App::Ack::print('--', $ors);
-                        }
-
-                        foreach my $line (@{$before_context}) {
-                            chomp $line;
-                            App::Ack::print_line_with_options($opt, $resource->name, $line, $line_no, '-');
-                            $last_line_printed = $line_no;
-                            $line_no++;
-                        }
-                    }
-
-                    if($after_context && $last_line_printed != $. - 1) {
-                        App::Ack::print('--', $ors);
-                    }
-
-                    App::Ack::print_line_with_options($opt, $resource->name, $_, $., ':');
-
-                    $last_line_printed = $.;
-
-                    if($after_context) {
-                        my $line_no = $. + 1;
-
-                        foreach my $line (@{$after_context}) {
-                            chomp $line;
-                            App::Ack::print_line_with_options($opt, $resource->name, $line, $line_no, '-');
-                            $last_line_printed = $line_no;
-                            $line_no++;
-                        }
-                    }
+                    App::Ack::print_line_with_context($opt, $resource->name, $_, $.);
                 }
                 return 1;
             });
