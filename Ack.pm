@@ -43,9 +43,6 @@ our $dir_sep_chars;
 our $is_cygwin;
 our $is_windows;
 
-my @before_context_lines;
-my @after_context_lines;
-
 use File::Spec ();
 use File::Glob ':glob';
 use Getopt::Long ();
@@ -551,13 +548,6 @@ sub exit_from_ack {
     exit $rc;
 }
 
-sub get_context {
-    return (
-        scalar(@before_context_lines) ? \@before_context_lines : undef,
-        scalar(@after_context_lines)  ? \@after_context_lines  : undef,
-    );
-}
-
 sub process_matches {
     my ( $resource, $opt, $func ) = @_;
 
@@ -567,36 +557,16 @@ sub process_matches {
     my $after_context  = $opt->{after_context};
     my $before_context = $opt->{before_context};
 
-    @after_context_lines  = ();
-    @before_context_lines = ();
-
-    while(@after_context_lines || $resource->next_text()) {
-        if( @after_context_lines ) {
-            $_ = shift @after_context_lines;
-            $.++;
-        }
+    App::Ack::iterate($resource, $opt, sub {
         if($invert ? !/$re/ : /$re/) {
             $nmatches++;
 
             my $matching_line = $_;
 
-            if( $after_context ) {
-                local $. = $.; # we want to make sure we base $. off of its
-                               # current value when we start flushing
-                               # @after_context_lines
-
-                while( @after_context_lines < $after_context && $resource->next_text() ) {
-                    push @after_context_lines, $_;
-                }
-            }
-
-            last if $func && !$func->($matching_line);
+            return 0 if $func && !$func->($matching_line);
         }
-        if($before_context) {
-            push @before_context_lines, $_;
-            shift @before_context_lines if @before_context_lines > $before_context;
-        }
-    }
+        return 1;
+    });
 
     return $nmatches;
 }
@@ -727,6 +697,68 @@ sub resource_has_match {
 
     return count_matches_in_resource($resource, $opt) > 0;
 }
+
+{
+
+my @before_ctx_lines;
+my @after_ctx_lines;
+my $is_iterating;
+
+sub get_context {
+    unless( $is_iterating ) {
+        Carp::croak("get_context() called outside of iterate()");
+    }
+
+    return (
+        scalar(@before_ctx_lines) ? \@before_ctx_lines : undef,
+        scalar(@after_ctx_lines)  ? \@after_ctx_lines  : undef,
+    );
+}
+
+sub iterate {
+    my ( $resource, $opt, $cb ) = @_;
+
+    $is_iterating = 1;
+
+    my $n_before_ctx_lines = $opt->{before_context} || 0;
+    my $n_after_ctx_lines  = $opt->{after_context}  || 0;
+    my $current_line;
+
+    @after_ctx_lines = @before_ctx_lines = ();
+
+    if($resource->next_text()) {
+        $current_line = $_; # prime the first line of input
+    }
+
+    while(defined $current_line) {
+        while(@after_ctx_lines < $n_after_ctx_lines && $resource->next_text()) {
+            push @after_ctx_lines, $_;
+        }
+
+        local $_ = $current_line;
+        local $. = $. - @after_ctx_lines;
+
+        last unless $cb->();
+
+        push @before_ctx_lines, $current_line;
+
+        if($n_after_ctx_lines) {
+            $current_line = shift @after_ctx_lines;
+        }
+        elsif($resource->next_text()) {
+            $current_line = $_;
+        }
+        else {
+            undef $current_line;
+        }
+        shift @before_ctx_lines while @before_ctx_lines > $n_before_ctx_lines;
+    }
+
+    $is_iterating = 0;
+}
+
+}
+
 
 
 =head1 COPYRIGHT & LICENSE
