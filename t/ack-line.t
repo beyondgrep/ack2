@@ -61,8 +61,6 @@ EOF
 }
 
 LINE_1_TO_5_CONTEXT: {
-    local $TODO = 'context not yet implemented';
-
     my @expected = split( /\n/, <<"EOF" );
 Well, my daddy left home when I was three
 And he didn't leave very much for my Ma and me
@@ -123,8 +121,6 @@ EOF
 
 
 LINE_1_CONTEXT: {
-    local $TODO = 'context not yet implemented';
-
     my @target_file = (
         File::Next::reslash( 't/swamp/c-header.h' ),
         File::Next::reslash( 't/swamp/c-source.c' )

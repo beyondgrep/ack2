@@ -189,6 +189,8 @@ sub main {
     my $max_count       = $opt->{m};
     my $ors             = $opt->{print0} ? "\0" : "\n";
 
+    my $last_line_printed = 0;
+
     my $nmatches = 0;
 RESOURCES:
     while ( my $resource = $resources->next ) {
@@ -213,10 +215,38 @@ RESOURCES:
                 } @lines;
                 @line_numbers{@lines} = (1) x @lines;
             }
-            while( $resource->next_text ) {
+
+            App::Ack::iterate($resource, $opt, sub {
                 chomp;
 
                 if( $line_numbers{$.} ) {
+                    my ( $before_context, $after_context ) = App::Ack::get_context();
+
+                    if($before_context) {
+                        my $line_no = $. - @{$before_context};
+
+                        if($last_line_printed != $line_no - 1) {
+                            App::Ack::print('--', $ors);
+                        }
+
+                        foreach my $line (@{$before_context}) {
+                            chomp $line;
+                            my @line_parts;
+
+                            if($print_filename) {
+                                push @line_parts, $resource->name, $line_no;
+                            }
+                            push @line_parts, $line;
+                            App::Ack::print( join( '-', @line_parts ), $ors );
+                            $last_line_printed = $line_no;
+                            $line_no++;
+                        }
+                    }
+
+                    if($after_context && $last_line_printed != $. - 1) {
+                        App::Ack::print('--', $ors);
+                    }
+
                     my @line_parts;
 
                     if($print_filename) {
@@ -224,8 +254,27 @@ RESOURCES:
                     }
                     push @line_parts, $_;
                     App::Ack::print( join( ':', @line_parts ), $ors );
+                    $last_line_printed = $.;
+
+                    if($after_context) {
+                        my $line_no = $. + 1;
+
+                        foreach my $line (@{$after_context}) {
+                            chomp $line;
+                            my @line_parts;
+
+                            if($print_filename) {
+                                push @line_parts, $resource->name, $line_no;
+                            }
+                            push @line_parts, $line;
+                            App::Ack::print( join( '-', @line_parts ), $ors );
+                            $last_line_printed = $line_no;
+                            $line_no++;
+                        }
+                    }
                 }
-            }
+                return 1;
+            });
         }
         elsif( $opt->{count} ) {
             my $matches_for_this_file = App::Ack::count_matches_in_resource( $resource, $opt );
