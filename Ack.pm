@@ -756,6 +756,61 @@ sub print_line_with_options {
     App::Ack::print( join( $separator, @line_parts ), $ors );
 }
 
+{
+
+my $last_line_printed = 0;
+
+sub print_line_with_context {
+    my ( $opt, $filename, $line, $line_no ) = @_;
+
+    unless(defined $last_line_printed) {
+        $last_line_printed = 0; # I don't know why this is happening, but
+                                # somehow $last_line_printed is being set to
+                                # undef on the first call to this function
+                                # *very* seldom.  Try removing this conditional
+                                # and running t/ack-line.t
+    }
+
+    my $ors = $opt->{print0} ? "\0" : "\n";
+
+    my ( $before_context, $after_context ) = App::Ack::get_context();
+
+    if($before_context) {
+        my $before_line_no = $line_no - @{$before_context};
+
+        if($last_line_printed != $before_line_no - 1) {
+            App::Ack::print('--', $ors);
+        }
+
+        foreach my $before_line (@{$before_context}) {
+            chomp $before_line;
+            App::Ack::print_line_with_options($opt, $filename, $before_line, $before_line_no, '-');
+            $last_line_printed = $before_line_no;
+            $before_line_no++;
+        }
+    }
+
+    if($after_context && $last_line_printed != $line_no - 1) {
+        App::Ack::print('--', $ors);
+    }
+
+    App::Ack::print_line_with_options($opt, $filename, $line, $line_no, ':');
+
+    $last_line_printed = $line_no;
+
+    if($after_context) {
+        my $after_line_no = $line_no + 1;
+
+        foreach my $line (@{$after_context}) {
+            chomp $line;
+            App::Ack::print_line_with_options($opt, $filename, $line, $after_line_no, '-');
+            $last_line_printed = $after_line_no;
+            $after_line_no++;
+        }
+    }
+}
+
+}
 
 =head1 COPYRIGHT & LICENSE
 
