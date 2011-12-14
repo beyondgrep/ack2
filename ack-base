@@ -231,13 +231,7 @@ RESOURCES:
 
                         foreach my $line (@{$before_context}) {
                             chomp $line;
-                            my @line_parts;
-
-                            if($print_filename) {
-                                push @line_parts, $resource->name, $line_no;
-                            }
-                            push @line_parts, $line;
-                            App::Ack::print( join( '-', @line_parts ), $ors );
+                            App::Ack::print_line_with_options($opt, $resource->name, $line, $line_no, '-');
                             $last_line_printed = $line_no;
                             $line_no++;
                         }
@@ -247,13 +241,8 @@ RESOURCES:
                         App::Ack::print('--', $ors);
                     }
 
-                    my @line_parts;
+                    App::Ack::print_line_with_options($opt, $resource->name, $_, $., ':');
 
-                    if($print_filename) {
-                        push @line_parts, $resource->name, $.;
-                    }
-                    push @line_parts, $_;
-                    App::Ack::print( join( ':', @line_parts ), $ors );
                     $last_line_printed = $.;
 
                     if($after_context) {
@@ -261,13 +250,7 @@ RESOURCES:
 
                         foreach my $line (@{$after_context}) {
                             chomp $line;
-                            my @line_parts;
-
-                            if($print_filename) {
-                                push @line_parts, $resource->name, $line_no;
-                            }
-                            push @line_parts, $line;
-                            App::Ack::print( join( '-', @line_parts ), $ors );
+                            App::Ack::print_line_with_options($opt, $resource->name, $line, $line_no, '-');
                             $last_line_printed = $line_no;
                             $line_no++;
                         }

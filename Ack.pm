@@ -590,7 +590,6 @@ sub print_matches_in_resource {
 
         chomp $matching_line;
 
-        my @line_parts;
         my $filename = $resource->name;
         my $line_no  = $.; # XXX should we pass $. in?
 
@@ -608,16 +607,9 @@ sub print_matches_in_resource {
             my $offset = @{$before_context};
             foreach my $line (@{$before_context}) {
                 chomp $line;
-                my @line_parts;
-
-                if( $print_filename) {
-                    push @line_parts, $filename, $. - $offset;
-                }
-                push @line_parts, $line;
-
+                App::Ack::print_line_with_options($opt, $filename, $line, $. - $offset, '-');
                 $last_printed = $. - $offset;
                 $offset--;
-                App::Ack::print( join('-', @line_parts), $ors );
             }
         }
 
@@ -625,14 +617,11 @@ sub print_matches_in_resource {
             App::Ack::print('--', $ors);
         }
 
-        if($print_filename) {
-            if($color) {
-                $filename = Term::ANSIColor::colored($filename,
-                    $ENV{ACK_COLOR_FILENAME});
-                $line_no  = Term::ANSIColor::colored($line_no,
-                    $ENV{ACK_COLOR_LINENO});
-            }
-            push @line_parts, $filename, $line_no;
+        if($color) {
+            $filename = Term::ANSIColor::colored($filename,
+                $ENV{ACK_COLOR_FILENAME});
+            $line_no  = Term::ANSIColor::colored($line_no,
+                $ENV{ACK_COLOR_LINENO});
         }
 
         if(@- > 1) {
@@ -659,23 +648,16 @@ sub print_matches_in_resource {
             $matching_line .= "\033[0m\033[K";
         }
 
-        push @line_parts, $matching_line;
-        App::Ack::print(join(':', @line_parts), $ors);
+        App::Ack::print_line_with_options($opt, $filename, $matching_line, $line_no, ':');
         $last_printed = $.;
 
         if($after_context) {
             my $offset = 1;
             foreach my $line (@{$after_context}) {
                 chomp $line;
-                my @line_parts;
-
-                if( $print_filename ) {
-                    push @line_parts, $filename, $. + $offset;
-                }
-                push @line_parts, $line;
+                App::Ack::print_line_with_options($opt, $filename, $line, $. + $offset, '-');
                 $last_printed = $. + $offset;
                 $offset++;
-                App::Ack::print( join('-', @line_parts), $ors );
             }
         }
 
