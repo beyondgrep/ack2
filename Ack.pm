@@ -577,91 +577,14 @@ sub print_matches_in_resource {
     my $print_filename = $opt->{H} && !$opt->{h};
 
     my $max_count           = $opt->{m} || -1;
-    my $ors                 = $opt->{print0} ? "\0" : "\n";
-    my $color               = $opt->{color};
-    my $match_word          = $opt->{w};
-    my $re                  = $opt->{regex};
-    my $last_printed        = -1;
-    my $is_first_match      = 1;
-    my $is_tracking_context = $opt->{after_context} || $opt->{before_context};
-
     return process_matches($resource, $opt, sub {
         my ( $matching_line ) = @_;
 
-        chomp $matching_line;
+        App::Ack::print_line_with_context($opt, $resource->name,
+            $matching_line, $.); # XXX should we pass $. in to process_matches
+                                 #     callback?
 
-        my $filename = $resource->name;
-        my $line_no  = $.; # XXX should we pass $. in?
 
-        my ( $before_context, $after_context ) = get_context();
-
-        if($before_context) {
-            my $first_line = $. - @{$before_context};
-            if( !$is_first_match && $last_printed != $first_line - 1 ) {
-                if( $first_line == 10 ) {
-                    print $last_printed, ' ', $first_line, "\n";
-                }
-                App::Ack::print('--', $ors);
-            }
-            $last_printed = $.; # XXX unless --after-context
-            my $offset = @{$before_context};
-            foreach my $line (@{$before_context}) {
-                chomp $line;
-                App::Ack::print_line_with_options($opt, $filename, $line, $. - $offset, '-');
-                $last_printed = $. - $offset;
-                $offset--;
-            }
-        }
-
-        if( $is_tracking_context && !$is_first_match && $last_printed != $. - 1 ) {
-            App::Ack::print('--', $ors);
-        }
-
-        if($color) {
-            $filename = Term::ANSIColor::colored($filename,
-                $ENV{ACK_COLOR_FILENAME});
-            $line_no  = Term::ANSIColor::colored($line_no,
-                $ENV{ACK_COLOR_LINENO});
-        }
-
-        if(@- > 1) {
-            my $offset = 0; # additional offset for when we add stuff
-
-            for(my $i = 1; $i < @-; $i++) {
-                my $match_start = $-[$i];
-                my $match_end   = $+[$i];
-
-                my $substring = substr( $matching_line,
-                    $offset + $match_start, $match_end - $match_start );
-                my $substitution = Term::ANSIColor::colored( $substring,
-                    $ENV{ACK_COLOR_MATCH} );
-
-                substr( $matching_line, $offset + $match_start,
-                    $match_end - $match_start, $substitution );
-
-                $offset += length( $substitution ) - length( $substring );
-            }
-        }
-        elsif($color) {
-            # XXX I know $& is a no-no; fix it later
-            $matching_line  =~ s/$re/Term::ANSIColor::colored($&, $ENV{ACK_COLOR_MATCH})/ge;
-            $matching_line .= "\033[0m\033[K";
-        }
-
-        App::Ack::print_line_with_options($opt, $filename, $matching_line, $line_no, ':');
-        $last_printed = $.;
-
-        if($after_context) {
-            my $offset = 1;
-            foreach my $line (@{$after_context}) {
-                chomp $line;
-                App::Ack::print_line_with_options($opt, $filename, $line, $. + $offset, '-');
-                $last_printed = $. + $offset;
-                $offset++;
-            }
-        }
-
-        $is_first_match = 0;
         return --$max_count != 0;
     });
 }
