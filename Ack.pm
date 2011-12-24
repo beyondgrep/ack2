@@ -756,53 +756,107 @@ sub print_line_with_options {
     App::Ack::print( join( $separator, @line_parts ), $ors );
 }
 
-my $last_line_printed;
+{
+
+my $is_first_match;
+my $previous_file_processed;
+my $previous_line_printed;
 
 BEGIN {
-    $last_line_printed = 0;
+    $is_first_match        = 1;
+    $previous_line_printed = -1;
 }
 
 sub print_line_with_context {
-    my ( $opt, $filename, $line, $line_no ) = @_;
+    my ( $opt, $filename, $matching_line, $line_no ) = @_;
 
-    my $ors = $opt->{print0} ? "\0" : "\n";
+    if( !defined($previous_file_processed) ||
+      $previous_file_processed ne $filename ) {
+        $previous_file_processed = $filename;
+        $previous_line_printed   = -1;
+    }
 
-    my ( $before_context, $after_context ) = App::Ack::get_context();
+    my $ors                 = $opt->{print0} ? "\0" : "\n";
+    my $color               = $opt->{color};
+    my $match_word          = $opt->{w};
+    my $re                  = $opt->{regex};
+    my $is_tracking_context = $opt->{after_context} || $opt->{before_context};
+
+    chomp $matching_line;
+
+    my ( $before_context, $after_context ) = get_context();
 
     if($before_context) {
-        my $before_line_no = $line_no - @{$before_context};
-
-        if($last_line_printed != $before_line_no - 1) {
+        my $first_line = $. - @{$before_context};
+        if( !$is_first_match && $previous_line_printed != $first_line - 1 ) {
+            if( $first_line == 10 ) {
+                print $is_first_match ? 'yes' : 'no', ' ', $previous_line_printed, ' ', $first_line, "\n";
+            }
             App::Ack::print('--', $ors);
         }
-
-        foreach my $before_line (@{$before_context}) {
-            chomp $before_line;
-            App::Ack::print_line_with_options($opt, $filename, $before_line, $before_line_no, '-');
-            $last_line_printed = $before_line_no;
-            $before_line_no++;
+        $previous_line_printed = $.; # XXX unless --after-context
+        my $offset = @{$before_context};
+        foreach my $line (@{$before_context}) {
+            chomp $line;
+            App::Ack::print_line_with_options($opt, $filename, $line, $. - $offset, '-');
+            $previous_line_printed = $. - $offset;
+            $offset--;
         }
     }
 
-    if($after_context && $last_line_printed != $line_no - 1) {
+    if( $is_tracking_context && !$is_first_match && $previous_line_printed != $. - 1 ) {
         App::Ack::print('--', $ors);
     }
 
-    App::Ack::print_line_with_options($opt, $filename, $line, $line_no, ':');
+    if($color) {
+        $filename = Term::ANSIColor::colored($filename,
+            $ENV{ACK_COLOR_FILENAME});
+        $line_no  = Term::ANSIColor::colored($line_no,
+            $ENV{ACK_COLOR_LINENO});
+    }
 
-    $last_line_printed = $line_no;
+    if(@- > 1) {
+        my $offset = 0; # additional offset for when we add stuff
 
-    if($after_context) {
-        my $after_line_no = $line_no + 1;
+        for(my $i = 1; $i < @-; $i++) {
+            my $match_start = $-[$i];
+            my $match_end   = $+[$i];
 
-        foreach my $line (@{$after_context}) {
-            chomp $line;
-            App::Ack::print_line_with_options($opt, $filename, $line, $after_line_no, '-');
-            $last_line_printed = $after_line_no;
-            $after_line_no++;
+            my $substring = substr( $matching_line,
+                $offset + $match_start, $match_end - $match_start );
+            my $substitution = Term::ANSIColor::colored( $substring,
+                $ENV{ACK_COLOR_MATCH} );
+
+            substr( $matching_line, $offset + $match_start,
+                $match_end - $match_start, $substitution );
+
+            $offset += length( $substitution ) - length( $substring );
         }
     }
+    elsif($color) {
+        # XXX I know $& is a no-no; fix it later
+        $matching_line  =~ s/$re/Term::ANSIColor::colored($&, $ENV{ACK_COLOR_MATCH})/ge;
+        $matching_line .= "\033[0m\033[K";
+    }
+
+    App::Ack::print_line_with_options($opt, $filename, $matching_line, $line_no, ':');
+    $previous_line_printed = $.;
+
+    if($after_context) {
+        my $offset = 1;
+        foreach my $line (@{$after_context}) {
+            chomp $line;
+            App::Ack::print_line_with_options($opt, $filename, $line, $. + $offset, '-');
+            $previous_line_printed = $. + $offset;
+            $offset++;
+        }
+    }
+
+    $is_first_match = 0;
 }
+
+}
+
 
 =head1 COPYRIGHT & LICENSE
 
