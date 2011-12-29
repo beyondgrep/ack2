@@ -583,15 +583,19 @@ sub get_capture_indices {
 sub print_matches_in_resource {
     my ( $resource, $opt ) = @_;
 
+    my $passthru  = $opt->{passthru};
     my $max_count = $opt->{m} || -1;
     my $nmatches  = 0;
+    my $filename  = $resource->name;
 
     App::Ack::iterate($resource, $opt, sub {
         if(App::Ack::does_match($opt, $_)) {
-            App::Ack::print_line_with_context($opt, $resource->name,
-                $_, $.);
+            App::Ack::print_line_with_context($opt, $filename, $_, $.);
             $nmatches++;
             $max_count--;
+        } elsif($passthru) {
+            chomp;
+            App::Ack::print_line_with_options($opt, $filename, $_, $., ':');
         }
         return $max_count != 0;
     });
