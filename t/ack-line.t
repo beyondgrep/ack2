@@ -88,8 +88,6 @@ LINE_1_AND_5_AND_NON_EXISTENT: {
 }
 
 LINE_AND_PASSTHRU: {
-    local $TODO = 'passthru not yet implemented';
-
     my @expected = split( /\n/, <<"EOF" );
 =head1 Dummy document
 
