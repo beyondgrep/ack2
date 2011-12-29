@@ -202,6 +202,7 @@ RESOURCES:
         }
         elsif( $opt->{lines} ) {
             my $print_filename = $opt->{H} && !$opt->{h};
+            my $passthru       = $opt->{passthru};
 
             my %line_numbers;
             foreach my $line ( @{ $opt->{lines} } ) {
@@ -214,11 +215,16 @@ RESOURCES:
                 @line_numbers{@lines} = (1) x @lines;
             }
 
+            my $filename = $resource->name;
+
             App::Ack::iterate($resource, $opt, sub {
                 chomp;
 
                 if( $line_numbers{$.} ) {
-                    App::Ack::print_line_with_context($opt, $resource->name, $_, $.);
+                    App::Ack::print_line_with_context($opt, $filename, $_, $.);
+                }
+                elsif( $passthru ) {
+                    App::Ack::print_line_with_options($opt, $filename, $_, $., ':');
                 }
                 return 1;
             });
