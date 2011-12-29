@@ -548,51 +548,47 @@ sub exit_from_ack {
     exit $rc;
 }
 
-sub process_matches {
-    my ( $resource, $opt, $func ) = @_;
+sub print_matches_in_resource {
+    my ( $resource, $opt ) = @_;
 
-    my $re             = $opt->{regex};
-    my $nmatches       = 0;
-    my $invert         = $opt->{v};
-    my $after_context  = $opt->{after_context};
-    my $before_context = $opt->{before_context};
+    my $max_count = $opt->{m} || -1;
+    my $nmatches  = 0;
 
     App::Ack::iterate($resource, $opt, sub {
-        if($invert ? !/$re/ : /$re/) {
+        if(App::Ack::does_match($opt, $_)) {
+            App::Ack::print_line_with_context($opt, $resource->name,
+                $_, $.);
             $nmatches++;
-
-            my $matching_line = $_;
-
-            return 0 if $func && !$func->($matching_line);
+            $max_count--;
         }
-        return 1;
+        return $max_count != 0;
     });
 
     return $nmatches;
 }
 
-sub print_matches_in_resource {
-    my ( $resource, $opt ) = @_;
+sub does_match {
+    my ( $opt, $line ) = @_;
 
-    my $print_filename = $opt->{H} && !$opt->{h};
+    my $re     = $opt->{regex};
+    my $invert = $opt->{v};
 
-    my $max_count           = $opt->{m} || -1;
-    return process_matches($resource, $opt, sub {
-        my ( $matching_line ) = @_;
-
-        App::Ack::print_line_with_context($opt, $resource->name,
-            $matching_line, $.); # XXX should we pass $. in to process_matches
-                                 #     callback?
-
-
-        return --$max_count != 0;
-    });
+    return $invert ? $line !~ /$re/ : $line =~ /$re/;
 }
 
 sub count_matches_in_resource {
     my ( $resource, $opt ) = @_;
 
-    return process_matches($resource, $opt);
+    my $nmatches = 0;
+
+    App::Ack::iterate($resource, $opt, sub {
+        if(App::Ack::does_match($opt, $_)) {
+            $nmatches++;
+        }
+        return 1;
+    });
+
+    return $nmatches;
 }
 
 sub resource_has_match {
