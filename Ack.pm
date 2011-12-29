@@ -548,6 +548,38 @@ sub exit_from_ack {
     exit $rc;
 }
 
+{
+
+my @capture_indices;
+
+sub does_match {
+    my ( $opt, $line ) = @_;
+
+    my $re     = $opt->{regex};
+    my $invert = $opt->{v};
+
+    @capture_indices = ();
+
+    if($invert ? $line !~ /$re/ : $line =~ /$re/) {
+        if(@- > 1) {
+            use English '-no_match_vars';
+
+            @capture_indices = map {
+                [ $LAST_MATCH_START[$_], $LAST_MATCH_END[$_] ]
+            } (1 .. $#LAST_MATCH_START );
+        }
+        return 1;
+    } else {
+        return;
+    }
+}
+
+sub get_capture_indices {
+    return @capture_indices;
+}
+
+}
+
 sub print_matches_in_resource {
     my ( $resource, $opt ) = @_;
 
@@ -565,15 +597,6 @@ sub print_matches_in_resource {
     });
 
     return $nmatches;
-}
-
-sub does_match {
-    my ( $opt, $line ) = @_;
-
-    my $re     = $opt->{regex};
-    my $invert = $opt->{v};
-
-    return $invert ? $line !~ /$re/ : $line =~ /$re/;
 }
 
 sub count_matches_in_resource {
@@ -734,12 +757,12 @@ sub print_line_with_context {
             $ENV{ACK_COLOR_LINENO});
     }
 
-    if(@- > 1) {
+    my @capture_indices  = get_capture_indices();
+    if(@capture_indices) {
         my $offset = 0; # additional offset for when we add stuff
 
-        for(my $i = 1; $i < @-; $i++) {
-            my $match_start = $-[$i];
-            my $match_end   = $+[$i];
+        foreach my $index_pair ( @capture_indices ) {
+            my ( $match_start, $match_end ) = @{$index_pair};
 
             my $substring = substr( $matching_line,
                 $offset + $match_start, $match_end - $match_start );
