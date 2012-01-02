@@ -58,6 +58,8 @@ sub _compile_descend_filter {
     my %ignore_dirs;
 
     foreach my $idir (@{$idirs}) {
+        $idir = App::Ack::remove_dir_sep($idir);
+
         unless ( $idir =~ /,/ ) {
             $idir = 'is,' . $idir;
         }
