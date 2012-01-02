@@ -58,6 +58,10 @@ sub _compile_descend_filter {
     my %ignore_dirs;
 
     foreach my $idir (@{$idirs}) {
+        unless ( $idir =~ /,/ ) {
+            $idir = 'is,' . $idir;
+        }
+
         if( $idir =~ /^(\w+),(.*)/ ) {
             if( $1 eq 'is') {
                 $ignore_dirs{$2} = 1;
