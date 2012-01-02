@@ -3,6 +3,7 @@ package App::Ack::ConfigLoader;
 use strict;
 use warnings;
 
+use App::Ack ();
 use App::Ack::Filter;
 use App::Ack::Filter::Default;
 use Carp ();
@@ -129,9 +130,16 @@ sub get_arg_spec {
         'h|no-filename'     => \$opt->{h},
         'H|with-filename'   => \$opt->{H},
         'i|ignore-case'     => \$opt->{i},
-        'ignore-directory|ignore-dir=s@' 
-                            => \$opt->{idirs},
-        'ignore-file=s@'    => \$opt->{ifiles},
+        'ignore-directory|ignore-dir=s' 
+                            => sub {
+                                shift;
+                                my $dir = App::Ack::remove_dir_sep( shift );
+                                push @{ $opt->{idirs} }, $dir;
+                               },
+        'ignore-file=s'    => sub {
+                                    my ( undef, $file ) = @_;
+                                    push @{ $opt->{ifiles} }, $file;
+                               },
         'invert-file-match' => \$opt->{invert_file_match},
         'lines=s'           => sub { shift; my $val = shift; push @{$opt->{lines}}, $val },
         'l|files-with-matches'
