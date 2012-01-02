@@ -551,6 +551,7 @@ sub exit_from_ack {
 {
 
 my @capture_indices;
+my $match_column_number;
 
 sub does_match {
     my ( $opt, $line ) = @_;
@@ -561,9 +562,11 @@ sub does_match {
     @capture_indices = ();
 
     if($invert ? $line !~ /$re/ : $line =~ /$re/) {
-        if(@- > 1) {
-            use English '-no_match_vars';
+        use English '-no_match_vars';
 
+        $match_column_number = $LAST_MATCH_START[0] + 1;
+
+        if(@- > 1) {
             @capture_indices = map {
                 [ $LAST_MATCH_START[$_], $LAST_MATCH_END[$_] ]
             } (1 .. $#LAST_MATCH_START );
@@ -576,6 +579,10 @@ sub does_match {
 
 sub get_capture_indices {
     return @capture_indices;
+}
+
+sub get_match_column {
+    return $match_column_number;
 }
 
 }
