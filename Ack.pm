@@ -698,12 +698,16 @@ sub print_line_with_options {
     my ( $opt, $filename, $line, $line_no, $separator ) = @_;
 
     my $print_filename = $opt->{H} && !$opt->{h};
+    my $print_column   = $opt->{column};
     my $ors            = $opt->{print0} ? "\0" : "\n";
 
     my @line_parts;
 
     if($print_filename) {
         push @line_parts, $filename, $line_no;
+        if( $print_column ) {
+            push @line_parts, get_match_column();
+        }
     }
     push @line_parts, $line;
     App::Ack::print( join( $separator, @line_parts ), $ors );
