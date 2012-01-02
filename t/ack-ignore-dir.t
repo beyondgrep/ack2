@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 26;
+use Test::More tests => 22;
 use File::Spec;
 
 use lib 't';
@@ -45,15 +45,6 @@ sub set_up_assertion_that_these_options_will_ignore_those_directories {
     @results = grep { ! m/$svn_regex/ } @results;
 
     return;
-}
-
-FILES_HAVE_BEEN_SET_UP_AS_EXPECTED: {
-    set_up_assertion_that_these_options_will_ignore_those_directories(
-        [ '-u',  ],
-        [        ],
-        'test data contents are as expected',
-    );
-    sets_match( \@results, \@expected, $test_description );
 }
 
 DASH_IGNORE_DIR: {
@@ -126,14 +117,6 @@ LAST_ONE_LISTED_WINS: {
     set_up_assertion_that_these_options_will_ignore_those_directories(
         [ '--ignore-dir=subdir', '--noignore-dir=subdir', '--ignore-dir=subdir', ],
         [ @std_ignore,                                                 'subdir', ],
-    );
-    sets_match( \@results, \@expected, $test_description );
-}
-
-DASH_U_BEATS_THE_PANTS_OFF_IGNORE_DIR_ANY_DAY_OF_THE_WEEK: {
-    set_up_assertion_that_these_options_will_ignore_those_directories(
-        [ '-u', '--ignore-dir=subdir', ],
-        [                              ],
     );
     sets_match( \@results, \@expected, $test_description );
 }
