@@ -568,7 +568,7 @@ sub does_match {
 
             $match_column_number = $LAST_MATCH_START[0] + 1;
 
-            if(@- > 1) {
+            if(@LAST_MATCH_START > 1) {
                 @capture_indices = map {
                     [ $LAST_MATCH_START[$_], $LAST_MATCH_END[$_] ]
                 } (1 .. $#LAST_MATCH_START );
