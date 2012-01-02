@@ -562,14 +562,16 @@ sub does_match {
     @capture_indices = ();
 
     if($invert ? $line !~ /$re/ : $line =~ /$re/) {
-        use English '-no_match_vars';
+        unless($invert) {
+            use English '-no_match_vars';
 
-        $match_column_number = $LAST_MATCH_START[0] + 1;
+            $match_column_number = $LAST_MATCH_START[0] + 1;
 
-        if(@- > 1) {
-            @capture_indices = map {
-                [ $LAST_MATCH_START[$_], $LAST_MATCH_END[$_] ]
-            } (1 .. $#LAST_MATCH_START );
+            if(@- > 1) {
+                @capture_indices = map {
+                    [ $LAST_MATCH_START[$_], $LAST_MATCH_END[$_] ]
+                } (1 .. $#LAST_MATCH_START );
+            }
         }
         return 1;
     } else {
