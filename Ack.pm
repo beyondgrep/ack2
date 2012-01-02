@@ -559,7 +559,8 @@ sub does_match {
     my $re     = $opt->{regex};
     my $invert = $opt->{v};
 
-    @capture_indices = ();
+    $match_column_number = undef;
+    @capture_indices     = ();
 
     if($invert ? $line !~ /$re/ : $line =~ /$re/) {
         unless($invert) {
