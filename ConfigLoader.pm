@@ -132,8 +132,12 @@ sub get_arg_spec {
         'i|ignore-case'     => \$opt->{i},
         'ignore-directory|ignore-dir=s' 
                             => sub {
-                                shift;
-                                my $dir = App::Ack::remove_dir_sep( shift );
+                                my ( undef, $dir ) = @_;
+
+                                $dir = App::Ack::remove_dir_sep( $dir );
+                                unless( $dir =~ /,/ ) {
+                                    $dir = 'is,' . $dir;
+                                }
                                 push @{ $opt->{idirs} }, $dir;
                                },
         'ignore-file=s'    => sub {
@@ -152,6 +156,23 @@ sub get_arg_spec {
         o                   => sub { $opt->{output} = '$&' },
         'output=s'          => \$opt->{output},
         'pager=s'           => \$opt->{pager},
+        'noignore-directory|noignore-dir=s'
+                            => sub {
+                                my ( undef, $dir ) = @_;
+
+                                # XXX can you do --noignore-dir=match,...?
+                                $dir = App::Ack::remove_dir_sep( $dir );
+                                unless( $dir =~ /,/ ) {
+                                    $dir = 'is,' . $dir;
+                                }
+                                unless( $dir =~ /^is,/ ) {
+                                    Carp::croak("invalid noignore-directory argument: '$dir'");
+                                }
+
+                                @{ $opt->{idirs} } = grep {
+                                    $_ ne $dir
+                                } @{ $opt->{idirs} };
+                               },
         'nopager'           => sub { $opt->{pager} = undef },
         'passthru'          => \$opt->{passthru},
         'print0'            => \$opt->{print0},
