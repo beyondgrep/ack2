@@ -90,9 +90,6 @@ MATCH_FILTER_PM   = Match.pm
 DEFAULT_FILTER_PM = Default.pm
 INVERSE_FILTER_PM = Inverse.pm
 ALL_PM            = $(ACK_PM) $(RESOURCE_PM) $(RESOURCES_PM) $(BASIC_PM) $(FILTER_PM) $(EXT_FILTER_PM) $(FIRST_FILTER_PM) $(IS_FILTER_PM) $(MATCH_FILTER_PM) $(DEFAULT_FILTER_PM) $(INVERSE_FILTER_PM) $(CONFIG_FINDER_PM) $(CONFIG_LOADER_PM)
-ACK_HELP          = ack-help.txt
-ACK_HELP_TYPES    = ack-help-types.txt
-ACK_HELP_DIRS     = ack-help-dirs.txt
 PERL_T            = $(PERL) -T
 
 .PHONY: tags critic
@@ -109,15 +106,6 @@ $(ACK) : $(BASE) $(ALL_PM) squash Makefile
 	$(PERL) squash %s ack-base File::Next $(ALL_PM) > $(ACK)
 	$(CHMOD) 0755 $(ACK)
 	$(PERL_T) -c $(ACK)
-
-$(ACK_HELP) : $(ACK)
-	$(PERL_T) $(ACK) --noenv --help > $(ACK_HELP) || perl -e0
-
-$(ACK_HELP_TYPES) : $(ACK)
-	$(PERL_T) $(ACK) --noenv --help=types > $(ACK_HELP_TYPES) || perl -e0
-
-$(ACK_HELP_DIRS) : $(ACK)
-	$(PERL_T) $(ACK) --noenv --help=dirs > $(ACK_HELP_DIRS) || perl -e0
 
 bininst : $(ACK)
 	$(CP) $(ACK) ~/bin/ack2
