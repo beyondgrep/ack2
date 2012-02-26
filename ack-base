@@ -122,11 +122,10 @@ sub _compile_file_filter {
                 }
             }
         }
-        # don't bother invoking inverse filters unless
-        # we consider the current resource a match
+        # Don't bother invoking inverse filters unless we consider the current resource a match
         if( $match_found && @{$inverse_filters} ) {
             foreach my $filter ( @{$inverse_filters} ) {
-                unless( $filter->filter( $resource ) ) {
+                if ( not $filter->filter( $resource ) ) {
                     $match_found = 0;
                     last;
                 }
@@ -147,7 +146,7 @@ sub main {
 
     my $opt = App::Ack::ConfigLoader::process_args( @arg_sources );
 
-    unless( defined $opt->{color} ) {
+    if ( not defined $opt->{color} ) {
         $opt->{color} = !App::Ack::output_to_pipe();
     }
 
