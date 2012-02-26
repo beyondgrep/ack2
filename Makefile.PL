@@ -94,6 +94,9 @@ tags:
 		--exclude=$(ACK) \
 		--languages=Perl --langmap=Perl:+.t \
 
+critic:
+	perlcritic -1 -q -profile perlcriticrc $(BASE) $(ALL_PM) t/*.t
+
 $(ACK) : $(BASE) $(ALL_PM) squash Makefile
 	$(PERL) squash %s ack-base File::Next $(ALL_PM) > $(ACK)
 	$(CHMOD) 0755 $(ACK)
