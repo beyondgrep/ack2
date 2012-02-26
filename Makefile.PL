@@ -63,14 +63,6 @@ WriteMakefile( %parms );
 
 package MY;
 
-sub MY::top_targets {
-    my $str = shift->SUPER::top_targets(@_);
-
-    $str =~ s/^pure_all.+/$& ack ack-help.txt ack-help-types.txt ack-help-dirs.txt/m;
-
-    return $str;
-}
-
 sub MY::postamble {
     my $file_next_filename = qx(perldoc -l File::Next);
     my $postamble = sprintf(<<'MAKE_FRAG', $debug_mode);
