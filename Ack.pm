@@ -631,9 +631,14 @@ sub count_matches_in_resource {
 sub resource_has_match {
     my ( $resource, $opt ) = @_;
 
-    local $opt->{v} = 0;
+    my $stash_v = $opt->{v};
+    $opt->{v} = 0;
 
-    return count_matches_in_resource($resource, $opt) > 0;
+    my $n = count_matches_in_resource($resource, $opt) > 0;
+
+    $opt->{v} = $stash_v;
+
+    return $n;
 }
 
 {
@@ -644,7 +649,7 @@ my $is_iterating;
 
 sub get_context {
     if ( not $is_iterating ) {
-        Carp::croak("get_context() called outside of iterate()");
+        Carp::croak( 'get_context() called outside of iterate()' );
     }
 
     return (
