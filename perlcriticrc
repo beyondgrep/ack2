@@ -20,6 +20,7 @@ functions = open opendir read readline readdir close closedir
 
 [-Modules::RequireVersionVar]
 
+[-RegularExpressions::RequireDotMatchAnything]  
 [-RegularExpressions::RequireExtendedFormatting]
 [-RegularExpressions::RequireLineBoundaryMatching]
 
