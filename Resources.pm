@@ -51,7 +51,7 @@ sub from_stdin {
     my $has_been_called = 0;
 
     $self->{iter} = sub {
-        unless($has_been_called) {
+        if ( !$has_been_called ) {
             $has_been_called = 1;
             return '-';
         }
