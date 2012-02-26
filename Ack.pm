@@ -562,20 +562,21 @@ sub does_match {
     $match_column_number = undef;
     @capture_indices     = ();
 
-    if($invert ? $line !~ /$re/ : $line =~ /$re/) {
-        unless($invert) {
+    if ( $invert ? $line !~ /$re/ : $line =~ /$re/ ) {
+        if ( not $invert ) {
             use English '-no_match_vars';
 
             $match_column_number = $LAST_MATCH_START[0] + 1;
 
-            if(@LAST_MATCH_START > 1) {
+            if ( @LAST_MATCH_START > 1 ) {
                 @capture_indices = map {
                     [ $LAST_MATCH_START[$_], $LAST_MATCH_END[$_] ]
-                } (1 .. $#LAST_MATCH_START );
+                } ( 1 .. $#LAST_MATCH_START );
             }
         }
         return 1;
-    } else {
+    }
+    else {
         return;
     }
 }
@@ -599,11 +600,12 @@ sub print_matches_in_resource {
     my $filename  = $resource->name;
 
     App::Ack::iterate($resource, $opt, sub {
-        if(App::Ack::does_match($opt, $_)) {
+        if ( App::Ack::does_match($opt, $_) ) {
             App::Ack::print_line_with_context($opt, $filename, $_, $.);
             $nmatches++;
             $max_count--;
-        } elsif($passthru) {
+        }
+        elsif ( $passthru ) {
             chomp;
             App::Ack::print_line_with_options($opt, $filename, $_, $., ':');
         }
@@ -618,12 +620,10 @@ sub count_matches_in_resource {
 
     my $nmatches = 0;
 
-    App::Ack::iterate($resource, $opt, sub {
-        if(App::Ack::does_match($opt, $_)) {
-            $nmatches++;
-        }
+    App::Ack::iterate( $resource, $opt, sub {
+        ++$nmatches if App::Ack::does_match($opt, $_);
         return 1;
-    });
+    } );
 
     return $nmatches;
 }
