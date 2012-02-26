@@ -52,12 +52,12 @@ sub test_loader {
 
     my @files = map {
         $opts{$_}
-    } sort { 
+    } sort {
         my ( $a_end ) = $a =~ /(\d+)/;
         my ( $b_end ) = $b =~ /(\d+)/;
 
-        $a_end <=> $b_end
-    } grep { /^file\d+/ } keys %opts; 
+        $a_end <=> $b_end;
+    } grep { /^file\d+/ } keys %opts;
     my @tempfiles;
     foreach my $contents (@files) {
         my $file = File::Temp->new;
