@@ -664,12 +664,12 @@ sub iterate {
 
     @after_ctx_lines = @before_ctx_lines = ();
 
-    if($resource->next_text()) {
+    if ( $resource->next_text() ) {
         $current_line = $_; # prime the first line of input
     }
 
-    while(defined $current_line) {
-        while(@after_ctx_lines < $n_after_ctx_lines && $resource->next_text()) {
+    while ( defined $current_line ) {
+        while ( (@after_ctx_lines < $n_after_ctx_lines) && $resource->next_text() ) {
             push @after_ctx_lines, $_;
         }
 
@@ -693,6 +693,8 @@ sub iterate {
     }
 
     $is_iterating = 0;
+
+    return;
 }
 
 }
