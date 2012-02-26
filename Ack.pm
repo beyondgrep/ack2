@@ -643,7 +643,7 @@ my @after_ctx_lines;
 my $is_iterating;
 
 sub get_context {
-    unless( $is_iterating ) {
+    if ( not $is_iterating ) {
         Carp::croak("get_context() called outside of iterate()");
     }
 
