@@ -1,3 +1,5 @@
+verbose = %f:%l:%c %m (%p)\n
+
 [-CodeLayout::ProhibitParensWithBuiltins]
 [CodeLayout::ProhibitHardTabs]
 allow_leading_tabs = 0
@@ -33,3 +35,4 @@ functions = open opendir read readline readdir close closedir
 
 [-Variables::ProhibitPackageVars]
 [-Variables::ProhibitPunctuationVars]
+
