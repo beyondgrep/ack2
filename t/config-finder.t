@@ -1,3 +1,5 @@
+#!perl
+
 use strict;
 use warnings;
 
@@ -29,9 +31,8 @@ sub expect_ackrcs {
 
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    my @got  = $finder->find_config_files;
-    @$expected = map { realpath($_) } @$expected;
-    @got       = map { realpath($_) } @got;
+    my @got      = map { realpath($_) } $finder->find_config_files;
+    @{$expected} = map { realpath($_) } @{$expected};
     is_deeply \@got, $expected;
 }
 
