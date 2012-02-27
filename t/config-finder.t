@@ -4,16 +4,13 @@ use warnings;
 use Cwd qw(getcwd realpath);
 use File::Spec;
 use File::Temp;
+use File::Slurp qw( write_file );
 use Test::Builder;
 use Test::More tests => 21;
 
 sub touch_ackrc {
-    my ( $filename ) = @_;
-
-    $filename ||= '.ackrc';
-    my $fh;
-    open $fh, '>', $filename;
-    close $fh;
+    my $filename = shift || '.ackrc';
+    write_file( $filename, '' );
 }
 
 sub no_home (&) {
@@ -40,7 +37,7 @@ sub expect_ackrcs {
 
 my @global_files;
 
-if($^O eq 'MSWin32') {
+if ( $^O eq 'MSWin32') {
     require Win32;
 
     no strict 'subs';
@@ -49,7 +46,8 @@ if($^O eq 'MSWin32') {
         Win32::GetFolderPath(Win32::CSIDL_COMMON_APPDATA),
         Win32::GetFolderPath(Win32::CSIDL_APPDATA),
     );
-} else {
+}
+else {
     @global_files = (
         '/etc/ackrc',
         File::Spec->catfile($ENV{'HOME'}, '.ackrc'),
