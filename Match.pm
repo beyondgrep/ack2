@@ -9,7 +9,7 @@ use File::Spec;
 sub new {
     my ( $class, $re ) = @_;
 
-    $re =~ s!^/|/$!!g; # XXX validate?
+    $re =~ s{^/|/$}{}g; # XXX validate?
     $re = qr/$re/i;
 
     return bless \$re, $class;
@@ -18,8 +18,8 @@ sub new {
 sub filter {
     my ( $self, $resource ) = @_;
 
-    my $re                     = $$self;
-    my ( undef, undef, $base ) = File::Spec->splitpath($resource->name);
+    my $re   = ${$self};
+    my $base = (File::Spec->splitpath($resource->name))[2];
 
     return $base =~ /$re/;
 }
