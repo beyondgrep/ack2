@@ -67,6 +67,8 @@ sub register_filter {
     my ( undef, $type, $package ) = @_;
 
     $filter_types{$type} = $package;
+
+    return;
 }
 
 =head2 $filter->filter($resource)

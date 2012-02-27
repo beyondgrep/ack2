@@ -15,8 +15,8 @@ sub new {
 sub filter {
     my ( $self, $resource ) = @_;
 
-    my $filename               = $$self;
-    my ( undef, undef, $base ) = File::Spec->splitpath($resource->name);
+    my $filename = ${$self};
+    my $base     = (File::Spec->splitpath($resource->name))[2];
 
     return $base eq $filename;
 }

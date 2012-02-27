@@ -13,6 +13,8 @@ use Test::More tests => 21;
 sub touch_ackrc {
     my $filename = shift || '.ackrc';
     write_file( $filename, '' );
+
+    return;
 }
 
 sub no_home (&) { ## no critic (ProhibitSubroutinePrototypes)
@@ -29,13 +31,14 @@ sub no_home (&) { ## no critic (ProhibitSubroutinePrototypes)
 my $finder;
 
 sub expect_ackrcs {
-    my ( $expected, $name ) = @_;
-
     local $Test::Builder::Level = $Test::Builder::Level + 1;
+
+    my $expected = shift;
+    my $name     = shift;
 
     my @got      = map { realpath($_) } $finder->find_config_files;
     @{$expected} = map { realpath($_) } @{$expected};
-    is_deeply \@got, $expected;
+    is_deeply( \@got, $expected, 'Lines match' );
 
     return;
 }

@@ -20,7 +20,7 @@ sub new {
 sub filter {
     my ( $self, $resource ) = @_;
 
-    my $re = $$self;
+    my $re = ${$self};
 
     local $_;
     return unless $resource->next_text;

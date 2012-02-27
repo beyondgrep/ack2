@@ -211,8 +211,8 @@ sub process_other {
 
     my $arg_specs = get_arg_spec($opt, $extra_specs);
 
-    for(my $i = 0; $i < @$arg_sources; $i += 2) {
-        my ($source_name, $args) = @$arg_sources[$i, $i + 1];
+    for ( my $i = 0; $i < @{$arg_sources}; $i += 2) {
+        my ($source_name, $args) = @{$arg_sources}[$i, $i + 1];
 
         my $ret;
         if ( ref($args) ) {
@@ -349,10 +349,9 @@ sub process_args {
     while ( @{$arg_sources} ) {
         my ( $source_name, $args ) = splice( @{$arg_sources}, 0, 2 );
 
-        # by this point in time, all of our sources should be transformed
-        # into an array ref
+        # All of our sources should be transformed into an array ref
         if ( ref($args) ) {
-            if ($source_name eq 'ARGV') {
+            if ( $source_name eq 'ARGV' ) {
                 @ARGV = @{$args};
             }
             elsif (@{$args}) {
@@ -360,11 +359,11 @@ sub process_args {
             }
         }
         else {
-            Carp::croak "The impossible has occurred!";
-        };
+            Carp::croak 'The impossible has occurred!';
+        }
     }
-    $opt{'filters'} ||= [];
-    my $filters       = $opt{'filters'};
+    my $filters = ($opt{filters} ||= []);
+
     # throw the default filter in if no others are selected
     if ( not grep { !$_->is_inverted() } @{$filters} ) {
         push @{$filters}, App::Ack::Filter::Default->new();
