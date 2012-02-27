@@ -229,6 +229,8 @@ sub process_other {
     }
 
     # XXX We need to check on a -- in the middle of a non-ARGV source
+
+    return;
 }
 
 sub should_dump_options {
