@@ -14,7 +14,8 @@ use File::Slurp qw( read_file );
 use App::Ack::Filter::Default;
 
 sub test_loader {
-    my $name = pop if @_ % 2;
+    pop if @_ % 2;
+
     my %opts = @_;
 
     local $Test::Builder::Level = $Test::Builder::Level + 1;
@@ -56,6 +57,8 @@ sub test_loader {
 
     is_deeply( $got_opts, $expected_opts, 'Options match' )       or diag 'Options did not match';
     is_deeply( $got_targets, $expected_targets, 'Targets match' ) or diag 'Targets did not match';
+
+    return;
 }
 
 my %defaults = (
