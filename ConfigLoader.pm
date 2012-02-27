@@ -85,13 +85,14 @@ sub process_filetypes {
         'type-set=s' => $set_spec,
     );
 
-    for(my $i = 0; $i < @$arg_sources; $i += 2) {
-        my ( $source_name, $args ) = @$arg_sources[ $i, $i + 1];
+    for ( my $i = 0; $i < @{$arg_sources}; $i += 2) {
+        my ( $source_name, $args ) = @{$arg_sources}[ $i, $i + 1];
 
-        if( ref($args) ) {
+        if ( ref($args) ) {
             # $args are modified in place, so no need to munge $arg_sources
             Getopt::Long::GetOptionsFromArray($args, %type_arg_specs);
-        } else {
+        }
+        else {
             ( undef, $arg_sources->[$i + 1] ) =
                 Getopt::Long::GetOptionsFromString($args, %type_arg_specs);
         }
@@ -130,7 +131,7 @@ sub get_arg_spec {
         'h|no-filename'     => \$opt->{h},
         'H|with-filename'   => \$opt->{H},
         'i|ignore-case'     => \$opt->{i},
-        'ignore-directory|ignore-dir=s' 
+        'ignore-directory|ignore-dir=s'
                             => sub {
                                 my ( undef, $dir ) = @_;
 
