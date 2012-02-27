@@ -328,6 +328,8 @@ sub dump_options {
         print '=' x length($name), "\n";
         print '  ', join(' ', @{$_}), "\n" foreach sort { compare_opts($a, $b) } @{$contents};
     }
+
+    return;
 }
 
 sub process_args {
@@ -335,7 +337,7 @@ sub process_args {
 
     my %opt;
 
-    if(should_dump_options($arg_sources)) {
+    if ( should_dump_options($arg_sources) ) {
         dump_options($arg_sources);
         exit(0);
     }
