@@ -9,6 +9,7 @@ use App::Ack;
 use Cwd qw( realpath getcwd );
 use File::Spec ();
 use File::Temp ();
+use File::Slurp qw( write_file );
 
 my $wd = getcwd() or die;
 
@@ -16,12 +17,9 @@ my $tempdir = File::Temp->newdir;
 
 chdir $tempdir->dirname or die;
 
-my $fh;
-open $fh, '>', '.ackrc';
-print {$fh} <<'ACKRC';
+write_file( '.ackrc', <<'ACKRC' );
 --type-add=perl,ext,pl,t,pm
 ACKRC
-close $fh;
 
 subtest 'without --noenv' => sub {
     local @ARGV = ('-f', 'lib/');
