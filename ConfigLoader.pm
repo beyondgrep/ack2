@@ -53,7 +53,7 @@ sub process_filetypes {
             my ( undef, $value ) = @_;
 
             my @filters = @{ $type_filters{$name} };
-            unless( $value ) {
+            if ( not $value ) {
                 @filters = map { $_->invert() } @filters;
             }
 
@@ -72,7 +72,7 @@ sub process_filetypes {
             my ( undef, $value ) = @_;
 
             my @filters = @{ $type_filters{$name} };
-            unless( $value ) {
+            if ( not $value ) {
                 @filters = map { $_->invert() } @filters;
             }
 
@@ -135,7 +135,7 @@ sub get_arg_spec {
                                 my ( undef, $dir ) = @_;
 
                                 $dir = App::Ack::remove_dir_sep( $dir );
-                                unless( $dir =~ /,/ ) {
+                                if ( $dir !~ /,/ ) {
                                     $dir = 'is,' . $dir;
                                 }
                                 push @{ $opt->{idirs} }, $dir;
@@ -162,10 +162,10 @@ sub get_arg_spec {
 
                                 # XXX can you do --noignore-dir=match,...?
                                 $dir = App::Ack::remove_dir_sep( $dir );
-                                unless( $dir =~ /,/ ) {
+                                if ( $dir !~ /,/ ) {
                                     $dir = 'is,' . $dir;
                                 }
-                                unless( $dir =~ /^is,/ ) {
+                                if ( $dir !~ /^is,/ ) {
                                     Carp::croak("invalid noignore-directory argument: '$dir'");
                                 }
 
@@ -195,7 +195,7 @@ sub get_arg_spec {
                 -exitval => 0,
             });
         }, # man sub
-        $extra_specs ? %$extra_specs : (),
+        $extra_specs ? %{$extra_specs} : (),
     }; # arg_specs
 }
 
@@ -266,11 +266,11 @@ sub explode_sources {
 
     for(my $i = 0; $i < @{$sources}; $i += 2) {
         my ( $name, $options ) = @{$sources}[$i, $i + 1];
-        unless(ref($options) eq 'ARRAY') {
+        if ( ref($options) ne 'ARRAY' ) {
             $sources->[$i + 1] = $options =
                 [ Text::ParseWords::shellwords($options) ];
         }
-        for(my $j = 0; $j < @{$options}; $j++) {
+        for ( my $j = 0; $j < @{$options}; $j++ ) {
             next unless $options->[$j] =~ /^-/;
             my @chunk = ( $options->[$j] );
             push @chunk, $options->[$j] while ++$j < @{$options} && $options->[$j] !~ /^-/;
@@ -313,7 +313,7 @@ sub dump_options {
 
     for(my $i = 0; $i < @{$sources}; $i += 2) {
         my ( $name, $contents ) = @{$sources}[$i, $i + 1];
-        unless($opts_by_source{$name}) {
+        if ( not $opts_by_source{$name} ) {
             $opts_by_source{$name} = [];
             push @source_names, $name;
         }
@@ -325,7 +325,7 @@ sub dump_options {
 
         print $name, "\n";
         print '=' x length($name), "\n";
-        print "  ", join(' ', @{$_}), "\n" foreach sort { compare_opts($a, $b) } @{$contents};
+        print '  ', join(' ', @{$_}), "\n" foreach sort { compare_opts($a, $b) } @{$contents};
     }
 }
 
@@ -361,7 +361,7 @@ sub process_args {
     $opt{'filters'} ||= [];
     my $filters       = $opt{'filters'};
     # throw the default filter in if no others are selected
-    unless(grep { !$_->is_inverted() } @{$filters}) {
+    if ( not grep { !$_->is_inverted() } @{$filters} ) {
         push @{$filters}, App::Ack::Filter::Default->new();
     }
     return \%opt;
