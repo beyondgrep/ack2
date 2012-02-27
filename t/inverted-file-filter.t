@@ -1,3 +1,5 @@
+#!perl
+
 use strict;
 use warnings;
 use lib 't';
@@ -59,8 +61,7 @@ INCLUDE_PLUS_EXCLUDE_ONLY: {
         t/swamp/perl.pl
     );
 
-    my @args = ( '--ackrc=./ackrc', '--type-add=pod,ext,pod', '--perl',
-                 '--nopod', '-f', 't/swamp' );
+    my @args = ( '--ackrc=./ackrc', '--type-add=pod,ext,pod', '--perl', '--nopod', '-f', 't/swamp' );
     my @results = run_ack( @args );
 
     sets_match( \@results, \@expected );

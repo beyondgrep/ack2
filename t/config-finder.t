@@ -15,13 +15,15 @@ sub touch_ackrc {
     write_file( $filename, '' );
 }
 
-sub no_home (&) {
+sub no_home (&) { ## no critic (ProhibitSubroutinePrototypes)
     my ( $fn ) = @_;
 
     my $home = delete $ENV{'HOME'}; # localized delete isn't supported in
                                     # earlier perls
     $fn->();
     $ENV{'HOME'} = $home;
+
+    return;
 }
 
 my $finder;
@@ -34,6 +36,8 @@ sub expect_ackrcs {
     my @got      = map { realpath($_) } $finder->find_config_files;
     @{$expected} = map { realpath($_) } @{$expected};
     is_deeply \@got, $expected;
+
+    return;
 }
 
 my @global_files;
@@ -41,7 +45,7 @@ my @global_files;
 if ( $^O eq 'MSWin32') {
     require Win32;
 
-    no strict 'subs';
+    no strict 'subs'; ## no critic (ProhibitNoStrict)
 
     @global_files = (
         Win32::GetFolderPath(Win32::CSIDL_COMMON_APPDATA),
