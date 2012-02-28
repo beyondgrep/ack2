@@ -168,9 +168,9 @@ sub main {
         unless(@start == 1 && -f $start[0]) {
             $opt->{H} = 1;
         }
-        @start = ('.') if not @start;
+        @start = ('.') unless @start;
         foreach my $target (@start) {
-            unless(-e $target) {
+            if ( -e $target ) {
                 App::Ack::warn( "$target: No such file or directory" );
             }
         }
