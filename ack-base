@@ -63,11 +63,11 @@ sub _compile_descend_filter {
                 $ignore_dirs{$2} = 1;
             }
             else {
-                Carp::croak "Non-is filters are not yet supported for --ignore-dir";
+                Carp::croak( 'Non-is filters are not yet supported for --ignore-dir' );
             }
         }
         else {
-            Carp::croak "invalid filter specification '$_'";
+            Carp::croak( qq{Invalid filter specification "$_"} );
         }
     }
 
@@ -85,10 +85,11 @@ sub _compile_file_filter {
     my @ifiles_filters = map {
         my $filter;
 
-        if($_ =~ /^(\w+),(.*)/) {
+        if ( /^(\w+),(.+)/ ) {
             $filter = App::Ack::Filter->create_filter($1, split(/,/, $2));
-        } else {
-            Carp::croak "invalid filter specification '$_'";
+        }
+        else {
+            Carp::croak( qq{Invalid filter specification "$_"} );
         }
         $filter
     } @{$ifiles};
@@ -97,9 +98,7 @@ sub _compile_file_filter {
     my $inverse_filters = [ grep {  $_->is_inverted() } @{$filters} ];
     @{$filters}         =   grep { !$_->is_inverted() } @{$filters};
 
-    my %is_member_of_starting_set = map {
-        $_ => 1
-    } @{$start};
+    my %is_member_of_starting_set = map { ($_ => 1) } @{$start};
 
     my $filter_re         = $opt->{G} ? qr/$opt->{G}/ : undef;
     my $invert_file_match = $opt->{invert_file_match};
@@ -112,7 +111,7 @@ sub _compile_file_filter {
             return 0 if $filter->filter($resource);
         }
         my $match_found = 1;
-        if(@{$filters}) {
+        if ( @{$filters} ) {
             $match_found = 0;
 
             foreach my $filter (@{$filters}) {
@@ -123,7 +122,7 @@ sub _compile_file_filter {
             }
         }
         # Don't bother invoking inverse filters unless we consider the current resource a match
-        if( $match_found && @{$inverse_filters} ) {
+        if ( $match_found && @{$inverse_filters} ) {
             foreach my $filter ( @{$inverse_filters} ) {
                 if ( not $filter->filter( $resource ) ) {
                     $match_found = 0;
@@ -131,7 +130,7 @@ sub _compile_file_filter {
                 }
             }
         }
-        if($match_found && defined($filter_re)) {
+        if ( $match_found && defined($filter_re) ) {
             $match_found = $File::Next::name =~ /$filter_re/;
             if($invert_file_match) {
                 $match_found = !$match_found;
