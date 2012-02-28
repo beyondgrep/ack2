@@ -170,7 +170,7 @@ sub main {
         }
         @start = ('.') unless @start;
         foreach my $target (@start) {
-            if ( -e $target ) {
+            if ( not -e $target ) {
                 App::Ack::warn( "$target: No such file or directory" );
             }
         }
