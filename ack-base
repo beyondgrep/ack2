@@ -58,8 +58,8 @@ sub _compile_descend_filter {
     my %ignore_dirs;
 
     foreach my $idir (@{$idirs}) {
-        if( $idir =~ /^(\w+),(.*)/ ) {
-            if( $1 eq 'is') {
+        if ( $idir =~ /^(\w+),(.*)/ ) {
+            if ( $1 eq 'is') {
                 $ignore_dirs{$2} = 1;
             }
             else {
@@ -115,7 +115,7 @@ sub _compile_file_filter {
             $match_found = 0;
 
             foreach my $filter (@{$filters}) {
-                if($filter->filter($resource)) {
+                if ($filter->filter($resource)) {
                     $match_found = 1;
                     last;
                 }
@@ -132,7 +132,7 @@ sub _compile_file_filter {
         }
         if ( $match_found && defined($filter_re) ) {
             $match_found = $File::Next::name =~ /$filter_re/;
-            if($invert_file_match) {
+            if ($invert_file_match) {
                 $match_found = !$match_found;
             }
         }
@@ -155,8 +155,8 @@ sub main {
         $opt->{regex} = App::Ack::build_regex(shift @ARGV, $opt);
     }
     else {
-        if( $opt->{f} || $opt->{lines} ) {
-            if( $opt->{regex} ) {
+        if ( $opt->{f} || $opt->{lines} ) {
+            if ( $opt->{regex} ) {
                 App::Ack::warn( "regex ($opt->{regex}) specified with -f or -g" );
                 App::Ack::exit_from_ack( 0 ); # XXX the 0 is misleading
             }
@@ -198,7 +198,7 @@ RESOURCES:
             ++$nmatches;
             last RESOURCES if defined($max_count) && $nmatches >= $max_count;
         }
-        elsif( $opt->{lines} ) {
+        elsif ( $opt->{lines} ) {
             my $print_filename = $opt->{H} && !$opt->{h};
             my $passthru       = $opt->{passthru};
 
@@ -218,19 +218,19 @@ RESOURCES:
             App::Ack::iterate($resource, $opt, sub {
                 chomp;
 
-                if( $line_numbers{$.} ) {
+                if ( $line_numbers{$.} ) {
                     App::Ack::print_line_with_context($opt, $filename, $_, $.);
                 }
-                elsif( $passthru ) {
+                elsif ( $passthru ) {
                     App::Ack::print_line_with_options($opt, $filename, $_, $., ':');
                 }
                 return 1;
             });
         }
-        elsif( $opt->{count} ) {
+        elsif ( $opt->{count} ) {
             my $matches_for_this_file = App::Ack::count_matches_in_resource( $resource, $opt );
-            if( !$opt->{l} || $matches_for_this_file > 0) {
-                if($print_filenames) {
+            if ( !$opt->{l} || $matches_for_this_file > 0) {
+                if ( $print_filenames ) {
                     # XXX printing should probably happen inside of App::Ack
                     print $resource->name, ':', $matches_for_this_file, $ors;
                 }
@@ -240,11 +240,11 @@ RESOURCES:
                 }
             }
         }
-        elsif( $opt->{l} ) {
+        elsif ( $opt->{l} ) {
             my $matches = App::Ack::resource_has_match( $resource, $opt );
             my $invert  = $opt->{v};
 
-            if( $invert ? !$matches : $matches ) {
+            if ( $invert ? !$matches : $matches ) {
                 # XXX printing should probably happen inside of App::Ack
                 print $resource->name, $ors;
                 ++$nmatches;
