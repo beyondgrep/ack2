@@ -471,13 +471,13 @@ sub load_colors {
 # print subs added in order to make it easy for a third party
 # module (such as App::Wack) to redefine the display methods
 # and show the results in a different way.
-sub print                   { print {$fh} @_ }
-sub print_first_filename    { App::Ack::print( $_[0], "\n" ) }
-sub print_blank_line        { App::Ack::print( "\n" ) }
-sub print_separator         { App::Ack::print( "--\n" ) }
-sub print_filename          { App::Ack::print( $_[0], $_[1] ) }
-sub print_line_no           { App::Ack::print( $_[0], $_[1] ) }
-sub print_column_no         { App::Ack::print( $_[0], $_[1] ) }
+sub print                   { print {$fh} @_; return; }
+sub print_first_filename    { App::Ack::print( $_[0], "\n" ); return; }
+sub print_blank_line        { App::Ack::print( "\n" ); return; }
+sub print_separator         { App::Ack::print( "--\n" ); return; }
+sub print_filename          { App::Ack::print( $_[0], $_[1] ); return; }
+sub print_line_no           { App::Ack::print( $_[0], $_[1] ); return; }
+sub print_column_no         { App::Ack::print( $_[0], $_[1] ); return; }
 sub print_count {
     my $filename = shift;
     my $nmatches = shift;
@@ -493,6 +493,8 @@ sub print_count {
         App::Ack::print( $nmatches ) if $count;
     }
     App::Ack::print( $ors );
+
+    return;
 }
 
 sub print_count0 {
@@ -506,6 +508,8 @@ sub print_count0 {
     else {
         App::Ack::print( '0', $ors );
     }
+
+    return;
 }
 
 sub set_up_pager {
@@ -721,6 +725,8 @@ sub print_line_with_options {
     }
     push @line_parts, $line;
     App::Ack::print( join( $separator, @line_parts ), $ors );
+
+    return;
 }
 
 {
