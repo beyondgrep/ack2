@@ -256,7 +256,7 @@ Put out an ack-specific warning.
 
 =cut
 
-sub warn { ## no critic (ProhibitBuiltinHomonyms)
+sub warn {
     return CORE::warn( _my_program(), ': ', @_, "\n" );
 }
 
@@ -266,7 +266,7 @@ Die in an ack-specific way.
 
 =cut
 
-sub die { ## no critic (ProhibitBuiltinHomonyms)
+sub die {
     return CORE::die( _my_program(), ': ', @_, "\n" );
 }
 
