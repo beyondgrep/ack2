@@ -29,7 +29,8 @@ functions = open opendir read readline readdir close closedir
 [-Subroutines::RequireArgUnpacking]
 
 [-TestingAndDebugging::ProhibitNoStrict]
-# If I've turned off strict, I know why I'm doing it.
+[-TestingAndDebugging::ProhibitNoWarnings]
+# If I've turned off warnings or strict, I know why I'm doing it.
 
 [-ValuesAndExpressions::ProhibitNoisyQuotes]
 [-ValuesAndExpressions::ProhibitEmptyQuotes]
