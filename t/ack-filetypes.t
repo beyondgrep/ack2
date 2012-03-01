@@ -1,3 +1,5 @@
+#!perl
+
 use strict;
 use warnings;
 
@@ -70,3 +72,5 @@ foreach my $filetype ( @filetypes ) {
     is( scalar @{$stderr}, 0, "--$filetype should print no errors" )
         or diag(explain($stderr));
 }
+
+done_testing();
