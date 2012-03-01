@@ -310,12 +310,12 @@ sub show_help {
 #   return show_help_types() if $help_arg =~ /^types?/;
 
     App::Ack::print( <<"END_OF_HELP" );
-Usage: ack [OPTION]... PATTERN [PATHS]
+Usage: ack [OPTION]... PATTERN [FILES or DIRECTORIES]
 
 Search for PATTERN in each source file in the tree from cwd on down.
-If [PATHS] is specified, then only those files/directories are checked.
-ack may also search STDIN, but only if no PATHS are specified, or if
-one of PATHS is "-".
+If [FILES or DIRECTORIES] is specified, then only those files/directories are 
+checked. ack may also search STDIN, but only if no files or directories are
+specified, or if one of the arguments is "-".
 
 Default switches may be specified in ACK_OPTIONS environment variable or
 an .ackrc file. If you want no dependency on the environment, turn it
@@ -358,7 +358,7 @@ Display the filetypes help subpage.
 
 sub show_help_types {
     App::Ack::print( <<'END_OF_HELP' );
-Usage: ack [OPTION]... PATTERN [PATHS]
+Usage: ack [OPTION]... PATTERN [FILES or DIRECTORIES]
 
 The following is the list of filetypes supported by ack.  You can
 specify a file type with the --type=TYPE format, or the --TYPE
