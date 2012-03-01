@@ -37,7 +37,7 @@ sub test_loader {
     foreach my $contents (@files) {
         my $file = File::Temp->new;
         print {$file} $contents;
-        close $file;
+        close $file or die $!;
     }
 
     my ( $got_opts, $got_targets );
@@ -48,7 +48,7 @@ sub test_loader {
 
         my @arg_sources = (
             ARGV => $argv,
-            map { $_ => scalar read_file($_), } @files,
+            map { $_ => scalar read_file($_) } @files,
         );
 
         $got_opts    = App::Ack::ConfigLoader::process_args( @arg_sources );
