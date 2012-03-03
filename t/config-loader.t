@@ -1,3 +1,5 @@
+#!perl
+
 use strict;
 use warnings;
 use lib 't';
@@ -7,39 +9,13 @@ use Test::More;
 use Carp qw(croak);
 use File::Temp;
 
+use File::Slurp qw( read_file );
+
 use App::Ack::Filter::Default;
 
-sub indent {
-    my ( $s ) = @_;
-
-    $s =~ s/^/  /gm;
-
-    return $s;
-}
-
-sub read_file {
-    my ( $filename ) = @_;
-
-    local $/;
-
-    my $fh;
-    open $fh, '<', $filename or croak $!;
-    my $contents = <$fh>;
-    close $fh;
-    return $contents;
-}
-
-sub write_file {
-    my ( $filename, $contents ) = @_;
-
-    my $fh;
-    open $fh, '>', $filename or croak $!;
-    print $fh $contents;
-    close $fh;
-}
-
 sub test_loader {
-    my $name = pop if @_ % 2;
+    pop if @_ % 2;
+
     my %opts = @_;
 
     local $Test::Builder::Level = $Test::Builder::Level + 1;
@@ -52,18 +28,16 @@ sub test_loader {
 
     my @files = map {
         $opts{$_}
-    } sort { 
+    } sort {
         my ( $a_end ) = $a =~ /(\d+)/;
         my ( $b_end ) = $b =~ /(\d+)/;
 
-        $a_end <=> $b_end
-    } grep { /^file\d+/ } keys %opts; 
-    my @tempfiles;
+        $a_end <=> $b_end;
+    } grep { /^file\d+/ } keys %opts;
     foreach my $contents (@files) {
         my $file = File::Temp->new;
-        print $file $contents;
-        close $file;
-        push @tempfiles, $file;
+        print {$file} $contents;
+        close $file or die $!;
     }
 
     my ( $got_opts, $got_targets );
@@ -74,17 +48,17 @@ sub test_loader {
 
         my @arg_sources = (
             ARGV => $argv,
-            map {
-                $_ => read_file($_),
-            } @files,
+            map { $_ => scalar read_file($_) } @files,
         );
 
         $got_opts    = App::Ack::ConfigLoader::process_args( @arg_sources );
         $got_targets = [ @ARGV ];
     };
 
-    is_deeply($got_opts, $expected_opts)       or diag "Options did not match";
-    is_deeply($got_targets, $expected_targets) or diag "Targets did not match";
+    is_deeply( $got_opts, $expected_opts, 'Options match' )       or diag 'Options did not match';
+    is_deeply( $got_targets, $expected_targets, 'Targets match' ) or diag 'Targets did not match';
+
+    return;
 }
 
 my %defaults = (
@@ -124,33 +98,38 @@ my %defaults = (
 
 use_ok 'App::Ack::ConfigLoader';
 
-test_loader
+test_loader(
     expected_opts    => { %defaults },
     expected_targets => [],
-    'empty inputs should result in default outputs';
+    'empty inputs should result in default outputs'
+);
 
-test_loader
+test_loader(
     argv             => ['-A', '15'],
     expected_opts    => { %defaults, after_context => 15 },
     expected_targets => [],
-    '-A should set after_context';
+    '-A should set after_context'
+);
 
-test_loader
+test_loader(
     argv             => ['--after-context=15'],
     expected_opts    => { %defaults, after_context => 15 },
     expected_targets => [],
-    '--after-context should set after_context';
+    '--after-context should set after_context'
+);
 
-test_loader
+test_loader(
     argv             => ['-B', '15'],
     expected_opts    => { %defaults, before_context => 15 },
     expected_targets => [],
-    '-B should set before_context';
+    '-B should set before_context'
+);
 
-test_loader
+test_loader(
     argv             => ['--before-context=15'],
     expected_opts    => { %defaults, before_context => 15 },
     expected_targets => [],
-    '--before-context should set before_context';
+    '--before-context should set before_context'
+);
 
 done_testing;

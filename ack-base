@@ -58,16 +58,16 @@ sub _compile_descend_filter {
     my %ignore_dirs;
 
     foreach my $idir (@{$idirs}) {
-        if( $idir =~ /^(\w+),(.*)/ ) {
-            if( $1 eq 'is') {
+        if ( $idir =~ /^(\w+),(.*)/ ) {
+            if ( $1 eq 'is') {
                 $ignore_dirs{$2} = 1;
             }
             else {
-                Carp::croak "Non-is filters are not yet supported for --ignore-dir";
+                Carp::croak( 'Non-is filters are not yet supported for --ignore-dir' );
             }
         }
         else {
-            Carp::croak "invalid filter specification '$_'";
+            Carp::croak( qq{Invalid filter specification "$_"} );
         }
     }
 
@@ -85,10 +85,11 @@ sub _compile_file_filter {
     my @ifiles_filters = map {
         my $filter;
 
-        if($_ =~ /^(\w+),(.*)/) {
+        if ( /^(\w+),(.+)/ ) {
             $filter = App::Ack::Filter->create_filter($1, split(/,/, $2));
-        } else {
-            Carp::croak "invalid filter specification '$_'";
+        }
+        else {
+            Carp::croak( qq{Invalid filter specification "$_"} );
         }
         $filter
     } @{$ifiles};
@@ -97,9 +98,7 @@ sub _compile_file_filter {
     my $inverse_filters = [ grep {  $_->is_inverted() } @{$filters} ];
     @{$filters}         =   grep { !$_->is_inverted() } @{$filters};
 
-    my %is_member_of_starting_set = map {
-        $_ => 1
-    } @{$start};
+    my %is_member_of_starting_set = map { ($_ => 1) } @{$start};
 
     my $filter_re         = $opt->{G} ? qr/$opt->{G}/ : undef;
     my $invert_file_match = $opt->{invert_file_match};
@@ -112,29 +111,28 @@ sub _compile_file_filter {
             return 0 if $filter->filter($resource);
         }
         my $match_found = 1;
-        if(@{$filters}) {
+        if ( @{$filters} ) {
             $match_found = 0;
 
             foreach my $filter (@{$filters}) {
-                if($filter->filter($resource)) {
+                if ($filter->filter($resource)) {
                     $match_found = 1;
                     last;
                 }
             }
         }
-        # don't bother invoking inverse filters unless
-        # we consider the current resource a match
-        if( $match_found && @{$inverse_filters} ) {
+        # Don't bother invoking inverse filters unless we consider the current resource a match
+        if ( $match_found && @{$inverse_filters} ) {
             foreach my $filter ( @{$inverse_filters} ) {
-                unless( $filter->filter( $resource ) ) {
+                if ( not $filter->filter( $resource ) ) {
                     $match_found = 0;
                     last;
                 }
             }
         }
-        if($match_found && defined($filter_re)) {
+        if ( $match_found && defined($filter_re) ) {
             $match_found = $File::Next::name =~ /$filter_re/;
-            if($invert_file_match) {
+            if ($invert_file_match) {
                 $match_found = !$match_found;
             }
         }
@@ -147,7 +145,7 @@ sub main {
 
     my $opt = App::Ack::ConfigLoader::process_args( @arg_sources );
 
-    unless( defined $opt->{color} ) {
+    if ( not defined $opt->{color} ) {
         $opt->{color} = !App::Ack::output_to_pipe();
     }
 
@@ -157,8 +155,8 @@ sub main {
         $opt->{regex} = App::Ack::build_regex(shift @ARGV, $opt);
     }
     else {
-        if( $opt->{f} || $opt->{lines} ) {
-            if( $opt->{regex} ) {
+        if ( $opt->{f} || $opt->{lines} ) {
+            if ( $opt->{regex} ) {
                 App::Ack::warn( "regex ($opt->{regex}) specified with -f or -g" );
                 App::Ack::exit_from_ack( 0 ); # XXX the 0 is misleading
             }
@@ -170,9 +168,9 @@ sub main {
         unless(@start == 1 && -f $start[0]) {
             $opt->{H} = 1;
         }
-        @start = ('.') if not @start;
+        @start = ('.') unless @start;
         foreach my $target (@start) {
-            unless(-e $target) {
+            if ( not -e $target ) {
                 App::Ack::warn( "$target: No such file or directory" );
             }
         }
@@ -200,7 +198,7 @@ RESOURCES:
             ++$nmatches;
             last RESOURCES if defined($max_count) && $nmatches >= $max_count;
         }
-        elsif( $opt->{lines} ) {
+        elsif ( $opt->{lines} ) {
             my $print_filename = $opt->{H} && !$opt->{h};
             my $passthru       = $opt->{passthru};
 
@@ -220,19 +218,19 @@ RESOURCES:
             App::Ack::iterate($resource, $opt, sub {
                 chomp;
 
-                if( $line_numbers{$.} ) {
+                if ( $line_numbers{$.} ) {
                     App::Ack::print_line_with_context($opt, $filename, $_, $.);
                 }
-                elsif( $passthru ) {
+                elsif ( $passthru ) {
                     App::Ack::print_line_with_options($opt, $filename, $_, $., ':');
                 }
                 return 1;
             });
         }
-        elsif( $opt->{count} ) {
+        elsif ( $opt->{count} ) {
             my $matches_for_this_file = App::Ack::count_matches_in_resource( $resource, $opt );
-            if( !$opt->{l} || $matches_for_this_file > 0) {
-                if($print_filenames) {
+            if ( !$opt->{l} || $matches_for_this_file > 0) {
+                if ( $print_filenames ) {
                     # XXX printing should probably happen inside of App::Ack
                     print $resource->name, ':', $matches_for_this_file, $ors;
                 }
@@ -242,11 +240,11 @@ RESOURCES:
                 }
             }
         }
-        elsif( $opt->{l} ) {
+        elsif ( $opt->{l} ) {
             my $matches = App::Ack::resource_has_match( $resource, $opt );
             my $invert  = $opt->{v};
 
-            if( $invert ? !$matches : $matches ) {
+            if ( $invert ? !$matches : $matches ) {
                 # XXX printing should probably happen inside of App::Ack
                 print $resource->name, $ors;
                 ++$nmatches;
@@ -260,3 +258,144 @@ RESOURCES:
     close $App::Ack::fh;
     App::Ack::exit_from_ack( $nmatches );
 }
+
+
+=head1 AUTHOR
+
+Andy Lester, C<< <andy at petdance.com> >>
+
+=head1 BUGS
+
+Please report any bugs or feature requests to the issues list at
+Github: L<https://github.com/petdance/ack/issues>
+
+=head1 ENHANCEMENTS
+
+All enhancement requests MUST first be posted to the ack-users
+mailing list at L<http://groups.google.com/group/ack-users>.  I
+will not consider a request without it first getting seen by other
+ack users.  This includes requests for new filetypes.
+
+There is a list of enhancements I want to make to F<ack> in the ack
+issues list at Github: L<https://github.com/petdance/ack/issues>
+
+Patches are always welcome, but patches with tests get the most
+attention.
+
+=head1 SUPPORT
+
+Support for and information about F<ack> can be found at:
+
+=over 4
+
+=item * The ack homepage
+
+L<http://betterthangrep.com/>
+
+=item * The ack-users mailing list
+
+L<http://groups.google.com/group/ack-users>
+
+=item * The ack issues list at Github
+
+L<https://github.com/petdance/ack/issues>
+
+=item * AnnoCPAN: Annotated CPAN documentation
+
+L<http://annocpan.org/dist/ack>
+
+=item * CPAN Ratings
+
+L<http://cpanratings.perl.org/d/ack>
+
+=item * Search CPAN
+
+L<http://search.cpan.org/dist/ack>
+
+=item * Git source repository
+
+L<https://github.com/petdance/ack>
+
+=back
+
+=head1 ACKNOWLEDGEMENTS
+
+How appropriate to have I<ack>nowledgements!
+
+Thanks to everyone who has contributed to ack in any way, including
+Shlomi Fish,
+Karen Etheridge,
+Olivier Mengue,
+Matthew Wild,
+Scott Kyle,
+Nick Hooey,
+Bo Borgerson,
+Mark Szymanski,
+Marq Schneider,
+Packy Anderson,
+JR Boyens,
+Dan Sully,
+Ryan Niebur,
+Kent Fredric,
+Mike Morearty,
+Ingmar Vanhassel,
+Eric Van Dewoestine,
+Sitaram Chamarty,
+Adam James,
+Richard Carlsson,
+Pedro Melo,
+AJ Schuster,
+Phil Jackson,
+Michael Schwern,
+Jan Dubois,
+Christopher J. Madsen,
+Matthew Wickline,
+David Dyck,
+Jason Porritt,
+Jjgod Jiang,
+Thomas Klausner,
+Uri Guttman,
+Peter Lewis,
+Kevin Riggle,
+Ori Avtalion,
+Torsten Blix,
+Nigel Metheringham,
+GE<aacute>bor SzabE<oacute>,
+Tod Hagan,
+Michael Hendricks,
+E<AElig>var ArnfjE<ouml>rE<eth> Bjarmason,
+Piers Cawley,
+Stephen Steneker,
+Elias Lutfallah,
+Mark Leighton Fisher,
+Matt Diephouse,
+Christian Jaeger,
+Bill Sully,
+Bill Ricker,
+David Golden,
+Nilson Santos F. Jr,
+Elliot Shank,
+Merijn Broeren,
+Uwe Voelker,
+Rick Scott,
+Ask BjE<oslash>rn Hansen,
+Jerry Gay,
+Will Coleda,
+Mike O'Regan,
+Slaven ReziE<0x107>,
+Mark Stosberg,
+David Alan Pisoni,
+Adriano Ferreira,
+James Keenan,
+Leland Johnson,
+Ricardo Signes
+and Pete Krawczyk.
+
+=head1 COPYRIGHT & LICENSE
+
+Copyright 2005-2012 Andy Lester.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the Artistic License v2.0.
+
+=cut

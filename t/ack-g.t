@@ -340,7 +340,7 @@ G_WITH_REGEX: {
     isnt( get_rc(), 0, 'Specifying both -g and --match must lead to an error RC' );
     is( scalar @{$stdout}, 0, 'No normal output' );
     is( scalar @{$stderr}, 1, 'One line of stderr output' );
-    like( $stderr->[0], qr/\(Sue\)/, 'Error message must contain "(Sue)"' );
+    like( $stderr->[0], qr/\Q(Sue)/, 'Error message must contain "(Sue)"' );
 }
 
 F_WITH_REGEX: {
@@ -352,5 +352,5 @@ F_WITH_REGEX: {
     isnt( get_rc(), 0, 'Specifying both -f and --match must lead to an error RC' );
     is( scalar @{$stdout}, 0, 'No normal output' );
     is( scalar @{$stderr}, 1, 'One line of stderr output' );
-    like( $stderr->[0], qr/\(Sue\)/, 'Error message must contain "(Sue)"' );
+    like( $stderr->[0], qr/\Q(Sue)/, 'Error message must contain "(Sue)"' );
 }

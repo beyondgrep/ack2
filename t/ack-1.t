@@ -54,5 +54,5 @@ DASH_G: {
     my $test_path = File::Next::reslash( 't/swamp/Makefile' );
 
     is( scalar @results, 1, "Should only get one file back from $regex" );
-    like( $results[0], qr{^\Q$test_path\E(\.PL)?$}, 'The one file matches one of the two Makefile files' );
+    like( $results[0], qr{^\Q$test_path\E(?:[.]PL)?$}, 'The one file matches one of the two Makefile files' );
 }

@@ -53,7 +53,7 @@ sub process_filetypes {
             my ( undef, $value ) = @_;
 
             my @filters = @{ $type_filters{$name} };
-            unless( $value ) {
+            if ( not $value ) {
                 @filters = map { $_->invert() } @filters;
             }
 
@@ -72,7 +72,7 @@ sub process_filetypes {
             my ( undef, $value ) = @_;
 
             my @filters = @{ $type_filters{$name} };
-            unless( $value ) {
+            if ( not $value ) {
                 @filters = map { $_->invert() } @filters;
             }
 
@@ -85,13 +85,14 @@ sub process_filetypes {
         'type-set=s' => $set_spec,
     );
 
-    for(my $i = 0; $i < @$arg_sources; $i += 2) {
-        my ( $source_name, $args ) = @$arg_sources[ $i, $i + 1];
+    for ( my $i = 0; $i < @{$arg_sources}; $i += 2) {
+        my ( $source_name, $args ) = @{$arg_sources}[ $i, $i + 1];
 
-        if( ref($args) ) {
+        if ( ref($args) ) {
             # $args are modified in place, so no need to munge $arg_sources
             Getopt::Long::GetOptionsFromArray($args, %type_arg_specs);
-        } else {
+        }
+        else {
             ( undef, $arg_sources->[$i + 1] ) =
                 Getopt::Long::GetOptionsFromString($args, %type_arg_specs);
         }
@@ -130,12 +131,12 @@ sub get_arg_spec {
         'h|no-filename'     => \$opt->{h},
         'H|with-filename'   => \$opt->{H},
         'i|ignore-case'     => \$opt->{i},
-        'ignore-directory|ignore-dir=s' 
+        'ignore-directory|ignore-dir=s'
                             => sub {
                                 my ( undef, $dir ) = @_;
 
                                 $dir = App::Ack::remove_dir_sep( $dir );
-                                unless( $dir =~ /,/ ) {
+                                if ( $dir !~ /,/ ) {
                                     $dir = 'is,' . $dir;
                                 }
                                 push @{ $opt->{idirs} }, $dir;
@@ -162,10 +163,10 @@ sub get_arg_spec {
 
                                 # XXX can you do --noignore-dir=match,...?
                                 $dir = App::Ack::remove_dir_sep( $dir );
-                                unless( $dir =~ /,/ ) {
+                                if ( $dir !~ /,/ ) {
                                     $dir = 'is,' . $dir;
                                 }
-                                unless( $dir =~ /^is,/ ) {
+                                if ( $dir !~ /^is,/ ) {
                                     Carp::croak("invalid noignore-directory argument: '$dir'");
                                 }
 
@@ -195,7 +196,7 @@ sub get_arg_spec {
                 -exitval => 0,
             });
         }, # man sub
-        $extra_specs ? %$extra_specs : (),
+        $extra_specs ? %{$extra_specs} : (),
     }; # arg_specs
 }
 
@@ -210,8 +211,8 @@ sub process_other {
 
     my $arg_specs = get_arg_spec($opt, $extra_specs);
 
-    for(my $i = 0; $i < @$arg_sources; $i += 2) {
-        my ($source_name, $args) = @$arg_sources[$i, $i + 1];
+    for ( my $i = 0; $i < @{$arg_sources}; $i += 2) {
+        my ($source_name, $args) = @{$arg_sources}[$i, $i + 1];
 
         my $ret;
         if ( ref($args) ) {
@@ -228,6 +229,8 @@ sub process_other {
     }
 
     # XXX We need to check on a -- in the middle of a non-ARGV source
+
+    return;
 }
 
 sub should_dump_options {
@@ -266,11 +269,11 @@ sub explode_sources {
 
     for(my $i = 0; $i < @{$sources}; $i += 2) {
         my ( $name, $options ) = @{$sources}[$i, $i + 1];
-        unless(ref($options) eq 'ARRAY') {
+        if ( ref($options) ne 'ARRAY' ) {
             $sources->[$i + 1] = $options =
                 [ Text::ParseWords::shellwords($options) ];
         }
-        for(my $j = 0; $j < @{$options}; $j++) {
+        for ( my $j = 0; $j < @{$options}; $j++ ) {
             next unless $options->[$j] =~ /^-/;
             my @chunk = ( $options->[$j] );
             push @chunk, $options->[$j] while ++$j < @{$options} && $options->[$j] !~ /^-/;
@@ -313,7 +316,7 @@ sub dump_options {
 
     for(my $i = 0; $i < @{$sources}; $i += 2) {
         my ( $name, $contents ) = @{$sources}[$i, $i + 1];
-        unless($opts_by_source{$name}) {
+        if ( not $opts_by_source{$name} ) {
             $opts_by_source{$name} = [];
             push @source_names, $name;
         }
@@ -325,8 +328,10 @@ sub dump_options {
 
         print $name, "\n";
         print '=' x length($name), "\n";
-        print "  ", join(' ', @{$_}), "\n" foreach sort { compare_opts($a, $b) } @{$contents};
+        print '  ', join(' ', @{$_}), "\n" foreach sort { compare_opts($a, $b) } @{$contents};
     }
+
+    return;
 }
 
 sub process_args {
@@ -334,7 +339,7 @@ sub process_args {
 
     my %opt;
 
-    if(should_dump_options($arg_sources)) {
+    if ( should_dump_options($arg_sources) ) {
         dump_options($arg_sources);
         exit(0);
     }
@@ -342,12 +347,11 @@ sub process_args {
     my $type_specs = process_filetypes(\%opt, $arg_sources);
     process_other(\%opt, $type_specs, $arg_sources);
     while ( @{$arg_sources} ) {
-        my ( $source_name, $args ) = splice( @$arg_sources, 0, 2 );
+        my ( $source_name, $args ) = splice( @{$arg_sources}, 0, 2 );
 
-        # by this point in time, all of our sources should be transformed
-        # into an array ref
+        # All of our sources should be transformed into an array ref
         if ( ref($args) ) {
-            if ($source_name eq 'ARGV') {
+            if ( $source_name eq 'ARGV' ) {
                 @ARGV = @{$args};
             }
             elsif (@{$args}) {
@@ -355,13 +359,13 @@ sub process_args {
             }
         }
         else {
-            Carp::croak "The impossible has occurred!";
-        };
+            Carp::croak 'The impossible has occurred!';
+        }
     }
-    $opt{'filters'} ||= [];
-    my $filters       = $opt{'filters'};
+    my $filters = ($opt{filters} ||= []);
+
     # throw the default filter in if no others are selected
-    unless(grep { !$_->is_inverted() } @{$filters}) {
+    if ( not grep { !$_->is_inverted() } @{$filters} ) {
         push @{$filters}, App::Ack::Filter::Default->new();
     }
     return \%opt;

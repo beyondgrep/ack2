@@ -256,7 +256,7 @@ Put out an ack-specific warning.
 
 =cut
 
-sub warn { ## no critic (ProhibitBuiltinHomonyms)
+sub warn {
     return CORE::warn( _my_program(), ': ', @_, "\n" );
 }
 
@@ -266,7 +266,7 @@ Die in an ack-specific way.
 
 =cut
 
-sub die { ## no critic (ProhibitBuiltinHomonyms)
+sub die {
     return CORE::die( _my_program(), ': ', @_, "\n" );
 }
 
@@ -310,12 +310,13 @@ sub show_help {
 #   return show_help_types() if $help_arg =~ /^types?/;
 
     App::Ack::print( <<"END_OF_HELP" );
-Usage: ack [OPTION]... PATTERN [FILES or DIRECTORIES]
+Usage: ack [OPTION]... PATTERN [FILES OR DIRECTORIES]
 
-Search for PATTERN in each source file in the tree from cwd on down.
-If [FILES or DIRECTORIES] is specified, then only those files/directories are 
-checked. ack may also search STDIN, but only if no files or directories are
-specified, or if one of the arguments is "-".
+Search for PATTERN in each source file in the tree from the current
+directory on down.  If any files or directories are specified, then
+only those files and directories are checked.  ack may also search
+STDIN, but only if no file or directory arguments are specified,
+or if one of them is "-".
 
 Default switches may be specified in ACK_OPTIONS environment variable or
 an .ackrc file. If you want no dependency on the environment, turn it
@@ -358,7 +359,7 @@ Display the filetypes help subpage.
 
 sub show_help_types {
     App::Ack::print( <<'END_OF_HELP' );
-Usage: ack [OPTION]... PATTERN [FILES or DIRECTORIES]
+Usage: ack [OPTION]... PATTERN [FILES OR DIRECTORIES]
 
 The following is the list of filetypes supported by ack.  You can
 specify a file type with the --type=TYPE format, or the --TYPE
@@ -471,13 +472,13 @@ sub load_colors {
 # print subs added in order to make it easy for a third party
 # module (such as App::Wack) to redefine the display methods
 # and show the results in a different way.
-sub print                   { print {$fh} @_ }
-sub print_first_filename    { App::Ack::print( $_[0], "\n" ) }
-sub print_blank_line        { App::Ack::print( "\n" ) }
-sub print_separator         { App::Ack::print( "--\n" ) }
-sub print_filename          { App::Ack::print( $_[0], $_[1] ) }
-sub print_line_no           { App::Ack::print( $_[0], $_[1] ) }
-sub print_column_no         { App::Ack::print( $_[0], $_[1] ) }
+sub print                   { print {$fh} @_; return; }
+sub print_first_filename    { App::Ack::print( $_[0], "\n" ); return; }
+sub print_blank_line        { App::Ack::print( "\n" ); return; }
+sub print_separator         { App::Ack::print( "--\n" ); return; }
+sub print_filename          { App::Ack::print( $_[0], $_[1] ); return; }
+sub print_line_no           { App::Ack::print( $_[0], $_[1] ); return; }
+sub print_column_no         { App::Ack::print( $_[0], $_[1] ); return; }
 sub print_count {
     my $filename = shift;
     my $nmatches = shift;
@@ -493,6 +494,8 @@ sub print_count {
         App::Ack::print( $nmatches ) if $count;
     }
     App::Ack::print( $ors );
+
+    return;
 }
 
 sub print_count0 {
@@ -506,6 +509,8 @@ sub print_count0 {
     else {
         App::Ack::print( '0', $ors );
     }
+
+    return;
 }
 
 sub set_up_pager {
@@ -562,20 +567,21 @@ sub does_match {
     $match_column_number = undef;
     @capture_indices     = ();
 
-    if($invert ? $line !~ /$re/ : $line =~ /$re/) {
-        unless($invert) {
+    if ( $invert ? $line !~ /$re/ : $line =~ /$re/ ) {
+        if ( not $invert ) {
             use English '-no_match_vars';
 
             $match_column_number = $LAST_MATCH_START[0] + 1;
 
-            if(@LAST_MATCH_START > 1) {
+            if ( @LAST_MATCH_START > 1 ) {
                 @capture_indices = map {
                     [ $LAST_MATCH_START[$_], $LAST_MATCH_END[$_] ]
-                } (1 .. $#LAST_MATCH_START );
+                } ( 1 .. $#LAST_MATCH_START );
             }
         }
         return 1;
-    } else {
+    }
+    else {
         return;
     }
 }
@@ -599,11 +605,12 @@ sub print_matches_in_resource {
     my $filename  = $resource->name;
 
     App::Ack::iterate($resource, $opt, sub {
-        if(App::Ack::does_match($opt, $_)) {
+        if ( App::Ack::does_match($opt, $_) ) {
             App::Ack::print_line_with_context($opt, $filename, $_, $.);
             $nmatches++;
             $max_count--;
-        } elsif($passthru) {
+        }
+        elsif ( $passthru ) {
             chomp;
             App::Ack::print_line_with_options($opt, $filename, $_, $., ':');
         }
@@ -618,12 +625,10 @@ sub count_matches_in_resource {
 
     my $nmatches = 0;
 
-    App::Ack::iterate($resource, $opt, sub {
-        if(App::Ack::does_match($opt, $_)) {
-            $nmatches++;
-        }
+    App::Ack::iterate( $resource, $opt, sub {
+        ++$nmatches if App::Ack::does_match($opt, $_);
         return 1;
-    });
+    } );
 
     return $nmatches;
 }
@@ -631,9 +636,14 @@ sub count_matches_in_resource {
 sub resource_has_match {
     my ( $resource, $opt ) = @_;
 
-    local $opt->{v} = 0;
+    my $stash_v = $opt->{v};
+    $opt->{v} = 0;
 
-    return count_matches_in_resource($resource, $opt) > 0;
+    my $n = count_matches_in_resource($resource, $opt) > 0;
+
+    $opt->{v} = $stash_v;
+
+    return $n;
 }
 
 {
@@ -643,8 +653,8 @@ my @after_ctx_lines;
 my $is_iterating;
 
 sub get_context {
-    unless( $is_iterating ) {
-        Carp::croak("get_context() called outside of iterate()");
+    if ( not $is_iterating ) {
+        Carp::croak( 'get_context() called outside of iterate()' );
     }
 
     return (
@@ -664,12 +674,12 @@ sub iterate {
 
     @after_ctx_lines = @before_ctx_lines = ();
 
-    if($resource->next_text()) {
+    if ( $resource->next_text() ) {
         $current_line = $_; # prime the first line of input
     }
 
-    while(defined $current_line) {
-        while(@after_ctx_lines < $n_after_ctx_lines && $resource->next_text()) {
+    while ( defined $current_line ) {
+        while ( (@after_ctx_lines < $n_after_ctx_lines) && $resource->next_text() ) {
             push @after_ctx_lines, $_;
         }
 
@@ -693,6 +703,8 @@ sub iterate {
     }
 
     $is_iterating = 0;
+
+    return;
 }
 
 }
@@ -714,6 +726,8 @@ sub print_line_with_options {
     }
     push @line_parts, $line;
     App::Ack::print( join( $separator, @line_parts ), $ors );
+
+    return;
 }
 
 {

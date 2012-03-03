@@ -1,15 +1,4 @@
-package TestFilter;
-
-use strict;
-use warnings;
-
-sub new {
-    my ( $class, @args ) = @_;
-
-    return bless \@args, $class;
-}
-
-package main;
+#!perl
 
 use strict;
 use warnings;
@@ -36,3 +25,17 @@ $filter = eval {
 ok( $filter, 'Creating a registered filter should succeed' ) or diag($@);
 isa_ok( $filter, 'TestFilter', 'Creating a test filter should be a TestFilter' );
 is_deeply( $filter, [qw/foo bar/], 'Extra arguments should get passed through to constructor' );
+
+
+package TestFilter;
+
+use strict;
+use warnings;
+
+sub new {
+    my ( $class, @args ) = @_;
+
+    return bless \@args, $class;
+}
+
+1;

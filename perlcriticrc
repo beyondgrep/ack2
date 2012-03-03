@@ -1,3 +1,5 @@
+verbose = %f:%l:%c %m (%p)\n
+
 [-CodeLayout::ProhibitParensWithBuiltins]
 [CodeLayout::ProhibitHardTabs]
 allow_leading_tabs = 0
@@ -20,10 +22,17 @@ functions = open opendir read readline readdir close closedir
 
 [-Modules::RequireVersionVar]
 
+[-RegularExpressions::RequireDotMatchAnything]
 [-RegularExpressions::RequireExtendedFormatting]
 [-RegularExpressions::RequireLineBoundaryMatching]
 
-[-Subroutines::RequireArgUnpacking]
+[Subroutines::RequireArgUnpacking]
+[-Subroutines::ProhibitBuiltinHomonyms]
+# We have plenty of funcs that we know are homonyms, but that's OK
+
+[-TestingAndDebugging::ProhibitNoStrict]
+[-TestingAndDebugging::ProhibitNoWarnings]
+# If I've turned off warnings or strict, I know why I'm doing it.
 
 [-ValuesAndExpressions::ProhibitNoisyQuotes]
 [-ValuesAndExpressions::ProhibitEmptyQuotes]
@@ -32,3 +41,4 @@ functions = open opendir read readline readdir close closedir
 
 [-Variables::ProhibitPackageVars]
 [-Variables::ProhibitPunctuationVars]
+

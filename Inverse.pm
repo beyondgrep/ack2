@@ -13,14 +13,14 @@ sub new {
 sub filter {
     my ( $self, $resource ) = @_;
 
-    my $filter = $$self;
+    my $filter = ${$self};
     return !$filter->filter( $resource );
 }
 
 sub invert {
-    my ( $self ) = @_;
+    my $self = shift;
 
-    return $$self;
+    return ${$self};
 }
 
 sub is_inverted {
