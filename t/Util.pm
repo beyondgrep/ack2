@@ -37,6 +37,16 @@ sub build_command_line {
 sub build_ack_command_line {
     my @args = @_;
 
+    # The --noenv makes sure we don't pull in anything from the user
+    #    unless explicitly specified in the test
+    if ( !grep { /^--(no)?env$/ } @args ) {
+        unshift( @args, '--noenv' );
+    }
+    # --ackrc makes sure we pull in "default" definitions
+    if( !grep { /^--ackrc=/ } @args) {
+        unshift( @args, '--ackrc=./ackrc' );
+    }
+
     return build_command_line( './ack', @args );
 }
 
@@ -113,16 +123,6 @@ sub run_ack_with_stderr {
 
     my @stdout;
     my @stderr;
-
-    # The --noenv makes sure we don't pull in anything from the user
-    #    unless explicitly specified in the test
-    if ( !grep { /^--(no)?env$/ } @args ) {
-        unshift( @args, '--noenv' );
-    }
-    # --ackrc makes sure we pull in "default" definitions
-    if( !grep { /^--ackrc=/ } @args) {
-        unshift( @args, '--ackrc=./ackrc' );
-    }
 
     my $cmd = build_ack_command_line( @args );
 
