@@ -202,8 +202,6 @@ ACK_G: {
 
 # ack -o disables context
 WITH_O: {
-    local $TODO = '--output not yet implemented';
-
     my @files = qw( t/text/boy-named-sue.txt );
     my @args = qw( the\\s+\\S+ -o -C2 );
     my @expected = split( /\n/, <<'EOF' );
