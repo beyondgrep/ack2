@@ -603,16 +603,33 @@ sub print_matches_in_resource {
     my $max_count = $opt->{m} || -1;
     my $nmatches  = 0;
     my $filename  = $resource->name;
+    my $break     = $opt->{break};
+    my $heading   = $opt->{heading};
+
+    my $has_printed_for_this_resource = 0;
 
     App::Ack::iterate($resource, $opt, sub {
         if ( App::Ack::does_match($opt, $_) ) {
+            if( !$has_printed_for_this_resource ) {
+                if( $break && has_printed_something() ) {
+                    App::Ack::print_blank_line();
+                }
+                if( $heading ) {
+                    App::Ack::print_filename( $resource->name, "\n" );
+                }
+            }
             App::Ack::print_line_with_context($opt, $filename, $_, $.);
+            $has_printed_for_this_resource = 1;
             $nmatches++;
             $max_count--;
         }
         elsif ( $passthru ) {
             chomp;
+            if( $break && !$has_printed_for_this_resource && has_printed_something() ) {
+                App::Ack::print_blank_line();
+            }
             App::Ack::print_line_with_options($opt, $filename, $_, $., ':');
+            $has_printed_for_this_resource = 1;
         }
         return $max_count != 0;
     });
@@ -727,11 +744,18 @@ sub print_line_with_options {
     my $print_filename = $opt->{H} && !$opt->{h};
     my $print_column   = $opt->{column};
     my $ors            = $opt->{print0} ? "\0" : "\n";
+    my $heading        = $opt->{heading};
 
     my @line_parts;
 
     if($print_filename) {
-        push @line_parts, $filename, $line_no;
+        if( $heading ) {
+            push @line_parts, $line_no;
+        }
+        else {
+            push @line_parts, $filename, $line_no;
+        }
+
         if( $print_column ) {
             push @line_parts, get_match_column();
         }
