@@ -709,8 +709,20 @@ sub iterate {
 
 }
 
+my $has_printed_something;
+
+BEGIN {
+    $has_printed_something = 0;
+}
+
+sub has_printed_something {
+    return $has_printed_something;
+}
+
 sub print_line_with_options {
     my ( $opt, $filename, $line, $line_no, $separator ) = @_;
+
+    $has_printed_something = 1;
 
     my $print_filename = $opt->{H} && !$opt->{h};
     my $print_column   = $opt->{column};
