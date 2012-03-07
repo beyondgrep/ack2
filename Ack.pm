@@ -780,10 +780,16 @@ BEGIN {
 sub print_line_with_context {
     my ( $opt, $filename, $matching_line, $line_no ) = @_;
 
+    my $heading = $opt->{heading};
+
     if( !defined($previous_file_processed) ||
       $previous_file_processed ne $filename ) {
         $previous_file_processed = $filename;
         $previous_line_printed   = -1;
+
+        if( $heading ) {
+            $is_first_match = 1;
+        }
     }
 
     my $ors                 = $opt->{print0} ? "\0" : "\n";
