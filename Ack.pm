@@ -799,9 +799,6 @@ sub print_line_with_context {
     if($before_context) {
         my $first_line = $. - @{$before_context};
         if( !$is_first_match && $previous_line_printed != $first_line - 1 ) {
-            if( $first_line == 10 ) {
-                print $is_first_match ? 'yes' : 'no', ' ', $previous_line_printed, ' ', $first_line, "\n";
-            }
             App::Ack::print('--', $ors);
         }
         $previous_line_printed = $.; # XXX unless --after-context
