@@ -193,6 +193,7 @@
 
 # Python http://www.python.org/
 --type-add=python,ext,py
+--type-add=python,firstlinematch,/python($|\s)/
 
 # Ruby http://www.ruby-lang.org/
 --type-add=ruby,ext,rb,rhtml,rjs,rxml,erb,rake,spec
