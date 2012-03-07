@@ -745,6 +745,8 @@ sub print_line_with_options {
     my $print_column   = $opt->{column};
     my $ors            = $opt->{print0} ? "\0" : "\n";
     my $heading        = $opt->{heading};
+    my $output_expr    = $opt->{output};
+    my $re             = $opt->{regex};
 
     my @line_parts;
 
@@ -760,8 +762,17 @@ sub print_line_with_options {
             push @line_parts, get_match_column();
         }
     }
-    push @line_parts, $line;
-    App::Ack::print( join( $separator, @line_parts ), $ors );
+    if( $output_expr ) {
+        # XXX avoid re-evaluation if we can
+        while( $line =~ /$re/g ) {
+            my $output = eval qq{"$output_expr"};
+            App::Ack::print( join( $separator, @line_parts, $output ), $ors );
+        }
+    }
+    else {
+        push @line_parts, $line;
+        App::Ack::print( join( $separator, @line_parts ), $ors );
+    }
 
     return;
 }
@@ -797,6 +808,7 @@ sub print_line_with_context {
     my $match_word          = $opt->{w};
     my $re                  = $opt->{regex};
     my $is_tracking_context = $opt->{after_context} || $opt->{before_context};
+    my $output_expr         = $opt->{output};
 
     chomp $matching_line;
 
@@ -829,7 +841,7 @@ sub print_line_with_context {
     }
 
     my @capture_indices  = get_capture_indices();
-    if(@capture_indices) {
+    if( @capture_indices && !$output_expr ) {
         my $offset = 0; # additional offset for when we add stuff
 
         foreach my $index_pair ( @capture_indices ) {
