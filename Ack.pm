@@ -686,6 +686,9 @@ sub iterate {
 
     $is_iterating = 1;
 
+    local $opt->{before_context} = $opt->{output} ? 0 : $opt->{before_context};
+    local $opt->{after_context}  = $opt->{output} ? 0 : $opt->{after_context};
+
     my $n_before_ctx_lines = $opt->{before_context} || 0;
     my $n_after_ctx_lines  = $opt->{after_context}  || 0;
     my $current_line;
