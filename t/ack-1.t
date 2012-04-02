@@ -47,7 +47,7 @@ DASH_F: {
 
 
 DASH_G: {
-    my $regex = 'Makefile';
+    my $regex = '(?<!nota)Makefile';
     my @files = qw( t/ );
     my @args = ( '-1', '-g', $regex );
     my @results = run_ack( @args, @files );
