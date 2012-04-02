@@ -152,7 +152,12 @@ sub main {
     my $resources;
     if ( $App::Ack::is_filter_mode ) {
         $resources    = App::Ack::Resources->from_stdin( $opt );
-        $opt->{regex} = App::Ack::build_regex(shift @ARGV, $opt);
+        if( my $regex = $opt->{regex} ) {
+            $opt->{regex} = App::Ack::build_regex( $regex, $opt );
+        }
+        else {
+            $opt->{regex} = App::Ack::build_regex( shift @ARGV, $opt );
+        }
     }
     else {
         if ( $opt->{f} || $opt->{lines} ) {
@@ -162,7 +167,12 @@ sub main {
             }
         }
         else {
-            $opt->{regex} = App::Ack::build_regex(shift @ARGV, $opt);
+            if( my $regex = $opt->{regex} ) {
+                $opt->{regex} = App::Ack::build_regex( $regex, $opt );
+            }
+            else {
+                $opt->{regex} = App::Ack::build_regex( shift @ARGV, $opt );
+            }
         }
         my @start = @ARGV;
         unless(@start == 1 && -f $start[0]) {

@@ -603,16 +603,34 @@ sub print_matches_in_resource {
     my $max_count = $opt->{m} || -1;
     my $nmatches  = 0;
     my $filename  = $resource->name;
+    my $break     = $opt->{break};
+    my $heading   = $opt->{heading};
+    my $ors       = $opt->{print0} ? "\0" : "\n";
+
+    my $has_printed_for_this_resource = 0;
 
     App::Ack::iterate($resource, $opt, sub {
         if ( App::Ack::does_match($opt, $_) ) {
+            if( !$has_printed_for_this_resource ) {
+                if( $break && has_printed_something() ) {
+                    App::Ack::print_blank_line();
+                }
+                if( $heading ) {
+                    App::Ack::print_filename( $resource->name, $ors );
+                }
+            }
             App::Ack::print_line_with_context($opt, $filename, $_, $.);
+            $has_printed_for_this_resource = 1;
             $nmatches++;
             $max_count--;
         }
         elsif ( $passthru ) {
             chomp;
+            if( $break && !$has_printed_for_this_resource && has_printed_something() ) {
+                App::Ack::print_blank_line();
+            }
             App::Ack::print_line_with_options($opt, $filename, $_, $., ':');
+            $has_printed_for_this_resource = 1;
         }
         return $max_count != 0;
     });
@@ -668,6 +686,9 @@ sub iterate {
 
     $is_iterating = 1;
 
+    local $opt->{before_context} = $opt->{output} ? 0 : $opt->{before_context};
+    local $opt->{after_context}  = $opt->{output} ? 0 : $opt->{after_context};
+
     my $n_before_ctx_lines = $opt->{before_context} || 0;
     my $n_after_ctx_lines  = $opt->{after_context}  || 0;
     my $current_line;
@@ -709,23 +730,53 @@ sub iterate {
 
 }
 
+my $has_printed_something;
+
+BEGIN {
+    $has_printed_something = 0;
+}
+
+sub has_printed_something {
+    return $has_printed_something;
+}
+
 sub print_line_with_options {
     my ( $opt, $filename, $line, $line_no, $separator ) = @_;
+
+    $has_printed_something = 1;
 
     my $print_filename = $opt->{H} && !$opt->{h};
     my $print_column   = $opt->{column};
     my $ors            = $opt->{print0} ? "\0" : "\n";
+    my $heading        = $opt->{heading};
+    my $output_expr    = $opt->{output};
+    my $re             = $opt->{regex};
 
     my @line_parts;
 
     if($print_filename) {
-        push @line_parts, $filename, $line_no;
+        if( $heading ) {
+            push @line_parts, $line_no;
+        }
+        else {
+            push @line_parts, $filename, $line_no;
+        }
+
         if( $print_column ) {
             push @line_parts, get_match_column();
         }
     }
-    push @line_parts, $line;
-    App::Ack::print( join( $separator, @line_parts ), $ors );
+    if( $output_expr ) {
+        # XXX avoid re-evaluation if we can
+        while( $line =~ /$re/g ) {
+            my $output = eval qq{"$output_expr"};
+            App::Ack::print( join( $separator, @line_parts, $output ), $ors );
+        }
+    }
+    else {
+        push @line_parts, $line;
+        App::Ack::print( join( $separator, @line_parts ), $ors );
+    }
 
     return;
 }
@@ -744,10 +795,16 @@ BEGIN {
 sub print_line_with_context {
     my ( $opt, $filename, $matching_line, $line_no ) = @_;
 
+    my $heading = $opt->{heading};
+
     if( !defined($previous_file_processed) ||
       $previous_file_processed ne $filename ) {
         $previous_file_processed = $filename;
         $previous_line_printed   = -1;
+
+        if( $heading ) {
+            $is_first_match = 1;
+        }
     }
 
     my $ors                 = $opt->{print0} ? "\0" : "\n";
@@ -755,6 +812,7 @@ sub print_line_with_context {
     my $match_word          = $opt->{w};
     my $re                  = $opt->{regex};
     my $is_tracking_context = $opt->{after_context} || $opt->{before_context};
+    my $output_expr         = $opt->{output};
 
     chomp $matching_line;
 
@@ -763,9 +821,6 @@ sub print_line_with_context {
     if($before_context) {
         my $first_line = $. - @{$before_context};
         if( !$is_first_match && $previous_line_printed != $first_line - 1 ) {
-            if( $first_line == 10 ) {
-                print $is_first_match ? 'yes' : 'no', ' ', $previous_line_printed, ' ', $first_line, "\n";
-            }
             App::Ack::print('--', $ors);
         }
         $previous_line_printed = $.; # XXX unless --after-context
@@ -790,7 +845,7 @@ sub print_line_with_context {
     }
 
     my @capture_indices  = get_capture_indices();
-    if(@capture_indices) {
+    if( @capture_indices && !$output_expr ) {
         my $offset = 0; # additional offset for when we add stuff
 
         foreach my $index_pair ( @capture_indices ) {
