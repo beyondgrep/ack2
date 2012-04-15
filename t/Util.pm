@@ -250,13 +250,24 @@ BEGIN {
                 $pty->close_slave();
                 $pty->set_raw();
 
-                my $output = '';
+                if(wantarray) {
+                    my @lines;
 
-                while(<$pty>) {
-                    $output .= $_;
+                    while(<$pty>) {
+                        chomp;
+                        push @lines, $_;
+                    }
+                    close $pty;
+                    return @lines;
+                } else {
+                    my $output = '';
+
+                    while(<$pty>) {
+                        $output .= $_;
+                    }
+                    close $pty;
+                    return $output;
                 }
-                close $pty;
-                return $output;
             } else {
                 $pty->make_slave_controlling_terminal();
                 my $slave = $pty->slave();
