@@ -72,21 +72,24 @@ INTERACTIVE_GROUPING_COLOR: {
     my @args  = qw( Sue ); # --color is on by default
     my @files = qw( t/text );
 
-    my $output = run_ack_interactive(@args, @files);
+    my $CFN      = color 'bold green';
+    my $CRESET   = color 'reset';
+    my $CLN      = color 'bold yellow';
+    my $CM       = color 'black on_yellow';
+    my $LINE_END = "\e[0m\e[K";
 
-    my $CFN    = color 'bold green';
-    my $CRESET = color 'reset';
-    my $CLN    = color 'bold yellow';
-    my $CM     = color 'black on_yellow';
+    my @expected_lines = (
+        qq{${CFN}t/text/boy-named-sue.txt$CRESET},
+        qq{${CLN}6${CRESET}:Was before he left, he went and named me ${CM}Sue${CRESET}.$LINE_END},
+        qq{${CLN}13${CRESET}:I tell ya, life ain't easy for a boy named ${CM}Sue${CRESET}.$LINE_END},
+        qq{${CLN}27${CRESET}:Sat the dirty, mangy dog that named me ${CM}Sue${CRESET}.$LINE_END},
+        qq{${CLN}34${CRESET}:And I said: "My name is ${CM}Sue${CRESET}! How do you do! Now you gonna die!"$LINE_END},
+        qq{${CLN}62${CRESET}:Cause I'm the son-of-a-bitch that named you ${CM}Sue${CRESET}."$LINE_END},
+        qq{${CLN}70${CRESET}:Bill or George! Anything but ${CM}Sue${CRESET}! I still hate that name!$LINE_END},
+        qq{${CLN}72${CRESET}:    -- "A Boy Named ${CM}Sue${CRESET}", Johnny Cash$LINE_END},
+    );
 
-    is $output, <<"END_OUTPUT";
-${CFN}t/text/boy-named-sue.txt$CRESET
-${CLN}6${CRESET}:Was before he left, he went and named me ${CM}Sue${CRESET}.
-${CLN}13${CRESET}:I tell ya, life ain't easy for a boy named ${CM}Sue${CRESET}.
-${CLN}27${CRESET}:Sat the dirty, mangy dog that named me ${CM}Sue${CRESET}.
-${CLN}34${CRESET}:And I said: "My name is ${CM}Sue${CRESET}! How do you do! Now you gonna die!"
-${CLN}62${CRESET}:Cause I'm the son-of-a-bitch that named you ${CM}Sue${CRESET}."
-${CLN}70${CRESET}:Bill or George! Anything but ${CM}Sue${CRESET}! I still hate that name!
-${CLN}72${CRESET}:    -- "A Boy Named ${CM}Sue${CRESET}", Johnny Cash
-END_OUTPUT
+    my @lines = run_ack_interactive(@args, @files);
+
+    lists_match(\@lines, \@expected_lines);
 }
