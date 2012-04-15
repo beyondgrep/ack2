@@ -218,5 +218,61 @@ sub is_filetype {
     return;
 }
 
+BEGIN {
+    my $ok = eval {
+        require IO::Pty;
+        1;
+    };
+
+    if($ok) {
+        no strict 'refs';
+        *run_ack_interactive = sub {
+            my ( @args) = @_;
+
+            # XXX this could be merged with build_ack_command_line
+            # The --noenv makes sure we don't pull in anything from the user
+            #    unless explicitly specified in the test
+            if ( !grep { /^--(no)?env$/ } @args ) {
+                unshift( @args, '--noenv' );
+            }
+            # --ackrc makes sure we pull in "default" definitions
+            if( !grep { /^--ackrc=/ } @args) {
+                unshift( @args, '--ackrc=./ackrc' );
+            }
+
+            unshift @args, $^X, '-T', './ack';
+
+            my $pty = IO::Pty->new;
+
+            my $pid = fork;
+
+            if($pid) {
+                $pty->close_slave();
+                $pty->set_raw();
+
+                my $output = '';
+
+                while(<$pty>) {
+                    $output .= $_;
+                }
+                close $pty;
+                return $output;
+            } else {
+                $pty->make_slave_controlling_terminal();
+                my $slave = $pty->slave();
+                $slave->clone_winsize_from(\*STDIN);
+                $slave->set_raw();
+
+                open STDIN,  '<&', $slave->fileno();
+                open STDOUT, '>&', $slave->fileno();
+                open STDERR, '>&', $slave->fileno();
+
+                close $slave;
+
+                exec @args;
+            }
+        };
+    }
+}
 
 1;
