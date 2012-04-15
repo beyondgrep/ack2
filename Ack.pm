@@ -606,6 +606,7 @@ sub print_matches_in_resource {
     my $break     = $opt->{break};
     my $heading   = $opt->{heading};
     my $ors       = $opt->{print0} ? "\0" : "\n";
+    my $color     = $opt->{color};
 
     my $has_printed_for_this_resource = 0;
 
@@ -616,7 +617,12 @@ sub print_matches_in_resource {
                     App::Ack::print_blank_line();
                 }
                 if( $heading ) {
-                    App::Ack::print_filename( $resource->name, $ors );
+                    my $filename = $resource->name;
+                    if($color) {
+                        $filename = Term::ANSIColor::colored($filename,
+                            $ENV{ACK_COLOR_FILENAME});
+                    }
+                    App::Ack::print_filename( $filename, $ors );
                 }
             }
             App::Ack::print_line_with_context($opt, $filename, $_, $.);
