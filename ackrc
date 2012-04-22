@@ -75,7 +75,7 @@
 # vi/vim swap files
 --ignore-file=match,/[._].*\.swp$/
 
-# core dumpes
+# core dumps
 --ignore-file=match,/core\.\d+$/
 
 
@@ -112,7 +112,7 @@
 # Batch
 --type-add=batch,ext,bat,cmd
 
-# Cold Fusion
+# ColdFusion http://en.wikipedia.org/wiki/ColdFusion
 --type-add=cfmx,ext,cfc,cfm,cfml
 
 # Clojure http://clojure.org/
@@ -134,7 +134,7 @@
 # CSS http://www.w3.org/Style/CSS/
 --type-add=css,ext,css
 
-# Delphi
+# Delphi http://en.wikipedia.org/wiki/Embarcadero_Delphi
 --type-add=delphi,ext,pas,int,dfm,nfm,dof,dpk,dproj,groupproj,bdsgroup,bdsproj
 
 # Emacs Lisp http://www.gnu.org/software/emacs
@@ -143,7 +143,7 @@
 # Erlang http://www.erlang.org/
 --type-add=erlang,ext,erl,hrl
 
-# Fortran
+# Fortran http://en.wikipedia.org/wiki/Fortran
 --type-add=fortran,ext,f,f77,f90,f95,f03,for,ftn,fpp
 
 # Google Go http://golang.org/
