@@ -177,7 +177,18 @@ sub main {
                 $opt->{regex} = App::Ack::build_regex( shift @ARGV, $opt );
             }
         }
-        my @start = @ARGV;
+        my @start;
+        if(my $filename = $opt->{files_from}) {
+            my $fh;
+            open $fh, '<', $filename or die "$filename: $!";
+            while(<$fh>) {
+                chomp;
+                push @start, $_;
+            }
+            close $fh;
+        } else {
+            @start = @ARGV;
+        }
         unless(@start == 1 && -f $start[0]) {
             $opt->{H} = 1;
         }

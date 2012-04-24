@@ -121,6 +121,7 @@ sub get_arg_spec {
         count               => \$opt->{count},
         'env!'              => sub { }, # ignore this option, it is handled beforehand
         f                   => \$opt->{f},
+        'files-from=s'      => \$opt->{files_from},
         'filter!'           => \$App::Ack::is_filter_mode,
         flush               => \$opt->{flush},
         'follow!'           => \$opt->{follow},
