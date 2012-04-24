@@ -325,8 +325,19 @@ off with --noenv.
 Example: ack -i select
 
 Searching:
+  -i, --ignore-case     Ignore case distinctions in PATTERN
+  --[no]smart-case      Ignore case distinctions in PATTERN,
+                        only if PATTERN contains no upper case
+                        Ignored if -i is specified
+  -v, --invert-match    Invert match: select non-matching lines
+  -w, --word-regexp     Force PATTERN to match only whole words
+  -Q, --literal         Quote all metacharacters; PATTERN is literal
 
 Search output:
+  -l, --files-with-matches
+                        Only print filenames containing matches
+  -L, --files-without-matches
+                        Only print filenames with no matches
 
 File presentation:
 
