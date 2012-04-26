@@ -382,16 +382,87 @@ Searching:
   -Q, --literal         Quote all metacharacters; PATTERN is literal
 
 Search output:
+  --line=NUM            Only print line(s) NUM of each file
   -l, --files-with-matches
                         Only print filenames containing matches
   -L, --files-without-matches
                         Only print filenames with no matches
+  -o                    Show only the part of a line matching PATTERN
+                        (turns off text highlighting)
+  --passthru            Print all lines, whether matching or not
+  --output=expr         Output the evaluation of expr for each line
+                        (turns off text highlighting)
+  --match PATTERN       Specify PATTERN explicitly.
+  -m, --max-count=NUM   Stop searching in each file after NUM matches
+  -1                    Stop searching after one match of any kind
+  -H, --with-filename   Print the filename for each match
+  -h, --no-filename     Suppress the prefixing filename on output
+  -c, --count           Show number of lines matching per file
+  --column              Show the column number of the first match
+
+  -A NUM, --after-context=NUM
+                        Print NUM lines of trailing context after matching
+                        lines.
+  -B NUM, --before-context=NUM
+                        Print NUM lines of leading context before matching
+                        lines.
+  -C [NUM], --context[=NUM]
+                        Print NUM lines (default 2) of output context.
+
+  --print0              Print null byte as separator between filenames,
+                        only works with -f, -g, -l, -L or -c.
+
 
 File presentation:
+  --pager=COMMAND       Pipes all ack output through COMMAND.  For example,
+                        --pager="less -R".  Ignored if output is redirected.
+  --nopager             Do not send output through a pager.  Cancels any
+                        setting in ~/.ackrc, ACK_PAGER or ACK_PAGER_COLOR.
+  --[no]heading         Print a filename heading above each file's results.
+                        (default: on when used interactively)
+  --[no]break           Print a break between results from different files.
+                        (default: on when used interactively)
+  --group               Same as --heading --break
+  --nogroup             Same as --noheading --nobreak
+  --[no]color           Highlight the matching text (default: on unless
+                        output is redirected, or on Windows)
+  --[no]colour          Same as --[no]color
+  --color-filename=COLOR
+  --color-match=COLOR
+  --color-lineno=COLOR  Set the color for filenames, matches, and line numbers.
+  --flush               Flush output immediately, even when ack is used
+                        non-interactively (when output goes to a pipe or
+                        file).
+
 
 File finding:
+  -f                    Only print the files found, without searching.
+                        The PATTERN must not be specified.
+  -g REGEX              Same as -f, but only print files matching REGEX.
+  --sort-files          Sort the found files lexically.
+  --invert-file-match   Print/search handle files that do not match -g/-G.
+  --show-types          Show which types each file has.
 
 File inclusion/exclusion:
+  --[no]ignore-dir=name Add/Remove directory from the list of ignored dirs
+  -r, -R, --recurse     Recurse into subdirectories (ack's default behavior)
+  -n, --no-recurse      No descending into subdirectories
+  -G REGEX              Only search files that match REGEX
+
+  --type=X              Include only Perl files.
+  --type=noX            Exclude X files.
+                        See "ack --help type" for supported filetypes.
+
+  --type-set TYPE=.EXTENSION[,.EXT2[,...]]
+                        Files with the given EXTENSION(s) are recognized as
+                        being of type TYPE. This replaces an existing
+                        definition for type TYPE.
+  --type-add TYPE=.EXTENSION[,.EXT2[,...]]
+                        Files with the given EXTENSION(s) are recognized as
+                        being of (the existing) type TYPE
+
+  --[no]follow          Follow symlinks.  Default is off.
+
 
 Miscellaneous:
   --noenv               Ignore environment variables and global ackrc files
