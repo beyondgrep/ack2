@@ -238,18 +238,9 @@ BEGIN {
         *run_ack_interactive = sub {
             my ( @args) = @_;
 
-            # XXX this could be merged with build_ack_command_line
-            # The --noenv makes sure we don't pull in anything from the user
-            #    unless explicitly specified in the test
-            if ( !grep { /^--(no)?env$/ } @args ) {
-                unshift( @args, '--noenv' );
-            }
-            # --ackrc makes sure we pull in "default" definitions
-            if( !grep { /^--ackrc=/ } @args) {
-                unshift( @args, '--ackrc=./ackrc' );
-            }
-
-            unshift @args, $^X, '-T', './ack';
+            my $cmd = build_ack_command_line(@args, {
+                no_capture => 1,
+            });
 
             my $pty = IO::Pty->new;
 
@@ -289,7 +280,7 @@ BEGIN {
 
                 close $slave;
 
-                exec @args;
+                exec $cmd;
             }
         };
     }
