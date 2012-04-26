@@ -102,6 +102,7 @@ sub run_cmd {
 
     # diag( "Running command: $cmd" );
 
+    record_option_coverage($cmd);
     my @stdout = `$cmd`;
     my ($sig,$core,$rc) = (($? & 127),  ($? & 128) , ($? >> 8));
     $ack_return_code = $rc;
@@ -227,6 +228,21 @@ sub is_filetype {
     return;
 }
 
+sub record_option_coverage {
+    my ( $command_line ) = @_;
+
+    return unless $ENV{ACK_OPTION_COVERAGE};
+
+    # strip the command line up until 'ack' is found
+    $command_line =~ s/^.*ack\b//;
+
+    $command_line = "$^X ./record-options $command_line";
+
+    system $command_line;
+
+    return;
+}
+
 BEGIN {
     my $ok = eval {
         require IO::Pty;
@@ -241,6 +257,8 @@ BEGIN {
             my $cmd = build_ack_command_line(@args, {
                 no_capture => 1,
             });
+
+            record_option_coverage($cmd);
 
             my $pty = IO::Pty->new;
 
