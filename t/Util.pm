@@ -20,6 +20,12 @@ sub is_win32 {
 sub build_command_line {
     my @args = @_;
 
+    my %options;
+
+    if ( ref( $args[-1] ) eq 'HASH' ) {
+        %options = %{ pop @args };
+    }
+
     if ( is_win32() ) {
         for ( @args ) {
             s/(\\+)$/$1$1/;     # Double all trailing backslashes
@@ -30,8 +36,11 @@ sub build_command_line {
     else {
         @args = map { quotemeta $_ } @args;
     }
+    if ( !$options{no_capture} ) {
+        unshift @args, './capture-stderr', $catcherr_file;
+    }
 
-    return "$^X -T ./capture-stderr $catcherr_file @args";
+    return "$^X -T @args";
 }
 
 sub build_ack_command_line {
