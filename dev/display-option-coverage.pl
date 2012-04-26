@@ -6,6 +6,15 @@ use lib 'blib/lib';
 
 use App::Ack::ConfigLoader ();
 
+if ( ! -e 'opts.coverage' ) {
+    die <<'END_DIE';
+Coverage file 'opts.coverage' not found!
+If you'd like to generate this file, please
+set the ACK_OPTION_COVERAGE environment variable
+to a truthy value and run 'make test'.
+END_DIE
+}
+
 my $arg_spec = App::Ack::ConfigLoader::get_arg_spec({});
 
 my $fh;
