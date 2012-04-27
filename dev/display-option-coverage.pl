@@ -15,7 +15,16 @@ to a truthy value and run 'make test'.
 END_DIE
 }
 
+my @extra_options = (
+    'type-add=s',
+    'type-set=s',
+    'dump',
+);
+
 my $arg_spec = App::Ack::ConfigLoader::get_arg_spec({});
+foreach my $option ( @extra_options ) {
+    $arg_spec->{ $option } = 1;
+}
 
 my $fh;
 open $fh, '<', 'opts.coverage' or die $!;
