@@ -8,3 +8,4 @@ nytprof/
 nytprof.out
 MYMETA.*
 tags
+opts.coverage
