@@ -468,6 +468,7 @@ Miscellaneous:
   --noenv               Ignore environment variables and global ackrc files
   --ackrc=filename      Specify an ackrc file to use
   --help                This help
+  --dump                Dump information on which options are loaded from which RC files
   --man                 Man page
   --version             Display version & copyright
   --thpppt              Bill the Cat
