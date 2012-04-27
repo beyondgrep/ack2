@@ -73,7 +73,7 @@ sub register_filter {
 
 =head2 $filter->filter($resource)
 
-Must be implementated by filter implementations.  Returns
+Must be implemented by filter implementations.  Returns
 true if the filter passes, false otherwise.
 
 =head2 $filter->invert()
