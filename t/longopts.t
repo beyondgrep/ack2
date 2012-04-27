@@ -53,6 +53,7 @@ my @other_long_opts = qw(
     --man
     --thpppt
     --bar
+    --dump
 );
 
 # --no-recurse is inconsitent w/--nogroup
