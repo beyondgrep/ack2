@@ -25,7 +25,9 @@ App::Ack::Filter - Filter objects to filter files
         my ( $self, $resource ) = @_;
     }
 
-    App::Ack::Filter->register_filter('mine' => __PACKAGE__);
+    BEGIN {
+        App::Ack::Filter->register_filter('mine' => __PACKAGE__);
+    }
 
     1;
 
