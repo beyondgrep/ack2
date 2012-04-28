@@ -7,6 +7,8 @@ use lib 't';
 use Util;
 use Test::More tests => 4;
 
+prep_environment();
+
 my ( $stdout, $stderr ) = run_ack_with_stderr( '--noenv', '--ackrc=./bad-ackrc', 'the', 't/text' );
 
 is( @{$stdout}, 0, 'nothing to stdout' );

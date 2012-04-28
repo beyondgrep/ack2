@@ -7,6 +7,8 @@ use lib 't';
 use Util;
 use Test::More tests => 4;
 
+prep_environment();
+
 my @expected = (
     't/swamp/groceries/fruit:1:apple',
     't/swamp/groceries/junk:1:apple fritters',
