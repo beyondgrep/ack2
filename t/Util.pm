@@ -1,9 +1,14 @@
 
 use File::Next ();
 use App::Ack ();
+use Cwd ();
+use File::Spec ();
+
+my $orig_wd;
 
 sub prep_environment {
     delete @ENV{qw( ACK_OPTIONS ACKRC ACK_PAGER )};
+    $orig_wd = Cwd::getcwd();
 }
 
 # capture stderr output into this file
@@ -37,7 +42,8 @@ sub build_command_line {
         @args = map { quotemeta $_ } @args;
     }
     if ( !$options{no_capture} ) {
-        unshift @args, './capture-stderr', $catcherr_file;
+        unshift @args, File::Spec->catfile($orig_wd, 'capture-stderr'),
+            $catcherr_file;
     }
 
     return "$^X -T @args";
@@ -53,10 +59,10 @@ sub build_ack_command_line {
     }
     # --ackrc makes sure we pull in "default" definitions
     if( !grep { /^--ackrc=/ } @args) {
-        unshift( @args, '--ackrc=./ackrc' );
+        unshift( @args, '--ackrc=' . File::Spec->catfile($orig_wd, './ackrc') );
     }
 
-    return build_command_line( './ack', @args );
+    return build_command_line( File::Spec->catfile($orig_wd, 'ack'), @args );
 }
 
 sub slurp {
@@ -236,7 +242,8 @@ sub record_option_coverage {
     # strip the command line up until 'ack' is found
     $command_line =~ s/^.*ack\b//;
 
-    $command_line = "$^X ./record-options $command_line";
+    $command_line = $^X . ' ' . File::Spec->catfile($orig_wd, 'record-options')
+        . ' ' .  $command_line;
 
     system $command_line;
 
