@@ -2,14 +2,18 @@
 
 use strict;
 use warnings;
+use lib 't';
 
-use Test::More tests => 2;
+use Test::More tests => 5;
 
 use App::Ack;
 use Cwd qw( realpath getcwd );
 use File::Spec ();
 use File::Temp ();
-use File::Slurp qw( write_file );
+use File::Slurp qw( append_file write_file );
+use Util;
+
+prep_environment();
 
 my $wd = getcwd() or die;
 
@@ -48,6 +52,17 @@ subtest 'with --noenv' => sub {
         ['-f', 'lib/'],
     ], 'Short list comes back because of --noenv' );
 };
+
+NOENV_IN_CONFIG: {
+    append_file( '.ackrc', "--noenv\n" );
+
+    local $ENV{'ACK_OPTIONS'} = '--perl';
+
+    my ( $stdout, $stderr ) = run_ack_with_stderr('--env', 'perl');
+    is @$stdout, 0;
+    is @$stderr, 1;
+    like $stderr->[0], qr/--noenv found in (?:.*)[.]ackrc/ or diag(explain($stderr));
+}
 
 chdir $wd or die; # Go back to the original directory to avoid warnings
 
