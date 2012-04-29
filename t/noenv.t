@@ -65,5 +65,3 @@ NOENV_IN_CONFIG: {
 }
 
 chdir $wd or die; # Go back to the original directory to avoid warnings
-
-done_testing();
