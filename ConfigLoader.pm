@@ -119,7 +119,13 @@ sub get_arg_spec {
         'color-lineno=s'    => \$ENV{ACK_COLOR_LINENO},
         'column!'           => \$opt->{column},
         count               => \$opt->{count},
-        'env!'              => sub { }, # ignore this option, it is handled beforehand
+        'env!'              => sub {
+            my ( undef, $value ) = @_;
+
+            if ( !$value ) {
+                $opt->{noenv_seen} = 1;
+            }
+        },
         f                   => \$opt->{f},
         'files-from=s'      => \$opt->{files_from},
         'filter!'           => \$App::Ack::is_filter_mode,
@@ -226,6 +232,9 @@ sub process_other {
         if ( !$ret ) {
             my $where = $source_name eq 'ARGV' ? 'on command line' : "in $source_name";
             App::Ack::die( "Invalid option $where" );
+        }
+        if ( $opt->{noenv_seen} ) {
+            App::Ack::die( "--noenv found in $source_name" );
         }
     }
 
