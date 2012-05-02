@@ -323,9 +323,7 @@ BEGIN {
         *run_ack_interactive = sub {
             my ( @args) = @_;
 
-            my $cmd = build_ack_command_line(@args, {
-                no_capture => 1,
-            });
+            my $cmd = build_ack_command_line(@args);
 
             record_option_coverage($cmd);
 
