@@ -7,6 +7,8 @@ use File::Spec ();
 
 my $orig_wd;
 
+my $option_coverage_file = 'opts.coverage';
+
 sub prep_environment {
     delete @ENV{qw( ACK_OPTIONS ACKRC ACK_PAGER )};
     $orig_wd = Cwd::getcwd();
@@ -294,10 +296,17 @@ sub record_option_coverage {
         }
     }
 
-    @command_line = ( $^X, File::Spec->catfile( $orig_wd, 'record-options' ),
-        @command_line );
+    my $fh;
 
-    system $command_line;
+    open $fh, '>>', File::Spec->catfile($orig_wd, $option_coverage_file )
+        or return; # we don't care too much if this fails
+
+    foreach $arg ( @command_line ) {
+        next unless $arg =~ /^-/;
+        print { $fh } "$arg\n";
+    }
+
+    close $fh;
 
     return;
 }
