@@ -12,10 +12,6 @@ sub prep_environment {
     $orig_wd = Cwd::getcwd();
 }
 
-sub is_win32 {
-    return $^O =~ /Win32/;
-}
-
 # The quoting of command line arguments depends on the OS
 sub build_command_line {
     my @args = @_;
@@ -26,18 +22,7 @@ sub build_command_line {
         %options = %{ pop @args };
     }
 
-    if ( is_win32() ) {
-        for ( @args ) {
-            s/(\\+)$/$1$1/;     # Double all trailing backslashes
-            s/"/\\"/g;          # Backslash all quotes
-            $_ = qq{"$_"};
-        }
-    }
-    else {
-        @args = map { quotemeta $_ } @args;
-    }
-
-    return "$^X -T @args";
+    return ( $^X, '-T', @args );
 }
 
 sub build_ack_command_line {
@@ -96,7 +81,7 @@ our $ack_return_code;
 # returns chomped STDOUT and STDERR as two array refs
 
 sub run_cmd {
-    my ( $cmd ) = @_;
+    my ( @cmd ) = @_;
 
     # diag( "Running command: $cmd" );
 
@@ -176,7 +161,7 @@ sub run_cmd {
         open STDOUT, '>&', $stdout_write;
         open STDERR, '>&', $stderr_write;
 
-        system $cmd;
+        system @cmd;
         exit( $? >> 8 );
     }
 
@@ -202,9 +187,9 @@ sub run_ack_with_stderr {
     my @stdout;
     my @stderr;
 
-    my $cmd = build_ack_command_line( @args );
+    my @cmd = build_ack_command_line( @args );
 
-    return run_cmd($cmd);
+    return run_cmd(@cmd);
 }
 
 # pipe into ack and return STDOUT and STDERR as array refs
@@ -297,15 +282,20 @@ sub is_filetype {
 }
 
 sub record_option_coverage {
-    my ( $command_line ) = @_;
+    my ( @command_line ) = @_;
 
     return unless $ENV{ACK_OPTION_COVERAGE};
 
-    # strip the command line up until 'ack' is found
-    $command_line =~ s/^.*ack\b//;
+    while ( @command_line ) {
+        my $element = shift @command_line;
 
-    $command_line = $^X . ' ' . File::Spec->catfile($orig_wd, 'record-options')
-        . ' ' .  $command_line;
+        if ( $element =~ /ack$/) {
+            last; # finish up once we've seen ack
+        }
+    }
+
+    @command_line = ( $^X, File::Spec->catfile( $orig_wd, 'record-options' ),
+        @command_line );
 
     system $command_line;
 
@@ -323,9 +313,9 @@ BEGIN {
         *run_ack_interactive = sub {
             my ( @args) = @_;
 
-            my $cmd = build_ack_command_line(@args);
+            my @cmd = build_ack_command_line(@args);
 
-            record_option_coverage($cmd);
+            record_option_coverage(@cmd);
 
             my $pty = IO::Pty->new;
 
@@ -365,7 +355,7 @@ BEGIN {
 
                 close $slave;
 
-                exec $cmd;
+                exec @cmd;
             }
         };
     }
