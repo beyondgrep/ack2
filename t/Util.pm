@@ -164,8 +164,7 @@ sub run_cmd {
         open STDOUT, '>&', $stdout_write;
         open STDERR, '>&', $stderr_write;
 
-        system @cmd;
-        exit( $? >> 8 );
+        exec @cmd;
     }
 
     my ($sig,$core,$rc) = (($? & 127),  ($? & 128) , ($? >> 8));
