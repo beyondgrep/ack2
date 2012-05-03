@@ -199,6 +199,8 @@ sub pipe_into_ack_with_stderr {
     my $input = shift;
     my @args = @_;
 
+    Carp::croak( "Not implemented" );
+
     my $cmd = build_ack_command_line( @args );
     $cmd = "$^X -pe1 $input | $cmd";
 
