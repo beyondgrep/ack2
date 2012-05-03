@@ -8,7 +8,7 @@ use File::Spec;
 use File::Temp;
 use File::Slurp qw( write_file );
 use Test::Builder;
-use Test::More tests => 21;
+use Test::More tests => 22;
 
 sub touch_ackrc {
     my $filename = shift || '.ackrc';
@@ -148,6 +148,17 @@ touch_ackrc $project_file;
 expect_ackrcs [ @global_files, File::Spec->rel2abs('_ackrc')], 'a lower-level _ackrc should be preferred to a higher-level .ackrc';
 no_home {
     expect_ackrcs [ $global_files[0], File::Spec->rel2abs('_ackrc')], 'a lower-level _ackrc should be preferred to a higher-level .ackrc';
+};
+
+unlink '_ackrc';
+
+do {
+    local $ENV{'HOME'} = File::Spec->catdir($tempdir->dirname, 'foo');
+
+    my $user_file = File::Spec->catfile($tempdir->dirname, 'foo', '.ackrc');
+    touch_ackrc $user_file;
+
+    expect_ackrcs [ $global_files[0], $user_file ], q{don't load the same ackrc file twice};
 };
 
 chdir $wd;
