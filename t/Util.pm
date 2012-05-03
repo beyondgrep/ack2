@@ -11,7 +11,10 @@ my $option_coverage_file = 'opts.coverage';
 
 sub prep_environment {
     delete @ENV{qw( ACK_OPTIONS ACKRC ACK_PAGER )};
-    $orig_wd = Cwd::getcwd();
+    # XXX is this safe enough? it's just the CWD...
+    if ( Cwd::getcwd() =~ /(.*)/ ) {
+        $orig_wd = $1;
+    }
     $ENV{PATH} = '/bin:/usr/bin';
 }
 
@@ -25,7 +28,12 @@ sub build_command_line {
         %options = %{ pop @args };
     }
 
-    return ( $^X, '-T', @args );
+    my $perl;
+    if($^X =~ /(.*)/) {
+        $perl = $1;
+    }
+
+    return ( $perl, '-T', @args );
 }
 
 sub build_ack_command_line {
