@@ -38,7 +38,7 @@ sub expect_ackrcs {
 
     my @got      = map { realpath($_) } $finder->find_config_files;
     @{$expected} = map { realpath($_) } @{$expected};
-    is_deeply( \@got, $expected, 'Lines match' );
+    is_deeply( \@got, $expected, 'Lines match' ) or diag(explain(\@got));
 
     return;
 }
