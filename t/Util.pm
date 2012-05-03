@@ -12,6 +12,7 @@ my $option_coverage_file = 'opts.coverage';
 sub prep_environment {
     delete @ENV{qw( ACK_OPTIONS ACKRC ACK_PAGER )};
     $orig_wd = Cwd::getcwd();
+    $ENV{PATH} = '/bin:/usr/bin';
 }
 
 # The quoting of command line arguments depends on the OS
