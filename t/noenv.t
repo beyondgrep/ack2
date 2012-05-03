@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use lib 't';
 
-use Test::More tests => 5;
+use Test::More skip_all => 'for now';
 
 use App::Ack;
 use Cwd qw( realpath getcwd );
