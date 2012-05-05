@@ -31,7 +31,6 @@ filter_test(
         't/swamp/notaMakefile',
         't/swamp/notaRakefile',
         't/swamp/options.pl',
-        't/swamp/options.pl.bak',
         't/swamp/parrot.pir',
         't/swamp/perl-test.t',
         't/swamp/perl-without-extension',

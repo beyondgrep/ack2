@@ -15,7 +15,6 @@ filter_test(
         't/swamp/0',
         't/swamp/Makefile.PL',
         't/swamp/options.pl',
-        't/swamp/options.pl.bak',
         't/swamp/perl-test.t',
         't/swamp/perl-without-extension',
         't/swamp/perl.cgi',

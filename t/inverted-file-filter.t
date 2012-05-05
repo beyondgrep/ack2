@@ -54,7 +54,6 @@ INCLUDE_PLUS_EXCLUDE_ONLY: {
         t/swamp/0
         t/swamp/perl.pm
         t/swamp/options.pl
-        t/swamp/options.pl.bak
         t/swamp/perl-without-extension
         t/swamp/perl.cgi
         t/swamp/Makefile.PL
