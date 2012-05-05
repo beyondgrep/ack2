@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use lib 't';
 
-use Test::More tests => 4;
+use Test::More tests => 7;
 use File::Next ();
 use Util;
 
@@ -48,4 +48,18 @@ EOF
 
     my @results = run_ack( @args, $target, @files );
     lists_match( \@results, \@expected );
+}
+
+TEST_UNKNOWN_TYPE: {
+    # XXX --ackrc isn't portable!
+    my @args   = ( '--ackrc=/dev/null', '--type-add=perl,ext,pl',
+        '--type=foo', '--nogroup', '--noheading', '--nocolor' );
+    my @files  = ( 't/swamp' );
+    my $target = 'perl';
+
+    my ( $stdout, $stderr ) = run_ack_with_stderr( @args, $target, @files );
+
+    is scalar(@$stdout), 0;
+    ok scalar(@$stderr) > 0;
+    like $stderr->[0], qr/Unknown type 'foo'/ or diag(explain($stderr));
 }
