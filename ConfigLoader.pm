@@ -189,6 +189,18 @@ sub get_arg_spec {
         'show-types'        => \$opt->{show_types},
         'smart-case!'       => \$opt->{smart_case},
         'sort-files'        => \$opt->{sort_files},
+        'type=s'            => sub {
+            my ( $getopt, $value ) = @_;
+
+            my $cb_value = 1;
+            if ( $value =~ s/^no// ) {
+                $cb_value = 0;
+            }
+
+            my $callback = $extra_specs->{ $value . '!' };
+
+            $callback->( $getopt, $cb_value );
+        },
         'u|unrestricted'    => \$opt->{u},
         'v|invert-match'    => \$opt->{v},
         'w|word-regexp'     => \$opt->{w},
