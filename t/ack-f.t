@@ -16,6 +16,7 @@ DEFAULT_DIR_EXCLUSIONS: {
         t/swamp/c-header.h
         t/swamp/c-source.c
         t/swamp/crystallography-weenies.f
+        t/swamp/example.R
         t/swamp/file.bar
         t/swamp/file.foo
         t/swamp/groceries/another_subdir/fruit
