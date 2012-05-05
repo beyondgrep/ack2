@@ -66,7 +66,7 @@
 
 # Files to ignore
 # Backup files
---ignore-file=ext,.bak
+--ignore-file=ext,bak
 --ignore-file=match,/~$/
 
 # Emacs swap files
