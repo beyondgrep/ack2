@@ -83,7 +83,7 @@ sub _compile_file_filter {
     my ( $opt, $start ) = @_;
 
     my $ifiles = $opt->{ifiles};
-    return unless $ifiles && @{$ifiles};
+    $ifiles  ||= [];
 
     my @ifiles_filters = map {
         my $filter;
