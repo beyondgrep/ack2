@@ -199,7 +199,12 @@ sub get_arg_spec {
 
             my $callback = $extra_specs->{ $value . '!' };
 
-            $callback->( $getopt, $cb_value );
+            if ( $callback ) {
+                $callback->( $getopt, $cb_value );
+            }
+            else {
+                Carp::croak( "Unknown type '$value'" );
+            }
         },
         'u|unrestricted'    => \$opt->{u},
         'v|invert-match'    => \$opt->{v},
