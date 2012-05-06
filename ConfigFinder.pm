@@ -42,9 +42,11 @@ use App::Ack ();
 use Cwd ();
 use File::Spec;
 
-if($App::Ack::is_windows) {
-    require Win32;
-};
+BEGIN {
+    if($App::Ack::is_windows) {
+        require Win32;
+    };
+}
 
 =head1 METHODS
 
