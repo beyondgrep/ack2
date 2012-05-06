@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use lib 't';
 
-use Test::More tests => 7;
+use Test::More tests => 10;
 use File::Next ();
 use Util;
 
@@ -62,4 +62,18 @@ TEST_UNKNOWN_TYPE: {
     is scalar(@$stdout), 0;
     ok scalar(@$stderr) > 0;
     like $stderr->[0], qr/Unknown type 'foo'/ or diag(explain($stderr));
+}
+
+TEST_NOTYPES: {
+    # XXX --ackrc isn't portable!
+    my @args   = ( '--ackrc=/dev/null', '--type=perl', '--nogroup',
+        '--noheading', '--nocolor' );
+    my @files  = ( 't/swamp' );
+    my $target = 'perl';
+
+    my ( $stdout, $stderr ) = run_ack_with_stderr( @args, $target, @files );
+
+    is scalar(@$stdout), 0;
+    ok scalar(@$stderr) > 0;
+    like $stderr->[0], qr/Unknown type 'perl'/ or diag(explain($stderr));
 }
