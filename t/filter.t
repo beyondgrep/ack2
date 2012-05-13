@@ -3,9 +3,9 @@
 use strict;
 use warnings;
 
-use Test::More tests => 6;
+use Test::More tests => 5;
 
-use_ok 'App::Ack::Filter';
+use App::Ack::Filter;
 
 my $filter;
 

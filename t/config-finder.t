@@ -8,7 +8,10 @@ use File::Spec;
 use File::Temp;
 use File::Slurp qw( write_file );
 use Test::Builder;
-use Test::More tests => 22;
+use Test::More tests => 21;
+
+use App::Ack::ConfigFinder;
+
 
 sub touch_ackrc {
     my $filename = shift || '.ackrc';
@@ -61,8 +64,6 @@ else {
         File::Spec->catfile($ENV{'HOME'}, '.ackrc'),
     );
 }
-
-use_ok 'App::Ack::ConfigFinder';
 
 my $wd      = getcwd;
 my $tempdir = File::Temp->newdir;

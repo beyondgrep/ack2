@@ -5,9 +5,9 @@ use warnings;
 use lib 't';
 
 use FilterTest;
-use Test::More tests => 2;
+use Test::More tests => 1;
 
-use_ok 'App::Ack::Filter::FirstLineMatch';
+use App::Ack::Filter::FirstLineMatch;
 
 filter_test(
     [ firstlinematch => '/^#!.*perl/' ], [

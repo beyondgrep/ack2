@@ -12,6 +12,8 @@ use File::Temp;
 use File::Slurp qw( read_file );
 
 use App::Ack::Filter::Default;
+use App::Ack::ConfigLoader;
+
 
 sub test_loader {
     pop if @_ % 2;
@@ -96,8 +98,6 @@ my %defaults = (
     v                 => undef,
     w                 => undef,
 );
-
-use_ok 'App::Ack::ConfigLoader';
 
 test_loader(
     expected_opts    => { %defaults },

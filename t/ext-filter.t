@@ -5,9 +5,9 @@ use warnings;
 use lib 't';
 
 use FilterTest;
-use Test::More tests => 2;
+use Test::More tests => 1;
 
-use_ok 'App::Ack::Filter::Extension';
+use App::Ack::Filter::Extension;
 
 filter_test(
     [ ext => qw/pl pod pm t/ ], [
