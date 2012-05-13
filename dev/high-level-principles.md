@@ -64,17 +64,6 @@ different encodings
 still be merely collections of command-line switches.
 
 
-# Incompatibilities with ack 1.x
-
-* Drop the --binary and --skipped flags, and some default filetypes.
-
-* No more -a or -u flags.
-
-* No more -G and --invert-file-match flags
-
-* -g now obeys all regex flags: -i, -w, -Q, -v
-
-
 # Features that may get added in ack 2.1+, but definitely not in 2.0
 
 * allow filetype-based plugins for searching arbitrary filetypes,
