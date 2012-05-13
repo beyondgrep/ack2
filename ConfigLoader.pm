@@ -131,8 +131,7 @@ sub get_arg_spec {
         'filter!'           => \$App::Ack::is_filter_mode,
         flush               => \$opt->{flush},
         'follow!'           => \$opt->{follow},
-        'g=s'               => sub { shift; $opt->{G} = shift; $opt->{f} = 1 },
-        'G=s'               => \$opt->{G},
+        g                   => \$opt->{g},
         'group!'            => sub { shift; $opt->{heading} = $opt->{break} = shift },
         'heading!'          => \$opt->{heading},
         'h|no-filename'     => \$opt->{h},
@@ -152,7 +151,6 @@ sub get_arg_spec {
                                     my ( undef, $file ) = @_;
                                     push @{ $opt->{ifiles} }, $file;
                                },
-        'invert-file-match' => \$opt->{invert_file_match},
         'lines=s'           => sub { shift; my $val = shift; push @{$opt->{lines}}, $val },
         'l|files-with-matches'
                             => \$opt->{l},

@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 22;
+use Test::More tests => 20;
 use File::Next 0.34; # for reslash function
 
 use lib 't';
@@ -184,20 +184,6 @@ EOF
     my @args = ( '--group', '-B1', '--sort-files', $regex );
 
     ack_lists_match( [ @args, @files ], \@expected, "Looking for $regex in multiple files with grouping" );
-}
-
-# context does nothing ack -g
-ACK_G: {
-    my @expected = qw(
-        t/swamp/html.htm
-        t/swamp/html.html
-    );
-    my $regex = 'swam.......htm';
-
-    my @files = qw( t/ );
-    my @args = ( '-C2', '-g', $regex );
-
-    ack_sets_match( [ @files, @args ], \@expected, "Looking for $regex - no change with -g" );
 }
 
 # ack -o disables context

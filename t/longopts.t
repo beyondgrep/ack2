@@ -39,7 +39,6 @@ my @other_long_opts = qw(
     --color-lineno
     --flush
     --sort-files
-    --invert-file-match
     --show-types
     --[no]ignore-dir
     --recurse

@@ -103,9 +103,6 @@ sub _compile_file_filter {
 
     my %is_member_of_starting_set = map { ($_ => 1) } @{$start};
 
-    my $filter_re         = $opt->{G} ? qr/$opt->{G}/ : undef;
-    my $invert_file_match = $opt->{invert_file_match};
-
     return sub {
         return 1 if $is_member_of_starting_set{ $File::Next::name };
 
@@ -133,12 +130,6 @@ sub _compile_file_filter {
                 }
             }
         }
-        if ( $match_found && defined($filter_re) ) {
-            $match_found = $File::Next::name =~ /$filter_re/;
-            if ($invert_file_match) {
-                $match_found = !$match_found;
-            }
-        }
         return $match_found;
     };
 }
@@ -158,7 +149,7 @@ sub main {
     my $resources;
     if ( $App::Ack::is_filter_mode ) {
         $resources    = App::Ack::Resources->from_stdin( $opt );
-        if( my $regex = $opt->{regex} ) {
+        if ( my $regex = $opt->{regex} ) {
             $opt->{regex} = App::Ack::build_regex( $regex, $opt );
         }
         else {
@@ -168,12 +159,12 @@ sub main {
     else {
         if ( $opt->{f} || $opt->{lines} ) {
             if ( $opt->{regex} ) {
-                App::Ack::warn( "regex ($opt->{regex}) specified with -f or -g" );
+                App::Ack::warn( "regex ($opt->{regex}) specified with -f or --lines" );
                 App::Ack::exit_from_ack( 0 ); # XXX the 0 is misleading
             }
         }
         else {
-            if( my $regex = $opt->{regex} ) {
+            if ( my $regex = $opt->{regex} ) {
                 $opt->{regex} = App::Ack::build_regex( $regex, $opt );
             }
             else {
@@ -181,7 +172,7 @@ sub main {
             }
         }
         my @start;
-        if(my $filename = $opt->{files_from}) {
+        if ( my $filename = $opt->{files_from} ) {
             my $fh;
             open $fh, '<', $filename or die "$filename: $!";
             while(<$fh>) {
@@ -189,7 +180,8 @@ sub main {
                 push @start, $_;
             }
             close $fh;
-        } else {
+        }
+        else {
             @start = @ARGV;
         }
         unless(@start == 1 && -f $start[0]) {
@@ -224,6 +216,14 @@ RESOURCES:
             print $resource->name, $ors;
             ++$nmatches;
             last RESOURCES if defined($max_count) && $nmatches >= $max_count;
+        }
+        elsif ( $opt->{g} ) {
+            my $is_match = ( $resource->name =~ /$opt->{regex}/o );
+            if ( $opt->{v} ? !$is_match : $is_match ) {
+                print $resource->name, $ors;
+                ++$nmatches;
+                last RESOURCES if defined($max_count) && $nmatches >= $max_count;
+            }
         }
         elsif ( $opt->{lines} ) {
             my $print_filename = $opt->{H} && !$opt->{h};
@@ -268,10 +268,9 @@ RESOURCES:
             }
         }
         elsif ( $opt->{l} ) {
-            my $matches = App::Ack::resource_has_match( $resource, $opt );
-            my $invert  = $opt->{v};
+            my $is_match = App::Ack::resource_has_match( $resource, $opt );
 
-            if ( $invert ? !$matches : $matches ) {
+            if ( $opt->{v} ? !$is_match : $is_match ) {
                 # XXX printing should probably happen inside of App::Ack
                 print $resource->name, $ors;
                 ++$nmatches;

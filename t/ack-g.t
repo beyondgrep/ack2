@@ -3,14 +3,14 @@
 use warnings;
 use strict;
 
-use Test::More tests => 55;
+use Test::More tests => 13;
 
 use lib 't';
 use Util;
 
 prep_environment();
 
-NO_STARTDIR: {
+subtest 'No starting directory specified' => sub {
     my $regex = 'non';
 
     my @files = qw( t/foo/non-existent );
@@ -21,10 +21,22 @@ NO_STARTDIR: {
     is( scalar @{$stderr}, 1, 'One line of STDERR for non-existent file' );
     like( $stderr->[0], qr/non-existent: No such file or directory/,
         'Correct warning message for non-existent file' );
-}
+};
 
+subtest 'regex comes before -g on the command line' => sub {
+    my $regex = 'non';
 
-NO_METACHARCTERS: {
+    my @files = qw( t/foo/non-existent );
+    my @args = ( $regex, '-g' );
+    my ($stdout, $stderr) = run_ack_with_stderr( @args, @files );
+
+    is( scalar @{$stdout}, 0, 'No STDOUT for non-existent file' );
+    is( scalar @{$stderr}, 1, 'One line of STDERR for non-existent file' );
+    like( $stderr->[0], qr/non-existent: No such file or directory/,
+        'Correct warning message for non-existent file' );
+};
+
+subtest 'No metacharacters' => sub {
     my @expected = qw(
         t/swamp/Makefile
         t/swamp/Makefile.PL
@@ -37,10 +49,10 @@ NO_METACHARCTERS: {
     my @results = run_ack( @args, @files );
 
     sets_match( \@results, \@expected, "Looking for $regex" );
-}
+};
 
 
-METACHARACTERS: {
+subtest 'With metacharacters' => sub {
     my @expected = qw(
         t/swamp/html.htm
         t/swamp/html.html
@@ -52,10 +64,9 @@ METACHARACTERS: {
     my @results = run_ack( @args, @files );
 
     sets_match( \@results, \@expected, "Looking for $regex" );
-}
+};
 
-
-FRONT_ANCHOR: {
+subtest 'Front anchor' => sub {
     my @expected = qw(
         t/filter.t
     );
@@ -66,10 +77,9 @@ FRONT_ANCHOR: {
     my @results = run_ack( @args, @files );
 
     sets_match( \@results, \@expected, "Looking for $regex" );
-}
+};
 
-
-BACK_ANCHOR: {
+subtest 'Back anchor' => sub {
     my @expected = qw(
         t/swamp/options.pl
         t/swamp/perl.pl
@@ -81,12 +91,12 @@ BACK_ANCHOR: {
     my @results = run_ack( @args, @files );
 
     sets_match( \@results, \@expected, "Looking for $regex" );
-}
+};
 
-
-# -i no longer applies to regex given by -g
-NOT_CASE_INSENSITIVE: {
-    my @expected = qw();
+subtest 'Case-insensitive via -i' => sub {
+    my @expected = qw(
+        t/swamp/pipe-stress-freaks.F
+    );
     my $regex = 'PIPE';
 
     my @files = qw( . );
@@ -94,11 +104,9 @@ NOT_CASE_INSENSITIVE: {
     my @results = run_ack( @args, @files );
 
     sets_match( \@results, \@expected, "Looking for -i -g $regex " );
-}
+};
 
-
-# ... but can be emulated with (?i:regex)
-CASE_INSENSITIVE: {
+subtest 'Case-insensitive via (?i:)' => sub {
     my @expected = qw(
         t/swamp/pipe-stress-freaks.F
     );
@@ -109,9 +117,9 @@ CASE_INSENSITIVE: {
     my @results = run_ack( @args, @files );
 
     sets_match( \@results, \@expected, "Looking for $regex" );
-}
+};
 
-FILE_ON_COMMAND_LINE_IS_ALWAYS_SEARCHED: {
+subtest 'File on command line is always searched' => sub {
     my @expected = ( 't/swamp/#emacs-workfile.pl#' );
     my $regex = 'emacs';
 
@@ -120,9 +128,9 @@ FILE_ON_COMMAND_LINE_IS_ALWAYS_SEARCHED: {
     my @results = run_ack( @args, @files );
 
     sets_match( \@results, \@expected, 'File on command line is always searched' );
-}
+};
 
-FILE_ON_COMMAND_LINE_IS_ALWAYS_SEARCHED_EVEN_WITH_WRONG_TYPE: {
+subtest 'File on command line is always searched, even with wrong filetype' => sub {
     my @expected = qw(
         t/swamp/parrot.pir
     );
@@ -133,97 +141,10 @@ FILE_ON_COMMAND_LINE_IS_ALWAYS_SEARCHED_EVEN_WITH_WRONG_TYPE: {
     my @results = run_ack( @args, @files );
 
     sets_match( \@results, \@expected, 'File on command line is always searched, even with wrong type.' );
-}
+};
 
-
-ONLY_MAKEFILES: {
-    my @expected = (
-        't/swamp/Makefile:1:# This Makefile is for the ack extension to perl.',
-        't/swamp/Makefile:4:# 6.30 (Revision: Revision: 4535 ) from the contents of',
-    );
-    my $content_regex = 'the';
-    my $file_regex = 'Makefile';
-
-    my @files = qw( t/swamp );
-    my @args = ( '-G', $file_regex, $content_regex );
-    my @results = run_ack( @args, @files );
-
-    sets_match( \@results, \@expected, "Looking for $content_regex in files matching $file_regex" );
-}
-
-PERL_TEST_CASE_INSENSITIVE_CONTENT: {
+subtest '-Q works on -g' => sub {
     my @expected = qw(
-        t/swamp/perl-test.t
-    );
-    my $content_regex = 'ack';
-    my $file_regex = '\.t$';
-
-    my @files = qw( t/swamp );
-    my @args = ( '--perl', '-G', $file_regex, '-i', $content_regex, '-l' );
-    my @results = run_ack( @args, @files );
-
-    sets_match( \@results, \@expected, "Looking for $content_regex (case insensitive) in files matching $file_regex" );
-}
-
-PERL_TEST_CASE_INSENSITIVE_CONTENT_SWAPPED: {
-    # order of arguments doesn't change anything
-    my @expected = qw(
-        t/swamp/perl-test.t
-    );
-    my $content_regex = 'ack';
-    my $file_regex = '\.t$';
-
-    my @files = qw( t/swamp );
-    my @args = ( '--perl', '-i', '-G', $file_regex, $content_regex, '-l' );
-    my @results = run_ack( @args, @files );
-
-    sets_match( \@results, \@expected, "Looking for $content_regex (case insensitive) in files matching $file_regex" );
-}
-
-
-PERL_TEST_CASE_INSENSITIVE_FILE_NOT: {
-    my @expected = qw();
-    my $content_regex = 'ack';
-    my $file_regex = '\.T$';
-
-    my @files = qw( t/swamp );
-    my @args = ( '--perl', '-i', '-G', $file_regex, $content_regex, '-l' );
-    my @results = run_ack( @args, @files );
-
-    sets_match( \@results, \@expected, "Looking for $content_regex in files matching $file_regex" );
-}
-
-PERL_TEST_CASE_INSENSITIVE_FILE_AND_CONTENT_NOT: {
-    my @expected = qw();
-    my $content_regex = 'ack';
-    my $file_regex = '\.T$';
-
-    my @files = qw( t/swamp );
-    my @args = ( '--perl', '-i', '-G', $file_regex, '-i', $content_regex, '-l' );
-    my @results = run_ack( @args, @files );
-
-    sets_match( \@results, \@expected, "Looking for $content_regex in files matching $file_regex (both case insensitive)" );
-}
-
-ALL_AND_DASH_G_INTERACTION: {
-    my @expected = qw(
-        t/swamp/file.bar
-        t/swamp/file.foo
-    );
-    my $content_regex = 'file';
-    my $file_regex = 'swamp.*[fb][oa][or]';
-
-    my @files = qw( t/swamp );
-    my @args = ( '-G', $file_regex, $content_regex, '-l' );
-    my @results = run_ack( @args, @files );
-
-    sets_match( \@results, \@expected, "Looking for $content_regex in all files matching $file_regex" );
-}
-
-QUOTEMETA_FILE_NOT: {
-    # -Q does nothing for -g regex
-    my @expected = qw(
-        t/ack-g.t
     );
     my $regex = 'ack-g.t$';
 
@@ -232,91 +153,20 @@ QUOTEMETA_FILE_NOT: {
     my @results = run_ack( @args, @files );
 
     sets_match( \@results, \@expected, "Looking for $regex with quotemeta." );
-}
+};
 
-QUOTEMETA_CONTENT: {
-    my @expected = qw( t/ack-print0.t );
-    my $file_regex = 'print0.t$';
-    my $content_regex = '...';
-
-    my @files = qw( t );
-    my @args = ( '-l', '-G', $file_regex, '-Q', $content_regex );
-    my @results = run_ack( @args, @files );
-
-    sets_match( \@results, \@expected, "Looking for $content_regex (quotemeta) in files matching $file_regex." );
-}
-
-QUOTEMETA_CONTENT_SWAPPED: {
-    my @expected = qw( t/ack-print0.t );
-    my $file_regex = 'print0.t$';
-    my $content_regex = '...';
-
-    my @files = qw( t );
-    my @args = ( '-l', '-Q', $content_regex, '-G', $file_regex );
-    my @results = run_ack( @args, @files );
-
-    sets_match( \@results, \@expected, "Looking for $content_regex (quotemeta) in files matching $file_regex - swapped." );
-}
-
-WORDS_FILE_NOT: {
-    # -w does nothing for -g regex
-    my @expected = qw(
-        t/text/freedom-of-choice.txt
-    );
+subtest '-w works on -g' => sub {
+    my @expected = qw();
     my $regex = 'free';
 
     my @files = qw( t/text/ );
-    my @args = ( '-w', '-g', $regex );
+    my @args = ( '-w', '-g', $regex ); # The -w means "free" won't match "freedom"
     my @results = run_ack( @args, @files );
 
     sets_match( \@results, \@expected, "Looking for $regex with '-w'." );
-}
+};
 
-INVERT_MATCH_FILE_NOT: {
-    # -v does nothing for -g regex
-    my @expected = qw(
-        t/text/4th-of-july.txt
-        t/text/freedom-of-choice.txt
-        t/text/science-of-myth.txt
-    );
-    my $regex = 'of';
-
-    my @files = qw( t/text/ );
-    my @args = ( '-v', '-g', $regex );
-    my @results = run_ack( @args, @files );
-
-    sets_match( \@results, \@expected, "Looking for filenames NOT matching $regex." );
-}
-
-INVERT_MATCH_CONTENT: {
-    my @expected = qw(
-        t/text/freedom-of-choice.txt
-    );
-    my $file_regex = 'of';
-    my $content_regex = 'are';
-
-    my @files = qw( t/text/ );
-    my @args = ( '-l', '-G', $file_regex, '-v', $content_regex );
-    my @results = run_ack( @args, @files );
-
-    sets_match( \@results, \@expected, "Looking for files without $content_regex in files matching $file_regex" );
-}
-
-INVERT_MATCH_CONTENT_SWAPPED: {
-    my @expected = qw(
-        t/text/freedom-of-choice.txt
-    );
-    my $file_regex = 'of';
-    my $content_regex = 'are';
-
-    my @files = qw( t/text/ );
-    my @args = ( '-l', '-v', $content_regex, '-G', $file_regex );
-    my @results = run_ack( @args, @files );
-
-    sets_match( \@results, \@expected, "Looking for files without $content_regex in files matching $file_regex - swapped" );
-}
-
-INVERT_FILE_MATCH: {
+subtest '-v works on -g' => sub {
     my @expected = qw(
         t/text/boy-named-sue.txt
         t/text/me-and-bobbie-mcgee.txt
@@ -325,32 +175,8 @@ INVERT_FILE_MATCH: {
     my $file_regex = 'of';
 
     my @files = qw( t/text/ );
-    my @args = ( '--invert-file-match', '-g', $file_regex );
+    my @args = ( '-v', '-g', $file_regex );
     my @results = run_ack( @args, @files );
 
     sets_match( \@results, \@expected, "Looking for file names that do not match $file_regex" );
-}
-
-G_WITH_REGEX: {
-    # specifying both -g and a regex should result in an error
-    my @files = qw( t/text );
-    my @args = qw( -g boy --match Sue );
-
-    my ($stdout, $stderr) = run_ack_with_stderr( @args, @files );
-    isnt( get_rc(), 0, 'Specifying both -g and --match must lead to an error RC' );
-    is( scalar @{$stdout}, 0, 'No normal output' );
-    is( scalar @{$stderr}, 1, 'One line of stderr output' );
-    like( $stderr->[0], qr/\Q(Sue)/, 'Error message must contain "(Sue)"' );
-}
-
-F_WITH_REGEX: {
-    # specifying both -f and a regex should result in an error
-    my @files = qw( t/text );
-    my @args = qw( -f --match Sue );
-
-    my ($stdout, $stderr) = run_ack_with_stderr( @args, @files );
-    isnt( get_rc(), 0, 'Specifying both -f and --match must lead to an error RC' );
-    is( scalar @{$stdout}, 0, 'No normal output' );
-    is( scalar @{$stderr}, 1, 'One line of stderr output' );
-    like( $stderr->[0], qr/\Q(Sue)/, 'Error message must contain "(Sue)"' );
-}
+};

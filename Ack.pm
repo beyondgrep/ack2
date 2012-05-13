@@ -438,18 +438,16 @@ File presentation:
 File finding:
   -f                    Only print the files found, without searching.
                         The PATTERN must not be specified.
-  -g REGEX              Same as -f, but only print files matching REGEX.
+  -g                    Same as -f, but only print files matching PATTERN.
   --sort-files          Sort the found files lexically.
-  --invert-file-match   Print/search handle files that do not match -g/-G.
   --show-types          Show which types each file has.
 
 File inclusion/exclusion:
   --[no]ignore-dir=name Add/Remove directory from the list of ignored dirs
   -r, -R, --recurse     Recurse into subdirectories (ack's default behavior)
   -n, --no-recurse      No descending into subdirectories
-  -G REGEX              Only search files that match REGEX
 
-  --type=X              Include only Perl files.
+  --type=X              Include only X files, where X is a recognized filetype.
   --type=noX            Exclude X files.
                         See "ack --help type" for supported filetypes.
 
