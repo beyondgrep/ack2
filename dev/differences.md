@@ -23,10 +23,15 @@ ack 2.0 will:
 
 # Incompatibilities with ack 1.x
 
-* Drop the --binary and --skipped flags, and some default filetypes.
+* Drop the `--binary` and `--skipped` switches, and some default filetypes.
 
-* No more -a or -u flags.
+* No more `-a` or `-u` switches.
 
-* No more -G and --invert-file-match flags
+* No more -G switch.
 
-* -g now obeys all regex flags: -i, -w, -Q, -v
+* The `--invert-file-match` flag is removed.  `-v` now works with `-g`.
+
+    # List files that do not match /foo/
+    ack -g foo -v
+
+* `-g` now obeys all regex flags: `-i`, `-w`, `-Q`, `-v`
