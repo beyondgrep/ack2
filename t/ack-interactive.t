@@ -12,7 +12,7 @@ if(! __PACKAGE__->can('run_ack_interactive')) {
     exit(0);
 }
 
-plan tests => 4;
+plan tests => 5;
 
 prep_environment();
 
@@ -92,4 +92,21 @@ INTERACTIVE_GROUPING_COLOR: {
     my @lines = run_ack_interactive(@args, @files);
 
     lists_match(\@lines, \@expected_lines);
+}
+
+INTERACTIVE_SINGLE_TARGET: {
+    my @args  = qw( Sue --nocolor );
+    my @files = qw( t/text/boy-named-sue.txt );
+
+    my $output = run_ack_interactive(@args, @files);
+
+    is $output, <<'END_OUTPUT';
+Was before he left, he went and named me Sue.
+I tell ya, life ain't easy for a boy named Sue.
+Sat the dirty, mangy dog that named me Sue.
+And I said: "My name is Sue! How do you do! Now you gonna die!"
+Cause I'm the son-of-a-bitch that named you Sue."
+Bill or George! Anything but Sue! I still hate that name!
+    -- "A Boy Named Sue", Johnny Cash
+END_OUTPUT
 }
