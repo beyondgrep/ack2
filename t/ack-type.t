@@ -29,7 +29,7 @@ EOF
     my $target  = 'perl';
 
     my @results = run_ack( @args, $target, @files );
-    lists_match( \@results, \@expected );
+    sets_match( \@results, \@expected );
 }
 
 TEST_NOTYPE: {
@@ -47,7 +47,7 @@ EOF
     my $target  = 'perl';
 
     my @results = run_ack( @args, $target, @files );
-    lists_match( \@results, \@expected );
+    sets_match( \@results, \@expected );
 }
 
 TEST_UNKNOWN_TYPE: {
