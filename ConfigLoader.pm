@@ -23,18 +23,20 @@ use Text::ParseWords ();
 sub process_filter_spec {
     my ( $spec ) = @_;
 
-    if($spec =~ /^(\w+),(\w+),(.*)/) {
+    if ( $spec =~ /^(\w+),(\w+),(.*)/ ) {
         return ( $1, App::Ack::Filter->create_filter($2, split(/,/, $3)) );
-    } elsif ( $spec =~ /^(\w+)=(.*)/ ) {
+    }
+    elsif ( $spec =~ /^(\w+)=(.*)/ ) {
         my ( $type_name, $extensions ) = ( $1, $2 );
 
         my @extensions = split(/,/, $extensions);
-        foreach my $extension (@extensions) {
+        foreach my $extension ( @extensions ) {
             $extension =~ s/^[.]//;
         }
 
         return ( $type_name, 'ext', @extensions );
-    } else {
+    }
+    else {
         Carp::croak "invalid filter specification '$spec'";
     }
 }
