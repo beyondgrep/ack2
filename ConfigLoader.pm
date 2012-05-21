@@ -24,7 +24,10 @@ sub process_filter_spec {
     my ( $spec ) = @_;
 
     if ( $spec =~ /^(\w+),(\w+),(.*)/ ) {
-        return ( $1, App::Ack::Filter->create_filter($2, split(/,/, $3)) );
+        my ( $type_name, $ext_type, $arguments ) = ( $1, $2, $3 );
+
+        return ( $type_name,
+            App::Ack::Filter->create_filter($ext_type, split(/,/, $arguments)) );
     }
     elsif ( $spec =~ /^(\w+)=(.*)/ ) {
         my ( $type_name, $extensions ) = ( $1, $2 );
