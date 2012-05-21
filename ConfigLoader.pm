@@ -25,6 +25,15 @@ sub process_filter_spec {
 
     if($spec =~ /^(\w+),(\w+),(.*)/) {
         return ( $1, App::Ack::Filter->create_filter($2, split(/,/, $3)) );
+    } elsif ( $spec =~ /^(\w+)=(.*)/ ) {
+        my ( $type_name, $extensions ) = ( $1, $2 );
+
+        my @extensions = split(/,/, $extensions);
+        foreach my $extension (@extensions) {
+            $extension =~ s/^[.]//;
+        }
+
+        return ( $type_name, 'ext', @extensions );
     } else {
         Carp::croak "invalid filter specification '$spec'";
     }
@@ -288,8 +297,13 @@ sub explode_sources {
     my $add_type = sub {
         my ( undef, $arg ) = @_;
 
-        ( $arg ) = split /,/, $arg;
-        $arg_spec->{$arg} = sub {};
+        # XXX refactor?
+        if ( $arg =~ /(\w+)=/) {
+            $arg_spec->{$1} = sub {};
+        } else {
+            ( $arg ) = split /,/, $arg;
+            $arg_spec->{$arg} = sub {};
+        }
     };
 
     for(my $i = 0; $i < @{$sources}; $i += 2) {
