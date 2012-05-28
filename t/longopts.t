@@ -219,7 +219,10 @@ my $usage;
 sub option_in_usage {
     my $opt = shift;
 
-    $usage = qx{ $^X -T $ack --help } unless $usage;
+    unless( $usage ) {
+        ( $usage, undef ) = run_ack_with_stderr( '--help' );
+        $usage            = join( "\n", @{$usage} );
+    }
 
     local $Test::Builder::Level = $Test::Builder::Level + 1;
     return ok( $usage =~ qr/\Q$opt\E\b/s, "Found $opt in usage" );
