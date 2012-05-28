@@ -189,7 +189,7 @@ sub main {
             @start = @ARGV;
         }
         if( !exists($opt->{show_filename}) ) {
-            unless(@start == 1 && -f $start[0]) {
+            unless(@start == 1 && !(-d $start[0])) {
                 $opt->{show_filename} = 1;
             }
         }
