@@ -146,7 +146,9 @@ sub main {
         $opt->{heading} = $opt->{break} = !App::Ack::output_to_pipe();
     }
 
-    $opt->{show_filename}= $opt->{H} && !$opt->{h};
+    if( defined($opt->{H}) || defined($opt->{h}) ) {
+        $opt->{show_filename}= $opt->{H} && !$opt->{h};
+    }
 
     my $resources;
     if ( $App::Ack::is_filter_mode ) {
