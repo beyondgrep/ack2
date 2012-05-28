@@ -188,8 +188,10 @@ sub main {
         else {
             @start = @ARGV;
         }
-        unless(@start == 1 && -f $start[0]) {
-            $opt->{H} = 1;
+        if( !exists($opt->{show_filename}) ) {
+            unless(@start == 1 && -f $start[0]) {
+                $opt->{show_filename} = 1;
+            }
         }
         @start = ('.') unless @start;
         foreach my $target (@start) {
