@@ -7,7 +7,7 @@ use File::Spec ();
 my $orig_wd;
 
 sub prep_environment {
-    delete @ENV{qw( ACK_OPTIONS ACKRC ACK_PAGER )};
+    delete @ENV{qw( ACK_OPTIONS ACKRC ACK_PAGER HOME )};
     $orig_wd = Cwd::getcwd();
 }
 
