@@ -79,6 +79,8 @@ sub slurp {
 sub run_ack {
     my @args = @_;
 
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+
     my ($stdout, $stderr) = run_ack_with_stderr( @args );
 
     if ( $TODO ) {
