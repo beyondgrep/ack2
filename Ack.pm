@@ -21,7 +21,7 @@ our $VERSION;
 our $COPYRIGHT;
 BEGIN {
     $VERSION = '2.00a01';
-    $COPYRIGHT = 'Copyright 2005-2011 Andy Lester.';
+    $COPYRIGHT = 'Copyright 2005-2012 Andy Lester.';
 }
 
 our $fh;
@@ -1028,7 +1028,7 @@ sub print_line_with_context {
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2005-2011 Andy Lester.
+Copyright 2005-2012 Andy Lester.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the Artistic License v2.0.
