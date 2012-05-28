@@ -729,14 +729,15 @@ sub get_match_column {
 sub print_matches_in_resource {
     my ( $resource, $opt ) = @_;
 
-    my $passthru  = $opt->{passthru};
-    my $max_count = $opt->{m} || -1;
-    my $nmatches  = 0;
-    my $filename  = $resource->name;
-    my $break     = $opt->{break};
-    my $heading   = $opt->{heading};
-    my $ors       = $opt->{print0} ? "\0" : "\n";
-    my $color     = $opt->{color};
+    my $passthru       = $opt->{passthru};
+    my $max_count      = $opt->{m} || -1;
+    my $nmatches       = 0;
+    my $filename       = $resource->name;
+    my $break          = $opt->{break};
+    my $heading        = $opt->{heading};
+    my $ors            = $opt->{print0} ? "\0" : "\n";
+    my $color          = $opt->{color};
+    my $print_filename = $opt->{show_filename};
 
     my $has_printed_for_this_resource = 0;
 
@@ -746,13 +747,15 @@ sub print_matches_in_resource {
                 if( $break && has_printed_something() ) {
                     App::Ack::print_blank_line();
                 }
-                if( $heading ) {
-                    my $filename = $resource->name;
-                    if($color) {
-                        $filename = Term::ANSIColor::colored($filename,
-                            $ENV{ACK_COLOR_FILENAME});
+                if( $print_filename) {
+                    if( $heading ) {
+                        my $filename = $resource->name;
+                        if($color) {
+                            $filename = Term::ANSIColor::colored($filename,
+                                $ENV{ACK_COLOR_FILENAME});
+                        }
+                        App::Ack::print_filename( $filename, $ors );
                     }
-                    App::Ack::print_filename( $filename, $ors );
                 }
             }
             App::Ack::print_line_with_context($opt, $filename, $_, $.);
