@@ -202,7 +202,9 @@ sub main {
     }
     App::Ack::set_up_pager( $opt->{pager} ) if defined $opt->{pager};
 
-    my $print_filenames = $opt->{H};
+    $opt->{show_filename}= $opt->{H} && !$opt->{h};
+
+    my $print_filenames = $opt->{show_filename};
     my $max_count       = $opt->{m};
     my $ors             = $opt->{print0} ? "\0" : "\n";
 
@@ -226,7 +228,7 @@ RESOURCES:
             }
         }
         elsif ( $opt->{lines} ) {
-            my $print_filename = $opt->{H} && !$opt->{h};
+            my $print_filename = $opt->{show_filename};
             my $passthru       = $opt->{passthru};
 
             my %line_numbers;

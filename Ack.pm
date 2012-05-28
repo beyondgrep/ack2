@@ -881,7 +881,7 @@ sub print_line_with_options {
 
     $has_printed_something = 1;
 
-    my $print_filename = $opt->{H} && !$opt->{h};
+    my $print_filename = $opt->{show_filename};
     my $print_column   = $opt->{column};
     my $ors            = $opt->{print0} ? "\0" : "\n";
     my $heading        = $opt->{heading};
