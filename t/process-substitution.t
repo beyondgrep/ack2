@@ -37,7 +37,7 @@ else {
     close $read;
     open STDOUT, '>&', $write;
     open STDERR, '>&', $write;
-    exec 'bash', '-c', './ack --nocolor perl <(cat t/swamp/options.pl)';
+    exec 'bash', '-c', './ack --noenv --nocolor perl <(cat t/swamp/options.pl)';
 }
 
 lists_match( \@output, \@expected );
