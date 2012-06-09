@@ -446,11 +446,13 @@ File inclusion/exclusion:
   --[no]ignore-dir=name Add/Remove directory from the list of ignored dirs
   -r, -R, --recurse     Recurse into subdirectories (ack's default behavior)
   -n, --no-recurse      No descending into subdirectories
+  --[no]follow          Follow symlinks.  Default is off.
 
   --type=X              Include only X files, where X is a recognized filetype.
   --type=noX            Exclude X files.
                         See "ack --help type" for supported filetypes.
 
+File type specification:
   --type-set TYPE=.EXTENSION[,.EXT2[,...]]
                         Files with the given EXTENSION(s) are recognized as
                         being of type TYPE. This replaces an existing
@@ -459,7 +461,6 @@ File inclusion/exclusion:
                         Files with the given EXTENSION(s) are recognized as
                         being of (the existing) type TYPE
 
-  --[no]follow          Follow symlinks.  Default is off.
 
 
 Miscellaneous:
