@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 12;
+use Test::More tests => 20;
 
 use lib 't';
 use Util;
@@ -31,8 +31,17 @@ DASH_CAPITAL_L: {
         t/text/shut-up-be-happy.txt
     );
 
+    my @switches = (
+        ['-L'],
+        ['--files-without-matches'],
+
+        ['-l','-v'],
+        ['-l','--invert-match'],
+        ['--files-with-matches','-v'],
+        ['--files-with-matches','--invert-match'],
+    );
     # -L and -l -v are identical
-    for my $switches ( (['-L'], ['-l','-v']) ) {
+    for my $switches ( @switches ) {
         my @files = qw( t/text );
         my @args = ( 'religion', '-a', @{$switches} );
         my @results = run_ack( @args, @files );
