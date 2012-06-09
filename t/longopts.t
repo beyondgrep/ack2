@@ -55,7 +55,7 @@ my @other_long_opts = qw(
     --dump
 );
 
-# --no-recurse is inconsitent w/--nogroup
+# --no-recurse is inconsistent w/--nogroup
 
 plan tests => 55 + @other_long_opts;
 
