@@ -387,11 +387,11 @@ Search output:
                         Only print filenames containing matches
   -L, --files-without-matches
                         Only print filenames with no matches
-  -o                    Show only the part of a line matching PATTERN
-                        (turns off text highlighting)
-  --passthru            Print all lines, whether matching or not
   --output=expr         Output the evaluation of expr for each line
                         (turns off text highlighting)
+  -o                    Show only the part of a line matching PATTERN
+                        Same as --output='\$&'
+  --passthru            Print all lines, whether matching or not
   --match PATTERN       Specify PATTERN explicitly.
   -m, --max-count=NUM   Stop searching in each file after NUM matches
   -1                    Stop searching after one match of any kind
