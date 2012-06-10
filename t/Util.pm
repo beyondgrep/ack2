@@ -87,6 +87,31 @@ sub read_file {
     return wantarray ? @lines : join( '', @lines );
 }
 
+# Use this instead of File::Slurp::write_file()
+sub write_file {
+    return _write_file( '>', 'create', @_ );
+}
+
+# Use this instead of File::Slurp::append_file()
+sub append_file {
+    return _write_file( '>>', 'append', @_ );
+}
+
+sub _write_file {
+    my $op       = shift;
+    my $verb     = shift;
+    my $filename = shift;
+    my @lines    = @_;
+
+    open( my $fh, $op, $filename ) or die "Can't $verb $filename: \n";
+    for my $line ( @lines ) {
+        print {$fh} $line;
+    }
+    close $fh or die;
+
+    return;
+}
+
 sub run_ack {
     my @args = @_;
 
