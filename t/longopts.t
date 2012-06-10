@@ -10,7 +10,7 @@ This tests whether L<ack(1)>'s command line options work as expected.
 =cut
 
 use Test::More;
-use File::Next 0.34; # For the reslash() function
+use File::Next (); # For the reslash() function
 
 my @other_long_opts = qw(
     --passthru

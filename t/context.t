@@ -4,7 +4,7 @@ use warnings;
 use strict;
 
 use Test::More tests => 20;
-use File::Next 0.34; # for reslash function
+use File::Next (); # for reslash function
 
 use lib 't';
 use Util;
