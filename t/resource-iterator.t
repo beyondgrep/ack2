@@ -15,6 +15,17 @@ BEGIN {
     use_ok( 'App::Ack' );
 }
 
+sub slurp {
+    my $iter = shift;
+
+    my @files;
+    while ( defined ( my $file = $iter->() ) ) {
+        push( @files, $file );
+    }
+
+    return @files;
+}
+
 UNFILTERED: {
     my $iter =
         File::Next::files( {
@@ -87,3 +98,5 @@ UNFILTERED: {
             't/swamp/not-an-#emacs-workfile#',
         ], 'UNFILTERED' );
 }
+
+done_testing();

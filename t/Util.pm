@@ -65,17 +65,6 @@ sub build_ack_command_line {
     return build_command_line( File::Spec->catfile($orig_wd, 'ack'), @args );
 }
 
-sub slurp {
-    my $iter = shift;
-
-    my @files;
-    while ( defined ( my $file = $iter->() ) ) {
-        push( @files, $file );
-    }
-
-    return @files;
-}
-
 # Use this instead of File::Slurp::read_file()
 sub read_file {
     my $filename = shift;
