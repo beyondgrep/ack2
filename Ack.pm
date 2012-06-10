@@ -441,6 +441,8 @@ File finding:
   -g                    Same as -f, but only print files matching PATTERN.
   --sort-files          Sort the found files lexically.
   --show-types          Show which types each file has.
+  --files-from=FILE     Read the list of files to search from FILE.
+  -x                    Read the list of files to search from STDIN.
 
 File inclusion/exclusion:
   --[no]ignore-dir=name Add/Remove directory from the list of ignored dirs
