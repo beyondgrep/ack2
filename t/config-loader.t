@@ -3,13 +3,12 @@
 use strict;
 use warnings;
 use lib 't';
+use Util;
 
 use Test::More;
 
 use Carp qw(croak);
 use File::Temp;
-
-use File::Slurp qw( read_file );
 
 use App::Ack::Filter::Default;
 use App::Ack::ConfigLoader;
