@@ -2,16 +2,16 @@
 
 use strict;
 use warnings;
-use lib 't';
 
 use Test::More tests => 5;
+
+use lib 't';
+use Util;
 
 use App::Ack;
 use Cwd qw( realpath getcwd );
 use File::Spec ();
 use File::Temp ();
-use File::Slurp qw( append_file write_file );
-use Util;
 
 prep_environment();
 

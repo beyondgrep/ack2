@@ -3,10 +3,12 @@
 use strict;
 use warnings;
 
+use lib 't';
+use Util;
+
 use Cwd qw(getcwd realpath);
 use File::Spec;
 use File::Temp;
-use File::Slurp qw( write_file );
 use Test::Builder;
 use Test::More tests => 21;
 
@@ -15,7 +17,7 @@ use App::Ack::ConfigFinder;
 
 sub touch_ackrc {
     my $filename = shift || '.ackrc';
-    write_file( $filename, '' );
+    write_file( $filename, () );
 
     return;
 }
