@@ -76,6 +76,17 @@ sub slurp {
     return @files;
 }
 
+# Use this instead of File::Slurp::read_file()
+sub read_file {
+    my $filename = shift;
+
+    open( my $fh, '<', $filename ) or die "Can't read $filename: \n";
+    my @lines = <$fh>;
+    close $fh or die;
+
+    return wantarray ? @lines : join( '', @lines );
+}
+
 sub run_ack {
     my @args = @_;
 
