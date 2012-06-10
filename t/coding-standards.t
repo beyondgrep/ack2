@@ -3,18 +3,33 @@
 use warnings;
 use strict;
 
+use lib 't';
+use Util;
+
 use Test::More;
-use File::Slurp;
 
 my @files = ( qw( ack ack-base ), glob( '*.pm' ), glob( 't/*.t' ) );
 
 plan tests => scalar @files;
 
 for my $file ( @files ) {
-    local $/ = undef;
-    open( my $fh, '<', $file ) or die "Can't read $file: \n";
-    my $text = <$fh>;
-    close $fh or die;
+    subtest $file => sub {
+        plan tests => 2;
 
-    is( index($text, "\t"), -1, "$file should have no embedded tabs" );
+        my @lines = read_file( $file );
+        my $text = join( '', @lines );
+
+        chomp @lines;
+        my $ok = 1;
+        for my $line ( @lines ) {
+            if ( $line =~ /[^ -~]/ ) {
+                my $col = $-[0] + 1;
+                diag( "$file has hi-bit characters at $.:$col" );
+                $ok = 0;
+            }
+        }
+        ok( $ok, 'No hi-bit characters found' );
+
+        is( index($text, "\t"), -1, "$file should have no embedded tabs" );
+    }
 }
