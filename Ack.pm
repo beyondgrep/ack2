@@ -221,6 +221,16 @@ sub build_regex {
         $str = "(?i)$str";
     }
 
+    my $ok = eval {
+        qr/$str/
+    };
+
+    my $error = $@;
+
+    if ( !$ok ) {
+        die "Invalid regex '$str':\n  $error";
+    }
+
     return $str;
 }
 
