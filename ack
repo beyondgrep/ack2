@@ -149,6 +149,10 @@ sub main {
 
     my $opt = App::Ack::ConfigLoader::process_args( @arg_sources );
 
+    if ( $opt->{flush} ) {
+        $| = 1;
+    }
+
     if ( not defined $opt->{color} ) {
         $opt->{color} = !App::Ack::output_to_pipe() && !$App::Ack::is_windows;
     }
