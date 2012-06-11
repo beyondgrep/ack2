@@ -11,18 +11,18 @@ use Util;
 prep_environment();
 
 NO_SWITCHES_MULTIPLE_FILES: {
-    my $tempfile = File::Temp->new;
     my $target_file = File::Next::reslash( 't/swamp/options.pl' );
     my @expected = split( /\n/, <<"EOF" );
 $target_file:2:use strict;
 EOF
 
-    my @files = qw( t/swamp/options.pl t/swamp/pipe-stress-freaks.F );
-    print $tempfile "$_\n" foreach @files;
+    my $tempfile = File::Temp->new;
+    print $tempfile "$_\n" for qw( t/swamp/options.pl t/swamp/pipe-stress-freaks.F );
     close $tempfile;
 
     my @args = qw( strict );
     my @results = run_ack( '--files-from=' . $tempfile->filename, @args );
+
 
     lists_match( \@results, \@expected, 'Looking for strict in multiple files' );
 }
