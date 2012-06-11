@@ -2,6 +2,8 @@ package App::Ack::Filter;
 
 use strict;
 use warnings;
+use overload
+    '""' => 'to_string';
 
 use App::Ack::Filter::Inverse ();
 use Carp ();
@@ -98,6 +100,12 @@ Returns true if this filter is an inverted filter; false otherwise.
 
 sub is_inverted {
     return 0;
+}
+
+sub to_string {
+    my ( $self ) = @_;
+
+    return ref($self);
 }
 
 1;
