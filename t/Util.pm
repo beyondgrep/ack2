@@ -114,29 +114,100 @@ our $ack_return_code;
 #
 # returns chomped STDOUT and STDERR as two array refs
 sub run_cmd {
-    my $cmd = shift;
+    my ( @cmd ) = @_;
 
-    diag( "Running command: $cmd" );
+    # my $cmd = join( ' ', @cmd );
+    # diag( "Running command: $cmd" );
 
-    record_option_coverage($cmd);
-    my @stdout = `$cmd`;
+    record_option_coverage(@cmd);
+
+    my ( @stdout, @stderr );
+
+    my ( $stdout_read, $stdout_write );
+    my ( $stderr_read, $stderr_write );
+
+    pipe $stdout_read, $stdout_write
+        or Carp::croak( "Unable to create pipe: $!" );
+
+    pipe $stderr_read, $stderr_write
+        or Carp::croak( "Unable to create pipe: $!" );
+
+    my $pid = fork();
+    if ( $pid == -1 ) {
+        Carp::croak( "Unable to fork: $!" );
+    }
+
+    if ( $pid ) {
+        close $stdout_write;
+        close $stderr_write;
+
+        while ( $stdout_read || $stderr_read ) {
+            my $rin = '';
+
+            vec( $rin, fileno($stdout_read), 1 ) = 1 if $stdout_read;
+            vec( $rin, fileno($stderr_read), 1 ) = 1 if $stderr_read;
+
+            my $ein = $rin;
+
+            select( $rin, undef, $ein, undef );
+
+            # XXX is this the best way to handle this?
+            if ( $stdout_read && vec( $ein, fileno($stdout_read), 1 ) ) {
+                close $stdout_read;
+                undef $stdout_read;
+            }
+            if ( $stderr_read && vec( $ein, fileno($stderr_read), 1 ) ) {
+                close $stderr_read;
+                undef $stderr_read;
+            }
+
+            if ( $stdout_read && vec( $rin, fileno($stdout_read), 1 ) ) {
+                my $line = <$stdout_read>;
+
+                if ( defined( $line ) ) {
+                    push @stdout, $line;
+                }
+                else {
+                    close $stdout_read;
+                    undef $stdout_read;
+                }
+            }
+
+            if ( $stderr_read && vec( $rin, fileno($stderr_read), 1 ) ) {
+                my $line = <$stderr_read>;
+
+                if ( defined( $line ) ) {
+                    push @stderr, $line;
+                }
+                else {
+                    close $stderr_read;
+                    undef $stderr_read;
+                }
+            }
+        }
+
+        waitpid $pid, 0;
+    } 
+    else {
+        close $stdout_read;
+        close $stderr_read;
+
+        open STDOUT, '>&', $stdout_write;
+        open STDERR, '>&', $stderr_write;
+
+        exec @cmd;
+    }
+
     my ($sig,$core,$rc) = (($? & 127),  ($? & 128) , ($? >> 8));
     $ack_return_code = $rc;
     ## XXX what do do with $core or $sig?
-
-    my @stderr;
-    open( my $fh, '<', $catcherr_file ) or die $!;
-    while ( <$fh> ) {
-        push( @stderr, $_ );
-    }
-    close $fh or die $!;
-    unlink $catcherr_file;
 
     chomp @stdout;
     chomp @stderr;
 
     return ( \@stdout, \@stderr );
 }
+
 
 sub get_rc {
     return $ack_return_code;
@@ -150,9 +221,10 @@ sub run_ack_with_stderr {
     my @stdout;
     my @stderr;
 
-    my $cmd = build_ack_invocation( @args );
+    @args = build_ack_invocation( @args );
+    unshift( @args, $^X, '-Mblib' );
 
-    return run_cmd($cmd);
+    return run_cmd( @args );
 }
 
 # pipe into ack and return STDOUT and STDERR as array refs
