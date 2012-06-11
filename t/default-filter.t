@@ -27,6 +27,7 @@ filter_test(
         't/swamp/javascript.js',
         't/swamp/Makefile',
         't/swamp/Makefile.PL',
+        't/swamp/minified.min.js',
         't/swamp/not-an-#emacs-workfile#',
         't/swamp/notaMakefile',
         't/swamp/notaRakefile',

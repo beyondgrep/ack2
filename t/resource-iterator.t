@@ -74,6 +74,7 @@ UNFILTERED: {
             t/swamp/javascript.js
             t/swamp/Makefile
             t/swamp/Makefile.PL
+            t/swamp/minified.min.js
             t/swamp/moose-andy.jpg
             t/swamp/notaMakefile
             t/swamp/notaRakefile
