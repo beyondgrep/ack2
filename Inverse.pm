@@ -27,4 +27,12 @@ sub is_inverted {
     return 1;
 }
 
+sub to_string {
+    my ( $self ) = @_;
+
+    my $filter = ${$self};
+
+    return "!$filter";
+}
+
 1;

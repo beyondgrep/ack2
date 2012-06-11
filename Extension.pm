@@ -21,6 +21,14 @@ sub filter {
     return $resource->name =~ /$re/;
 }
 
+sub to_string {
+    my ( $self ) = @_;
+
+    my $re = ${$self};
+
+    return ref($self) . " - $re";
+}
+
 BEGIN {
     App::Ack::Filter->register_filter(ext => __PACKAGE__);
 }

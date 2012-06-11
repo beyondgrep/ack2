@@ -24,6 +24,14 @@ sub filter {
     return $base =~ /$re/;
 }
 
+sub to_string {
+    my ( $self ) = @_;
+
+    my $re = ${$self};
+
+    print ref($self) . " - $re";
+}
+
 BEGIN {
     App::Ack::Filter->register_filter(match => __PACKAGE__);
 }

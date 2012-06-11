@@ -21,6 +21,14 @@ sub filter {
     return $base eq $filename;
 }
 
+sub to_string {
+    my ( $self ) = @_;
+
+    my $filename = ${$self};
+
+    return ref($self) . " - $filename";
+}
+
 BEGIN {
     App::Ack::Filter->register_filter(is => __PACKAGE__);
 }
