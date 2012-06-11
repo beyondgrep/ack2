@@ -18,17 +18,17 @@ sub is_win32 {
     return $^O =~ /Win32/;
 }
 
-# capture-stderr is executing ack and storing the stderr output in
-# $catcherr_file in a portable way.
-#
-# The quoting of command line arguments depends on the OS
-sub build_command_line {
+sub build_ack_invocation {
     my @args = @_;
 
-    my %options;
-
-    if ( ref( $args[-1] ) eq 'HASH' ) {
-        %options = %{ pop @args };
+    # The --noenv makes sure we don't pull in anything from the user
+    #    unless explicitly specified in the test
+    if ( !grep { /^--(no)?env$/ } @args ) {
+        unshift( @args, '--noenv' );
+    }
+    # --ackrc makes sure we pull in "default" definitions
+    if ( !grep { /^--ackrc=/ } @args) {
+        unshift( @args, '--ackrc=' . File::Spec->catfile($orig_wd, './ackrc') );
     }
 
     if ( is_win32() ) {
@@ -39,30 +39,11 @@ sub build_command_line {
         }
     }
     else {
-        @args = map { quotemeta $_ } @args;
-    }
-    if ( !$options{no_capture} ) {
-        unshift @args, File::Spec->catfile($orig_wd, 'capture-stderr'),
-            $catcherr_file;
+        # XXX This is not a good way to shoo
+        #@args = map { quotemeta $_ } @args;
     }
 
-    return "$^X -T @args";
-}
-
-sub build_ack_command_line {
-    my @args = @_;
-
-    # The --noenv makes sure we don't pull in anything from the user
-    #    unless explicitly specified in the test
-    if ( !grep { /^--(no)?env$/ } @args ) {
-        unshift( @args, '--noenv' );
-    }
-    # --ackrc makes sure we pull in "default" definitions
-    if( !grep { /^--ackrc=/ } @args) {
-        unshift( @args, '--ackrc=' . File::Spec->catfile($orig_wd, './ackrc') );
-    }
-
-    return build_command_line( File::Spec->catfile($orig_wd, 'ack'), @args );
+    return "blib/script/ack @args";
 }
 
 # Use this instead of File::Slurp::read_file()
@@ -125,7 +106,7 @@ sub run_ack {
 our $ack_return_code;
 
 # run the given command, assuming that the command was created with
-# build_ack_command_line (and thus writes its STDERR to $catcherr_file).
+# build_ack_invocation (and thus writes its STDERR to $catcherr_file).
 #
 # sets $ack_return_code and unlinks the $catcherr_file
 #
@@ -133,7 +114,7 @@ our $ack_return_code;
 sub run_cmd {
     my $cmd = shift;
 
-    # diag( "Running command: $cmd" );
+    diag( "Running command: $cmd" );
 
     record_option_coverage($cmd);
     my @stdout = `$cmd`;
@@ -167,7 +148,7 @@ sub run_ack_with_stderr {
     my @stdout;
     my @stderr;
 
-    my $cmd = build_ack_command_line( @args );
+    my $cmd = build_ack_invocation( @args );
 
     return run_cmd($cmd);
 }
@@ -177,7 +158,7 @@ sub pipe_into_ack_with_stderr {
     my $input = shift;
     my @args = @_;
 
-    my $cmd = build_ack_command_line( @args );
+    my $cmd = build_ack_invocation( @args );
     $cmd = "$^X -pe1 $input | $cmd";
 
     my ($stdout, $stderr) = run_cmd( $cmd );
@@ -288,9 +269,7 @@ BEGIN {
         *run_ack_interactive = sub {
             my ( @args) = @_;
 
-            my $cmd = build_ack_command_line(@args, {
-                no_capture => 1,
-            });
+            my $cmd = build_ack_invocation();
 
             record_option_coverage($cmd);
 
