@@ -40,7 +40,10 @@ else {
     close $read;
     open STDOUT, '>&', $write;
     open STDERR, '>&', $write;
-    exec 'bash', '-c', "$^X -Mblib blib/script/ack --noenv --nocolor --smart-case this <(cat t/swamp/options.pl)";
+
+    my @args = build_ack_invocation( qw( --noenv --nocolor --smart-case this ) );
+    my $args = join( ' ', @args );
+    exec 'bash', '-c', "$args <(cat t/swamp/options.pl)";
 }
 
 lists_match( \@output, \@expected );
