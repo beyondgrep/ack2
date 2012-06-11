@@ -221,6 +221,7 @@ sub get_arg_spec {
         'u|unrestricted'    => \$opt->{u},
         'v|invert-match'    => \$opt->{v},
         'w|word-regexp'     => \$opt->{w},
+        'x'                 => sub { $opt->{files_from} = '-' },
 
         'version'           => sub { App::Ack::print_version_statement(); exit; },
         'help|?:s'          => sub { shift; App::Ack::show_help(@_); exit; },
