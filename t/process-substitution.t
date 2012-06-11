@@ -5,7 +5,10 @@ use lib 't';
 use Test::More;
 use Util;
 
-my @expected = ( '#!/usr/bin/env perl' );
+my @expected = (
+    'THIS IS ALL IN UPPER CASE',
+    'this is a word here',
+);
 
 prep_environment();
 
@@ -37,7 +40,7 @@ else {
     close $read;
     open STDOUT, '>&', $write;
     open STDERR, '>&', $write;
-    exec 'bash', '-c', './ack --noenv --nocolor perl <(cat t/swamp/options.pl)';
+    exec 'bash', '-c', "$^X -Mblib blib/script/ack --noenv --nocolor --smart-case this <(cat t/swamp/options.pl)";
 }
 
 lists_match( \@output, \@expected );
