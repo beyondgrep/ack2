@@ -162,7 +162,7 @@
 --type-add=java,ext,java,properties
 
 # JavaScript
---type-add=js,ext,js
+--type-add=js,ext
 
 # JSP http://www.oracle.com/technetwork/java/javaee/jsp/index.html
 --type-add=jsp,ext,jsp,jspx,jhtm,jhtml
