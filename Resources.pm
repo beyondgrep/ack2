@@ -14,9 +14,9 @@ for App::Ack::Resource objects.
 
 =head1 METHODS
 
-=head2 from_starting( $opt, \@starting_points )
+=head2 from_argv( $opt, \@starting_points )
 
-Return an iterator 
+Return an iterator
 
 =cut
 
