@@ -78,6 +78,9 @@
 # core dumps
 --ignore-file=match,/core\.\d+$/
 
+# minified Javascript
+--ignore-file=match,/[.]min[.]js$/
+
 
 # Filetypes defined
 
