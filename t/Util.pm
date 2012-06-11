@@ -43,7 +43,7 @@ sub build_ack_invocation {
         #@args = map { quotemeta $_ } @args;
     }
 
-    unshift( @args, 'blib/script/ack' );
+    unshift( @args, File::Spec->rel2abs( 'blib/script/ack', $orig_wd ) );
 
     return wantarray ? @args : join( ' ', @args );
 }
@@ -222,7 +222,7 @@ sub run_ack_with_stderr {
     my @stderr;
 
     @args = build_ack_invocation( @args );
-    unshift( @args, $^X, '-Mblib' );
+    unshift( @args, $^X, "-Mblib=$orig_wd" );
 
     return run_cmd( @args );
 }
