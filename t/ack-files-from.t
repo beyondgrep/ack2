@@ -29,7 +29,7 @@ EOF
 
 NON_EXISTENT_FILE: {
     my @args = qw( strict );
-    my ( $stdout, $stderr ) = run_ack_with_stderr( "--files-from=t/foo/non-existent", @args);
+    my ( $stdout, $stderr ) = run_ack_with_stderr( '--files-from=t/foo/non-existent', @args);
 
     is( scalar @{$stdout}, 0, 'No STDOUT for non-existent file' );
     is( scalar @{$stderr}, 1, 'One line of STDERR for non-existent file' );
