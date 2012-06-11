@@ -1,2 +1,2 @@
 #!/bin/sh
-perl -Mblib blib/script/ack $*
+perl -Mblib blib/script/ack --ackrc=./ackrc $*
