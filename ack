@@ -195,6 +195,7 @@ sub main {
 
         if ( defined $opt->{files_from} ) {
             $resources = App::Ack::Resources->from_file( $opt, $opt->{files_from} );
+            exit 1 unless $resources;
         }
         else {
             @start = ('.') unless @start;

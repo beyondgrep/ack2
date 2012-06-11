@@ -54,15 +54,15 @@ sub from_file {
     my $opt   = shift;
     my $file  = shift;
 
-    my $self = bless {}, $class;
-
-    $self->{iter} =
+    my $iter =
         File::Next::from_file( {
             error_handler => sub { my $msg = shift; App::Ack::warn( $msg ) },
             sort_files    => $opt->{sort_files},
-        }, $file );
+        }, $file ) or return undef;
 
-    return $self;
+    return bless {
+        iter => $iter,
+    }, $class;
 }
 
 sub from_stdin {
