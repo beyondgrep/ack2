@@ -14,9 +14,9 @@ for App::Ack::Resource objects.
 
 =head1 METHODS
 
-=head2 from_argv( $opt, \@starting_points )
+=head2 from_argv( \%opt, \@starting_points )
 
-Return an iterator
+Return an iterator that does the file finding for us.
 
 =cut
 
@@ -38,6 +38,29 @@ sub from_argv {
             sort_files      => $opt->{sort_files},
             follow_symlinks => $opt->{follow},
         }, @{$start} );
+
+    return $self;
+}
+
+=head2 from_file( \%opt, $filename )
+
+Return an iterator that reads the list of files to search from a
+given file.  If I<$filename> is '-', then it reads from STDIN.
+
+=cut
+
+sub from_file {
+    my $class = shift;
+    my $opt   = shift;
+    my $file  = shift;
+
+    my $self = bless {}, $class;
+
+    $self->{iter} =
+        File::Next::from_file( {
+            error_handler => sub { my $msg = shift; App::Ack::warn( $msg ) },
+            sort_files    => $opt->{sort_files},
+        }, $file );
 
     return $self;
 }
