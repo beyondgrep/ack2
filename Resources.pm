@@ -65,6 +65,7 @@ sub from_file {
     }, $class;
 }
 
+# This is for reading input lines from STDIN, not the list of files from STDIN
 sub from_stdin {
     my $class = shift;
     my $opt   = shift;
