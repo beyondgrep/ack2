@@ -95,6 +95,7 @@
 --type-add=make,ext,mk
 --type-add=make,ext,mak
 --type-add=make,is,makefile
+--type-add=make,is,Makefile
 --type-add=make,is,gnumakefile
 
 # Rakefiles http://rake.rubyforge.org/
