@@ -112,6 +112,14 @@ sub process_filetypes {
         }
     }
 
+    $additional_specs{'known-types'} = sub {
+        my ( undef, $value ) = @_;
+
+        my @filters = map { @$_ } values(%type_filters);
+
+        push @{ $opt->{'filters'} }, @filters;
+    };
+
     return \%additional_specs;
 }
 
