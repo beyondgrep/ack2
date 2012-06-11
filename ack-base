@@ -175,35 +175,31 @@ sub main {
             }
         }
         my @start;
-        if ( my $filename = $opt->{files_from} ) {
-            my $fh;
-            open $fh, '<', $filename or die "$filename: $!";
-            while(<$fh>) {
-                chomp;
-                push @start, $_;
-            }
-            close $fh;
-        }
-        else {
+        if ( not defined $opt->{files_from} ) {
             @start = @ARGV;
         }
-        if( !exists($opt->{show_filename}) ) {
+        if ( !exists($opt->{show_filename}) ) {
             unless(@start == 1 && !(-d $start[0])) {
                 $opt->{show_filename} = 1;
             }
         }
-        @start = ('.') unless @start;
-        foreach my $target (@start) {
-            if ( not -e $target ) {
-                App::Ack::warn( "$target: No such file or directory" );
-            }
+
+        if ( defined $opt->{files_from} ) {
+            $resources = App::Ack::Resources->from_file( $opt, $opt->{files_from} );
         }
+        else {
+            @start = ('.') unless @start;
+            foreach my $target (@start) {
+                if ( not -e $target ) {
+                    App::Ack::warn( "$target: No such file or directory" );
+                }
+            }
 
-        $opt->{file_filter}    = _compile_file_filter($opt, \@start);
-        $opt->{descend_filter} = _compile_descend_filter($opt);
+            $opt->{file_filter}    = _compile_file_filter($opt, \@start);
+            $opt->{descend_filter} = _compile_descend_filter($opt);
 
-
-        $resources = App::Ack::Resources->from_argv( $opt, \@start );
+            $resources = App::Ack::Resources->from_argv( $opt, \@start );
+        }
     }
     App::Ack::set_up_pager( $opt->{pager} ) if defined $opt->{pager};
 
