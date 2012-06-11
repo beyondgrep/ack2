@@ -67,7 +67,7 @@ sub MY::postamble {
     my $file_next_filename = qx(perldoc -l File::Next);
     my $postamble = sprintf(<<'MAKE_FRAG', $debug_mode);
 ACK               = ack
-BASE              = ack-base
+ACK_STANDALONE    = ack-standalone
 ACK_PM            = Ack.pm
 RESOURCE_PM       = Resource.pm
 RESOURCES_PM      = Resources.pm
@@ -95,12 +95,12 @@ tags:
 		--languages=Perl --langmap=Perl:+.t \
 
 critic:
-	perlcritic -1 -q -profile perlcriticrc $(BASE) $(ALL_PM) t/*.t
+	perlcritic -1 -q -profile perlcriticrc $(ACK) $(ALL_PM) t/*.t
 
-$(ACK) : $(BASE) $(ALL_PM) squash Makefile
-	$(PERL) squash %s ack-base File::Next $(ALL_PM) > $(ACK)
-	$(CHMOD) 0755 $(ACK)
-	$(PERL_T) -c $(ACK)
+$(ACK_STANDALONE) : $(ACK) $(ALL_PM) squash Makefile
+	$(PERL) squash %s $(ACK) File::Next $(ALL_PM) > $(ACK_STANDALONE)
+	$(CHMOD) 0755 $(ACK_STANDALONE)
+	$(PERL_T) -c $(ACK_STANDALONE)
 
 bininst : $(ACK)
 	$(CP) $(ACK) ~/bin/ack2

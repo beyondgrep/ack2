@@ -7,8 +7,17 @@ use 5.8.0;
 
 use App::Ack ();
 use App::Ack::ConfigLoader ();
-use App::Ack::Filter ();
+use App::Ack::Resources;
 use App::Ack::Resource::Basic ();
+
+# XXX Don't make this so brute force
+use App::Ack::Filter ();
+use App::Ack::Filter::Default;
+use App::Ack::Filter::Extension;
+use App::Ack::Filter::FirstLineMatch;
+use App::Ack::Filter::Inverse;
+use App::Ack::Filter::Is;
+use App::Ack::Filter::Match;
 
 use Carp ();
 

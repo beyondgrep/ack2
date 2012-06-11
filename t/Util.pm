@@ -18,17 +18,17 @@ sub is_win32 {
     return $^O =~ /Win32/;
 }
 
-# capture-stderr is executing ack and storing the stderr output in
-# $catcherr_file in a portable way.
-#
-# The quoting of command line arguments depends on the OS
-sub build_command_line {
+sub build_ack_invocation {
     my @args = @_;
 
-    my %options;
-
-    if ( ref( $args[-1] ) eq 'HASH' ) {
-        %options = %{ pop @args };
+    # The --noenv makes sure we don't pull in anything from the user
+    #    unless explicitly specified in the test
+    if ( !grep { /^--(no)?env$/ } @args ) {
+        unshift( @args, '--noenv' );
+    }
+    # --ackrc makes sure we pull in "default" definitions
+    if ( !grep { /^--ackrc=/ } @args) {
+        unshift( @args, '--ackrc=' . File::Spec->catfile($orig_wd, './ackrc') );
     }
 
     if ( is_win32() ) {
@@ -39,30 +39,13 @@ sub build_command_line {
         }
     }
     else {
-        @args = map { quotemeta $_ } @args;
-    }
-    if ( !$options{no_capture} ) {
-        unshift @args, File::Spec->catfile($orig_wd, 'capture-stderr'),
-            $catcherr_file;
+        # XXX This is not a good way to shoo
+        #@args = map { quotemeta $_ } @args;
     }
 
-    return "$^X -T @args";
-}
+    unshift( @args, 'blib/script/ack' );
 
-sub build_ack_command_line {
-    my @args = @_;
-
-    # The --noenv makes sure we don't pull in anything from the user
-    #    unless explicitly specified in the test
-    if ( !grep { /^--(no)?env$/ } @args ) {
-        unshift( @args, '--noenv' );
-    }
-    # --ackrc makes sure we pull in "default" definitions
-    if( !grep { /^--ackrc=/ } @args) {
-        unshift( @args, '--ackrc=' . File::Spec->catfile($orig_wd, './ackrc') );
-    }
-
-    return build_command_line( File::Spec->catfile($orig_wd, 'ack'), @args );
+    return wantarray ? @args : join( ' ', @args );
 }
 
 # Use this instead of File::Slurp::read_file()
@@ -125,35 +108,106 @@ sub run_ack {
 our $ack_return_code;
 
 # run the given command, assuming that the command was created with
-# build_ack_command_line (and thus writes its STDERR to $catcherr_file).
+# build_ack_invocation (and thus writes its STDERR to $catcherr_file).
 #
 # sets $ack_return_code and unlinks the $catcherr_file
 #
 # returns chomped STDOUT and STDERR as two array refs
 sub run_cmd {
-    my $cmd = shift;
+    my ( @cmd ) = @_;
 
+    # my $cmd = join( ' ', @cmd );
     # diag( "Running command: $cmd" );
 
-    record_option_coverage($cmd);
-    my @stdout = `$cmd`;
+    record_option_coverage(@cmd);
+
+    my ( @stdout, @stderr );
+
+    my ( $stdout_read, $stdout_write );
+    my ( $stderr_read, $stderr_write );
+
+    pipe $stdout_read, $stdout_write
+        or Carp::croak( "Unable to create pipe: $!" );
+
+    pipe $stderr_read, $stderr_write
+        or Carp::croak( "Unable to create pipe: $!" );
+
+    my $pid = fork();
+    if ( $pid == -1 ) {
+        Carp::croak( "Unable to fork: $!" );
+    }
+
+    if ( $pid ) {
+        close $stdout_write;
+        close $stderr_write;
+
+        while ( $stdout_read || $stderr_read ) {
+            my $rin = '';
+
+            vec( $rin, fileno($stdout_read), 1 ) = 1 if $stdout_read;
+            vec( $rin, fileno($stderr_read), 1 ) = 1 if $stderr_read;
+
+            my $ein = $rin;
+
+            select( $rin, undef, $ein, undef );
+
+            # XXX is this the best way to handle this?
+            if ( $stdout_read && vec( $ein, fileno($stdout_read), 1 ) ) {
+                close $stdout_read;
+                undef $stdout_read;
+            }
+            if ( $stderr_read && vec( $ein, fileno($stderr_read), 1 ) ) {
+                close $stderr_read;
+                undef $stderr_read;
+            }
+
+            if ( $stdout_read && vec( $rin, fileno($stdout_read), 1 ) ) {
+                my $line = <$stdout_read>;
+
+                if ( defined( $line ) ) {
+                    push @stdout, $line;
+                }
+                else {
+                    close $stdout_read;
+                    undef $stdout_read;
+                }
+            }
+
+            if ( $stderr_read && vec( $rin, fileno($stderr_read), 1 ) ) {
+                my $line = <$stderr_read>;
+
+                if ( defined( $line ) ) {
+                    push @stderr, $line;
+                }
+                else {
+                    close $stderr_read;
+                    undef $stderr_read;
+                }
+            }
+        }
+
+        waitpid $pid, 0;
+    } 
+    else {
+        close $stdout_read;
+        close $stderr_read;
+
+        open STDOUT, '>&', $stdout_write;
+        open STDERR, '>&', $stderr_write;
+
+        exec @cmd;
+    }
+
     my ($sig,$core,$rc) = (($? & 127),  ($? & 128) , ($? >> 8));
     $ack_return_code = $rc;
     ## XXX what do do with $core or $sig?
-
-    my @stderr;
-    open( my $fh, '<', $catcherr_file ) or die $!;
-    while ( <$fh> ) {
-        push( @stderr, $_ );
-    }
-    close $fh or die $!;
-    unlink $catcherr_file;
 
     chomp @stdout;
     chomp @stderr;
 
     return ( \@stdout, \@stderr );
 }
+
 
 sub get_rc {
     return $ack_return_code;
@@ -167,9 +221,10 @@ sub run_ack_with_stderr {
     my @stdout;
     my @stderr;
 
-    my $cmd = build_ack_command_line( @args );
+    @args = build_ack_invocation( @args );
+    unshift( @args, $^X, '-Mblib' );
 
-    return run_cmd($cmd);
+    return run_cmd( @args );
 }
 
 # pipe into ack and return STDOUT and STDERR as array refs
@@ -177,7 +232,7 @@ sub pipe_into_ack_with_stderr {
     my $input = shift;
     my @args = @_;
 
-    my $cmd = build_ack_command_line( @args );
+    my $cmd = build_ack_invocation( @args );
     $cmd = "$^X -pe1 $input | $cmd";
 
     my ($stdout, $stderr) = run_cmd( $cmd );
@@ -288,9 +343,7 @@ BEGIN {
         *run_ack_interactive = sub {
             my ( @args) = @_;
 
-            my $cmd = build_ack_command_line(@args, {
-                no_capture => 1,
-            });
+            my $cmd = build_ack_invocation(@args);
 
             record_option_coverage($cmd);
 

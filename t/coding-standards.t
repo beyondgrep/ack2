@@ -8,7 +8,7 @@ use Util;
 
 use Test::More;
 
-my @files = ( qw( ack ack-base ), glob( '*.pm' ), glob( 't/*.t' ) );
+my @files = ( qw( ack ), glob( '*.pm' ), glob( 't/*.t' ) );
 
 plan tests => scalar @files;
 
