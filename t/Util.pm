@@ -343,7 +343,7 @@ BEGIN {
         *run_ack_interactive = sub {
             my ( @args) = @_;
 
-            my $cmd = build_ack_invocation();
+            my $cmd = build_ack_invocation(@args);
 
             record_option_coverage($cmd);
 
