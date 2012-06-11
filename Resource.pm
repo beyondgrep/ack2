@@ -4,6 +4,8 @@ use App::Ack;
 
 use warnings;
 use strict;
+use overload
+    '""' => 'name';
 
 sub FAIL {
     require Carp;
