@@ -43,7 +43,9 @@ sub build_ack_invocation {
         #@args = map { quotemeta $_ } @args;
     }
 
-    return "blib/script/ack @args";
+    unshift( @args, 'blib/script/ack' );
+
+    return wantarray ? @args : join( ' ', @args );
 }
 
 # Use this instead of File::Slurp::read_file()
