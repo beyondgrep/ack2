@@ -114,8 +114,8 @@ sub _compile_file_filter {
     return sub {
         return 1 if $is_member_of_starting_set{ $File::Next::name };
 
-        my $resource = App::Ack::Resource::Basic->new($File::Next::name);
         foreach my $filter (@ifiles_filters) {
+            my $resource = App::Ack::Resource::Basic->new($File::Next::name);
             return 0 if $filter->filter($resource);
         }
         my $match_found = 1;
@@ -123,6 +123,7 @@ sub _compile_file_filter {
             $match_found = 0;
 
             foreach my $filter (@{$filters}) {
+                my $resource = App::Ack::Resource::Basic->new($File::Next::name);
                 if ($filter->filter($resource)) {
                     $match_found = 1;
                     last;
@@ -132,6 +133,7 @@ sub _compile_file_filter {
         # Don't bother invoking inverse filters unless we consider the current resource a match
         if ( $match_found && @{$inverse_filters} ) {
             foreach my $filter ( @{$inverse_filters} ) {
+                my $resource = App::Ack::Resource::Basic->new($File::Next::name);
                 if ( not $filter->filter( $resource ) ) {
                     $match_found = 0;
                     last;
