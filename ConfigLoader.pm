@@ -37,7 +37,7 @@ sub process_filter_spec {
             $extension =~ s/^[.]//;
         }
 
-        return ( $type_name, 'ext', @extensions );
+        return ( $type_name, App::Ack::Filter->create_filter('ext', @extensions) );
     }
     else {
         Carp::croak "invalid filter specification '$spec'";
