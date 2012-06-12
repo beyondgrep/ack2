@@ -14,11 +14,10 @@ prep_environment();
 NORMAL_CASE: {
     my @expected = ( 'Well, my daddy left home when I was three' );
 
+    my @args  = qw( -v are -a -h -m1 );
     my @files = qw( t/text/boy-named-sue.txt );
-    my @args = qw( -v are -a -h -m1 );
-    my @results = run_ack( @args, @files );
 
-    lists_match( \@results, \@expected, 'First line of a file that does not contain "are".' );
+    ack_lists_match( [ @args, @files ], \@expected, 'First line of a file that does not contain "are".' );
 }
 
 DASH_L: {
@@ -30,11 +29,10 @@ DASH_L: {
         t/text/shut-up-be-happy.txt
     );
 
+    my @args  = qw( religion -i -a -v -l );
     my @files = qw( t/text );
-    my @args = qw( religion -i -a -v -l );
-    my @results = run_ack( @args, @files );
 
-    sets_match( \@results, \@expected, 'No religion please' );
+    ack_sets_match( [ @args, @files ], \@expected, 'No religion please' );
 }
 
 DASH_C: {
@@ -47,9 +45,10 @@ DASH_C: {
         t/text/shut-up-be-happy.txt:26
     );
 
+    my @args  = qw( religion -i -a -v -c );
     my @files = qw( t/text );
-    my @args = qw( religion -i -a -v -c );
-    my @results = run_ack( @args, @files );
 
-    sets_match( \@results, \@expected, 'Non-religion counts' );
+    ack_sets_match( [ @args, @files ], \@expected, 'Non-religion counts' );
 }
+
+done_testing();
