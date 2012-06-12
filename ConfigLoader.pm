@@ -7,7 +7,7 @@ use App::Ack ();
 use App::Ack::Filter;
 use App::Ack::Filter::Default;
 use Carp ();
-use Getopt::Long 2.36; # For GetOptionsFromArray
+use Getopt::Long; # Must be 2.36, but we can't check for that in the use.
 use Text::ParseWords ();
 
 =head1 App::Ack::ConfigLoader
