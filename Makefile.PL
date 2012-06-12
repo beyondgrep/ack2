@@ -18,6 +18,7 @@ my %parms = (
         'Resource.pm'       => '$(INST_LIBDIR)/App/Ack/Resource.pm',
         'Resources.pm'      => '$(INST_LIBDIR)/App/Ack/Resources.pm',
         'Basic.pm'          => '$(INST_LIBDIR)/App/Ack/Resource/Basic.pm',
+        'ConfigDefault.pm'  => '$(INST_LIBDIR)/App/Ack/ConfigDefault.pm',
         'ConfigFinder.pm'   => '$(INST_LIBDIR)/App/Ack/ConfigFinder.pm',
         'ConfigLoader.pm'   => '$(INST_LIBDIR)/App/Ack/ConfigLoader.pm',
         'Debug.pm'          => '$(INST_LIBDIR)/App/Ack/Debug.pm',
@@ -73,6 +74,7 @@ ACK_PM            = Ack.pm
 RESOURCE_PM       = Resource.pm
 RESOURCES_PM      = Resources.pm
 BASIC_PM          = Basic.pm
+CONFIG_DEFAULT_PM = ConfigDefault.pm
 CONFIG_FINDER_PM  = ConfigFinder.pm
 CONFIG_LOADER_PM  = ConfigLoader.pm
 FILTER_PM         = Filter.pm
@@ -82,7 +84,7 @@ IS_FILTER_PM      = Is.pm
 MATCH_FILTER_PM   = Match.pm
 DEFAULT_FILTER_PM = Default.pm
 INVERSE_FILTER_PM = Inverse.pm
-ALL_PM            = $(ACK_PM) $(RESOURCE_PM) $(RESOURCES_PM) $(BASIC_PM) $(FILTER_PM) $(EXT_FILTER_PM) $(FIRST_FILTER_PM) $(IS_FILTER_PM) $(MATCH_FILTER_PM) $(DEFAULT_FILTER_PM) $(INVERSE_FILTER_PM) $(CONFIG_FINDER_PM) $(CONFIG_LOADER_PM)
+ALL_PM            = $(ACK_PM) $(RESOURCE_PM) $(RESOURCES_PM) $(BASIC_PM) $(FILTER_PM) $(EXT_FILTER_PM) $(FIRST_FILTER_PM) $(IS_FILTER_PM) $(MATCH_FILTER_PM) $(DEFAULT_FILTER_PM) $(INVERSE_FILTER_PM) $(CONFIG_FINDER_PM) $(CONFIG_LOADER_PM) $(CONFIG_DEFAULT_PM)
 PERL_T            = $(PERL) -T
 
 .PHONY: tags critic
