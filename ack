@@ -222,6 +222,7 @@ sub main {
     my $print_filenames = $opt->{show_filename};
     my $max_count       = $opt->{m};
     my $ors             = $opt->{print0} ? "\0" : "\n";
+    my $only_first      = $opt->{1};
 
     my $nmatches = 0;
 RESOURCES:
@@ -295,6 +296,9 @@ RESOURCES:
         }
         else {
             $nmatches += App::Ack::print_matches_in_resource( $resource, $opt );
+            if ( $nmatches && $only_first ) {
+                last RESOURCES;
+            }
         }
     }
 
