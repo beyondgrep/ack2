@@ -17,6 +17,6 @@ my @expected = (
 my @args  = ( '--ackrc=/dev/null', '--type-add=perl,ext,pl', '--perl', '-f' );
 my @files = ( 't/swamp' );
 
-my @results = run_ack( @args, @files );
+ack_sets_match( [ @args, @files ], \@expected );
 
-sets_match( \@results, \@expected );
+done_testing();

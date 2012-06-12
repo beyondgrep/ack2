@@ -54,9 +54,8 @@ DEFAULT_DIR_EXCLUSIONS: {
     );
 
     my @args = qw( --ackrc=./ackrc -f t/swamp );
-    my @results = run_ack( @args );
 
-    sets_match( \@results, \@expected );
+    ack_sets_match( [ @args ], \@expected );
 }
 
 COMBINED_FILTERS: {
@@ -74,9 +73,8 @@ COMBINED_FILTERS: {
     );
 
     my @args = qw( --ackrc=./ackrc -f t/swamp --perl --rake );
-    my @results = run_ack ( @args );
 
-    sets_match( \@results, \@expected );
+    ack_sets_match( [ @args ], \@expected );
 }
 
 subtest '-f with a regex is an error' => sub {
@@ -89,4 +87,6 @@ subtest '-f with a regex is an error' => sub {
     is( scalar @{$stdout}, 0, 'No normal output' );
     is( scalar @{$stderr}, 1, 'One line of stderr output' );
     like( $stderr->[0], qr/\Q(Sue)/, 'Error message must contain "(Sue)"' );
-}
+};
+
+done_testing();
