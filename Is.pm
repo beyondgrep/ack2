@@ -21,7 +21,7 @@ sub filter {
     return $base eq $filename;
 }
 
-sub to_string {
+sub inspect {
     my ( $self ) = @_;
 
     my $filename = ${$self};

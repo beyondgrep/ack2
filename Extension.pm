@@ -21,7 +21,7 @@ sub filter {
     return $resource->name =~ /$re/;
 }
 
-sub to_string {
+sub inspect {
     my ( $self ) = @_;
 
     my $re = ${$self};

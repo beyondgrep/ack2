@@ -27,7 +27,7 @@ sub is_inverted {
     return 1;
 }
 
-sub to_string {
+sub inspect {
     my ( $self ) = @_;
 
     my $filter = ${$self};

@@ -24,7 +24,7 @@ sub filter {
     return $base =~ /$re/;
 }
 
-sub to_string {
+sub inspect {
     my ( $self ) = @_;
 
     my $re = ${$self};

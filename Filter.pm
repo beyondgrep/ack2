@@ -102,7 +102,27 @@ sub is_inverted {
     return 0;
 }
 
+=head2 $filter->to_string
+
+Converts the filter to a string.  This method is also
+called implicitly by stringification.
+
+=cut
+
 sub to_string {
+    my ( $self ) = @_;
+
+    return "(unimplemented to_string)";
+}
+
+=head2 $filter->inspect
+
+Prints a human-readable debugging string for this filter.  Useful for,
+you guessed it, debugging.
+
+=cut
+
+sub inspect {
     my ( $self ) = @_;
 
     return ref($self);
