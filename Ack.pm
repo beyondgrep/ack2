@@ -3,6 +3,7 @@ package App::Ack;
 use warnings;
 use strict;
 
+use App::Ack::ConfigDefault;
 use App::Ack::ConfigFinder;
 use Getopt::Long;
 use File::Next 1.08;
@@ -104,6 +105,8 @@ sub retrieve_arg_sources {
         }
         push( @files, $ackrc );
     }
+
+    push @arg_sources, Defaults => [ App::Ack::ConfigDefault::options() ];
 
     foreach my $file ( @files) {
         my @lines = read_rcfile($file);
