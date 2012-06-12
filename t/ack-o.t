@@ -74,7 +74,7 @@ WITH_OUTPUT: {
         "$target_file[1]:21:x.x",
     );
 
-    my @results = run_ack( @args, @files );
-
-    sets_match( \@results, \@expected, 'Find all the things with --output function' );
+    ack_sets_match( [ @args, @files ], \@expected, 'Find all the things with --output function' );
 }
+
+done_testing();

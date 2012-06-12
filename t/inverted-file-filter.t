@@ -44,9 +44,8 @@ EXCLUDE_ONLY: {
     );
 
     my @args = qw( --ackrc=./ackrc --noperl -f t/swamp );
-    my @results = run_ack( @args );
 
-    sets_match( \@results, \@expected );
+    ack_sets_match( [ @args ], \@expected, 'Exclude only' );
 }
 
 INCLUDE_PLUS_EXCLUDE_ONLY: {
@@ -62,7 +61,6 @@ INCLUDE_PLUS_EXCLUDE_ONLY: {
     );
 
     my @args = ( '--ackrc=./ackrc', '--type-add=pod,ext,pod', '--perl', '--nopod', '-f', 't/swamp' );
-    my @results = run_ack( @args );
 
-    sets_match( \@results, \@expected );
+    ack_sets_match( [ @args ], \@expected, 'Include plus exclude only' );
 }
