@@ -33,6 +33,7 @@ EXCLUDE_ONLY: {
         t/swamp/Makefile
         t/swamp/notaMakefile
         t/swamp/notaRakefile
+        t/swamp/notes.md
         t/swamp/parrot.pir
         t/swamp/pipe-stress-freaks.F
         t/swamp/Rakefile

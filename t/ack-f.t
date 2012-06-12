@@ -36,6 +36,7 @@ DEFAULT_DIR_EXCLUSIONS: {
         t/swamp/Makefile.PL
         t/swamp/notaMakefile
         t/swamp/notaRakefile
+        t/swamp/notes.md
         t/swamp/options.pl
         t/swamp/parrot.pir
         t/swamp/perl-test.t

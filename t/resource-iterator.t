@@ -78,6 +78,7 @@ UNFILTERED: {
             t/swamp/moose-andy.jpg
             t/swamp/notaMakefile
             t/swamp/notaRakefile
+            t/swamp/notes.md
             t/swamp/options.pl
             t/swamp/options.pl.bak
             t/swamp/parrot.pir

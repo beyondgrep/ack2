@@ -31,6 +31,7 @@ filter_test(
         't/swamp/not-an-#emacs-workfile#',
         't/swamp/notaMakefile',
         't/swamp/notaRakefile',
+        't/swamp/notes.md',
         't/swamp/options.pl',
         't/swamp/options.pl.bak',
         't/swamp/parrot.pir',
