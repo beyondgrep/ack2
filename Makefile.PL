@@ -35,7 +35,7 @@ my %parms = (
         'Term::ANSIColor'   => 0,
         'Getopt::Long'      => 0,
         'Test::More'        => 0.96, # For subtest()
-        'File::Next'        => 1.08,
+        'File::Next'        => 1.09_02,
         'File::Basename'    => 0,
         'Pod::Usage'        => 0,
     },
