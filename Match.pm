@@ -34,6 +34,14 @@ sub inspect {
     print ref($self) . " - $re";
 }
 
+sub to_string {
+    my ( $self ) = @_;
+
+    my $re = $self->{'regex'};
+
+    return "filename matches $re";
+}
+
 BEGIN {
     App::Ack::Filter->register_filter(match => __PACKAGE__);
 }

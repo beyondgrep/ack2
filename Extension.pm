@@ -32,6 +32,14 @@ sub inspect {
     return ref($self) . " - $re";
 }
 
+sub to_string {
+    my ( $self ) = @_;
+
+    my $exts = $self->{'extensions'};
+
+    return join(' ', map { ".$_" } @{$exts});
+}
+
 BEGIN {
     App::Ack::Filter->register_filter(ext => __PACKAGE__);
 }

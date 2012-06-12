@@ -31,6 +31,12 @@ sub inspect {
     return ref($self) . " - $filename";
 }
 
+sub to_string {
+    my ( $self ) = @_;
+
+    my $filename = $self->{'filename'};
+}
+
 BEGIN {
     App::Ack::Filter->register_filter(is => __PACKAGE__);
 }

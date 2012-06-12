@@ -39,6 +39,14 @@ sub inspect {
     return ref($self) . " - $re";
 }
 
+sub to_string {
+    my ( $self ) = @_;
+
+    my $re = $self->{'regex'};
+
+    return "first line matches $re";
+}
+
 BEGIN {
     App::Ack::Filter->register_filter(firstlinematch => __PACKAGE__);
 }
