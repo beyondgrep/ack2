@@ -54,19 +54,18 @@ sub process_filetypes {
         'pass_through',
     );
     my %additional_specs;
-    my %type_filters;
 
     my $add_spec = sub {
         my ( undef, $spec ) = @_;
 
         my ( $name, $filter ) = process_filter_spec($spec);
 
-        push @{ $type_filters{$name} }, $filter;
+        push @{ $App::Ack::mappings{$name} }, $filter;
 
         $additional_specs{$name . '!'} = sub {
             my ( undef, $value ) = @_;
 
-            my @filters = @{ $type_filters{$name} };
+            my @filters = @{ $App::Ack::mappings{$name} };
             if ( not $value ) {
                 @filters = map { $_->invert() } @filters;
             }
@@ -80,12 +79,12 @@ sub process_filetypes {
 
         my ( $name, $filter ) = process_filter_spec($spec);
 
-        $type_filters{$name} = [ $filter ];
+        $App::Ack::mappings{$name} = [ $filter ];
 
         $additional_specs{$name . '!'} = sub {
             my ( undef, $value ) = @_;
 
-            my @filters = @{ $type_filters{$name} };
+            my @filters = @{ $App::Ack::mappings{$name} };
             if ( not $value ) {
                 @filters = map { $_->invert() } @filters;
             }
@@ -115,7 +114,7 @@ sub process_filetypes {
     $additional_specs{'known-types'} = sub {
         my ( undef, $value ) = @_;
 
-        my @filters = map { @$_ } values(%type_filters);
+        my @filters = map { @$_ } values(%App::Ack::mappings);
 
         push @{ $opt->{'filters'} }, @filters;
     };
