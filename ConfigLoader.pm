@@ -29,7 +29,7 @@ sub process_filter_spec {
         return ( $type_name,
             App::Ack::Filter->create_filter($ext_type, split(/,/, $arguments)) );
     }
-    elsif ( $spec =~ /^(\w+)=(.*)/ ) {
+    elsif ( $spec =~ /^(\w+)=(.*)/ ) { # Check to see if we have ack1-style argument specification.
         my ( $type_name, $extensions ) = ( $1, $2 );
 
         my @extensions = split(/,/, $extensions);
