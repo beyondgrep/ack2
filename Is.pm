@@ -9,13 +9,15 @@ use File::Spec ();
 sub new {
     my ( $class, $filename ) = @_;
 
-    return bless \$filename, $class;
+    return bless {
+        filename => $filename,
+    }, $class;
 }
 
 sub filter {
     my ( $self, $resource ) = @_;
 
-    my $filename = ${$self};
+    my $filename = $self->{'filename'};
     my $base     = (File::Spec->splitpath($resource->name))[2];
 
     return $base eq $filename;
@@ -24,7 +26,7 @@ sub filter {
 sub inspect {
     my ( $self ) = @_;
 
-    my $filename = ${$self};
+    my $filename = $self->{'filename'};
 
     return ref($self) . " - $filename";
 }

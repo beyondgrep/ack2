@@ -12,13 +12,15 @@ sub new {
     $re =~ s{^/|/$}{}g; # XXX validate?
     $re = qr/$re/i;
 
-    return bless \$re, $class;
+    return bless {
+        regex => $re,
+    }, $class;
 }
 
 sub filter {
     my ( $self, $resource ) = @_;
 
-    my $re   = ${$self};
+    my $re   = $self->{'regex'};
     my $base = (File::Spec->splitpath($resource->name))[2];
 
     return $base =~ /$re/;
@@ -27,7 +29,7 @@ sub filter {
 sub inspect {
     my ( $self ) = @_;
 
-    my $re = ${$self};
+    my $re = $self->{'regex'};
 
     print ref($self) . " - $re";
 }

@@ -6,10 +6,13 @@ use base 'App::Ack::Filter';
 
 sub new {
     my ( $class, $re ) = @_;
+
     $re =~ s{^/|/$}{}g; # XXX validate?
     $re = qr{$re}i;
 
-    return bless \$re, $class;
+    return bless {
+        regex => $re,
+    }, $class;
 }
 
 # XXX This test checks the first "line" of the file, but we need
@@ -20,7 +23,7 @@ sub new {
 sub filter {
     my ( $self, $resource ) = @_;
 
-    my $re = ${$self};
+    my $re = $self->{'regex'};
 
     local $_;
     return unless $resource->next_text;
@@ -31,7 +34,7 @@ sub filter {
 sub inspect {
     my ( $self ) = @_;
 
-    my $re = ${$self};
+    my $re = $self->{'regex'};
 
     return ref($self) . " - $re";
 }
