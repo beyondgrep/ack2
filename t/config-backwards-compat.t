@@ -41,10 +41,13 @@ my $temp_config = File::Temp->new;
 print { $temp_config } $old_config;
 close $temp_config;
 
-my @args = ( '--ackrc=' . $temp_config->filename, 'strict',
-    't/swamp/options.pl' );
+my @args = ( '--ackrc=' . $temp_config->filename, '--md', 'One',
+    't/swamp/' );
+
+my $file = File::Next::reslash('t/swamp/notes.md');
+my $line = 3;
 
 my ( $stdout, $stderr ) = run_ack_with_stderr( @args );
 is scalar(@$stdout), 1;
-like $stdout->[0], qr/use strict/;
+like $stdout->[0], qr/$file:$line.*[*] One/;
 is scalar(@$stderr), 0 or diag(explain($stderr));
