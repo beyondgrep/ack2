@@ -248,6 +248,8 @@ sub pipe_into_ack {
 
 # Use this one if order is important
 sub lists_match {
+    local $Test::Builder::Level = $Test::Builder::Level + 1; ## no critic
+
     my @actual = @{+shift};
     my @expected = @{+shift};
     my $msg = shift;
@@ -256,8 +258,6 @@ sub lists_match {
     for my $path ( @expected, @actual ) {
         $path = File::Next::reslash( $path ); ## no critic (Variables::ProhibitPackageVars)
     }
-
-    local $Test::Builder::Level = $Test::Builder::Level + 1; ## no critic
 
     eval 'use Test::Differences';
     if ( !$@ ) {
@@ -269,6 +269,8 @@ sub lists_match {
 }
 
 sub ack_lists_match {
+    local $Test::Builder::Level = $Test::Builder::Level + 1; ## no critic
+
     my $args     = shift;
     my $expected = shift;
     my $message  = shift;
@@ -283,15 +285,18 @@ sub ack_lists_match {
 
 # Use this one if you don't care about order of the lines
 sub sets_match {
+    local $Test::Builder::Level = $Test::Builder::Level + 1; ## no critic
+
     my @actual = @{+shift};
     my @expected = @{+shift};
     my $msg = shift;
 
-    local $Test::Builder::Level = $Test::Builder::Level + 1; ## no critic
     return lists_match( [sort @actual], [sort @expected], $msg );
 }
 
 sub ack_sets_match {
+    local $Test::Builder::Level = $Test::Builder::Level + 1; ## no critic
+
     my $args     = shift;
     my $expected = shift;
     my $message  = shift;
