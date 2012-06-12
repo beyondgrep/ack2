@@ -1,3 +1,5 @@
+#!perl
+
 use strict;
 use warnings;
 
@@ -8,20 +10,23 @@ use Util;
 
 prep_environment();
 
-my $target_file = File::Next::reslash( 't/text/boy-named-sue.txt' );
+my @text  = glob( 't/text/s*.txt' );
+my $myth  = File::Next::reslash( 't/text/science-of-myth.txt' );
+my $happy = File::Next::reslash( 't/text/shut-up-be-happy.txt' );
 
 my @expected = split( /\n/, <<"EOF" );
-$target_file:6:Was before he left, he went and named me Sue.
-$target_file:13:I tell ya, life ain't easy for a boy named Sue.
-$target_file:27:Sat the dirty, mangy dog that named me Sue.
-$target_file:34:And I said: "My name is Sue! How do you do! Now you gonna die!"
-$target_file:62:Cause I'm the son-of-a-bitch that named you Sue."
+$myth:3:In the case of Christianity and Judaism there exists the belief
+$myth:6:The Buddhists believe that the functional aspects override the myth
+$myth:7:While other religions use the literal core to build foundations with
+$happy:10:Anyone caught outside the gates of their subdivision sector after curfew will be shot.
+$happy:12:Your neighborhood watch officer will be by to collect urine samples in the morning.
+$happy:13:Anyone gaught intefering with the collection of urine samples will be shot.
 EOF
 
-ack_lists_match( [ '-m', 5, 'Sue', 't/text' ], \@expected );
+ack_lists_match( [ '-m', 3, '-w', 'the', @text ], \@expected );
 
 @expected = split( /\n/, <<"EOF" );
-$target_file:6:Was before he left, he went and named me Sue.
+$myth:3:In the case of Christianity and Judaism there exists the belief
 EOF
 
-ack_lists_match( [ '-1', 'Sue', 't/text' ], \@expected );
+ack_lists_match( [ '-1', '-w', 'the', @text ], \@expected, 'We should only get one line back for the entire run, not just per file.' );
