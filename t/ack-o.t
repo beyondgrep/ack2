@@ -29,9 +29,7 @@ NO_O: {
 EOF
     s/^\s+// for @expected;
 
-    my @results = run_ack( @args, @files );
-
-    lists_match( \@results, \@expected, 'Find all the things without -o' );
+    ack_lists_match( [ @args, @files ], \@expected, 'Find all the things without -o' );
 }
 
 
@@ -57,9 +55,7 @@ WITH_O: {
 EOF
     s/^\s+// for @expected;
 
-    my @results = run_ack( @args, @files );
-
-    lists_match( \@results, \@expected, 'Find all the things with -o' );
+    ack_lists_match( [ @args, @files ], \@expected, 'Find all the things with -o' );
 }
 
 
