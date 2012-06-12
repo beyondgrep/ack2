@@ -39,7 +39,6 @@ my @actual_swamp_perl = map { "$swamp/$_" } qw(
 
 DASH_F: {
     my @args = qw( -f --perl );
-    my @results = run_ack( @args, $swamp );
 
-    sets_match( \@results, \@actual_swamp_perl, 'DASH_F' );
+    ack_sets_match( [ @args, $swamp ], \@actual_swamp_perl, 'DASH_F' );
 }
