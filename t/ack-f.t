@@ -54,7 +54,7 @@ DEFAULT_DIR_EXCLUSIONS: {
         't/swamp/not-an-#emacs-workfile#',
     );
 
-    my @args = qw( --ackrc=./ackrc -f t/swamp );
+    my @args = qw( -f t/swamp );
 
     ack_sets_match( [ @args ], \@expected );
 }
@@ -73,7 +73,7 @@ COMBINED_FILTERS: {
         t/swamp/perl.pod
     );
 
-    my @args = qw( --ackrc=./ackrc -f t/swamp --perl --rake );
+    my @args = qw( -f t/swamp --perl --rake );
 
     ack_sets_match( [ @args ], \@expected );
 }

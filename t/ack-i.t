@@ -18,12 +18,12 @@ my @targets = map {
     "t/swamp/groceries/$_"
 } qw/fruit junk meat/;
 
-my @args    = ( qw( --ackrc=./ackrc --nocolor APPLE -i ), @targets );
+my @args    = ( qw( --nocolor APPLE -i ), @targets );
 my @results = run_ack( @args );
 
 lists_match( \@results, \@expected );
 
-@args    = ( qw( --ackrc=./ackrc --nocolor APPLE --ignore-case ), @targets );
+@args    = ( qw( --nocolor APPLE --ignore-case ), @targets );
 @results = run_ack( @args );
 
 lists_match( \@results, \@expected );

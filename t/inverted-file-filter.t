@@ -44,7 +44,7 @@ EXCLUDE_ONLY: {
         't/swamp/not-an-#emacs-workfile#',
     );
 
-    my @args = qw( --ackrc=./ackrc --noperl -f t/swamp );
+    my @args = qw( --noperl -f t/swamp );
 
     ack_sets_match( [ @args ], \@expected, 'Exclude only' );
 }
@@ -61,7 +61,7 @@ INCLUDE_PLUS_EXCLUDE_ONLY: {
         t/swamp/perl.pl
     );
 
-    my @args = ( '--ackrc=./ackrc', '--type-add=pod,ext,pod', '--perl', '--nopod', '-f', 't/swamp' );
+    my @args = ( '--type-add=pod,ext,pod', '--perl', '--nopod', '-f', 't/swamp' );
 
     ack_sets_match( [ @args ], \@expected, 'Include plus exclude only' );
 }
