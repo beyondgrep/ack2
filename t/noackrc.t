@@ -13,7 +13,6 @@ my @expected = (
     't/swamp/perl.pl',
 );
 
-local $TODO = 'broken for now';
 # XXX the /dev/null thing isn't portable!
 my @args  = ( '--ackrc=/dev/null', '--type-add=perl,ext,pl', '--perl', '-f' );
 my @files = ( 't/swamp' );
