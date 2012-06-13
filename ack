@@ -160,19 +160,16 @@ sub main {
         $opt->{heading} = $opt->{break} = !App::Ack::output_to_pipe();
     }
 
-    if( defined($opt->{H}) || defined($opt->{h}) ) {
+    if ( defined($opt->{H}) || defined($opt->{h}) ) {
         $opt->{show_filename}= $opt->{H} && !$opt->{h};
     }
 
     my $resources;
     if ( $App::Ack::is_filter_mode ) {
         $resources    = App::Ack::Resources->from_stdin( $opt );
-        if ( my $regex = $opt->{regex} ) {
-            $opt->{regex} = App::Ack::build_regex( $regex, $opt );
-        }
-        else {
-            $opt->{regex} = App::Ack::build_regex( shift @ARGV, $opt );
-        }
+        my $regex = $opt->{regex};
+        $regex = shift @ARGV if not defined $regex;
+        $opt->{regex} = App::Ack::build_regex( $regex, $opt );
     }
     else {
         if ( $opt->{f} || $opt->{lines} ) {
@@ -182,12 +179,9 @@ sub main {
             }
         }
         else {
-            if ( my $regex = $opt->{regex} ) {
-                $opt->{regex} = App::Ack::build_regex( $regex, $opt );
-            }
-            else {
-                $opt->{regex} = App::Ack::build_regex( shift @ARGV, $opt );
-            }
+            my $regex = $opt->{regex};
+            $regex = shift @ARGV if not defined $regex;
+            $opt->{regex} = App::Ack::build_regex( $regex, $opt );
         }
         my @start;
         if ( not defined $opt->{files_from} ) {
