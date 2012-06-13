@@ -481,6 +481,7 @@ File type specification:
 Miscellaneous:
   --noenv               Ignore environment variables and global ackrc files
   --ackrc=filename      Specify an ackrc file to use
+  --ignore-ack-defaults Ignore the default definitions that ack includes.
   --help                This help
   --dump                Dump information on which options are loaded from which RC files
   --man                 Man page
