@@ -53,6 +53,7 @@ my @other_long_opts = qw(
     --thpppt
     --bar
     --dump
+    --ignore-ack-defaults
 );
 
 # --no-recurse is inconsistent w/--nogroup
