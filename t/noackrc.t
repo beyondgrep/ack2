@@ -13,7 +13,7 @@ my @expected = (
     't/swamp/perl.pl',
 );
 
-my @args  = ( '--ignore-ack-defaults', '--type-add=perl,ext,pl', '--perl', '-f' );
+my @args  = ( '--ignore-ack-defaults', '--type-add=perl:ext:pl', '--perl', '-f' );
 my @files = ( 't/swamp' );
 
 ack_sets_match( [ @args, @files ], \@expected );

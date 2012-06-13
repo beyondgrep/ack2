@@ -99,168 +99,168 @@ sub _options_block {
 # Filetypes defined
 
 # Perl http://perl.org/
---type-add=perl,ext,pod
---type-add=perl,ext,pl
---type-add=perl,ext,pm
---type-add=perl,ext,t
---type-add=perl,firstlinematch,/perl($|\s)/
+--type-add=perl:ext:pod
+--type-add=perl:ext:pl
+--type-add=perl:ext:pm
+--type-add=perl:ext:t
+--type-add=perl:firstlinematch:/perl($|\s)/
 
 # Makefiles http://www.gnu.org/s/make/
---type-add=make,ext,mk
---type-add=make,ext,mak
---type-add=make,is,makefile
---type-add=make,is,Makefile
---type-add=make,is,GNUmakefile
+--type-add=make:ext:mk
+--type-add=make:ext:mak
+--type-add=make:is:makefile
+--type-add=make:is:Makefile
+--type-add=make:is:GNUmakefile
 
 # Rakefiles http://rake.rubyforge.org/
---type-add=rake,is,Rakefile
+--type-add=rake:is:Rakefile
 
 # CMake http://www.cmake.org/
---type-add=cmake,is,CMakeLists.txt
---type-add=cmake,ext,cmake
+--type-add=cmake:is:CMakeLists.txt
+--type-add=cmake:ext:cmake
 
 # Actionscript
---type-add=actionscript,ext,as,mxml
+--type-add=actionscript:ext:as,mxml
 
 # Ada http://www.adaic.org/
---type-add=ada,ext,ada,adb,ads
+--type-add=ada:ext:ada,adb,ads
 
 # Assembly
---type-add=asm,ext,asm,s
+--type-add=asm:ext:asm,s
 
 # Batch
---type-add=batch,ext,bat,cmd
+--type-add=batch:ext:bat,cmd
 
 # ColdFusion http://en.wikipedia.org/wiki/ColdFusion
---type-add=cfmx,ext,cfc,cfm,cfml
+--type-add=cfmx:ext:cfc,cfm,cfml
 
 # Clojure http://clojure.org/
---type-add=clojure,ext,clj
+--type-add=clojure:ext:clj
 
 # C
 # .xs are Perl C files
---type-add=cc,ext,c,h,xs
+--type-add=cc:ext:c,h,xs
 
 # C header files
---type-add=hh,ext,h
+--type-add=hh:ext:h
 
 # C++
---type-add=cpp,ext,cpp,cc,cxx,m,hpp,hh,h,hxx
+--type-add=cpp:ext:cpp,cc,cxx,m,hpp,hh,h,hxx
 
 # C#
---type-add=csharp,ext,cs
+--type-add=csharp:ext:cs
 
 # CSS http://www.w3.org/Style/CSS/
---type-add=css,ext,css
+--type-add=css:ext:css
 
 # Delphi http://en.wikipedia.org/wiki/Embarcadero_Delphi
---type-add=delphi,ext,pas,int,dfm,nfm,dof,dpk,dproj,groupproj,bdsgroup,bdsproj
+--type-add=delphi:ext:pas,int,dfm,nfm,dof,dpk,dproj,groupproj,bdsgroup,bdsproj
 
 # Emacs Lisp http://www.gnu.org/software/emacs
---type-add=elisp,ext,el
+--type-add=elisp:ext:el
 
 # Erlang http://www.erlang.org/
---type-add=erlang,ext,erl,hrl
+--type-add=erlang:ext:erl,hrl
 
 # Fortran http://en.wikipedia.org/wiki/Fortran
---type-add=fortran,ext,f,f77,f90,f95,f03,for,ftn,fpp
+--type-add=fortran:ext:f,f77,f90,f95,f03,for,ftn,fpp
 
 # Google Go http://golang.org/
---type-add=go,ext,go
+--type-add=go:ext:go
 
 # Groovy http://groovy.codehaus.org/
---type-add=groovy,ext,groovy,gtmpl,gpp,grunit
+--type-add=groovy:ext:groovy,gtmpl,gpp,grunit
 
 # Haskell http://www.haskell.org/
---type-add=haskell,ext,hs,lhs
+--type-add=haskell:ext:hs,lhs
 
 # HTML
---type-add=html,ext,htm,html
+--type-add=html:ext:htm,html
 
 # Java http://www.oracle.com/technetwork/java/index.html
---type-add=java,ext,java,properties
+--type-add=java:ext:java,properties
 
 # JavaScript
---type-add=js,ext,js
+--type-add=js:ext:js
 
 # JSP http://www.oracle.com/technetwork/java/javaee/jsp/index.html
---type-add=jsp,ext,jsp,jspx,jhtm,jhtml
+--type-add=jsp:ext:jsp,jspx,jhtm,jhtml
 
 # Common Lisp http://common-lisp.net/
---type-add=lisp,ext,lisp,lsp
+--type-add=lisp:ext:lisp,lsp
 
 # Lua http://www.lua.org/
---type-add=lua,ext,lua
+--type-add=lua:ext:lua
 
 # Objective-C
---type-add=objc,ext,m,h
+--type-add=objc:ext:m,h
 
 # Objective-C++
---type-add=objcpp,ext,mm,h
+--type-add=objcpp:ext:mm,h
 
 # OCaml http://caml.inria.fr/
---type-add=ocaml,ext,ml,mli
+--type-add=ocaml:ext:ml,mli
 
 # Parrot http://www.parrot.org/
---type-add=parrot,ext,pir,pasm,pmc,ops,pod,pg,tg
+--type-add=parrot:ext:pir,pasm,pmc,ops,pod,pg,tg
 
 # PHP http://www.php.net/
---type-add=php,ext,php,phpt,php3,php4,php5,phtml
+--type-add=php:ext:php,phpt,php3,php4,php5,phtml
 
 # Plone http://plone.org/
---type-add=plone,ext,pt,cpt,metadata,cpy,py
+--type-add=plone:ext:pt,cpt,metadata,cpy,py
 
 # Python http://www.python.org/
---type-add=python,ext,py
---type-add=python,firstlinematch,/python($|\s)/
+--type-add=python:ext:py
+--type-add=python:firstlinematch:/python($|\s)/
 
 # R http://www.r-project.org/
---type-add=rr,ext,R
+--type-add=rr:ext:R
 
 # Ruby http://www.ruby-lang.org/
---type-add=ruby,ext,rb,rhtml,rjs,rxml,erb,rake,spec
+--type-add=ruby:ext:rb,rhtml,rjs,rxml,erb,rake,spec
 
 # Scala http://www.scala-lang.org/
---type-add=scala,ext,scala
+--type-add=scala:ext:scala
 
 # Scheme http://groups.csail.mit.edu/mac/projects/scheme/
---type-add=scheme,ext,scm,ss
+--type-add=scheme:ext:scm,ss
 
 # Shell
---type-add=shell,ext,sh,bash,csh,tcsh,ksh,zsh
+--type-add=shell:ext:sh,bash,csh,tcsh,ksh,zsh
 
 # Smalltalk http://www.smalltalk.org/
---type-add=smalltalk,ext,st
+--type-add=smalltalk:ext:st
 
 # SQL http://www.iso.org/iso/catalogue_detail.htm?csnumber=45498
---type-add=sql,ext,sql,ctl
+--type-add=sql:ext:sql,ctl
 
 # Tcl http://www.tcl.tk/
---type-add=tcl,ext,tcl,itcl,itk
+--type-add=tcl:ext:tcl,itcl,itk
 
 # LaTeX http://www.latex-project.org/
---type-add=tex,ext,tex,cls,sty
+--type-add=tex:ext:tex,cls,sty
 
 # Template Toolkit http://template-toolkit.org/
---type-add=tt,ext,tt,tt2,ttml
+--type-add=tt:ext:tt,tt2,ttml
 
 # Visual Basic
---type-add=vb,ext,bas,cls,frm,ctl,vb,resx
+--type-add=vb:ext:bas,cls,frm,ctl,vb,resx
 
 # Verilog
---type-add=verilog,ext,v,vh,sv
+--type-add=verilog:ext:v,vh,sv
 
 # VHDL http://www.eda.org/twiki/bin/view.cgi/P1076/WebHome
---type-add=vhdl,ext,vhd,vhdl
+--type-add=vhdl:ext:vhd,vhdl
 
 # Vim http://www.vim.org/
---type-add=vim,ext,vim
+--type-add=vim:ext:vim
 
 # XML http://www.w3.org/TR/REC-xml/
---type-add=xml,ext,xml,dtd,xsl,xslt,ent
+--type-add=xml:ext:xml,dtd,xsl,xslt,ent
 
 # YAML http://yaml.org/
---type-add=yaml,ext,yaml,yml
+--type-add=yaml:ext:yaml,yml
 HERE
 }
 

@@ -51,7 +51,7 @@ EOF
 }
 
 TEST_UNKNOWN_TYPE: {
-    my @args   = ( '--ignore-ack-defaults', '--type-add=perl,ext,pl',
+    my @args   = ( '--ignore-ack-defaults', '--type-add=perl:ext:pl',
         '--type=foo', '--nogroup', '--noheading', '--nocolor' );
     my @files  = ( 't/swamp' );
     my $target = 'perl';

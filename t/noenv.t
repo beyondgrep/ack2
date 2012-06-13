@@ -51,7 +51,7 @@ my $tempdir = File::Temp->newdir;
 chdir $tempdir->dirname or die;
 
 write_file( '.ackrc', <<'ACKRC' );
---type-add=perl,ext,pl,t,pm
+--type-add=perl:ext:pl,t,pm
 ACKRC
 
 subtest 'without --noenv' => sub {
@@ -63,7 +63,7 @@ subtest 'without --noenv' => sub {
 
     is_deeply( [ realpath($sources[0]), @sources[1..5] ], [
         realpath(File::Spec->catfile($tempdir->dirname, '.ackrc')),
-        [ '--type-add=perl,ext,pl,t,pm' ],
+        [ '--type-add=perl:ext:pl,t,pm' ],
         'ACK_OPTIONS',
         '--perl',
         'ARGV',

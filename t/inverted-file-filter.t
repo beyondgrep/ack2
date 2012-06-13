@@ -61,7 +61,7 @@ INCLUDE_PLUS_EXCLUDE_ONLY: {
         t/swamp/perl.pl
     );
 
-    my @args = ( '--type-add=pod,ext,pod', '--perl', '--nopod', '-f', 't/swamp' );
+    my @args = ( '--type-add=pod:ext:pod', '--perl', '--nopod', '-f', 't/swamp' );
 
     ack_sets_match( [ @args ], \@expected, 'Include plus exclude only' );
 }
