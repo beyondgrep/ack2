@@ -25,75 +25,75 @@ sub _options_block {
 
 # Directories to ignore
 # Bazaar
---ignore-directory=is,.bzr
+--ignore-directory=is:.bzr
 
 # Codeville
---ignore-directory=is,.cdv
+--ignore-directory=is:.cdv
 
 # Interface Builder
---ignore-directory=is,~.dep
---ignore-directory=is,~.dot
---ignore-directory=is,~.nib
---ignore-directory=is,~.plst
+--ignore-directory=is:~.dep
+--ignore-directory=is:~.dot
+--ignore-directory=is:~.nib
+--ignore-directory=is:~.plst
 
 # Git
---ignore-directory=is,.git
+--ignore-directory=is:.git
 
 # Mercurial
---ignore-directory=is,.hg
+--ignore-directory=is:.hg
 
 # quilt
---ignore-directory=is,.pc
+--ignore-directory=is:.pc
 
 # Subversion
---ignore-directory=is,.svn
+--ignore-directory=is:.svn
 
 # Monotone
---ignore-directory=is,_MTN
+--ignore-directory=is:_MTN
 
 # CVS
---ignore-directory=is,CVS
+--ignore-directory=is:CVS
 
 # RCS
---ignore-directory=is,RCS
+--ignore-directory=is:RCS
 
 # SCCS
---ignore-directory=is,SCCS
+--ignore-directory=is:SCCS
 
 # darcs
---ignore-directory=is,_darcs
+--ignore-directory=is:_darcs
 
 # Vault/Fortress
---ignore-directory=is,_sgbak
+--ignore-directory=is:_sgbak
 
 # autoconf
---ignore-directory=is,autom4te.cache
+--ignore-directory=is:autom4te.cache
 
 # Perl module building
---ignore-directory=is,blib
---ignore-directory=is,_build
+--ignore-directory=is:blib
+--ignore-directory=is:_build
 
 # Perl Devel::Cover module's output directory
---ignore-directory=is,cover_db
+--ignore-directory=is:cover_db
 
 
 
 # Files to ignore
 # Backup files
---ignore-file=ext,bak
---ignore-file=match,/~$/
+--ignore-file=ext:bak
+--ignore-file=match:/~$/
 
 # Emacs swap files
---ignore-file=match,/^#.+#$/
+--ignore-file=match:/^#.+#$/
 
 # vi/vim swap files
---ignore-file=match,/[._].*\.swp$/
+--ignore-file=match:/[._].*\.swp$/
 
 # core dumps
---ignore-file=match,/core\.\d+$/
+--ignore-file=match:/core\.\d+$/
 
 # minified Javascript
---ignore-file=match,/[.]min[.]js$/
+--ignore-file=match:/[.]min[.]js$/
 
 
 # Filetypes defined

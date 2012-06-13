@@ -158,13 +158,13 @@ sub get_arg_spec {
         'h|no-filename'     => \$opt->{h},
         'H|with-filename'   => \$opt->{H},
         'i|ignore-case'     => \$opt->{i},
-        'ignore-directory|ignore-dir=s'
+        'ignore-directory|ignore-dir=s' # XXX Combine this version with the negated version below
                             => sub {
                                 my ( undef, $dir ) = @_;
 
                                 $dir = App::Ack::remove_dir_sep( $dir );
-                                if ( $dir !~ /,/ ) {
-                                    $dir = 'is,' . $dir;
+                                if ( $dir !~ /^(?:is|match):/ ) {
+                                    $dir = 'is:' . $dir;
                                 }
                                 push @{ $opt->{idirs} }, $dir;
                                },
@@ -189,10 +189,10 @@ sub get_arg_spec {
 
                                 # XXX can you do --noignore-dir=match,...?
                                 $dir = App::Ack::remove_dir_sep( $dir );
-                                if ( $dir !~ /,/ ) {
-                                    $dir = 'is,' . $dir;
+                                if ( $dir !~ /^(?:is|match):/ ) {
+                                    $dir = 'is:' . $dir;
                                 }
-                                if ( $dir !~ /^is,/ ) {
+                                if ( $dir !~ /^(?:is|match):/ ) {
                                     Carp::croak("invalid noignore-directory argument: '$dir'");
                                 }
 

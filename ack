@@ -69,7 +69,7 @@ sub _compile_descend_filter {
     my %ignore_dirs;
 
     foreach my $idir (@{$idirs}) {
-        if ( $idir =~ /^(\w+),(.*)/ ) {
+        if ( $idir =~ /^(\w+):(.*)/ ) {
             if ( $1 eq 'is') {
                 $ignore_dirs{$2} = 1;
             }
@@ -96,8 +96,9 @@ sub _compile_file_filter {
     my @ifiles_filters = map {
         my $filter;
 
-        if ( /^(\w+),(.+)/ ) {
-            $filter = App::Ack::Filter->create_filter($1, split(/,/, $2));
+        if ( /^(\w+):(.+)/ ) {
+            my ($how,$what) = ($1,$2);
+            $filter = App::Ack::Filter->create_filter($how, split(/,/, $what));
         }
         else {
             Carp::croak( qq{Invalid filter specification "$_"} );
