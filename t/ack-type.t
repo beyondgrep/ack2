@@ -51,8 +51,7 @@ EOF
 }
 
 TEST_UNKNOWN_TYPE: {
-    # XXX --ackrc isn't portable!
-    my @args   = ( '--ackrc=/dev/null', '--type-add=perl,ext,pl',
+    my @args   = ( '--ignore-ack-defaults', '--type-add=perl,ext,pl',
         '--type=foo', '--nogroup', '--noheading', '--nocolor' );
     my @files  = ( 't/swamp' );
     my $target = 'perl';
@@ -65,8 +64,7 @@ TEST_UNKNOWN_TYPE: {
 }
 
 TEST_NOTYPES: {
-    # XXX --ackrc isn't portable!
-    my @args   = ( '--ackrc=/dev/null', '--type=perl', '--nogroup',
+    my @args   = ( '--ignore-ack-defaults', '--type=perl', '--nogroup',
         '--noheading', '--nocolor' );
     my @files  = ( 't/swamp' );
     my $target = 'perl';
