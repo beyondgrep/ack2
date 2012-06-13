@@ -386,10 +386,60 @@ sub dump_options {
     return;
 }
 
+sub remove_default_options_if_needed {
+    my ( $sources ) = @_;
+
+    my $default_index;
+
+    foreach my $index ( 0 .. $#$sources ) {
+        if ( $sources->[$index] eq 'Defaults' ) {
+            $default_index = $index;
+            last;
+        }
+    }
+
+    return $sources unless defined $default_index;
+
+    my $should_remove = 0;
+
+    Getopt::Long::Configure('default'); # start with default options
+    Getopt::Long::Configure(
+        'no_ignore_case',
+        'no_auto_abbrev',
+        'pass_through',
+    );
+
+    foreach my $index ( $default_index + 2 .. $#$sources ) {
+        next if $index % 2 != 0;
+
+        my ( $name, $args ) = @{$sources}[ $index, $index + 1 ];
+
+        if(ref($args)) {
+            Getopt::Long::GetOptionsFromArray($args,
+                'ignore-ack-defaults' => \$should_remove,
+            );
+        } else {
+            ( undef, $sources->[$index + 1] ) = Getopt::Long::GetOptionsFromString($args,
+                'ignore-ack-defaults' => \$should_remove,
+            );
+        }
+    }
+
+    Getopt::Long::Configure('default');
+
+    return $sources unless $should_remove;
+
+    my @copy = @{$sources};
+    splice @copy, $default_index, 2;
+    return \@copy;
+}
+
 sub process_args {
     my $arg_sources = \@_;
 
     my %opt;
+
+    $arg_sources = remove_default_options_if_needed($arg_sources);
 
     if ( should_dump_options($arg_sources) ) {
         dump_options($arg_sources);
