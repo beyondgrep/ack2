@@ -56,8 +56,9 @@ sub from_file {
 
     my $iter =
         File::Next::from_file( {
-            error_handler => sub { my $msg = shift; App::Ack::warn( $msg ) },
-            sort_files    => $opt->{sort_files},
+            error_handler   => sub { my $msg = shift; App::Ack::warn( $msg ) },
+            warning_handler => sub { my $msg = shift; App::Ack::warn( $msg ) },
+            sort_files      => $opt->{sort_files},
         }, $file ) or return undef;
 
     return bless {

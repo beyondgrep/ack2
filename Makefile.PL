@@ -36,7 +36,7 @@ my %parms = (
         'Term::ANSIColor'   => 0,
         'Getopt::Long'      => 2.36, # For GetOptionsFromArray()
         'Test::More'        => 0.96, # For subtest()
-        'File::Next'        => 1.09_02,
+        'File::Next'        => 1.09_03,
         'File::Basename'    => 0,
         'Pod::Usage'        => 0,
     },
