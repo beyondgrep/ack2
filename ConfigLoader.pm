@@ -23,7 +23,7 @@ use Text::ParseWords ();
 sub process_filter_spec {
     my ( $spec ) = @_;
 
-    if ( $spec =~ /^(\w+),(\w+),(.*)/ ) {
+    if ( $spec =~ /^(\w+):(\w+):(.*)/ ) {
         my ( $type_name, $ext_type, $arguments ) = ( $1, $2, $3 );
 
         return ( $type_name,
@@ -314,7 +314,7 @@ sub explode_sources {
         if ( $arg =~ /(\w+)=/) {
             $arg_spec->{$1} = sub {};
         } else {
-            ( $arg ) = split /,/, $arg;
+            ( $arg ) = split /:/, $arg;
             $arg_spec->{$arg} = sub {};
         }
     };
