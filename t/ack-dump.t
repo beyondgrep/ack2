@@ -11,7 +11,7 @@ prep_environment();
 
 DUMP: {
     my $fh;
-    open $fh, '<', './ackrc' or die $!;
+    open $fh, '<', 't/ackrc' or die $!;
     my @lines = map { chomp; $_ } <$fh>;
     close $fh;
     my @expected = grep {
