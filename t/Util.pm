@@ -26,10 +26,6 @@ sub build_ack_invocation {
     if ( !grep { /^--(no)?env$/ } @args ) {
         unshift( @args, '--noenv' );
     }
-    # --ackrc makes sure we pull in "default" definitions
-    if ( !grep { /^--ackrc=/ } @args) {
-        unshift( @args, '--ackrc=' . File::Spec->catfile($orig_wd, './ackrc') );
-    }
 
     if ( is_win32() ) {
         for ( @args ) {
