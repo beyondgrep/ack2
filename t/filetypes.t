@@ -23,7 +23,8 @@ use Util;
         }
 
         foreach my $type (@types_to_try) {
-            my ( $filenames, undef ) = run_ack_with_stderr('-f', "--$type", 't/swamp');
+            my ( $filenames, undef ) = run_ack_with_stderr('-f', "--$type",
+                't/swamp', 't/etc');
 
             foreach my $filename (@$filenames) {
                 push @{ $types_for_file{$filename} }, $type;
