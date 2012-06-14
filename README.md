@@ -40,6 +40,7 @@ ack 2.0 will:
     * We will no longer have a `-a` switch.
 
 * improved flexibility in defining filetype selectors
+    * name equality ($filename eq 'Makefile')
     * glob-style matching (`*.pl` identifies a Perl file)
     * regex-style matching (`/\.pl$/i` identifies a Perl file)
     * shebang-line matching (shebang line matching `/usr/bin/perl/` identifies a Perl file)
@@ -50,7 +51,10 @@ ack 2.0 will:
     * user-specific ackrc (~/.ackrc)
     * per-project ackrc files (~/myproject/ackrc)
 
+* you can use --dump to figure which options are set where
+
 * all inclusion/exclusion rules will be in the ackrc files
-    * ack 2.0 will have no hardcoded filetype specifications,
-    directories to include or exclude, and so on.  It will ship
-    with a default global ackrc, but does not need it.
+    * ack 2.0 has a set of definitions for filetypes, directories to
+      include or exclude, etc, *but* these are only included so you don't
+      need to ship an ackrc file to a new machine.  You may tell ack to
+      disregard these defaults if you like.
