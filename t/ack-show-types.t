@@ -36,5 +36,5 @@ DASH_F: {
 }
 
 DASH_G: {
-    do_test( qw{ -g Rakef --show-types t/swamp } );
+    do_test( qw{ -g \bRakef --show-types t/swamp } );
 }
