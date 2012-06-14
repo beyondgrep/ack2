@@ -262,6 +262,7 @@ sub _options_block {
 
 # XML http://www.w3.org/TR/REC-xml/
 --type-add=xml:ext:xml,dtd,xsl,xslt,ent
+--type-add=xml:firstlinematch:/<[?]xml/
 
 # YAML http://yaml.org/
 --type-add=yaml:ext:yaml,yml
