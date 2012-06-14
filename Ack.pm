@@ -1042,6 +1042,28 @@ sub print_line_with_context {
 
 }
 
+# inefficient, but functional
+sub filetypes {
+    my ( $resource ) = @_;
+
+    my @matches;
+
+    foreach my $k (keys %mappings) {
+        my $filters = $mappings{$k};
+
+        foreach my $filter (@{$filters}) {
+            # clone the resource
+            my $clone = $resource->clone;
+            if ( $filter->filter($clone) ) {
+                push @matches, $k;
+                last;
+            }
+        }
+    }
+
+    return sort @matches;
+}
+
 
 =head1 COPYRIGHT & LICENSE
 
