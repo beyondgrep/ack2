@@ -67,6 +67,7 @@ subtest 'With metacharacters' => sub {
 subtest 'Front anchor' => sub {
     my @expected = qw(
         t/file-permission.t
+        t/filetypes.t
         t/filter.t
     );
     my $regex = '^t.fil';
