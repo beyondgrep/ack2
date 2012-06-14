@@ -181,6 +181,7 @@
 
 # PHP http://www.php.net/
 --type-add=php:ext:php,phpt,php3,php4,php5,phtml
+--type-add=php:firstlinematch:/php($|\s)/
 
 # Plone http://plone.org/
 --type-add=plone:ext:pt,cpt,metadata,cpy,py
@@ -195,6 +196,7 @@
 # Ruby http://www.ruby-lang.org/
 --type-add=ruby:ext:rb,rhtml,rjs,rxml,erb,rake,spec
 --type-add=ruby:is:Rakefile
+--type-add=ruby:firstlinematch:/ruby($|\s)/
 
 # Scala http://www.scala-lang.org/
 --type-add=scala:ext:scala
@@ -204,6 +206,7 @@
 
 # Shell
 --type-add=shell:ext:sh,bash,csh,tcsh,ksh,zsh
+--type-add=shell:firstlinematch:/(?:ba|t?c|k|z)?sh($|\s)/
 
 # Smalltalk http://www.smalltalk.org/
 --type-add=smalltalk:ext:st
