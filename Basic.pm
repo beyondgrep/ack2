@@ -148,5 +148,17 @@ sub close {
     return;
 }
 
+=head2 $res->clone()
+
+API: Clone this resource.
+
+=cut
+
+sub clone {
+    my ( $self ) = @_;
+
+    return __PACKAGE__->new($self->name);
+}
+
 
 1;
