@@ -108,4 +108,14 @@ sub close {
     return FAIL();
 }
 
+=head2 $res->clone
+
+Clones this resource.
+
+=cut
+
+sub clone {
+    return FAIL();
+}
+
 1;
