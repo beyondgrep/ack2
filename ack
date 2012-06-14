@@ -228,7 +228,12 @@ RESOURCES:
         # to do makes no sense.
         if ( $opt->{f} ) {
             # XXX printing should probably happen inside of App::Ack
-            print $resource->name, $ors;
+            if($opt->{show_types}) {
+                my @types = App::Ack::filetypes($resource);
+                print $resource->name, ' => ', join(',', @types), $ors;
+            } else {
+                print $resource->name, $ors;
+            }
             ++$nmatches;
             last RESOURCES if defined($max_count) && $nmatches >= $max_count;
         }
