@@ -23,6 +23,7 @@ t/swamp/pipe-stress-freaks.F
 t/swamp/perl.pod
 t/swamp/html.htm
 t/swamp/perl-test.t
+t/swamp/perl.handler.pod
 t/swamp/perl.pl
 t/swamp/Makefile.PL
 t/swamp/c-source.c

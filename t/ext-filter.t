@@ -16,6 +16,7 @@ filter_test(
         't/swamp/blib/ignore.pod',
         't/swamp/options.pl',
         't/swamp/perl-test.t',
+        't/swamp/perl.handler.pod',
         't/swamp/perl.pl',
         't/swamp/perl.pm',
         't/swamp/perl.pod',

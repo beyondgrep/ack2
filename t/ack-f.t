@@ -42,6 +42,7 @@ DEFAULT_DIR_EXCLUSIONS: {
         t/swamp/perl-test.t
         t/swamp/perl-without-extension
         t/swamp/perl.cgi
+        t/swamp/perl.handler.pod
         t/swamp/perl.pl
         t/swamp/perl.pm
         t/swamp/perl.pod
@@ -69,6 +70,7 @@ COMBINED_FILTERS: {
         t/swamp/perl.cgi
         t/swamp/Makefile.PL
         t/swamp/perl-test.t
+        t/swamp/perl.handler.pod
         t/swamp/perl.pl
         t/swamp/perl.pod
     );

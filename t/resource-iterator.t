@@ -86,6 +86,7 @@ UNFILTERED: {
             t/swamp/perl-without-extension
             t/swamp/perl.cgi
             t/swamp/perl.pl
+            t/swamp/perl.handler.pod
             t/swamp/perl.pm
             t/swamp/perl.pod
             t/swamp/perl.tar.gz

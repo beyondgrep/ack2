@@ -30,6 +30,7 @@ my @actual_swamp_perl = map { "$swamp/$_" } qw(
     Makefile.PL
     options.pl
     perl.cgi
+    perl.handler.pod
     perl.pl
     perl.pm
     perl.pod
