@@ -240,7 +240,12 @@ RESOURCES:
         elsif ( $opt->{g} ) {
             my $is_match = ( $resource->name =~ /$opt->{regex}/o );
             if ( $opt->{v} ? !$is_match : $is_match ) {
-                print $resource->name, $ors;
+                if($opt->{show_types}) {
+                    my @types = App::Ack::filetypes($resource);
+                    print $resource->name, ' => ', join(',', @types), $ors;
+                } else {
+                    print $resource->name, $ors;
+                }
                 ++$nmatches;
                 last RESOURCES if defined($max_count) && $nmatches >= $max_count;
             }
