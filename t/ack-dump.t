@@ -2,21 +2,19 @@
 
 use strict;
 use warnings;
+
 use lib 't';
+use Util;
 
 use Test::More tests => 3;
-use Util;
+
+use App::Ack::ConfigDefault;
 
 prep_environment();
 
 DUMP: {
-    my $fh;
-    open $fh, '<', 't/ackrc' or die $!;
-    my @lines = map { chomp; $_ } <$fh>;
-    close $fh;
-    my @expected = grep {
-        /\S/ && !/^\s*#/
-    } @lines;
+    my @expected = split( /\n/, App::Ack::ConfigDefault::_options_block );
+    @expected = grep { /./ && !/^#/ } @expected;
 
     my @args    = qw( --dump );
     my @results = run_ack( @args );

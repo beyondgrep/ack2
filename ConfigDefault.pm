@@ -100,7 +100,7 @@ sub _options_block {
 
 # Perl http://perl.org/
 --type-add=perl:ext:pl,pm,pod,t
---type-add=perl:firstlinematch:/perl($|\s)/
+--type-add=perl:firstlinematch:/#!.*\bperl/
 
 # Makefiles http://www.gnu.org/s/make/
 --type-add=make:ext:mk
