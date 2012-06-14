@@ -10,7 +10,7 @@ use Util;
 
 prep_environment();
 
-my @exp_types = qw{ rake ruby text };
+my @exp_types = qw{ rake ruby };
 
 sub get_types {
     my $line = shift;
