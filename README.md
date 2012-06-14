@@ -39,7 +39,7 @@ ack 2.0 will:
 * by default search all text files, as identified by Perl's `-T` operator
     * We will no longer have a `-a` switch.
 
-* improved flexibility in defining filetypes
+* improved flexibility in defining filetype selectors
     * glob-style matching (`*.pl` identifies a Perl file)
     * regex-style matching (`/\.pl$/i` identifies a Perl file)
     * shebang-line matching (shebang line matching `/usr/bin/perl/` identifies a Perl file)
