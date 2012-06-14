@@ -168,7 +168,7 @@ sub main {
     }
 
     my $resources;
-    if ( $App::Ack::is_filter_mode ) {
+    if ( $App::Ack::is_filter_mode && !$opt->{files_from} ) { # probably -x
         $resources    = App::Ack::Resources->from_stdin( $opt );
         my $regex = $opt->{regex};
         $regex = shift @ARGV if not defined $regex;
