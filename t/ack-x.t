@@ -57,6 +57,9 @@ sub do_parent {
             }
         }
     }
+
+    chomp @{$stdout_lines};
+    chomp @{$stderr_lines};
 }
 
 prep_environment();
