@@ -6,7 +6,7 @@ use warnings;
 use lib 't';
 use Util;
 
-use Test::More tests => 3;
+use Test::More tests => 5;
 
 use App::Ack::ConfigDefault;
 
@@ -27,4 +27,10 @@ DUMP: {
     }
 
     sets_match( \@results, \@expected );
+
+    my @perl = grep { /perl/ } @results;
+    is( scalar @perl, 2, 'Two specs for Perl' );
+
+    my @ignore_dir = grep { /ignore-dir/ } @results;
+    is( scalar @ignore_dir, 20, 'Twenty specs for ignoring directories' );
 }
