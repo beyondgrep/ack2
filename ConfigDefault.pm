@@ -219,6 +219,7 @@ sub _options_block {
 
 # Ruby http://www.ruby-lang.org/
 --type-add=ruby:ext:rb,rhtml,rjs,rxml,erb,rake,spec
+--type-add=ruby:is:Rakefile
 
 # Scala http://www.scala-lang.org/
 --type-add=scala:ext:scala
