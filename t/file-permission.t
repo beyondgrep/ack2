@@ -10,7 +10,9 @@ use Test::More;
 use lib 't';
 use Util;
 
-use constant NTESTS => 10;
+use File::Spec;
+
+use constant NTESTS => 14;
 
 plan skip_all => q{Can't be checked under Win32} if is_win32;
 plan skip_all => q{Can't be run as root}         if $> == 0;
@@ -36,6 +38,11 @@ SKIP: {
 
     # --count takes a different execution path
     check_with( 'regex', '--count', $program );
+
+    my($volume,$path) = File::Spec->splitpath($program);
+
+    # Run another test on the directory containing the read only file
+    check_with( 'notinthere', $volume . $path );
 
     # change permissions back
     chmod $old_mode, $program;
