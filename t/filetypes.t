@@ -5,9 +5,6 @@ use strict;
 
 use Test::More;
 
-plan skip_all => 'for now';
-exit 0;
-
 use lib 't';
 use Util;
 
