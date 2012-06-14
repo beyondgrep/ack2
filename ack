@@ -443,8 +443,9 @@ David Alan Pisoni,
 Adriano Ferreira,
 James Keenan,
 Leland Johnson,
-Ricardo Signes
-and Pete Krawczyk.
+Ricardo Signes,
+Pete Krawczyk and
+Rob Hoelz.
 
 =head1 COPYRIGHT & LICENSE
 
