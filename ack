@@ -318,6 +318,55 @@ RESOURCES:
 
 Andy Lester, C<< <andy at petdance.com> >>
 
+=head1 ACKRC LOCATION SEMANTICS
+
+Ack can load its configuration from many sources.  This list
+specifies the sources Ack looks for configuration; each one
+that is found is loaded in the order specified here, and
+each one overrides options set in any of the sources preceding
+it.  (For example, if I set --sort-files in my user ackrc, and
+--nosort-files on the command line, the comand line takes
+precedence)
+
+=over 4
+
+=item *
+
+Defaults are loaded from App::Ack::ConfigDefaults.  This can be omitted
+using C<--ignore-ack-defaults>.
+
+=item * Global ackrc
+
+Options are then loaded from the global ackrc.  This is located at
+C</etc/ackrc> on Unix-like systems, and
+C<C:\Documents and Settings\All Users\Application Data> on Windows.
+This can be omitted using C<--noenv>.
+
+=item * User ackrc
+
+Options are then loaded from the user's ackrc.  This is located at
+C<$HOME/.ackrc> on Unix-like systems, and
+C<C:\Documents and Settings\$USER\Application Data>.
+This can be omitted using C<--noenv>.
+
+=item * Project ackrc
+
+Options are then loaded from the project ackrc.  The project ackrc is
+the first ackrc file with the name C<.ackrc> or C<_ackrc>, first searching
+in the current directory, then the parent directory, then the grandparent
+directory, etc.  This can be omitted using C<--noenv>.
+
+=item * ACK_OPTIONS
+
+Options are then loaded from the enviroment variable C<ACK_OPTIONS>.  This can
+be omitted using C<--noenv>.
+
+=item * Command line
+
+Options are then loaded from the command line.
+
+=back
+
 =head1 BUGS
 
 Please report any bugs or feature requests to the issues list at
