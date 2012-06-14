@@ -1,0 +1,3 @@
+#!/usr/bin/perl
+# NOTE: This must stay a very short file so that C<-B $open_fh> will
+# think it's binary.
