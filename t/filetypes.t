@@ -75,7 +75,6 @@ MATCH_VIA_CONTENT: {
     my %lookups = (
         't/swamp/Makefile'          => 'make',
         't/swamp/Makefile.PL'       => 'perl',
-        't/swamp/buttonhook.xml'    => 'xml',
         't/etc/shebang.php.xxx'     => 'php',
         't/etc/shebang.pl.xxx'      => 'perl',
         't/etc/shebang.py.xxx'      => 'python',
