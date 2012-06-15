@@ -53,11 +53,9 @@ my @global_files;
 if ( $^O eq 'MSWin32') {
     require Win32;
 
-    no strict 'subs';
-
     @global_files = (
-        Win32::GetFolderPath(Win32::CSIDL_COMMON_APPDATA),
-        Win32::GetFolderPath(Win32::CSIDL_APPDATA),
+        Win32::GetFolderPath(Win32::CSIDL_COMMON_APPDATA()),
+        Win32::GetFolderPath(Win32::CSIDL_APPDATA()),
     );
 }
 else {
