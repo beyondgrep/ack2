@@ -18,9 +18,9 @@ through binary files.
 
 * Removed the `--skipped` option.
 
-* Removed the `--invert-file-match` option.  `-v` now works with `-g`.
+* Removed the `--invert-file-match` option.  `-v` now works with
+`-g`.  To list files that do not match `/foo/`
 
-    \# List files that do not match /foo/
     ack -g foo -v
 
 * `-g` now obeys all regex options: `-i`, `-w`, `-Q`, `-v`
@@ -29,7 +29,8 @@ through binary files.
 regexes specified on the command line.  Now you use the `-x` switch
 to pipe filenames from one `ack` invocation into another.
 
-    \# Search files with filename matching "sales" for the string "foo"
+To search files with filename matching "sales" for the string "foo":
+
     ack -g sales | ack -x foo
 
 # New features in ack 2.0
