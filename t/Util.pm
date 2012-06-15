@@ -223,7 +223,12 @@ sub run_ack_with_stderr {
     my @stderr;
 
     @args = build_ack_invocation( @args );
-    unshift( @args, $^X, "-Mblib=$orig_wd" );
+    if ( $ENV{'ACK_TEST_STANDALONE'} ) {
+        unshift( @args, $^X );
+    }
+    else {
+        unshift( @args, $^X, "-Mblib=$orig_wd" );
+    }
 
     return run_cmd( @args );
 }

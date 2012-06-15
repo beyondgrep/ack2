@@ -121,7 +121,7 @@ test: test_classic test_standalone
 test_classic: all
 	ACK_TEST_STANDALONE=0 PERL_DL_NONLAZY=1 $(FULLPERLRUN) "-MExtUtils::Command::MM" "-e" "test_harness($(TEST_VERBOSE), '$(INST_LIB)', '$(INST_ARCHLIB)')" $(TEST_FILES)
 
-test_standalone: $(ACK_STANDALONE)
+test_standalone: all $(ACK_STANDALONE)
 	ACK_TEST_STANDALONE=1 PERL_DL_NONLAZY=1 $(FULLPERLRUN) "-MExtUtils::Command::MM" "-e" "test_harness($(TEST_VERBOSE), '$(INST_LIB)', '$(INST_ARCHLIB)')" $(TEST_FILES)
 
 MAKE_FRAG

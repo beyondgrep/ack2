@@ -106,6 +106,11 @@ EOF
 my @lhs_args = ( $^X, '-Mblib', build_ack_invocation( '-g', 'of', 't/text' ) );
 my @rhs_args = ( $^X, '-Mblib', build_ack_invocation( '-x', 'the' ) ); # for now
 
+if ( $ENV{'ACK_TEST_STANDALONE'} ) {
+    @lhs_args = grep { $_ ne '-Mblib' } @lhs_args;
+    @rhs_args = grep { $_ ne '-Mblib' } @rhs_args;
+}
+
 my @stdout;
 my @stderr;
 
