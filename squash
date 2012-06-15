@@ -35,7 +35,7 @@ for my $arg ( @ARGV ) {
     open( my $fh, '<', $filename ) or die "Can't open $filename: $!";
     my $was_in_pod = 0;
     my $in_pod     = 0;
-    $code .= "#line 1 '$filename'\n" if $debug_mode && $filename ne 'ack-base';
+    $code .= "#line 1 '$filename'\n" if $debug_mode && $filename ne 'ack';
     while ( <$fh> ) {
         next if /^use (?:File::Next|App::Ack)/;
 
@@ -49,7 +49,7 @@ for my $arg ( @ARGV ) {
         }
 
         # See if we're in module POD blocks
-        if ( $filename ne 'ack-base' ) {
+        if ( $filename ne 'ack' ) {
             $was_in_pod = $in_pod;
 
             if ( /^=(\w+)/ ) {
