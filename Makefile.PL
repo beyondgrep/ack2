@@ -21,7 +21,6 @@ my %parms = (
         'ConfigDefault.pm'  => '$(INST_LIBDIR)/App/Ack/ConfigDefault.pm',
         'ConfigFinder.pm'   => '$(INST_LIBDIR)/App/Ack/ConfigFinder.pm',
         'ConfigLoader.pm'   => '$(INST_LIBDIR)/App/Ack/ConfigLoader.pm',
-        'Debug.pm'          => '$(INST_LIBDIR)/App/Ack/Debug.pm',
         'Filter.pm'         => '$(INST_LIBDIR)/App/Ack/Filter.pm',
         'Extension.pm'      => '$(INST_LIBDIR)/App/Ack/Filter/Extension.pm',
         'FirstLineMatch.pm' => '$(INST_LIBDIR)/App/Ack/Filter/FirstLineMatch.pm',
