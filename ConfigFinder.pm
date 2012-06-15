@@ -70,12 +70,10 @@ sub _remove_redundancies {
     foreach my $path ( @configs ) {
         my ( $dev, $inode ) = (stat $path)[0, 1];
 
-        if( defined( $dev ) ) { # files that can't be read don't matter
-            if( $dev_and_inode_seen{"$dev:$inode"} ) {
-                undef $path;
-            } else {
-                $dev_and_inode_seen{"$dev:$inode"} = 1;
-            }
+        if( !defined( $dev ) || $dev_and_inode_seen{"$dev:$inode"} ) {
+            undef $path;
+        } else {
+            $dev_and_inode_seen{"$dev:$inode"} = 1;
         }
     }
     return grep { defined() } @configs;
