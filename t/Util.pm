@@ -39,7 +39,12 @@ sub build_ack_invocation {
         #@args = map { quotemeta $_ } @args;
     }
 
-    unshift( @args, File::Spec->rel2abs( 'blib/script/ack', $orig_wd ) );
+    if ( $ENV{'ACK_TEST_STANDALONE'} ) {
+        unshift( @args, File::Spec->rel2abs( 'ack-standalone', $orig_wd ) );
+    }
+    else {
+        unshift( @args, File::Spec->rel2abs( 'blib/script/ack', $orig_wd ) );
+    }
 
     return wantarray ? @args : join( ' ', @args );
 }
