@@ -64,6 +64,11 @@ WriteMakefile( %parms );
 
 package MY;
 
+# supress EU::MM test rule
+sub MY::test {
+    return '';
+}
+
 sub MY::postamble {
     my $file_next_filename = qx(perldoc -l File::Next);
     my $postamble = sprintf(<<'MAKE_FRAG', $debug_mode);
@@ -86,6 +91,9 @@ INVERSE_FILTER_PM = Inverse.pm
 ALL_PM            = $(ACK_PM) $(RESOURCE_PM) $(RESOURCES_PM) $(BASIC_PM) $(FILTER_PM) $(EXT_FILTER_PM) $(FIRST_FILTER_PM) $(IS_FILTER_PM) $(MATCH_FILTER_PM) $(DEFAULT_FILTER_PM) $(INVERSE_FILTER_PM) $(CONFIG_FINDER_PM) $(CONFIG_LOADER_PM) $(CONFIG_DEFAULT_PM)
 PERL_T            = $(PERL) -T
 
+TEST_VERBOSE=0
+TEST_FILES=t/*.t
+
 .PHONY: tags critic
 
 tags:
@@ -107,6 +115,14 @@ $(ACK_STANDALONE) : $(ACK) $(ALL_PM) squash Makefile
 bininst : $(ACK)
 	$(CP) $(ACK) ~/bin/ack2
 	$(CP) ackrc ~/.ack2rc
+
+test: test_classic test_standalone
+
+test_classic: all
+	ACK_TEST_STANDALONE=0 PERL_DL_NONLAZY=1 $(FULLPERLRUN) "-MExtUtils::Command::MM" "-e" "test_harness($(TEST_VERBOSE), '$(INST_LIB)', '$(INST_ARCHLIB)')" $(TEST_FILES)
+
+test_standalone: $(ACK_STANDALONE)
+	ACK_TEST_STANDALONE=1 PERL_DL_NONLAZY=1 $(FULLPERLRUN) "-MExtUtils::Command::MM" "-e" "test_harness($(TEST_VERBOSE), '$(INST_LIB)', '$(INST_ARCHLIB)')" $(TEST_FILES)
 
 MAKE_FRAG
 
