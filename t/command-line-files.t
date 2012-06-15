@@ -47,9 +47,19 @@ EOF
 FILE_NOT_THERE: {
     my $file = File::Next::reslash( 't/swamp/perl.pod' );
 
-    my @expected_stderr = split( /\n/, <<'EOF' );
+    my @expected_stderr;
+
+    # I don't care for this, but it's the least of the evils I could think of
+    if ( $ENV{'ACK_TEST_STANDALONE'} ) {
+        @expected_stderr = split( /\n/, <<'EOF' );
+ack-standalone: non-existent-file.txt: No such file or directory
+EOF
+    }
+    else {
+        @expected_stderr = split( /\n/, <<'EOF' );
 ack: non-existent-file.txt: No such file or directory
 EOF
+    }
 
     my @expected_stdout = split( /\n/, <<"EOF" );
 ${file}:3:=head2 There's important stuff in here!
