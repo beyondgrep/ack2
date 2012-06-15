@@ -9,24 +9,23 @@ First, ack looks for a global ackrc.
 =over
 
 =item On Windows, this is `ackrc` in either COMMON_APPDATA or APPDATA.
+If `ackrc` is present in both directories, ack uses both files in that
+order.
 
 =item On a non-Windows OS, this is `/etc/ackrc`.
 
 =back
 
-Then, ack looks for a user-specific ackrc.
-
-=over
-
-=item On Windows, this is `$HOME/_ackrc`, if the HOME environment variable is set.
-
-=item On non-Windows systems, this is `$HOME/.ackrc`.
-
-=back
+Then, ack looks for a user-specific ackrc if the HOME environment
+variable is set.  This is either `$HOME/.ackrc` or `$HOME/_ackrc`.
 
 Then, ack looks for a project-specific ackrc file.  ack searches
-up the directory hierarchy for the first .ackrc or _ackrc file this is not
-one of the ackrc files found in the previous steps.
+up the directory hierarchy for the first `.ackrc` or `_ackrc` file.
+If this is one of the ackrc files found in the previous steps, it is
+not loaded again.
+
+If a directory contains both `.ackrc` and `_ackrc`, only `.ackrc` will
+be used.
 
 After ack loads the options from the found ackrc files, ack looks
 at the ACKRC_OPTIONS environment variable.
@@ -65,19 +64,32 @@ sub new {
 sub _remove_redundancies {
     my ( @configs ) = @_;
 
-    my %dev_and_inode_seen;
+    my (%dev_and_inode_seen, %path_seen);
 
     foreach my $path ( @configs ) {
         my ( $dev, $inode ) = (stat $path)[0, 1];
 
-        if( !defined($dev) || ($inode && $dev_and_inode_seen{"$dev:$inode"} )) {
+        if( !defined($dev) || $path_seen{$path} ||
+            ($inode && $dev_and_inode_seen{"$dev:$inode"} )) {
             undef $path;
         } else {
-            $dev_and_inode_seen{"$dev:$inode"} = 1;
+            $dev_and_inode_seen{"$dev:$inode"} = $path_seen{$path} = 1;
         }
     }
     return grep { defined() } @configs;
 }
+
+sub _check_for_ackrc
+{
+    return unless defined $_[0];
+
+    foreach my $name (qw(.ackrc _ackrc)) {
+        my $fn = File::Spec->catfile(@_, $name);
+        return $fn if -f $fn;
+    }
+
+    return;
+} # end _check_for_ackrc
 
 =head2 $finder->find_config_files
 
@@ -94,25 +106,16 @@ sub find_config_files {
             Win32::GetFolderPath(Win32::CSIDL_COMMON_APPDATA()),
             Win32::GetFolderPath(Win32::CSIDL_APPDATA()),
         );
-        if(defined(my $home = $ENV{'HOME'})) {
-            push @config_files, File::Spec->catfile($home, '_ackrc');
-        }
     } else {
         push @config_files, '/etc/ackrc';
-        if(defined(my $home = $ENV{'HOME'})) {
-            push @config_files, File::Spec->catfile($home, '.ackrc');
-        }
     }
+
+    push @config_files, _check_for_ackrc($ENV{'HOME'});
 
     my @dirs = File::Spec->splitdir(Cwd::getcwd());
     while(@dirs) {
-        my $ackrc = File::Spec->catfile(@dirs, '.ackrc');
-        if(-f $ackrc) {
-            push @config_files, $ackrc;
-            last;
-        }
-        $ackrc = File::Spec->catfile(@dirs, '_ackrc');
-        if(-f $ackrc) {
+        my $ackrc = _check_for_ackrc(@dirs);
+        if(defined $ackrc) {
             push @config_files, $ackrc;
             last;
         }
