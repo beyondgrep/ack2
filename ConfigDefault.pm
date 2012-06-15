@@ -203,14 +203,14 @@ sub _options_block {
 
 # PHP http://www.php.net/
 --type-add=php:ext:php,phpt,php3,php4,php5,phtml
---type-add=php:firstlinematch:/php($|\s)/
+--type-add=php:firstlinematch:/#!.*\bphp/
 
 # Plone http://plone.org/
 --type-add=plone:ext:pt,cpt,metadata,cpy,py
 
 # Python http://www.python.org/
 --type-add=python:ext:py
---type-add=python:firstlinematch:/python($|\s)/
+--type-add=python:firstlinematch:/#!.*\bpython/
 
 # R http://www.r-project.org/
 --type-add=rr:ext:R
@@ -218,7 +218,7 @@ sub _options_block {
 # Ruby http://www.ruby-lang.org/
 --type-add=ruby:ext:rb,rhtml,rjs,rxml,erb,rake,spec
 --type-add=ruby:is:Rakefile
---type-add=ruby:firstlinematch:/ruby($|\s)/
+--type-add=ruby:firstlinematch:/#!.*\bruby/
 
 # Scala http://www.scala-lang.org/
 --type-add=scala:ext:scala
@@ -228,7 +228,7 @@ sub _options_block {
 
 # Shell
 --type-add=shell:ext:sh,bash,csh,tcsh,ksh,zsh
---type-add=shell:firstlinematch:/(?:ba|t?c|k|z)?sh($|\s)/
+--type-add=shell:firstlinematch:/(?:ba|t?c|k|z)?sh\b/
 
 # Smalltalk http://www.smalltalk.org/
 --type-add=smalltalk:ext:st
