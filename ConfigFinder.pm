@@ -24,8 +24,7 @@ up the directory hierarchy for the first `.ackrc` or `_ackrc` file.
 If this is one of the ackrc files found in the previous steps, it is
 not loaded again.
 
-If a directory contains both `.ackrc` and `_ackrc`, only `.ackrc` will
-be used.
+It is a fatal error if a directory contains both `.ackrc` and `_ackrc`.
 
 After ack loads the options from the found ackrc files, ack looks
 at the ACKRC_OPTIONS environment variable.
@@ -83,12 +82,15 @@ sub _check_for_ackrc
 {
     return unless defined $_[0];
 
-    foreach my $name (qw(.ackrc _ackrc)) {
-        my $fn = File::Spec->catfile(@_, $name);
-        return $fn if -f $fn;
-    }
+    my @files = grep { -f }
+                map { File::Spec->catfile(@_, $_) }
+                qw(.ackrc _ackrc);
 
-    return;
+    die File::Spec->catdir(@_) . " contains both .ackrc and _ackrc.\n" .
+        "Please remove one of those files.\n"
+            if @files > 1;
+
+    return wantarray ? @files : $files[0];
 } # end _check_for_ackrc
 
 =head2 $finder->find_config_files

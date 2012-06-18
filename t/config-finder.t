@@ -10,7 +10,7 @@ use Cwd qw(getcwd realpath);
 use File::Spec;
 use File::Temp;
 use Test::Builder;
-use Test::More tests => 21;
+use Test::More tests => 23;
 
 use App::Ack::ConfigFinder;
 
@@ -143,9 +143,16 @@ no_home {
 
 unlink $project_file;
 touch_ackrc;
-expect_ackrcs [ @std_files, File::Spec->rel2abs('.ackrc')], '.ackrc should be preferred to _ackrc';
+my $ok = eval { $finder->find_config_files };
+my $err = $@;
+ok( !$ok, '.ackrc + _ackrc is error' );
+like( $err, qr/contains both \.ackrc and _ackrc/, 'Got the expected error' );
+
 no_home {
-    expect_ackrcs [ @global_files, File::Spec->rel2abs('.ackrc')], '.ackrc should be preferred to _ackrc';
+  $ok = eval { $finder->find_config_files };
+  $err = $@;
+  ok( !$ok, '.ackrc + _ackrc is error' );
+  like( $err, qr/contains both \.ackrc and _ackrc/, 'Got the expected error' );
 };
 
 unlink '.ackrc';
