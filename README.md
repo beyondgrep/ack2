@@ -59,3 +59,6 @@ ack 2.0 will:
       include or exclude, etc, *but* these are only included so you don't
       need to ship an ackrc file to a new machine.  You may tell ack to
       disregard these defaults if you like.
+
+* In addition to the classic `--thpppt` option to draw Bill the
+Cat, `ack --bar` will draw (of course) Admiral Ackbar.
