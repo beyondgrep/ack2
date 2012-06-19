@@ -85,6 +85,16 @@ sub _write_file {
     return;
 }
 
+sub break_up_lines {
+    my $str = shift;
+
+    return split( /\n/, $str );
+}
+
+sub reslash_all {
+    return map { File::Next::reslash( $_ ) } @_;
+}
+
 sub run_ack {
     my @args = @_;
 

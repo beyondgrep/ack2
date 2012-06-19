@@ -147,6 +147,18 @@ sub _compile_file_filter {
     };
 }
 
+sub show_types {
+    my $resource = shift;
+    my $ors      = shift;
+
+    my @types = App::Ack::filetypes( $resource );
+    my $types = join( ',', @types );
+    my $arrow = @types ? ' => ' : ' =>';
+    print $resource->name, $arrow, join( ',', @types ), $ors;
+
+    return;
+}
+
 sub main {
     my @arg_sources = App::Ack::retrieve_arg_sources();
 
@@ -226,12 +238,14 @@ RESOURCES:
     while ( my $resource = $resources->next ) {
         # XXX this variable name combined with what we're trying
         # to do makes no sense.
+
+        # XXX Combine the -f and -g functions
         if ( $opt->{f} ) {
             # XXX printing should probably happen inside of App::Ack
-            if($opt->{show_types}) {
-                my @types = App::Ack::filetypes($resource);
-                print $resource->name, ' => ', join(',', @types), $ors;
-            } else {
+            if ( $opt->{show_types} ) {
+                show_types( $resource, $ors );
+            }
+            else {
                 print $resource->name, $ors;
             }
             ++$nmatches;
@@ -240,10 +254,10 @@ RESOURCES:
         elsif ( $opt->{g} ) {
             my $is_match = ( $resource->name =~ /$opt->{regex}/o );
             if ( $opt->{v} ? !$is_match : $is_match ) {
-                if($opt->{show_types}) {
-                    my @types = App::Ack::filetypes($resource);
-                    print $resource->name, ' => ', join(',', @types), $ors;
-                } else {
+                if ( $opt->{show_types} ) {
+                    show_types( $resource, $ors );
+                }
+                else {
                     print $resource->name, $ors;
                 }
                 ++$nmatches;
