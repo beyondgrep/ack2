@@ -388,7 +388,7 @@ Example: ack -i select
 Searching:
   -i, --ignore-case     Ignore case distinctions in PATTERN
   --[no]smart-case      Ignore case distinctions in PATTERN,
-                        only if PATTERN contains no upper case
+                        only if PATTERN contains no upper case.
                         Ignored if -i is specified
   -v, --invert-match    Invert match: select non-matching lines
   -w, --word-regexp     Force PATTERN to match only whole words
@@ -449,9 +449,9 @@ File presentation:
 
 
 File finding:
-  -f                    Only print the files found, without searching.
+  -f                    Only print the files selected, without searching.
                         The PATTERN must not be specified.
-  -g                    Same as -f, but only print files matching PATTERN.
+  -g                    Same as -f, but only select files matching PATTERN.
   --sort-files          Sort the found files lexically.
   --show-types          Show which types each file has.
   --files-from=FILE     Read the list of files to search from FILE.
