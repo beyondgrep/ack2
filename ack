@@ -512,6 +512,10 @@ searched.
 
 Print a short help statement.
 
+=item B<--help-types>
+
+Print all known types.
+
 =item B<-i>, B<--ignore-case>
 
 Ignore case in the search strings.
@@ -772,8 +776,8 @@ The following does B<NOT> work in the F<.ackrc> file:
   --type-set eiffel=.e,.eiffel
 
 
-In order to see all currently defined types, use I<--help types>, e.g.
-I<ack --type-set backup=.bak --type-add perl=.perl --help types>
+In order to see all currently defined types, use I<--help-types>, e.g.
+I<ack --type-set backup=.bak --type-add perl=.perl --help-types>
 
 Restrictions:
 
