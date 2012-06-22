@@ -465,7 +465,7 @@ File inclusion/exclusion:
 
   --type=X              Include only X files, where X is a recognized filetype.
   --type=noX            Exclude X files.
-                        See "ack --help type" for supported filetypes.
+                        See "ack --help-types" for supported filetypes.
 
 File type specification:
   --type-set TYPE=.EXTENSION[,.EXT2[,...]]
@@ -483,6 +483,7 @@ Miscellaneous:
   --ackrc=filename      Specify an ackrc file to use
   --ignore-ack-defaults Ignore the default definitions that ack includes.
   --help                This help
+  --help-types          Display all known types
   --dump                Dump information on which options are loaded from which RC files
   --man                 Man page
   --version             Display version & copyright
