@@ -31,11 +31,11 @@ my %parms = (
     },
     EXE_FILES           => [ 'ack' ],
     PREREQ_PM => {
-        'Test::Harness'     => 2.50, # Something reasonably newish
+        'Test::Harness'     => '2.50', # Something reasonably newish
+        'Test::More'        => '0.96', # For subtest()
         'Term::ANSIColor'   => 0,
-        'Getopt::Long'      => 2.36, # For GetOptionsFromArray()
-        'Test::More'        => 0.96, # For subtest()
-        'File::Next'        => 1.10,
+        'Getopt::Long'      => '2.36', # For GetOptionsFromArray()
+        'File::Next'        => '1.10',
         'File::Basename'    => 0,
         'Pod::Usage'        => 0,
     },
