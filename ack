@@ -58,7 +58,6 @@ MAIN: {
     Getopt::Long::Configure('pass_through', 'no_auto_abbrev');
     Getopt::Long::GetOptions(
         'help'       => sub { App::Ack::show_help(); exit; },
-        'help-types' => sub { App::Ack::show_help_types(); exit; },
         'version'    => sub { App::Ack::print_version_statement(); exit; },
         'man'        => sub {
             require Pod::Usage;
