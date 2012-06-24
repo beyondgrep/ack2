@@ -19,6 +19,8 @@ use App::Ack::Filter::Inverse;
 use App::Ack::Filter::Is;
 use App::Ack::Filter::Match;
 
+use Getopt::Long ();
+
 use Carp ();
 
 our $VERSION = '2.00a01';
@@ -51,6 +53,22 @@ MAIN: {
         delete @ENV{@keys};
     }
     App::Ack::load_colors();
+
+    Getopt::Long::Configure('defaults');
+    Getopt::Long::Configure('pass_through', 'no_auto_abbrev');
+    Getopt::Long::GetOptions(
+        'help'       => sub { App::Ack::show_help(); exit; },
+        'help-types' => sub { App::Ack::show_help_types(); exit; },
+        'version'    => sub { App::Ack::print_version_statement(); exit; },
+        'man'        => sub {
+            require Pod::Usage;
+            Pod::Usage::pod2usage({
+                -verbose => 2,
+                -exitval => 0,
+            });
+        }, # man sub
+    );
+    Getopt::Long::Configure('defaults');
 
     if ( !@ARGV ) {
         App::Ack::show_help();
