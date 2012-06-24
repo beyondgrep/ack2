@@ -536,6 +536,14 @@ END_OF_HELP
     return;
 }
 
+sub show_man {
+    require Pod::Usage;
+    Pod::Usage::pod2usage({
+        -verbose => 2,
+        -exitval => 0,
+    });
+}
+
 sub _listify {
     my @whats = @_;
 

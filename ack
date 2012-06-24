@@ -58,13 +58,7 @@ MAIN: {
     Getopt::Long::GetOptions(
         'help'       => sub { App::Ack::show_help(); exit; },
         'version'    => sub { App::Ack::print_version_statement(); exit; },
-        'man'        => sub {
-            require Pod::Usage;
-            Pod::Usage::pod2usage({
-                -verbose => 2,
-                -exitval => 0,
-            });
-        }, # man sub
+        'man'        => sub { App::Ack::show_man(); exit; },
     );
     Getopt::Long::Configure('defaults');
 

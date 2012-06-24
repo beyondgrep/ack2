@@ -233,13 +233,7 @@ sub get_arg_spec {
         'version'           => sub { App::Ack::print_version_statement(); exit; },
         'help|?:s'          => sub { shift; App::Ack::show_help(@_); exit; },
         'help-types'        => sub { App::Ack::show_help_types(); exit; },
-        'man'               => sub {
-            require Pod::Usage;
-            Pod::Usage::pod2usage({
-                -verbose => 2,
-                -exitval => 0,
-            });
-        }, # man sub
+        'man'               => sub { App::Ack::show_man(); exit; },
         $extra_specs ? %{$extra_specs} : (),
     }; # arg_specs
 }
