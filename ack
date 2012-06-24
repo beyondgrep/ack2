@@ -47,7 +47,6 @@ MAIN: {
             $env_is_usable = defined $1 ? 0 : 1;
         }
     }
-    @ARGV = grep { defined() } @ARGV; # filter out options we discarded
     if ( !$env_is_usable ) {
         my @keys = ( 'ACKRC', grep { /^ACK_/ } keys %ENV );
         delete @ENV{@keys};
