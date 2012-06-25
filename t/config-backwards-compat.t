@@ -48,6 +48,6 @@ my $file = File::Next::reslash('t/swamp/notes.md');
 my $line = 3;
 
 my ( $stdout, $stderr ) = run_ack_with_stderr( @args );
-is scalar(@$stdout), 1;
+is( scalar(@{$stdout}), 1, 'Got back exactly one line' );
 like $stdout->[0], qr/$file:$line.*[*] One/;
-is scalar(@$stderr), 0 or diag(explain($stderr));
+is( scalar(@{$stderr}), 0, 'No output to stderr' ) or diag(explain($stderr));
