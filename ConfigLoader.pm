@@ -122,6 +122,15 @@ sub process_filetypes {
     return \%additional_specs;
 }
 
+sub removed_option {
+    my ( $option ) = @_;
+
+    return sub {
+        warn "Option '$option' is not valid in ack 2\n";
+        exit 1;
+    };
+}
+
 sub get_arg_spec {
     my ( $opt, $extra_specs ) = @_;
 
@@ -131,7 +140,8 @@ sub get_arg_spec {
         'B|before-context=i'
                             => \$opt->{before_context},
         'C|context:i'       => sub { shift; my $val = shift; $opt->{before_context} = $opt->{after_context} = ($val || 2) },
-        'a|all-types'       => \$opt->{all},
+        'a'                 => removed_option('-a'),
+        'all'               => removed_option('--all'),
         'break!'            => \$opt->{break},
         c                   => \$opt->{count},
         'color|colour!'     => \$opt->{color},
@@ -153,6 +163,7 @@ sub get_arg_spec {
         flush               => \$opt->{flush},
         'follow!'           => \$opt->{follow},
         g                   => \$opt->{g},
+        G                   => removed_option('-G'),
         'group!'            => sub { shift; $opt->{heading} = $opt->{break} = shift },
         'heading!'          => \$opt->{heading},
         'h|no-filename'     => \$opt->{h},
@@ -225,7 +236,8 @@ sub get_arg_spec {
                 Carp::croak( "Unknown type '$value'" );
             }
         },
-        'u|unrestricted'    => \$opt->{u},
+        'u'                 => removed_option('-u'),
+        'unrestricted'      => removed_option('--unrestricted'),
         'v|invert-match'    => \$opt->{v},
         'w|word-regexp'     => \$opt->{w},
         'x'                 => sub { $opt->{files_from} = '-' },
