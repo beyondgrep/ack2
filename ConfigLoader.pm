@@ -93,9 +93,17 @@ sub process_filetypes {
         };
     };
 
+    my $delete_spec = sub {
+        my ( undef, $name ) = @_;
+
+        delete $App::Ack::mappings{$name};
+        delete $additional_specs{$name . '!'};
+    };
+
     my %type_arg_specs = (
         'type-add=s' => $add_spec,
         'type-set=s' => $set_spec,
+        'type-del=s' => $delete_spec,
     );
 
     for ( my $i = 0; $i < @{$arg_sources}; $i += 2) {
