@@ -90,6 +90,7 @@ t/r-lang-ext.t
 t/resource-iterator.t
 t/zero.t
 
+t/home/.ackrc
 t/swamp/#emacs-workfile.pl#
 t/swamp/0
 t/swamp/CMakeLists.txt
