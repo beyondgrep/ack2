@@ -15,7 +15,7 @@ DASH_L: {
         t/text/science-of-myth.txt
     );
 
-    my @args  = qw( religion -i -a -l );
+    my @args  = qw( religion -i -l );
     my @files = qw( t/text );
 
     ack_sets_match( [ @args, @files ], \@expected, 'Looking for religion with -l' );
@@ -42,7 +42,7 @@ DASH_CAPITAL_L: {
     # -L and -l -v are identical
     for my $switches ( @switches ) {
         my @files = qw( t/text );
-        my @args  = ( 'religion', '-a', @{$switches} );
+        my @args  = ( 'religion', @{$switches} );
 
         ack_sets_match( [ @args, @files ], \@expected, "Looking for religion with @{$switches}" );
     }
@@ -58,7 +58,7 @@ DASH_C: {
         t/text/shut-up-be-happy.txt:0
     );
 
-    my @args  = qw( boy -i -a -c );
+    my @args  = qw( boy -i -c );
     my @files = qw( t/text );
 
     ack_sets_match( [ @args, @files ], \@expected, 'Boy counts' );
@@ -69,7 +69,7 @@ DASH_LC: {
         t/text/science-of-myth.txt:2
     );
 
-    my @args  = qw( religion -i -a -l -c );
+    my @args  = qw( religion -i -l -c );
     my @files = qw( t/text );
 
     ack_sets_match( [ @args, @files ], \@expected, 'Religion counts -l -c' );

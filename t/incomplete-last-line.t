@@ -18,7 +18,7 @@ but no new line on the last line!
 At last everything is done for you.
 EOF
 
-    my @args  = qw( -a -h --nogroup last );
+    my @args  = qw( -h --nogroup last );
     my @files = qw( t/swamp/incomplete-last-line.txt t/text/shut-up-be-happy.txt );
 
     ack_lists_match( [ @args, @files ], \@expected, 'Incomplete line gets a newline appended.' );

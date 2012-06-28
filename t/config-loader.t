@@ -64,7 +64,6 @@ sub test_loader {
 
 my %defaults = (
     after_context     => undef,
-    all               => undef,
     before_context    => undef,
     'break'           => undef,
     color             => undef,
@@ -92,7 +91,6 @@ my %defaults = (
     show_types        => undef,
     smart_case        => undef,
     sort_files        => undef,
-    u                 => undef,
     v                 => undef,
     w                 => undef,
 );

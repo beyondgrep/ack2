@@ -12,10 +12,10 @@ prep_environment();
 my @files = qw( t/text );
 
 my @tests = (
-    [ qw/Sue -a/ ],
-    [ qw/boy -a -i/ ], # case-insensitive is handled correctly with --match
-    [ qw/ll+ -a -Q/ ], # quotemeta        is handled correctly with --match
-    [ qw/gon -a -w/ ], # words            is handled correctly with --match
+    [ qw/Sue/ ],
+    [ qw/boy -i/ ], # case-insensitive is handled correctly with --match
+    [ qw/ll+ -Q/ ], # quotemeta        is handled correctly with --match
+    [ qw/gon -w/ ], # words            is handled correctly with --match
 );
 
 # 3 tests for each call to test_match()
