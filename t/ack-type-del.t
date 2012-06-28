@@ -11,7 +11,7 @@ my ( $stdin, $stdout );
 
 # sanity check
 ( $stdin, $stdout ) = run_ack_with_stderr('--perl', '-f', 't/swamp');
-ok scalar(@$stdin) > 0;
+is scalar(@$stdin), 10;
 is scalar(@$stdout), 0;
 
 ( $stdin, $stdout ) = run_ack_with_stderr('--type-del=perl', '--perl', '-f', 't/swamp');
