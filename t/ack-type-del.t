@@ -1,13 +1,14 @@
 use strict;
 use warnings;
 
-use Test::More tests => 7;
+use Test::More tests => 11;
 use lib 't';
 use Util;
 
 prep_environment();
 
 my ( $stdout, $stderr );
+my $help_types_output;
 
 # sanity check
 ( $stdout, $stderr ) = run_ack_with_stderr('--perl', '-f', 't/swamp');
@@ -22,3 +23,10 @@ like $stderr->[0], qr/Unknown option: perl/;
 ( $stdout, $stderr ) = run_ack_with_stderr('--type-del=perl', '--type-add=perl:ext:pm', '--perl', '-f', 't/swamp');
 is scalar(@$stdout), 1;
 is scalar(@$stderr), 0;
+
+# more sanity checking
+$help_types_output = run_ack( '--help-types' );
+like $help_types_output, qr/--\[no\]perl/;
+
+$help_types_output = run_ack( '--type-del=perl', '--help-types' );
+unlike $help_types_output, qr/--\[no\]perl/;
