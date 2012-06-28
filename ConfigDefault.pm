@@ -166,7 +166,7 @@ sub _options_block {
 --type-add=go:ext:go
 
 # Groovy http://groovy.codehaus.org/
---type-add=groovy:ext:groovy,gtmpl,gpp,grunit
+--type-add=groovy:ext:groovy,gtmpl,gpp,grunit,gradle
 
 # Haskell http://www.haskell.org/
 --type-add=haskell:ext:hs,lhs
