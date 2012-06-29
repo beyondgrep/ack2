@@ -22,12 +22,12 @@ sub is_global_file {
 
     my $wd = getcwd();
 
-    my $sep = $^O eq 'Win32' ? '\\' : '/';
+    my $sep = is_win32() ? '\\' : '/';
 
     chop $dir if $dir =~ m{$sep$};
     chop $wd  if $wd =~ m{$sep$};
 
-    return $wd !~ /^$dir/;
+    return $wd !~ /^\Q$dir\E/;
 }
 
 sub remove_defaults_and_globals {
