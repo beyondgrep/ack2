@@ -28,8 +28,15 @@ like $output, qr/Usage: ack/;
     like $output, qr/Usage: ack/;
 }
 
-$output = run_ack( '--env', '--man' );
-like $output, qr/ACK(?:-STANDALONE)?\Q(1)\E/;
+{
+    ($output, my $stderr) = run_ack_with_stderr( '--env', '--man' );
+    # Don't worry if man complains about long lines:
+    is( scalar(grep !/can't break line/, @{$stderr}), 0,
+        "Should have no output to stderr: ack --env --man" )
+        or diag( join( "\n", "STDERR:", @{$stderr} ) );
+
+    like $output->[0], qr/ACK(?:-STANDALONE)?\Q(1)\E/;
+}
 
 $output = run_ack( '--env', '--thpppt' );
 like $output, qr/ack --thpppt/;
