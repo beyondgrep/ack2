@@ -5,10 +5,13 @@ use warnings;
 
 use File::Next ();
 use File::Spec ();
-use Test::More tests => 2;
+use Test::More;
 
 use lib 't';
 use Util;
+
+plan skip_all => "Not working on Windows yet" if is_win32;
+plan tests => 2;
 
 sub do_parent {
     my %params = @_;

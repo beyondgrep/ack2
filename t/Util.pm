@@ -11,7 +11,8 @@ sub prep_environment {
     $orig_wd = Cwd::getcwd();
 }
 
-# capture stderr output into this file
+# capture stderr & stdout output into these files (only on Win32)
+my $catchout_file = 'stdout.log';
 my $catcherr_file = 'stderr.log';
 
 sub is_win32 {
@@ -134,68 +135,85 @@ sub run_cmd {
 
     my ( @stdout, @stderr );
 
-    my ( $stdout_read, $stdout_write );
-    my ( $stderr_read, $stderr_write );
+    if (is_win32) {
+        open(SAVEOUT, ">&STDOUT") or die "Can't dup STDOUT: $!";
+        open(SAVEERR, ">&STDERR") or die "Can't dup STDERR: $!";
+        open(STDOUT, '>', $catchout_file) or die "Can't open $catchout_file: $!";
+        open(STDERR, '>', $catcherr_file) or die "Can't open $catcherr_file: $!";
+        system @cmd;
+        close STDOUT;
+        close STDERR;
+        open(STDOUT, ">&SAVEOUT") or die "Can't restore STDOUT: $!";
+        open(STDERR, ">&SAVEERR") or die "Can't restore STDERR: $!";
+        close SAVEOUT;
+        close SAVEERR;
+        @stdout = read_file($catchout_file);
+        @stderr = read_file($catcherr_file);
+    } else {
 
-    pipe $stdout_read, $stdout_write
-        or Carp::croak( "Unable to create pipe: $!" );
+        my ( $stdout_read, $stdout_write );
+        my ( $stderr_read, $stderr_write );
 
-    pipe $stderr_read, $stderr_write
-        or Carp::croak( "Unable to create pipe: $!" );
+        pipe $stdout_read, $stdout_write
+            or Carp::croak( "Unable to create pipe: $!" );
 
-    my $pid = fork();
-    if ( $pid == -1 ) {
-        Carp::croak( "Unable to fork: $!" );
-    }
+        pipe $stderr_read, $stderr_write
+            or Carp::croak( "Unable to create pipe: $!" );
 
-    if ( $pid ) {
-        close $stdout_write;
-        close $stderr_write;
-
-        while ( $stdout_read || $stderr_read ) {
-            my $rin = '';
-
-            vec( $rin, fileno($stdout_read), 1 ) = 1 if $stdout_read;
-            vec( $rin, fileno($stderr_read), 1 ) = 1 if $stderr_read;
-
-            select( $rin, undef, undef, undef );
-
-            if ( $stdout_read && vec( $rin, fileno($stdout_read), 1 ) ) {
-                my $line = <$stdout_read>;
-
-                if ( defined( $line ) ) {
-                    push @stdout, $line;
-                }
-                else {
-                    close $stdout_read;
-                    undef $stdout_read;
-                }
-            }
-
-            if ( $stderr_read && vec( $rin, fileno($stderr_read), 1 ) ) {
-                my $line = <$stderr_read>;
-
-                if ( defined( $line ) ) {
-                    push @stderr, $line;
-                }
-                else {
-                    close $stderr_read;
-                    undef $stderr_read;
-                }
-            }
+        my $pid = fork();
+        if ( $pid == -1 ) {
+            Carp::croak( "Unable to fork: $!" );
         }
 
-        waitpid $pid, 0;
-    } 
-    else {
-        close $stdout_read;
-        close $stderr_read;
+        if ( $pid ) {
+            close $stdout_write;
+            close $stderr_write;
 
-        open STDOUT, '>&', $stdout_write;
-        open STDERR, '>&', $stderr_write;
+            while ( $stdout_read || $stderr_read ) {
+                my $rin = '';
 
-        exec @cmd;
-    }
+                vec( $rin, fileno($stdout_read), 1 ) = 1 if $stdout_read;
+                vec( $rin, fileno($stderr_read), 1 ) = 1 if $stderr_read;
+
+                select( $rin, undef, undef, undef );
+
+                if ( $stdout_read && vec( $rin, fileno($stdout_read), 1 ) ) {
+                    my $line = <$stdout_read>;
+
+                    if ( defined( $line ) ) {
+                        push @stdout, $line;
+                    }
+                    else {
+                        close $stdout_read;
+                        undef $stdout_read;
+                    }
+                }
+
+                if ( $stderr_read && vec( $rin, fileno($stderr_read), 1 ) ) {
+                    my $line = <$stderr_read>;
+
+                    if ( defined( $line ) ) {
+                        push @stderr, $line;
+                    }
+                    else {
+                        close $stderr_read;
+                        undef $stderr_read;
+                    }
+                }
+            }
+
+            waitpid $pid, 0;
+        }
+        else {
+            close $stdout_read;
+            close $stderr_read;
+
+            open STDOUT, '>&', $stdout_write;
+            open STDERR, '>&', $stderr_write;
+
+            exec @cmd;
+        }
+    } # end else not Win32
 
     my ($sig,$core,$rc) = (($? & 127),  ($? & 128) , ($? >> 8));
     $ack_return_code = $rc;

@@ -9,3 +9,5 @@ MYMETA.*
 tags
 opts.coverage
 ack-standalone
+stderr.log
+stdout.log
