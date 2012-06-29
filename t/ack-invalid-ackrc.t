@@ -30,12 +30,17 @@ like $output, qr/Usage: ack/;
 
 {
     ($output, my $stderr) = run_ack_with_stderr( '--env', '--man' );
-    # Don't worry if man complains about long lines:
-    is( scalar(grep !/can't break line/, @{$stderr}), 0,
+    # Don't worry if man complains about long lines,
+    # or if the terminal doesn't handle Unicode:
+    is( scalar(grep !/can't break line|Wide character in print/, @{$stderr}), 0,
         "Should have no output to stderr: ack --env --man" )
         or diag( join( "\n", "STDERR:", @{$stderr} ) );
 
-    like $output->[0], qr/ACK(?:-STANDALONE)?\Q(1)\E/;
+    if (is_win32()) {
+        like join("\n", @{$output}[0,1]), qr/^NAME\s+ack(?:-standalone)?\s/;
+    } else {
+        like $output->[0], qr/ACK(?:-STANDALONE)?\Q(1)\E/;
+    }
 }
 
 $output = run_ack( '--env', '--thpppt' );
