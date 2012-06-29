@@ -70,7 +70,9 @@ sub MY::test {
 }
 
 sub MY::postamble {
-    my $file_next_filename = qx(perldoc -l File::Next);
+    # was this next line used for something???
+    # my $file_next_filename = qx(perldoc -l File::Next);
+
     my $postamble = sprintf(<<'MAKE_FRAG', $debug_mode);
 ACK               = ack
 ACK_STANDALONE    = ack-standalone
@@ -109,7 +111,8 @@ critic:
 
 $(ACK_STANDALONE) : $(ACK) $(ALL_PM) squash Makefile
 	$(PERL) squash %s $(ACK) File::Next $(ALL_PM) > $(ACK_STANDALONE)
-	$(CHMOD) 0755 $(ACK_STANDALONE)
+	$(FIXIN) $(ACK_STANDALONE)
+	-$(NOECHO) $(CHMOD) $(PERM_RWX) $(ACK_STANDALONE)
 	$(PERL_T) -c $(ACK_STANDALONE)
 
 bininst : $(ACK)

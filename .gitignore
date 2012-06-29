@@ -9,5 +9,6 @@ MYMETA.*
 tags
 opts.coverage
 ack-standalone
+ack-standalone.bat
 stderr.log
 stdout.log
