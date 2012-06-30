@@ -158,19 +158,7 @@ sub run_cmd {
             vec( $rin, fileno($stdout_read), 1 ) = 1 if $stdout_read;
             vec( $rin, fileno($stderr_read), 1 ) = 1 if $stderr_read;
 
-            my $ein = $rin;
-
-            select( $rin, undef, $ein, undef );
-
-            # XXX is this the best way to handle this?
-            if ( $stdout_read && vec( $ein, fileno($stdout_read), 1 ) ) {
-                close $stdout_read;
-                undef $stdout_read;
-            }
-            if ( $stderr_read && vec( $ein, fileno($stderr_read), 1 ) ) {
-                close $stderr_read;
-                undef $stderr_read;
-            }
+            select( $rin, undef, undef, undef );
 
             if ( $stdout_read && vec( $rin, fileno($stdout_read), 1 ) ) {
                 my $line = <$stdout_read>;
