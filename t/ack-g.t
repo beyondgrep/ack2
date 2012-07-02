@@ -80,6 +80,7 @@ subtest 'Front anchor' => sub {
 
 subtest 'Back anchor' => sub {
     my @expected = qw(
+        t/runtests.pl
         t/swamp/options.pl
         t/swamp/perl.pl
     );

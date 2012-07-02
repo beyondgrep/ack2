@@ -50,7 +50,7 @@ ack 2.0 will:
     * global ackrc (/etc/ackrc)
         * https://github.com/petdance/ack/issues/#issue/79
     * user-specific ackrc (~/.ackrc)
-    * per-project ackrc files (~/myproject/ackrc)
+    * per-project ackrc files (~/myproject/.ackrc)
 
 * you can use --dump to figure which options are set where
 

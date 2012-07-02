@@ -34,7 +34,7 @@ use Util;
 
     # XXX implement me with --show-types!
     sub filetypes {
-        my ( $filename ) = @_;
+        my $filename = File::Next::reslash(shift);
 
         if ( !%types_for_file ) {
             populate_filetypes();

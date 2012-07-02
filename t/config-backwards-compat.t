@@ -49,5 +49,5 @@ my $line = 3;
 
 my ( $stdout, $stderr ) = run_ack_with_stderr( @args );
 is( scalar(@{$stdout}), 1, 'Got back exactly one line' );
-like $stdout->[0], qr/$file:$line.*[*] One/;
+like $stdout->[0], qr/\Q$file:$line\E.*[*] One/;
 is( scalar(@{$stderr}), 0, 'No output to stderr' ) or diag(explain($stderr));
