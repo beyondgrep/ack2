@@ -32,7 +32,10 @@ like $output, qr/Usage: ack/;
     ($output, my $stderr) = run_ack_with_stderr( '--env', '--man' );
     # Don't worry if man complains about long lines,
     # or if the terminal doesn't handle Unicode:
-    is( scalar(grep !/can't break line|Wide character in print/, @{$stderr}), 0,
+    is( scalar(grep !/can't\ break\ line
+                     |Wide\ character\ in\ print
+                     |Unknown\ escape\ E<0x[[:xdigit:]]+>/x, @{$stderr}),
+        0,
         "Should have no output to stderr: ack --env --man" )
         or diag( join( "\n", "STDERR:", @{$stderr} ) );
 
