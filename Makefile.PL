@@ -41,7 +41,7 @@ my %parms = (
     },
     MAN3PODS            => {}, # no need for man pages for any of the .pm files
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
-    clean               => { FILES => 'ack-1* nytprof*' },
+    clean               => { FILES => 'ack-1* nytprof* stderr.log stdout.log' },
 );
 
 if ( $ExtUtils::MakeMaker::VERSION =~ /^\d\.\d\d$/ and $ExtUtils::MakeMaker::VERSION > 6.30 ) {
@@ -70,7 +70,9 @@ sub MY::test {
 }
 
 sub MY::postamble {
-    my $file_next_filename = qx(perldoc -l File::Next);
+    # was this next line used for something???
+    # my $file_next_filename = qx(perldoc -l File::Next);
+
     my $postamble = sprintf(<<'MAKE_FRAG', $debug_mode);
 ACK               = ack
 ACK_STANDALONE    = ack-standalone
@@ -109,7 +111,8 @@ critic:
 
 $(ACK_STANDALONE) : $(ACK) $(ALL_PM) squash Makefile
 	$(PERL) squash %s $(ACK) File::Next $(ALL_PM) > $(ACK_STANDALONE)
-	$(CHMOD) 0755 $(ACK_STANDALONE)
+	$(FIXIN) $(ACK_STANDALONE)
+	-$(NOECHO) $(CHMOD) $(PERM_RWX) $(ACK_STANDALONE)
 	$(PERL_T) -c $(ACK_STANDALONE)
 
 bininst : $(ACK)
@@ -119,10 +122,10 @@ bininst : $(ACK)
 test: test_classic test_standalone
 
 test_classic: all
-	ACK_TEST_STANDALONE=0 PERL_DL_NONLAZY=1 $(FULLPERLRUN) "-MExtUtils::Command::MM" "-e" "test_harness($(TEST_VERBOSE), '$(INST_LIB)', '$(INST_ARCHLIB)')" $(TEST_FILES)
+	$(FULLPERLRUN) t/runtests.pl 0 $(TEST_VERBOSE) "$(INST_LIB)" "$(INST_ARCHLIB)" $(TEST_FILES)
 
 test_standalone: all $(ACK_STANDALONE)
-	ACK_TEST_STANDALONE=1 PERL_DL_NONLAZY=1 $(FULLPERLRUN) "-MExtUtils::Command::MM" "-e" "test_harness($(TEST_VERBOSE), '$(INST_LIB)', '$(INST_ARCHLIB)')" $(TEST_FILES)
+	$(FULLPERLRUN) t/runtests.pl 1 $(TEST_VERBOSE) "$(INST_LIB)" "$(INST_ARCHLIB)" $(TEST_FILES)
 
 MAKE_FRAG
 

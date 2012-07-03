@@ -88,6 +88,7 @@ t/pod.t
 t/process-substitution.t
 t/r-lang-ext.t
 t/resource-iterator.t
+t/runtests.pl
 t/zero.t
 
 t/home/.ackrc
