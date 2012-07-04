@@ -1073,6 +1073,25 @@ sub filetypes {
     return sort @matches;
 }
 
+# returns a (fairly) unique identifier for a file
+# use this function to compare two files to see if they're
+# equal (ie. the same file, but with a different path/links/etc)
+sub get_file_id {
+    my ( $filename ) = @_;
+
+    if ( $is_windows ) {
+        return File::Next::reslash( $filename );
+    } else {
+        # XXX is this the best method? it always hits the FS
+        if( my ( $dev, $inode ) = (stat($filename))[0, 1] ) {
+            return join(':', $dev, $inode);
+        } else {
+            # XXX this could be better
+            return $filename;
+        }
+    }
+}
+
 
 =head1 COPYRIGHT & LICENSE
 
