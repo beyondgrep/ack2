@@ -63,16 +63,17 @@ sub new {
 sub _remove_redundancies {
     my ( @configs ) = @_;
 
-    my (%dev_and_inode_seen, %path_seen);
+    my %dev_and_inode_seen;
 
     foreach my $path ( @configs ) {
         my ( $dev, $inode ) = (stat $path)[0, 1];
 
-        if( !defined($dev) || $path_seen{$path} ||
-            ($inode && $dev_and_inode_seen{"$dev:$inode"} )) {
-            undef $path;
-        } else {
-            $dev_and_inode_seen{"$dev:$inode"} = $path_seen{$path} = 1;
+        if( defined($dev) ) {
+            if( $dev_and_inode_seen{"$dev:$inode"} ) {
+                undef $path;
+            } else {
+                $dev_and_inode_seen{"$dev:$inode"} = 1;
+            }
         }
     }
     return grep { defined() } @configs;

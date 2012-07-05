@@ -120,10 +120,10 @@ sub _compile_file_filter {
     my $inverse_filters = [ grep {  $_->is_inverted() } @{$filters} ];
     @{$filters}         =   grep { !$_->is_inverted() } @{$filters};
 
-    my %is_member_of_starting_set = map { (File::Next::reslash($_) => 1) } @{$start};
+    my %is_member_of_starting_set = map { (App::Ack::get_file_id($_) => 1) } @{$start};
 
     return sub {
-        return 1 if $is_member_of_starting_set{ $File::Next::name };
+        return 1 if $is_member_of_starting_set{ App::Ack::get_file_id($File::Next::name) };
 
         foreach my $filter (@ifiles_filters) {
             my $resource = App::Ack::Resource::Basic->new($File::Next::name);
