@@ -66,8 +66,6 @@ else {
     );
 }
 
-@global_files = grep { -f } @global_files;
-
 my @std_files = (@global_files, File::Spec->catfile($ENV{'HOME'}, '.ackrc'));
 
 my $wd      = getcwd;
