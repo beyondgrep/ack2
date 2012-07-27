@@ -359,9 +359,9 @@ BEGIN {
         *run_ack_interactive = sub {
             my ( @args) = @_;
 
-            my $cmd = build_ack_invocation(@args);
+            my @cmd = build_ack_invocation(@args);
 
-            record_option_coverage($cmd);
+            record_option_coverage(@cmd);
 
             my $pty = IO::Pty->new;
 
@@ -401,7 +401,7 @@ BEGIN {
 
                 close $slave;
 
-                exec $cmd;
+                exec @cmd;
             }
         };
     }
