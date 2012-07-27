@@ -333,17 +333,32 @@ sub ack_sets_match {
 
 
 sub record_option_coverage {
-    my ( $command_line ) = @_;
+    my ( @command_line ) = @_;
 
     return unless $ENV{ACK_OPTION_COVERAGE};
+    return if $ENV{ACK_STANDALONE}; # we don't need to record the second time
+                                    # around
 
-    # strip the command line up until 'ack' is found
-    $command_line =~ s/^.*ack\b//;
+    my $record_options = File::Spec->catfile($orig_wd, 'record-options');
 
-    $command_line = $^X . ' ' . File::Spec->catfile($orig_wd, 'record-options')
-        . ' ' .  $command_line;
+    if ( @command_line == 1 ) {
+        my $command_line = $command_line[0];
 
-    system $command_line;
+        # strip the command line up until 'ack' is found
+        $command_line =~ s/^.*ack\b//;
+
+        $command_line = "$^X $record_options $command_line";
+
+        system $command_line;
+    } else {
+        while ( @command_line && $command_line[0] !~ /ack/ ) {
+            shift @command_line;
+        }
+        shift @command_line; # get rid of 'ack' itself
+        unshift @command_line, $^X, $record_options;
+
+        system @command_line;
+    }
 
     return;
 }
