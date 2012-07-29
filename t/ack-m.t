@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use Test::More tests => 5;
 
 use lib 't';
 use Util;
@@ -30,3 +30,15 @@ $myth:3:In the case of Christianity and Judaism there exists the belief
 EOF
 
 ack_lists_match( [ '-1', '-w', 'the', @text ], \@expected, 'We should only get one line back for the entire run, not just per file.' );
+
+DASH_L: {
+    my $target   = 'the';
+    my @files    = File::Next::reslash( 't/text' );
+    my @args     = ( '-m', 3, '-l', '--sort-files', $target );
+    my @results  = run_ack( @args, @files );
+    my @expected = map { File::Next::reslash( "t/text/$_" ) } (
+        '4th-of-july.txt', 'boy-named-sue.txt', 'freedom-of-choice.txt'
+    );
+
+    is_deeply(\@results, \@expected);
+}
