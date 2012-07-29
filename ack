@@ -323,6 +323,9 @@ RESOURCES:
                 # XXX printing should probably happen inside of App::Ack
                 print $resource->name, $ors;
                 ++$nmatches;
+
+                last if $only_first;
+                last if defined($max_count) && $nmatches >= $max_count;
             }
         }
         else {
