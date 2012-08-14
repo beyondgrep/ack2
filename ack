@@ -555,6 +555,10 @@ specify B<--ignore-dir=foo> and then no files from any foo directory
 are taken into account by ack unless given explicitly on the command
 line.
 
+=item B<-k>, B<--known-types>
+
+Limit selected files to those with types that ack knows about.
+
 =item B<--line=I<NUM>>
 
 Only print line I<NUM> of each file. Multiple lines can be given with multiple
