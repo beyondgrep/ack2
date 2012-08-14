@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 2;
+use Test::More tests => 4;
 
 use lib 't';
 use Util;
@@ -36,3 +36,5 @@ t/swamp/example.R
 );
 
 ack_sets_match( [ '--known-types', '-f', 't/swamp' ], \@files);
+
+ack_sets_match( [ '-k', '-f', 't/swamp' ], \@files);
