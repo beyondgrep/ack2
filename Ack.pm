@@ -482,6 +482,7 @@ Miscellaneous:
   --noenv               Ignore environment variables and global ackrc files
   --ackrc=filename      Specify an ackrc file to use
   --ignore-ack-defaults Ignore the default definitions that ack includes.
+  --create-ackrc        Outputs a default ackrc for your customization to standard output.
   --help                This help
   --help-types          Display all known types
   --dump                Dump information on which options are loaded from which RC files
