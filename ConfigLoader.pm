@@ -158,6 +158,7 @@ sub get_arg_spec {
         'color-lineno=s'    => \$ENV{ACK_COLOR_LINENO},
         'column!'           => \$opt->{column},
         count               => \$opt->{count},
+        'create-ackrc'      => sub { App::Ack::create_ackrc(); exit; },
         'env!'              => sub {
             my ( undef, $value ) = @_;
 

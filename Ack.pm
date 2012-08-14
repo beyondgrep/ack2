@@ -1092,6 +1092,12 @@ sub get_file_id {
     }
 }
 
+sub create_ackrc {
+    my @lines = App::Ack::ConfigDefault::options();
+
+    print join("\n", @lines);
+}
+
 
 =head1 COPYRIGHT & LICENSE
 
