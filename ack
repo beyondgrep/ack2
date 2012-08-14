@@ -471,6 +471,11 @@ Sets the color to be used for line numbers.
 Show the column number of the first match.  This is helpful for
 editors that can place your cursor at a given position.
 
+=item B<--create-ackrc>
+
+Dumps the default ack options to standard output.  This is useful for
+when you want to customize the defaults.
+
 =item B<--env>, B<--noenv>
 
 B<--noenv> disables all environment processing. No F<.ackrc> is
