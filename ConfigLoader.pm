@@ -119,7 +119,7 @@ sub process_filetypes {
         }
     }
 
-    $additional_specs{'known-types'} = sub {
+    $additional_specs{'k|known-types'} = sub {
         my ( undef, $value ) = @_;
 
         my @filters = map { @$_ } values(%App::Ack::mappings);
