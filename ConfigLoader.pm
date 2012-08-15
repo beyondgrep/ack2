@@ -294,8 +294,6 @@ sub process_other {
 
     my $arg_specs = get_arg_spec($opt, $extra_specs);
 
-    local $SIG{__WARN__} = $is_help_types_active ? sub {} : $SIG{__WARN__};
-
     for ( my $i = 0; $i < @{$arg_sources}; $i += 2) {
         my ($source_name, $args) = @{$arg_sources}[$i, $i + 1];
 
