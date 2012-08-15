@@ -31,16 +31,19 @@ $output = run_ack( '--env', '--help' );
 like $output, qr/Usage: ack/;
 
 {
-    $output = run_ack( '--env', '--help-types' );
-    like $output, qr/Usage: ack/;
+    my $stderr;
 
-    my @lines = split /\n/, $output;
+    ( $output, $stderr ) = run_ack_with_stderr( '--env', '--help-types' );
+    like join("\n", @{$output}), qr/Usage: ack/;
+
+    $stderr = join("\n", @{$stderr});
+    like $stderr, qr/Unknown option: frobnicate/;
 
     # the following was shamelessly copied from ack-help-types.t
     for(my $i = 0; $i < @types; $i += 2) {
         my ( $type, $checks ) = @types[ $i , $i + 1 ];
 
-        my ( $matching_line ) = grep { /--\[no\]$type/ } @lines;
+        my ( $matching_line ) = grep { /--\[no\]$type/ } @{$output};
 
         ok $matching_line;
 
