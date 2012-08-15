@@ -334,6 +334,12 @@ sub explode_sources {
         }
     };
 
+    my $del_type = sub {
+        my ( undef, $arg ) = @_;
+
+        delete $arg_spec->{$arg};
+    };
+
     for(my $i = 0; $i < @{$sources}; $i += 2) {
         my ( $name, $options ) = @{$sources}[$i, $i + 1];
         if ( ref($options) ne 'ARRAY' ) {
@@ -350,6 +356,7 @@ sub explode_sources {
             Getopt::Long::GetOptionsFromArray(\@chunk,
                 'type-add=s' => $add_type,
                 'type-set=s' => $add_type,
+                'type-del=s' => $del_type,
             );
             Getopt::Long::GetOptionsFromArray(\@chunk, %{$arg_spec});
 
