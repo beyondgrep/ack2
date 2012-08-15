@@ -3,9 +3,18 @@ use warnings;
 
 use Cwd qw(getcwd);
 use File::Temp;
-use Test::More tests => 12;
+use List::Util qw(sum);
+use Test::More;
 use lib 't';
 use Util;
+
+my @types = (
+    perl   => [qw{.pl .pod .pl .t}],
+    python => [qw{.py}],
+    ruby   => [qw{.rb Rakefile}],
+);
+
+plan tests => sum(map { ref($_) ? scalar(@$_) : 1 } @types) + 12;
 
 prep_environment();
 
@@ -24,6 +33,21 @@ like $output, qr/Usage: ack/;
 {
     $output = run_ack( '--env', '--help-types' );
     like $output, qr/Usage: ack/;
+
+    my @lines = split /\n/, $output;
+
+    # the following was shamelessly copied from ack-help-types.t
+    for(my $i = 0; $i < @types; $i += 2) {
+        my ( $type, $checks ) = @types[ $i , $i + 1 ];
+
+        my ( $matching_line ) = grep { /--\[no\]$type/ } @lines;
+
+        ok $matching_line;
+
+        foreach my $check (@{$checks}) {
+            like $matching_line, qr/\Q$check\E/;
+        }
+    }
 }
 
 {
