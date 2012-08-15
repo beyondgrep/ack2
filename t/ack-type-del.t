@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 11;
+use Test::More tests => 13;
 use lib 't';
 use Util;
 
@@ -30,3 +30,17 @@ like $help_types_output, qr/--\[no\]perl/;
 
 $help_types_output = run_ack( '--type-del=perl', '--help-types' );
 unlike $help_types_output, qr/--\[no\]perl/;
+
+DUMP: {
+    my @dump_output = run_ack( '--type-del=perl', '--dump' );
+    # discard everything up to the ARGV section
+    while(@dump_output && $dump_output[0] ne 'ARGV') {
+        shift @dump_output;
+    }
+    shift @dump_output; # discard ARGV
+    shift @dump_output; # discard header
+    foreach my $line (@dump_output) {
+        $line =~ s/^\s+|\s+$//g;
+    }
+    lists_match( \@dump_output, ['--type-del=perl'], '--type-del should show up in --dump output' );
+}
