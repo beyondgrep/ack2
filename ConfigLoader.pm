@@ -268,7 +268,33 @@ sub process_other {
         'no_ignore_case',
     );
 
+    my $argv_source;
+    my $is_help_types_active;
+
+    for ( my $i = 0; $i < @{$arg_sources}; $i += 2 ) {
+        my ( $source_name, $args ) = @{$arg_sources}[ $i, $i + 1 ];
+
+        if ( $source_name eq 'ARGV' ) {
+            $argv_source = $args;
+            last;
+        }
+    }
+
+    if ( $argv_source ) { # this *should* always be true, but you never know...
+        my @copy = @{$argv_source};
+
+        Getopt::Long::Configure('pass_through');
+
+        Getopt::Long::GetOptionsFromArray( \@copy,
+            'help-types' => \$is_help_types_active,
+        );
+
+        Getopt::Long::Configure('no_pass_through');
+    }
+
     my $arg_specs = get_arg_spec($opt, $extra_specs);
+
+    local $SIG{__WARN__} = $is_help_types_active ? sub {} : $SIG{__WARN__};
 
     for ( my $i = 0; $i < @{$arg_sources}; $i += 2) {
         my ($source_name, $args) = @{$arg_sources}[$i, $i + 1];
@@ -282,8 +308,10 @@ sub process_other {
                 Getopt::Long::GetOptionsFromString( $args, %{$arg_specs} );
         }
         if ( !$ret ) {
-            my $where = $source_name eq 'ARGV' ? 'on command line' : "in $source_name";
-            App::Ack::die( "Invalid option $where" );
+            if ( !$is_help_types_active ) {
+                my $where = $source_name eq 'ARGV' ? 'on command line' : "in $source_name";
+                App::Ack::die( "Invalid option $where" );
+            }
         }
         if ( $opt->{noenv_seen} ) {
             App::Ack::die( "--noenv found in $source_name" );
