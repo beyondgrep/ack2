@@ -126,6 +126,8 @@ the text.  This basically emulates a call to C<< <$fh> >>.
 sub next_text {
     if ( defined ($_ = readline $_[0]->{fh}) ) {
         $. = ++$_[0]->{line};
+        s/[\r\n]+$//; # chomp may not handle this
+        $_ .= "\n"; # add back newline (XXX make it native)
         return 1;
     }
 
