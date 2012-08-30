@@ -12,6 +12,7 @@ my @files = qw(
 t/swamp/0
 t/swamp/Rakefile
 t/swamp/parrot.pir
+t/swamp/options-crlf.pl
 t/swamp/options.pl
 t/swamp/javascript.js
 t/swamp/html.html

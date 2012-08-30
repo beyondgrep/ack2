@@ -12,7 +12,7 @@ my $help_types_output;
 
 # sanity check
 ( $stdout, $stderr ) = run_ack_with_stderr('--perl', '-f', 't/swamp');
-is scalar(@$stdout), 10;
+is scalar(@$stdout), 11;
 is scalar(@$stderr), 0;
 
 ( $stdout, $stderr ) = run_ack_with_stderr('--type-del=perl', '--perl', '-f', 't/swamp');

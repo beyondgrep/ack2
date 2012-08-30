@@ -79,6 +79,7 @@ UNFILTERED: {
             t/swamp/notaMakefile
             t/swamp/notaRakefile
             t/swamp/notes.md
+            t/swamp/options-crlf.pl
             t/swamp/options.pl
             t/swamp/options.pl.bak
             t/swamp/parrot.pir

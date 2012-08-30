@@ -53,6 +53,7 @@ INCLUDE_PLUS_EXCLUDE_ONLY: {
     my @expected = qw(
         t/swamp/0
         t/swamp/perl.pm
+        t/swamp/options-crlf.pl
         t/swamp/options.pl
         t/swamp/perl-without-extension
         t/swamp/perl.cgi

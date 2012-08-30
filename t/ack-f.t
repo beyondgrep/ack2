@@ -37,6 +37,7 @@ DEFAULT_DIR_EXCLUSIONS: {
         t/swamp/notaMakefile
         t/swamp/notaRakefile
         t/swamp/notes.md
+        t/swamp/options-crlf.pl
         t/swamp/options.pl
         t/swamp/parrot.pir
         t/swamp/perl-test.t
@@ -65,6 +66,7 @@ COMBINED_FILTERS: {
         t/swamp/0
         t/swamp/perl.pm
         t/swamp/Rakefile
+        t/swamp/options-crlf.pl
         t/swamp/options.pl
         t/swamp/perl-without-extension
         t/swamp/perl.cgi

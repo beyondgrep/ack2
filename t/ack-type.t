@@ -14,6 +14,7 @@ TEST_TYPE: {
     my @expected = split( /\n/, <<'EOF' );
 t/swamp/0:1:#!/usr/bin/perl -w
 t/swamp/Makefile.PL:1:#!perl -T
+t/swamp/options-crlf.pl:1:#!/usr/bin/env perl
 t/swamp/options.pl:1:#!/usr/bin/env perl
 t/swamp/perl-test.t:1:#!perl -T
 t/swamp/perl-without-extension:1:#!/usr/bin/perl -w
