@@ -62,3 +62,18 @@ ack 2.0 will:
 
 * In addition to the classic `--thpppt` option to draw Bill the
 Cat, `ack --bar` will draw (of course) Admiral Ackbar.
+
+# Building
+
+    # Optional
+    perl -MCPAN -e 'install Test::More'
+    perl -MCPAN -e 'install File::Next'
+    perl -MCPAN -e 'install Getopt::Long'
+    perl -MCPAN -e 'install File::Temp'
+    perl -MCPAN -e 'install IO::Pty'
+    git pull
+    # Required
+    perl Makefile.PL
+    make
+    make test
+    cp ack-standalone ~/bin/ack2
