@@ -176,6 +176,8 @@ sub main {
 
     my $opt = App::Ack::ConfigLoader::process_args( @arg_sources );
 
+    $App::Ack::report_bad_filenames = !$opt->{dont_report_bad_filenames};
+
     if ( $opt->{flush} ) {
         $| = 1;
     }
@@ -227,7 +229,7 @@ sub main {
         else {
             @start = ('.') unless @start;
             foreach my $target (@start) {
-                if ( not -e $target ) {
+                if ( !-e $target && $App::Ack::report_bad_filenames) {
                     App::Ack::warn( "$target: No such file or directory" );
                 }
             }
@@ -655,6 +657,11 @@ and B<-G> options.
 
 Recurse into sub-directories. This is the default and just here for
 compatibility with grep. You can also use it for turning B<--no-recurse> off.
+
+=item B<-s>
+
+Supress error messages about nonexistent or unreadable files.  This is taken
+from fgrep.
 
 =item B<--smart-case>, B<--no-smart-case>
 

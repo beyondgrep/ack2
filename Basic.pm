@@ -34,7 +34,7 @@ sub new {
         $self->{fh} = *STDIN;
     }
     else {
-        if ( !open( $self->{fh}, '<', $self->{filename} ) ) {
+        if ( !open( $self->{fh}, '<', $self->{filename} ) && $App::Ack::report_bad_filenames ) {
             App::Ack::warn( "$self->{filename}: $!" );
             return;
         }
@@ -86,7 +86,7 @@ sub needs_line_scan {
 
     my $buffer;
     my $rc = sysread( $self->{fh}, $buffer, $size );
-    if ( not defined $rc ) {
+    if ( !defined($rc) && $App::Ack::report_bad_filenames ) {
         App::Ack::warn( "$self->{filename}: $!" );
         return 1;
     }
@@ -107,8 +107,9 @@ is true.
 sub reset {
     my $self = shift;
 
-    seek( $self->{fh}, 0, 0 )
-        or App::Ack::warn( "$self->{filename}: $!" );
+    if( !seek( $self->{fh}, 0, 0 ) && $App::Ack::report_bad_filenames ) {
+        App::Ack::warn( "$self->{filename}: $!" );
+    }
 
     return;
 }
@@ -143,7 +144,7 @@ API: Close the resource.
 sub close {
     my $self = shift;
 
-    if ( not close $self->{fh} ) {
+    if ( !close($self->{fh}) && $App::Ack::report_bad_filenames ) {
         App::Ack::warn( $self->name() . ": $!" );
     }
 

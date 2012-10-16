@@ -425,6 +425,9 @@ Search output:
   --print0              Print null byte as separator between filenames,
                         only works with -f, -g, -l, -L or -c.
 
+  -s                    Suppress error messages about nonexistent or
+                        unreadable files.
+
 
 File presentation:
   --pager=COMMAND       Pipes all ack output through COMMAND.  For example,

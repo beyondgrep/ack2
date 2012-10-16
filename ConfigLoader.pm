@@ -230,6 +230,7 @@ EOT
         'print0'            => \$opt->{print0},
         'Q|literal'         => \$opt->{Q},
         'r|R|recurse'       => sub { $opt->{n} = 0 },
+        's'                 => \$opt->{dont_report_bad_filenames},
         'show-types'        => \$opt->{show_types},
         'smart-case!'       => \$opt->{smart_case},
         'sort-files'        => \$opt->{sort_files},
