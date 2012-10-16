@@ -14,7 +14,7 @@ my @options = (qw{
 }, ['-G', 'sue']);
 
 
-plan tests => 3 * @options;
+plan tests => 2 + (2 * @options);
 
 foreach my $option (@options) {
     my @args = ref($option) ? @$option : ( $option );
@@ -24,6 +24,6 @@ foreach my $option (@options) {
     my ( $stdout, $stderr ) = run_ack_with_stderr( @args );
 
     is scalar(@$stdout), 0;
-    is scalar(@$stderr), 1;
     like $stderr->[0], qr/Option '$option' is not valid in ack 2/;
+    like $stderr->[1], qr/-k/ if '-a' eq $option or '--all' eq $option;
 }

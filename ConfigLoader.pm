@@ -131,10 +131,11 @@ sub process_filetypes {
 }
 
 sub removed_option {
-    my ( $option ) = @_;
+    my ( $option, $explanation ) = @_;
 
+    $explanation ||= '';
     return sub {
-        warn "Option '$option' is not valid in ack 2\n";
+        warn "Option '$option' is not valid in ack 2\n$explanation";
         exit 1;
     };
 }
@@ -142,14 +143,18 @@ sub removed_option {
 sub get_arg_spec {
     my ( $opt, $extra_specs ) = @_;
 
+    my $dash_a_explanation = <<EOT;
+This is because we now have -k/--known-types which makes it only select files
+of known types, rather than any text file (which is the behavior of ack 1.x).
+EOT
     return {
         1                   => sub { $opt->{1} = $opt->{m} = 1 },
         'A|after-context=i' => \$opt->{after_context},
         'B|before-context=i'
                             => \$opt->{before_context},
         'C|context:i'       => sub { shift; my $val = shift; $opt->{before_context} = $opt->{after_context} = ($val || 2) },
-        'a'                 => removed_option('-a'),
-        'all'               => removed_option('--all'),
+        'a'                 => removed_option('-a', $dash_a_explanation),
+        'all'               => removed_option('--all', $dash_a_explanation),
         'break!'            => \$opt->{break},
         c                   => \$opt->{count},
         'color|colour!'     => \$opt->{color},
