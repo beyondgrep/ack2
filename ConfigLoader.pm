@@ -147,6 +147,21 @@ sub get_arg_spec {
 This is because we now have -k/--known-types which makes it only select files
 of known types, rather than any text file (which is the behavior of ack 1.x).
 EOT
+
+=for Adding-Options
+
+    *** IF YOU ARE MODIFYING ACK PLEASE READ THIS ***
+
+    If you plan to add a new option to ack, please make sure of
+    the following:
+
+    * Your new option has a test underneath the t/ directory.
+    * Your new option is explained when a user invokes ack --help.
+      (See App::Ack::show_help)
+    * Your new option is explained when a user invokes ack --man.
+      (See the POD at the end of ./ack)
+    * Add your option to t/config-loader.t
+=cut
     return {
         1                   => sub { $opt->{1} = $opt->{m} = 1 },
         'A|after-context=i' => \$opt->{after_context},
