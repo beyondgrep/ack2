@@ -360,6 +360,15 @@ Ack searches the named input FILEs (or standard input if no files
 are named, or the file name - is given) for lines containing a match
 to the given PATTERN.  By default, ack prints the matching lines.
 
+PATTERN is a Perl regular expression.  Perl regular expressions
+are commonly found in other programming languages, but for the particulars
+of their behavior, please consult
+L<http://perldoc.perl.org/perlreref.html|perlreref>.  If you don't know
+how to use regular expression but are interested in learning, you may
+consult L<http://perldoc.perl.org/perlretut.html|perlretut>.  If you do not
+need or want ack to use regular expressions, please see the
+C<-Q>/C<--literal> option.
+
 Ack can also list files that would be searched, without actually
 searching them, to let you take advantage of ack's file-type filtering
 capabilities.
