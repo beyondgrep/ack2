@@ -69,4 +69,6 @@ Cat, `ack --bar` will draw (of course) Admiral Ackbar.
     perl Makefile.PL
     make
     make test
-    cp ack-standalone ~/bin/ack2
+    sudo make install # for a system-wide installation (recommended)
+    # - or -
+    cp ack-standalone ~/bin/ack2 # for a personal installation
