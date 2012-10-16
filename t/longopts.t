@@ -54,6 +54,7 @@ my @other_long_opts = qw(
     --bar
     --dump
     --ignore-ack-defaults
+    -s
 );
 
 # --no-recurse is inconsistent w/--nogroup
