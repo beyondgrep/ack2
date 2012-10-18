@@ -48,6 +48,7 @@ filter_test(
         't/swamp/Rakefile',
         't/swamp/Sample.ascx',
         't/swamp/Sample.asmx',
+        't/swamp/sample.asp',
         't/swamp/sample.aspx',
         't/swamp/sample.rake',
         't/swamp/service.svc',

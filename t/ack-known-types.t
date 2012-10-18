@@ -35,6 +35,7 @@ t/swamp/crystallography-weenies.f
 t/swamp/CMakeLists.txt
 t/swamp/Sample.ascx
 t/swamp/Sample.asmx
+t/swamp/sample.asp
 t/swamp/sample.aspx
 t/swamp/service.svc
 t/swamp/stuff.cmake
@@ -57,6 +58,7 @@ t/swamp/crystallography-weenies.f
 t/swamp/CMakeLists.txt
 t/swamp/Sample.ascx
 t/swamp/Sample.asmx
+t/swamp/sample.asp
 t/swamp/sample.aspx
 t/swamp/service.svc
 t/swamp/stuff.cmake
