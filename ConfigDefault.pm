@@ -122,6 +122,9 @@ sub _options_block {
 # Ada http://www.adaic.org/
 --type-add=ada:ext:ada,adb,ads
 
+# ASP.Net http://www.asp.net/
+--type-add=aspx:ext:master,ascx,asmx,aspx,svc
+
 # Assembly
 --type-add=asm:ext:asm,s
 
