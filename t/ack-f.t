@@ -34,6 +34,7 @@ DEFAULT_DIR_EXCLUSIONS: {
         t/swamp/javascript.js
         t/swamp/Makefile
         t/swamp/Makefile.PL
+        t/swamp/MasterPage.master
         t/swamp/notaMakefile
         t/swamp/notaRakefile
         t/swamp/notes.md
@@ -49,7 +50,11 @@ DEFAULT_DIR_EXCLUSIONS: {
         t/swamp/perl.pod
         t/swamp/pipe-stress-freaks.F
         t/swamp/Rakefile
+        t/swamp/Sample.ascx
+        t/swamp/Sample.asmx
+        t/swamp/sample.aspx
         t/swamp/sample.rake
+        t/swamp/service.svc
         t/swamp/stuff.cmake
         t/swamp/CMakeLists.txt
         ),

@@ -31,13 +31,18 @@ EXCLUDE_ONLY: {
         t/swamp/incomplete-last-line.txt
         t/swamp/javascript.js
         t/swamp/Makefile
+        t/swamp/MasterPage.master
         t/swamp/notaMakefile
         t/swamp/notaRakefile
         t/swamp/notes.md
         t/swamp/parrot.pir
         t/swamp/pipe-stress-freaks.F
         t/swamp/Rakefile
+        t/swamp/Sample.ascx
+        t/swamp/Sample.asmx
+        t/swamp/sample.aspx
         t/swamp/sample.rake
+        t/swamp/service.svc
         t/swamp/stuff.cmake
         t/swamp/CMakeLists.txt
         ),
