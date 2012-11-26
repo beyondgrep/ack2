@@ -121,7 +121,7 @@ if (is_win32()) {
     $lhs_pid = fork();
 
     if ( !defined($lhs_pid) ) {
-        die "Unable to fork";
+        die 'Unable to fork';
     }
 
     if ( $lhs_pid ) {
@@ -130,7 +130,7 @@ if (is_win32()) {
         if ( !defined($rhs_pid) ) {
             kill TERM => $lhs_pid;
             waitpid $lhs_pid, 0;
-            die "Unable to fork";
+            die 'Unable to fork';
         }
     }
 
