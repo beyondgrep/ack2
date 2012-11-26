@@ -14,7 +14,7 @@ sub new {
         extensions => \@extensions,
         regex      => $re,
     }, $class;
-};
+}
 
 sub filter {
     my ( $self, $resource ) = @_;
