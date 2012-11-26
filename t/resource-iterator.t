@@ -30,7 +30,6 @@ UNFILTERED: {
     my $iter =
         File::Next::files( {
             file_filter    => undef,
-            descend_filter => \&App::Ack::ignoredir_filter,
             descend_filter => undef,
         }, 't/swamp' );
 
