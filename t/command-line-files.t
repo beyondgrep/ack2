@@ -13,18 +13,18 @@ use File::Next ();
 
 prep_environment();
 
-my @files = qw(
+my @source_files = qw(
     t/swamp/options-crlf.pl
     t/swamp/options.pl
     t/swamp/options.pl.bak
 );
 
-$_ = File::Next::reslash($_) for @files;
+$_ = File::Next::reslash($_) for @source_files;
 
 JUST_THE_DIR: {
     my @expected = split( /\n/, <<"EOF" );
-$files[0]:19:notawordhere
-$files[1]:19:notawordhere
+$source_files[0]:19:notawordhere
+$source_files[1]:19:notawordhere
 EOF
 
     my @files = qw( t/swamp );
@@ -36,8 +36,8 @@ EOF
 # Even a .bak file gets searched if you specify it on the command line.
 SPECIFYING_A_BAK_FILE: {
     my @expected = split( /\n/, <<"EOF" );
-$files[1]:19:notawordhere
-$files[2]:19:notawordhere
+$source_files[1]:19:notawordhere
+$source_files[2]:19:notawordhere
 EOF
 
     my @files = qw( t/swamp/options.pl t/swamp/options.pl.bak );
