@@ -1,5 +1,16 @@
 #!/usr/bin/env perl
 
+# This script looks through the list of dependencies in
+# @dependencies (see below) and tries to find the minimum
+# version of each with which ack2 will run.
+#
+# This script considers each version in isolation, so
+# it won't catch things like "Getopt::Long 10 + File::Spec 5 works,
+# Getopt::Long 5 + File::Spec 10 works, but Getopt::Long 5 +
+# File::Spec 5 doesn't work".  I figured this would be acceptable,
+# and I didn't want the script to work through the exponential number
+# of combinations.
+
 use strict;
 use warnings;
 use feature 'say';
