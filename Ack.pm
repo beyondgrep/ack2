@@ -164,8 +164,7 @@ sub create_ignore_rules {
 
     my @opts = @{$opts};
 
-    my %rules = {
-    };
+    my %rules;
 
     for my $opt ( @opts ) {
         if ( $opt =~ /^(is|ext|regex),(.+)$/ ) {
