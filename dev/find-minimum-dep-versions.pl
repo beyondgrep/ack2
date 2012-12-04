@@ -10,6 +10,12 @@
 # File::Spec 5 doesn't work".  I figured this would be acceptable,
 # and I didn't want the script to work through the exponential number
 # of combinations.
+#
+# This script also assumes that for each dependency, there exists a
+# release R for which all releases before R fail, and all releases
+# including and after R succeed.  This script is intended as a rough
+# estimate tools that delivers minimum module versions higher than
+# 0.
 
 use strict;
 use warnings;
