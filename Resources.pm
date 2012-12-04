@@ -2,7 +2,7 @@ package App::Ack::Resources;
 
 use App::Ack;
 
-use File::Next;
+use File::Next 1.10;
 
 use warnings;
 use strict;

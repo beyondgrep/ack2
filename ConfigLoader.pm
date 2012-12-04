@@ -6,9 +6,13 @@ use warnings;
 use App::Ack ();
 use App::Ack::Filter;
 use App::Ack::Filter::Default;
-use Carp ();
-use Getopt::Long; # Must be 2.36, but we can't check for that in the use.
-use Text::ParseWords ();
+use Carp 1.22 ();
+use Getopt::Long ();
+BEGIN {
+    # see ack for explanation
+    UNIVERSAL::VERSION('Getopt::Long', '2.36');
+}
+use Text::ParseWords 3.1 ();
 
 =head1 App::Ack::ConfigLoader
 

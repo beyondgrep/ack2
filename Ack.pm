@@ -5,8 +5,12 @@ use strict;
 
 use App::Ack::ConfigDefault;
 use App::Ack::ConfigFinder;
-use Getopt::Long;
-use File::Next 1.08;
+use Getopt::Long ();
+BEGIN {
+    # see ack for explanation
+    UNIVERSAL::VERSION('Getopt::Long', '2.36');
+}
+use File::Next 1.10;
 
 =head1 NAME
 
@@ -44,9 +48,8 @@ our $dir_sep_chars;
 our $is_cygwin;
 our $is_windows;
 
-use File::Spec ();
-use File::Glob ':glob';
-use Getopt::Long ();
+use File::Spec 1.00015 ();
+use File::Glob 1.00015 ':glob';
 
 BEGIN {
     # These have to be checked before any filehandle diddling.
@@ -82,7 +85,7 @@ sub retrieve_arg_sources {
     Getopt::Long::Configure('pass_through');
     Getopt::Long::Configure('no_auto_abbrev');
 
-    GetOptions(
+    Getopt::Long::GetOptions(
         'noenv'   => \$noenv,
         'ackrc=s' => \$ackrc,
     );
@@ -620,7 +623,7 @@ Set default colors, load Term::ANSIColor
 =cut
 
 sub load_colors {
-    eval 'use Term::ANSIColor ()';
+    eval 'use Term::ANSIColor 3.01 ()';
 
     $ENV{ACK_COLOR_MATCH}    ||= 'black on_yellow';
     $ENV{ACK_COLOR_FILENAME} ||= 'bold green';

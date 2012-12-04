@@ -20,8 +20,18 @@ use App::Ack::Filter::Is;
 use App::Ack::Filter::Match;
 
 use Getopt::Long ();
+=for Explanation
+    Getopt::Long stores the requested version and uses it to
+    generate --help and --version handlers if requested.  Interestingly
+    enough, we don't request them, but we get a fun error message from
+    Getopt::Long anyway.  This BEGIN block (and others like it) gets
+    around the issue, but we should probably fix it for real some day.
+=cut
+BEGIN {
+    UNIVERSAL::VERSION('Getopt::Long', '2.36');
+}
 
-use Carp ();
+use Carp 1.22 ();
 
 our $VERSION = '2.00a01';
 # Check http://betterthangrep.com/ for updates
