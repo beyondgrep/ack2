@@ -100,11 +100,16 @@ sub bisect (&@) {
 my @dependencies = (
     'Carp',
     'Cwd',
+    'File::Basename',
     'File::Glob',
     'File::Next',
     'File::Spec',
     'File::Temp',
     'Getopt::Long',
+    'Pod::Usage',
+    'Term::ANSIColor',
+    'Test::Harness',
+    'Test::More',
     'Text::ParseWords',
 );
 
