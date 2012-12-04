@@ -31,19 +31,19 @@ my %parms = (
     },
     EXE_FILES           => [ 'ack' ],
     PREREQ_PM => {
-        'Carp'              => 0,
-        'Cwd'               => 0,
+        'Carp'              => '1.22',
+        'Cwd'               => '3.00',
         'Test::Harness'     => '2.50', # Something reasonably newish
-        'Test::More'        => '0.96', # For subtest()
-        'Term::ANSIColor'   => 0,
+        'Test::More'        => '0.98', # For subtest()
+        'Term::ANSIColor'   => '3.01',
         'Getopt::Long'      => '2.36', # For GetOptionsFromArray()
         'File::Next'        => '1.10',
-        'File::Basename'    => 0,
-        'File::Glob'        => 0,
-        'File::Spec'        => 0,
-        'File::Temp'        => 0,
-        'Pod::Usage'        => 0,
-        'Text::ParseWords'  => 0,
+        'File::Basename'    => '1.00015',
+        'File::Glob'        => '1.00015',
+        'File::Spec'        => '3.00',
+        'File::Temp'        => '0.19',
+        'Pod::Usage'        => '1.26',
+        'Text::ParseWords'  => '3.1',
     },
     MAN3PODS            => {}, # no need for man pages for any of the .pm files
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
