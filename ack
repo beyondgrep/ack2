@@ -444,6 +444,11 @@ Print I<NUM> lines of trailing context after matching lines.
 
 Print I<NUM> lines of leading context before matching lines.
 
+=item B<--[no]break>
+
+Print a break between results from different files. On by default
+when used interactively.
+
 =item B<-C [I<NUM>]>, B<--context[=I<NUM>]>
 
 Print I<NUM> lines (default 2) of context around matching lines.
@@ -538,6 +543,11 @@ Print the filename for each match.
 
 Suppress the prefixing of filenames on output when multiple files are
 searched.
+
+=item B<--[no]heading>
+
+Print a filename heading above each file's results.  This is the default
+when used interactively.
 
 =item B<--help>
 
