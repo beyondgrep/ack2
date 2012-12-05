@@ -7,11 +7,7 @@ use App::Ack ();
 use App::Ack::Filter;
 use App::Ack::Filter::Default;
 use Carp 1.22 ();
-use Getopt::Long ();
-BEGIN {
-    # see ack for explanation
-    UNIVERSAL::VERSION('Getopt::Long', '2.36');
-}
+use Getopt::Long 2.36 ();
 use Text::ParseWords 3.1 ();
 
 =head1 App::Ack::ConfigLoader
@@ -51,7 +47,7 @@ sub process_filter_spec {
 sub process_filetypes {
     my ( $opt, $arg_sources ) = @_;
 
-    Getopt::Long::Configure('default'); # start with default options
+    Getopt::Long::Configure('default', 'no_auto_help', 'no_auto_version'); # start with default options, minus some annoying ones
     Getopt::Long::Configure(
         'no_ignore_case',
         'no_auto_abbrev',
@@ -287,7 +283,7 @@ EOT
 sub process_other {
     my ( $opt, $extra_specs, $arg_sources ) = @_;
 
-    Getopt::Long::Configure('default'); # start with default options
+    Getopt::Long::Configure('default', 'no_auto_help', 'no_auto_version'); # start with default options, minus some annoying ones
     Getopt::Long::Configure(
         'bundling',
         'no_ignore_case',
@@ -353,7 +349,7 @@ sub should_dump_options {
         my ( $name, $options ) = @{$sources}[$i, $i + 1];
         if($name eq 'ARGV') {
             my $dump;
-            Getopt::Long::Configure('default', 'pass_through');
+            Getopt::Long::Configure('default', 'pass_through', 'no_auto_help', 'no_auto_version');
             Getopt::Long::GetOptionsFromArray($options,
                 'dump' => \$dump,
             );
@@ -368,7 +364,7 @@ sub explode_sources {
 
     my @new_sources;
 
-    Getopt::Long::Configure('default', 'pass_through');
+    Getopt::Long::Configure('default', 'pass_through', 'no_auto_help', 'no_auto_version');
 
     my %opt;
     my $arg_spec = get_arg_spec(\%opt);
@@ -475,7 +471,7 @@ sub remove_default_options_if_needed {
 
     my $should_remove = 0;
 
-    Getopt::Long::Configure('default'); # start with default options
+    Getopt::Long::Configure('default', 'no_auto_help', 'no_auto_version'); # start with default options, minus some annoying ones
     Getopt::Long::Configure(
         'no_ignore_case',
         'no_auto_abbrev',
@@ -499,6 +495,7 @@ sub remove_default_options_if_needed {
     }
 
     Getopt::Long::Configure('default');
+    Getopt::Long::Configure('default', 'no_auto_help', 'no_auto_version');
 
     return $sources unless $should_remove;
 

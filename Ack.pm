@@ -5,11 +5,7 @@ use strict;
 
 use App::Ack::ConfigDefault;
 use App::Ack::ConfigFinder;
-use Getopt::Long ();
-BEGIN {
-    # see ack for explanation
-    UNIVERSAL::VERSION('Getopt::Long', '2.36');
-}
+use Getopt::Long 2.36 ();
 use File::Next 1.10;
 
 =head1 NAME
@@ -81,7 +77,7 @@ sub retrieve_arg_sources {
     my $noenv;
     my $ackrc;
 
-    Getopt::Long::Configure('default');
+    Getopt::Long::Configure('default', 'no_auto_help', 'no_auto_version');
     Getopt::Long::Configure('pass_through');
     Getopt::Long::Configure('no_auto_abbrev');
 
@@ -90,7 +86,7 @@ sub retrieve_arg_sources {
         'ackrc=s' => \$ackrc,
     );
 
-    Getopt::Long::Configure('default');
+    Getopt::Long::Configure('default', 'no_auto_help', 'no_auto_version');
 
     my @files;
 

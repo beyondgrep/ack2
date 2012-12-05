@@ -19,17 +19,7 @@ use App::Ack::Filter::Inverse;
 use App::Ack::Filter::Is;
 use App::Ack::Filter::Match;
 
-use Getopt::Long ();
-=for Explanation
-    Getopt::Long stores the requested version and uses it to
-    generate --help and --version handlers if requested.  Interestingly
-    enough, we don't request them, but we get a fun error message from
-    Getopt::Long anyway.  This BEGIN block (and others like it) gets
-    around the issue, but we should probably fix it for real some day.
-=cut
-BEGIN {
-    UNIVERSAL::VERSION('Getopt::Long', '2.36');
-}
+use Getopt::Long 2.36 ();
 
 use Carp 1.22 ();
 
@@ -65,14 +55,14 @@ MAIN: {
     }
     App::Ack::load_colors();
 
-    Getopt::Long::Configure('defaults');
+    Getopt::Long::Configure('default', 'no_auto_help', 'no_auto_version');
     Getopt::Long::Configure('pass_through', 'no_auto_abbrev');
     Getopt::Long::GetOptions(
         'help'       => sub { App::Ack::show_help(); exit; },
         'version'    => sub { App::Ack::print_version_statement(); exit; },
         'man'        => sub { App::Ack::show_man(); exit; },
     );
-    Getopt::Long::Configure('defaults');
+    Getopt::Long::Configure('default', 'no_auto_help', 'no_auto_version');
 
     if ( !@ARGV ) {
         App::Ack::show_help();
