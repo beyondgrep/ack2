@@ -444,6 +444,11 @@ Print I<NUM> lines of trailing context after matching lines.
 
 Print I<NUM> lines of leading context before matching lines.
 
+=item B<--[no]break>
+
+Print a break between results from different files. On by default
+when used interactively.
+
 =item B<-C [I<NUM>]>, B<--context[=I<NUM>]>
 
 Print I<NUM> lines (default 2) of context around matching lines.
@@ -539,6 +544,11 @@ Print the filename for each match.
 Suppress the prefixing of filenames on output when multiple files are
 searched.
 
+=item B<--[no]heading>
+
+Print a filename heading above each file's results.  This is the default
+when used interactively.
+
 =item B<--help>
 
 Print a short help statement.
@@ -620,13 +630,16 @@ highlighting)
 Output the evaluation of I<expr> for each line (turns off text
 highlighting)
 
-=item B<--pager=I<program>>
+=item B<--pager=I<program>>, B<--nopager>
 
-Direct ack's output through I<program>.  This can also be specified
+B<--pager> directs ack's output through I<program>.  This can also be specified
 via the C<ACK_PAGER> and C<ACK_PAGER_COLOR> environment variables.
 
 Using --pager does not suppress grouping and coloring like piping
 output on the command-line does.
+
+B<--nopager> cancels any setting in ~/.ackrc, C<ACK_PAGER> or C<ACK_PAGER_COLOR>.
+No output will be sent through a pager.
 
 =item B<--passthru>
 
@@ -914,11 +927,11 @@ If you are not on Windows, you never need to use C<ACK_PAGER_COLOR>.
 F<ack> integrates easily with the Vim text editor. Set this in your
 F<.vimrc> to use F<ack> instead of F<grep>:
 
-    set grepprg=ack\ -a
+    set grepprg=ack\ -k
 
-That examples uses C<-a> to search through all files, but you may
-use other default flags. Now you can search with F<ack> and easily
-step through the results in Vim:
+That example uses C<-k> to search through only files of the types ack
+knows about, but you may use other default flags. Now you can search
+with F<ack> and easily step through the results in Vim:
 
   :grep Dumper perllib
 
@@ -1094,7 +1107,7 @@ so would require reading in the entire file at a time.
 If you want to see lines near your match, use the C<--A>, C<--B>
 and C<--C> switches for displaying context.
 
-=head2 Why is ack telling me I have an invalid option wFen searching for C<+foo>?
+=head2 Why is ack telling me I have an invalid option when searching for C<+foo>?
 
 ack treats command line options beginning with C<+> or C<-> as options; if you
 would like to search for these, you may prefix your search term with C<--> or
