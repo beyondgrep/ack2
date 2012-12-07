@@ -28,12 +28,18 @@ sub from_argv {
     my $self = bless {}, $class;
 
     my $file_filter    = undef;
-    my $descend_filter = undef;
+    my $descend_filter = $opt->{descend_filter};
+
+    if( $opt->{n} ) {
+        $descend_filter = sub {
+            return 0;
+        };
+    }
 
     $self->{iter} =
         File::Next::files( {
             file_filter     => $opt->{file_filter},
-            descend_filter  => $opt->{descend_filter},
+            descend_filter  => $descend_filter,
             error_handler   => sub { my $msg = shift; App::Ack::warn( $msg ) },
             sort_files      => $opt->{sort_files},
             follow_symlinks => $opt->{follow},
