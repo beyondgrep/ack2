@@ -673,7 +673,7 @@ compatibility with grep. You can also use it for turning B<--no-recurse> off.
 
 =item B<-s>
 
-Supress error messages about nonexistent or unreadable files.  This is taken
+Suppress error messages about nonexistent or unreadable files.  This is taken
 from fgrep.
 
 =item B<--smart-case>, B<--no-smart-case>
