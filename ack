@@ -630,13 +630,16 @@ highlighting)
 Output the evaluation of I<expr> for each line (turns off text
 highlighting)
 
-=item B<--pager=I<program>>
+=item B<--pager=I<program>>, B<--nopager>
 
-Direct ack's output through I<program>.  This can also be specified
+B<--pager> directs ack's output through I<program>.  This can also be specified
 via the C<ACK_PAGER> and C<ACK_PAGER_COLOR> environment variables.
 
 Using --pager does not suppress grouping and coloring like piping
 output on the command-line does.
+
+B<--nopager> cancels any setting in ~/.ackrc, C<ACK_PAGER> or C<ACK_PAGER_COLOR>.
+No output will be sent through a pager.
 
 =item B<--passthru>
 
