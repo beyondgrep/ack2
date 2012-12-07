@@ -1107,7 +1107,7 @@ so would require reading in the entire file at a time.
 If you want to see lines near your match, use the C<--A>, C<--B>
 and C<--C> switches for displaying context.
 
-=head2 Why is ack telling me I have an invalid option wFen searching for C<+foo>?
+=head2 Why is ack telling me I have an invalid option when searching for C<+foo>?
 
 ack treats command line options beginning with C<+> or C<-> as options; if you
 would like to search for these, you may prefix your search term with C<--> or
