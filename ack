@@ -927,11 +927,11 @@ If you are not on Windows, you never need to use C<ACK_PAGER_COLOR>.
 F<ack> integrates easily with the Vim text editor. Set this in your
 F<.vimrc> to use F<ack> instead of F<grep>:
 
-    set grepprg=ack\ -a
+    set grepprg=ack\ -k
 
-That examples uses C<-a> to search through all files, but you may
-use other default flags. Now you can search with F<ack> and easily
-step through the results in Vim:
+That example uses C<-k> to search through only files of the types ack
+knows about, but you may use other default flags. Now you can search
+with F<ack> and easily step through the results in Vim:
 
   :grep Dumper perllib
 
