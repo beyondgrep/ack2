@@ -290,6 +290,20 @@ are_mutually_exclusive('--count', '-g', ['--count', '-g', 'science', 't/text/sci
 are_mutually_exclusive('--column', '-f', ['--column', '-f', 'science', 't/text/science-of-myth.txt']);
 are_mutually_exclusive('--column', '-g', ['--column', '-g', 'science', 't/text/science-of-myth.txt']);
 
+# -A/-B/-C/--after-context/--before-context/--context
+are_mutually_exclusive('-A', '-f', ['-A', 1, '-f', 'science', 't/text/science-of-myth.txt']);
+are_mutually_exclusive('-A', '-g', ['-A', 1, '-g', 'science', 't/text/science-of-myth.txt']);
+are_mutually_exclusive('--after-context', '-f', ['--after-context', 1, '-f', 'science', 't/text/science-of-myth.txt']);
+are_mutually_exclusive('--after-context', '-g', ['--after-context', 1, '-g', 'science', 't/text/science-of-myth.txt']);
+are_mutually_exclusive('-B', '-f', ['-B', 1, '-f', 'science', 't/text/science-of-myth.txt']);
+are_mutually_exclusive('-B', '-g', ['-B', 1, '-g', 'science', 't/text/science-of-myth.txt']);
+are_mutually_exclusive('--before-context', '-f', ['--before-context', 1, '-f', 'science', 't/text/science-of-myth.txt']);
+are_mutually_exclusive('--before-context', '-g', ['--before-context', 1, '-g', 'science', 't/text/science-of-myth.txt']);
+are_mutually_exclusive('-C', '-f', ['-C', 1, '-f', 'science', 't/text/science-of-myth.txt']);
+are_mutually_exclusive('-C', '-g', ['-C', 1, '-g', 'science', 't/text/science-of-myth.txt']);
+are_mutually_exclusive('--context', '-f', ['--context', 1, '-f', 'science', 't/text/science-of-myth.txt']);
+are_mutually_exclusive('--context', '-g', ['--context', 1, '-g', 'science', 't/text/science-of-myth.txt']);
+
 done_testing();
 
 # XXX test --count after --
