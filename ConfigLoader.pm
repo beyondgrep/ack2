@@ -20,6 +20,9 @@ use Text::ParseWords 3.1 ();
 
 =cut
 
+my @INVALID_COMBINATIONS = (
+);
+
 sub process_filter_spec {
     my ( $spec ) = @_;
 
@@ -504,10 +507,55 @@ sub remove_default_options_if_needed {
     return \@copy;
 }
 
+sub check_for_mutually_exclusive_options {
+    my ( $arg_sources ) = @_;
+
+    my %mutually_exclusive_with;
+    my %set_opts;
+    my @copy = @$arg_sources;
+
+    for(my $i = 0; $i < @INVALID_COMBINATIONS; $i += 2) {
+        my ( $lhs, $rhs ) = @INVALID_COMBINATIONS[ $i, $i + 1 ];
+
+        foreach my $l_opt ( @$lhs ) {
+            foreach my $r_opt ( @$rhs ) {
+                push @{ $mutually_exclusive_with{ $l_opt } }, $r_opt;
+                push @{ $mutually_exclusive_with{ $r_opt } }, $l_opt;
+            }
+        }
+    }
+
+    while( @copy ) {
+        my ( $source_name, $args ) = splice @copy, 0, 2;
+        $args = ref($args) ? [ @$args ] : [ Text::ParseWords::shellwords($args) ];
+
+        foreach my $opt ( @$args ) {
+            next unless $opt =~ /^[-+]/;
+            if( $opt =~ /^(.*)=/ ) {
+                $opt = $1;
+            }
+
+            $set_opts{ $opt } = 1;
+
+            my $mutex_opts = $mutually_exclusive_with{ $opt };
+
+            next unless $mutex_opts;
+
+            foreach my $mutex_opt ( @$mutex_opts ) {
+                if($set_opts{ $mutex_opt }) {
+                    die "Options '$mutex_opt' and '$opt' are mutually exclusive\n";
+                }
+            }
+        }
+    }
+}
+
 sub process_args {
     my $arg_sources = \@_;
 
     my %opt;
+
+    check_for_mutually_exclusive_options($arg_sources);
 
     $arg_sources = remove_default_options_if_needed($arg_sources);
 
