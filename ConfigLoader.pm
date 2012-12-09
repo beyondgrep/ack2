@@ -33,6 +33,7 @@ my @INVALID_COMBINATIONS = (
     [qw(-h --no-filename)] => [qw(-H --with-filename -c --count -f -g --group --heading)],
     [qw(-H --with-filename)] => [qw(-h --no-filename -c --count -f -g)],
     [qw(-c --count)] => [qw(--column -A --after-context -B --before-context -C --context --heading --group --break -f -g)],
+    [qw(--column)] => [qw(-f -g)],
 );
 
 sub process_filter_spec {

@@ -286,6 +286,10 @@ are_mutually_exclusive('--count', '--break', ['--count', '--break', 'science', '
 are_mutually_exclusive('--count', '-f', ['--count', '-f', 'science', 't/text/science-of-myth.txt']);
 are_mutually_exclusive('--count', '-g', ['--count', '-g', 'science', 't/text/science-of-myth.txt']);
 
+# --column
+are_mutually_exclusive('--column', '-f', ['--column', '-f', 'science', 't/text/science-of-myth.txt']);
+are_mutually_exclusive('--column', '-g', ['--column', '-g', 'science', 't/text/science-of-myth.txt']);
+
 done_testing();
 
 # XXX test --count after --
