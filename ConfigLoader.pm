@@ -30,7 +30,7 @@ my @INVALID_COMBINATIONS = (
     [qw(--output)] => [qw(-c --count -f -g)],
     [qw(--match)] => [qw(-f -g)],
     [qw(-m --max-count)] => [qw(-1 -f -g -c --count)],
-    [qw(-h --no-filename)] => [qw(-H --with-filename -c --count -f -g)],
+    [qw(-h --no-filename)] => [qw(-H --with-filename -c --count -f -g --group --heading)],
     [qw(-H --with-filename)] => [qw(-h --no-filename -c --count -f -g)],
 );
 
