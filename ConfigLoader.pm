@@ -36,6 +36,7 @@ my @INVALID_COMBINATIONS = (
     [qw(--column)] => [qw(-f -g)],
     [qw(-A -B -C --after-context --before-context --context)] => [qw(-f -g)],
     [qw(-f)] => [qw(-g --heading --group --break)],
+    [qw(-g)] => [qw(--heading --group --break)],
 );
 
 sub process_filter_spec {
