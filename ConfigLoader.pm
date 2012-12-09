@@ -175,6 +175,9 @@ EOT
     * Your new option is explained when a user invokes ack --man.
       (See the POD at the end of ./ack)
     * Add your option to t/config-loader.t
+    * Go through the list of options already available, and consider
+      whether your new option can be considered mutually exclusive
+      with another option.
 =cut
     return {
         1                   => sub { $opt->{1} = $opt->{m} = 1 },
