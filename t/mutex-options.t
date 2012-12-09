@@ -304,6 +304,12 @@ are_mutually_exclusive('-C', '-g', ['-C', 1, '-g', 'science', 't/text/science-of
 are_mutually_exclusive('--context', '-f', ['--context', 1, '-f', 'science', 't/text/science-of-myth.txt']);
 are_mutually_exclusive('--context', '-g', ['--context', 1, '-g', 'science', 't/text/science-of-myth.txt']);
 
+# -f
+are_mutually_exclusive('-f', '-g', ['-f', '-g', 'science', 't/text/science-of-myth.txt']);
+are_mutually_exclusive('-f', '--group', ['-f', '--group', 'science', 't/text/science-of-myth.txt']);
+are_mutually_exclusive('-f', '--heading', ['-f', '--heading', 'science', 't/text/science-of-myth.txt']);
+are_mutually_exclusive('-f', '--break', ['-f', '--break', 'science', 't/text/science-of-myth.txt']);
+
 done_testing();
 
 # XXX test --count after --
