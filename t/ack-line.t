@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 22;
+use Test::More tests => 23;
 
 use lib 't';
 use Util;
@@ -139,6 +139,18 @@ EOF
     my @args = qw( --cc --lines=1 --after=3 --sort );
 
     ack_lists_match( [ @args, @files ], \@expected, 'Looking for first line in multiple files' );
+}
+
+LINE_NO_WARNINGS: {
+    my @expected = (
+        'Well, my daddy left home when I was three',
+    );
+
+    my @files = qw( t/text/boy-named-sue.txt );
+    my @args = qw( --lines=1 );
+
+    my @output = run_ack_interactive( @args, @files );
+    is scalar(@output), 1, 'There must be exactly one line of output (with no warnings)';
 }
 
 LINE_WITH_REGEX: {
