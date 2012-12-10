@@ -295,6 +295,8 @@ RESOURCES:
 
             my $filename = $resource->name;
 
+            local $opt->{color} = 0;
+
             App::Ack::iterate($resource, $opt, sub {
                 chomp;
 
