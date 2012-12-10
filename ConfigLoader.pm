@@ -554,6 +554,8 @@ sub check_for_mutually_exclusive_options {
 
         foreach my $opt ( @$args ) {
             next unless $opt =~ /^[-+]/;
+            last if $opt eq '--';
+
             if( $opt =~ /^(.*)=/ ) {
                 $opt = $1;
             }
