@@ -324,4 +324,16 @@ are_mutually_exclusive('-g', '--break', ['-g', '--break', 'science', 't/text/sci
     is(get_rc(), 0, 'The ack command should not fail');
 }
 
+# verify that mutually exclusive options in different sources don't cause a problem
+{
+    my $ackrc = <<'END_ACKRC';
+--group
+END_ACKRC
+
+    my @stdout = run_ack('--count', 't/text/science-of-myth.txt', {
+        ackrc => \$ackrc,
+    });
+    ok(@stdout > 0, 'Some lines should appear on standard output');
+}
+
 done_testing();
