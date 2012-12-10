@@ -315,6 +315,13 @@ are_mutually_exclusive('-g', '--group', ['-g', '--group', 'science', 't/text/sci
 are_mutually_exclusive('-g', '--heading', ['-g', '--heading', 'science', 't/text/science-of-myth.txt']);
 are_mutually_exclusive('-g', '--break', ['-g', '--break', 'science', 't/text/science-of-myth.txt']);
 
-done_testing();
+# verify that "options" that follow -- aren't factored into the mutual exclusivity
+{
+    my ( $stdout, $stderr ) = run_ack_with_stderr('-A', 5, 'science', 't/text/science-of-myth.txt', '--', '-l');
+    ok(@$stdout > 0, 'Some lines should appear on standard output');
+    is(scalar(@$stderr), 1, 'A single line should be present on standard error');
+    like($stderr->[0], qr/No such file or directory/, 'The error message should indicate a missing file (-l)');
+    is(get_rc(), 0, 'The ack command should not fail');
+}
 
-# XXX test --count after --
+done_testing();
