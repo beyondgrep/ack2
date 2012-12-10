@@ -394,6 +394,7 @@ BEGIN {
                         push @lines, $_;
                     }
                     close $pty;
+                    waitpid $pid, 0;
                     return @lines;
                 } else {
                     my $output = '';
@@ -402,6 +403,7 @@ BEGIN {
                         $output .= $_;
                     }
                     close $pty;
+                    waitpid $pid, 0;
                     return $output;
                 }
             } else {
