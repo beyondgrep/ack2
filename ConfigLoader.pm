@@ -20,6 +20,29 @@ use Text::ParseWords 3.1 ();
 
 =cut
 
+my @INVALID_COMBINATIONS;
+
+BEGIN {
+    @INVALID_COMBINATIONS = (
+        # XXX normalize
+        [qw(-l)] => [qw(-A -B -C -L -o --passthru --output --max-count -h -H --with-filename --no-filename --column --after-context --before-context --context --heading --break --group -f -g --show-types)],
+        [qw(-L)] => [qw(-A -B -C -l -o --passthru --output --max-count -h -H --with-filename --no-filename --column --after-context --before-context --context --heading --break --group -f -g --show-types -c --count)],
+        [qw(--line)] => [qw(-l --files-with-matches --files-without-matches -L -o --passthru --match -m --max-count -1 -h -H --with-filename --no-filename -c --count --column -A --after-context -B --before-context -C --context --print0 -f -g --show-types)],
+        [qw(-o)] => [qw(--output -c --count --column -A -B -C --after-context --before-context --context --column -f --show-types)],
+        [qw(--passthru)] => [qw(--output -A -B -C --after-context --before-context --context --column -m --max-count -1 -c --count -f -g)],
+        [qw(--output)] => [qw(-c --count -f -g)],
+        [qw(--match)] => [qw(-f -g)],
+        [qw(-m --max-count)] => [qw(-1 -f -g -c --count)],
+        [qw(-h --no-filename)] => [qw(-H --with-filename -c --count -f -g --group --heading)],
+        [qw(-H --with-filename)] => [qw(-h --no-filename -c --count -f -g)],
+        [qw(-c --count)] => [qw(--column -A --after-context -B --before-context -C --context --heading --group --break -f -g)],
+        [qw(--column)] => [qw(-f -g)],
+        [qw(-A -B -C --after-context --before-context --context)] => [qw(-f -g)],
+        [qw(-f)] => [qw(-g --heading --group --break)],
+        [qw(-g)] => [qw(--heading --group --break)],
+    );
+}
+
 sub process_filter_spec {
     my ( $spec ) = @_;
 
@@ -161,6 +184,9 @@ EOT
     * Your new option is explained when a user invokes ack --man.
       (See the POD at the end of ./ack)
     * Add your option to t/config-loader.t
+    * Go through the list of options already available, and consider
+      whether your new option can be considered mutually exclusive
+      with another option.
 =cut
     return {
         1                   => sub { $opt->{1} = $opt->{m} = 1 },
@@ -504,10 +530,58 @@ sub remove_default_options_if_needed {
     return \@copy;
 }
 
+sub check_for_mutually_exclusive_options {
+    my ( $arg_sources ) = @_;
+
+    my %mutually_exclusive_with;
+    my @copy = @$arg_sources;
+
+    for(my $i = 0; $i < @INVALID_COMBINATIONS; $i += 2) {
+        my ( $lhs, $rhs ) = @INVALID_COMBINATIONS[ $i, $i + 1 ];
+
+        foreach my $l_opt ( @$lhs ) {
+            foreach my $r_opt ( @$rhs ) {
+                push @{ $mutually_exclusive_with{ $l_opt } }, $r_opt;
+                push @{ $mutually_exclusive_with{ $r_opt } }, $l_opt;
+            }
+        }
+    }
+
+    while( @copy ) {
+        my %set_opts;
+
+        my ( $source_name, $args ) = splice @copy, 0, 2;
+        $args = ref($args) ? [ @$args ] : [ Text::ParseWords::shellwords($args) ];
+
+        foreach my $opt ( @$args ) {
+            next unless $opt =~ /^[-+]/;
+            last if $opt eq '--';
+
+            if( $opt =~ /^(.*)=/ ) {
+                $opt = $1;
+            }
+
+            $set_opts{ $opt } = 1;
+
+            my $mutex_opts = $mutually_exclusive_with{ $opt };
+
+            next unless $mutex_opts;
+
+            foreach my $mutex_opt ( @$mutex_opts ) {
+                if($set_opts{ $mutex_opt }) {
+                    die "Options '$mutex_opt' and '$opt' are mutually exclusive\n";
+                }
+            }
+        }
+    }
+}
+
 sub process_args {
     my $arg_sources = \@_;
 
     my %opt;
+
+    check_for_mutually_exclusive_options($arg_sources);
 
     $arg_sources = remove_default_options_if_needed($arg_sources);
 

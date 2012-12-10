@@ -1,10 +1,14 @@
 
+use Carp ();
 use File::Next ();
 use App::Ack ();
 use Cwd ();
 use File::Spec ();
+use File::Temp ();
 
 my $orig_wd;
+my @temp_files; # we store temp files here to make sure they're properly
+                # reclaimed at interpreter shutdown
 
 sub prep_environment {
     delete @ENV{qw( ACK_OPTIONS ACKRC ACK_PAGER HOME )};
@@ -21,6 +25,36 @@ sub is_win32 {
 
 sub build_ack_invocation {
     my @args = @_;
+
+    my $options;
+
+    foreach my $arg ( @args ) {
+        if ( ref($arg) eq 'HASH' ) {
+            if ( $options ) {
+                Carp::croak('You may not specify more than one options hash');
+            }
+            else {
+                $options = $arg;
+            }
+        }
+    }
+
+    $options ||= {};
+
+    @args = grep { ref($_) ne 'HASH' } @args;
+
+    if ( my $ackrc = $options->{ackrc} ) {
+        if ( ref($ackrc) eq 'SCALAR' ) {
+            my $temp_ackrc = File::Temp->new;
+            push @temp_files, $temp_ackrc;
+
+            print { $temp_ackrc } $$ackrc, "\n";
+            close $temp_ackrc;
+            $ackrc = $temp_ackrc->filename;
+        }
+
+        unshift @args, '--ackrc', $ackrc;
+    }
 
     # The --noenv makes sure we don't pull in anything from the user
     #    unless explicitly specified in the test
@@ -102,6 +136,7 @@ sub run_ack {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
     my ($stdout, $stderr) = run_ack_with_stderr( @args );
+    @args = grep { ref($_) ne 'HASH' } @args;
 
     if ( $TODO ) {
         fail( q{Automatically fail stderr check for TODO tests.} );

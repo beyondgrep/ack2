@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 5;
+use Test::More tests => 4;
 
 use lib 't';
 use Util;
@@ -87,17 +87,5 @@ COMBINED_FILTERS: {
 
     ack_sets_match( [ @args ], \@expected );
 }
-
-subtest '-f with a regex is an error' => sub {
-    # specifying both -f and a regex should result in an error
-    my @files = qw( t/text );
-    my @args = qw( -f --match Sue );
-
-    my ($stdout, $stderr) = run_ack_with_stderr( @args, @files );
-    isnt( get_rc(), 0, 'Specifying both -f and --match must lead to an error RC' );
-    is( scalar @{$stdout}, 0, 'No normal output' );
-    is( scalar @{$stderr}, 1, 'One line of stderr output' );
-    like( $stderr->[0], qr/\Q(Sue)/, 'Error message must contain "(Sue)"' );
-};
 
 done_testing();
