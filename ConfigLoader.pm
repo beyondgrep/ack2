@@ -534,7 +534,6 @@ sub check_for_mutually_exclusive_options {
     my ( $arg_sources ) = @_;
 
     my %mutually_exclusive_with;
-    my %set_opts;
     my @copy = @$arg_sources;
 
     for(my $i = 0; $i < @INVALID_COMBINATIONS; $i += 2) {
@@ -549,6 +548,8 @@ sub check_for_mutually_exclusive_options {
     }
 
     while( @copy ) {
+        my %set_opts;
+
         my ( $source_name, $args ) = splice @copy, 0, 2;
         $args = ref($args) ? [ @$args ] : [ Text::ParseWords::shellwords($args) ];
 
