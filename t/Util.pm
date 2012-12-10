@@ -4,8 +4,11 @@ use File::Next ();
 use App::Ack ();
 use Cwd ();
 use File::Spec ();
+use File::Temp ();
 
 my $orig_wd;
+my @temp_files; # we store temp files here to make sure they're properly
+                # reclaimed at interpreter shutdown
 
 sub prep_environment {
     delete @ENV{qw( ACK_OPTIONS ACKRC ACK_PAGER HOME )};
@@ -39,6 +42,19 @@ sub build_ack_invocation {
     $options ||= {};
 
     @args = grep { ref($_) ne 'HASH' } @args;
+
+    if ( my $ackrc = $options->{ackrc} ) {
+        if ( ref($ackrc) eq 'SCALAR' ) {
+            my $temp_ackrc = File::Temp->new;
+            push @temp_files, $temp_ackrc;
+
+            print { $temp_ackrc } $$ackrc, "\n";
+            close $temp_ackrc;
+            $ackrc = $temp_ackrc->filename;
+        }
+
+        unshift @args, '--ackrc', $ackrc;
+    }
 
     # The --noenv makes sure we don't pull in anything from the user
     #    unless explicitly specified in the test
