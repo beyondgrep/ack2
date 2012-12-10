@@ -1,4 +1,5 @@
 
+use Carp ();
 use File::Next ();
 use App::Ack ();
 use Cwd ();
@@ -21,6 +22,23 @@ sub is_win32 {
 
 sub build_ack_invocation {
     my @args = @_;
+
+    my $options;
+
+    foreach my $arg ( @args ) {
+        if ( ref($arg) eq 'HASH' ) {
+            if ( $options ) {
+                Carp::croak('You may not specify more than one options hash');
+            }
+            else {
+                $options = $arg;
+            }
+        }
+    }
+
+    $options ||= {};
+
+    @args = grep { ref($_) ne 'HASH' } @args;
 
     # The --noenv makes sure we don't pull in anything from the user
     #    unless explicitly specified in the test
