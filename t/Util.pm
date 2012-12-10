@@ -136,6 +136,7 @@ sub run_ack {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
     my ($stdout, $stderr) = run_ack_with_stderr( @args );
+    @args = grep { ref($_) ne 'HASH' } @args;
 
     if ( $TODO ) {
         fail( q{Automatically fail stderr check for TODO tests.} );
