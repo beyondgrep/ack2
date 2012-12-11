@@ -119,6 +119,7 @@ $(ACK_STANDALONE) : $(ACK) $(ALL_PM) squash Makefile
 	$(PERL) squash %s $(ACK) File::Next $(ALL_PM) > $(ACK_STANDALONE)
 	$(FIXIN) $(ACK_STANDALONE)
 	-$(NOECHO) $(CHMOD) $(PERM_RWX) $(ACK_STANDALONE)
+	$(PERL) -i -p -e "s/\\\$$GIT_REVISION\s*=\s*''/\\\$$GIT_REVISION = q{$$(git rev-parse --short HEAD)}/" $(ACK_STANDALONE)
 	$(PERL_T) -c $(ACK_STANDALONE)
 
 bininst : $(ACK)
