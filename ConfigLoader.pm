@@ -560,6 +560,9 @@ sub check_for_mutually_exclusive_options {
             if( $opt =~ /^(.*)=/ ) {
                 $opt = $1;
             }
+            elsif ( $opt =~ /^(-[^-]).+/ ) {
+                $opt = $1;
+            }
 
             $set_opts{ $opt } = 1;
 
