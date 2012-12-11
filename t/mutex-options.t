@@ -52,6 +52,7 @@ are_mutually_exclusive('--line', '--match', ['--line=1', '--match', 't/text/scie
 are_mutually_exclusive('--line', '--match', ['--line', 1, '--match', 't/text/science-of-myth.txt']);
 are_mutually_exclusive('--line', '-m', ['--line=1', '-m', 1, 't/text/science-of-myth.txt']);
 are_mutually_exclusive('--line', '-m', ['--line', 1, '-m', 1, 't/text/science-of-myth.txt']);
+are_mutually_exclusive('--line', '-m', ['--line', 1, '-m1', 't/text/science-of-myth.txt']);
 are_mutually_exclusive('--line', '--max-count', ['--line=1', '--max-count', 1, 't/text/science-of-myth.txt']);
 are_mutually_exclusive('--line', '--max-count', ['--line', 1, '--max-count', 1, 't/text/science-of-myth.txt']);
 are_mutually_exclusive('--line', '--max-count', ['--line=1', '--max-count=1', 't/text/science-of-myth.txt']);
