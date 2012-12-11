@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 20;
+use Test::More tests => 18;
 use File::Next (); # for reslash function
 
 use lib 't';
@@ -184,30 +184,4 @@ EOF
     my @args = ( '--group', '-B1', '--sort-files', $regex );
 
     ack_lists_match( [ @args, @files ], \@expected, "Looking for $regex in multiple files with grouping" );
-}
-
-# ack -o disables context
-WITH_O: {
-    my @files = qw( t/text/boy-named-sue.txt );
-    my @args = qw( the\\s+\\S+ -o -C2 );
-    my @expected = split( /\n/, <<'EOF' );
-        the meanest
-        the moon
-        the honky-tonks
-        the dirty,
-        the eyes
-        the wall
-        the street
-        the mud
-        the blood
-        the beer.
-        the name
-        the right
-        the gravel
-        the spit
-        the son-of-a-bitch
-EOF
-    s/^\s+// for @expected;
-
-    ack_lists_match( [ @args, @files ], \@expected, 'Context is disabled with -o' );
 }
