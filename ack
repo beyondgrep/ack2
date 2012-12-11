@@ -715,17 +715,18 @@ Type specifications can be repeated and are ORed together.
 
 See I<ack --help=types> for a list of valid types.
 
-=item B<--type-add I<TYPE>=I<.EXTENSION>[,I<.EXT2>[,...]]>
+=item B<--type-add I<TYPE>:I<FILTER>:I<FILTERARGS>>
 
-Files with the given EXTENSION(s) are recognized as being of (the
-existing) type TYPE. See also L</"Defining your own types">.
+Files with the given FILTERARGS applied to the given FILTER
+are recognized as being of (the existing) type TYPE.
+See also L</"Defining your own types">.
 
 
-=item B<--type-set I<TYPE>=I<.EXTENSION>[,I<.EXT2>[,...]]>
+=item B<--type-set I<TYPE>:I<FILTER>:I<FILTERARGS>>
 
-Files with the given EXTENSION(s) are recognized as being of type
-TYPE. This replaces an existing definition for type TYPE.  See also
-L</"Defining your own types">.
+Files with the given FILTERARGS applied to the given FILTER are recognized as
+being of type TYPE. This replaces an existing definition for type TYPE.  See
+also L</"Defining your own types">.
 
 =item B<-v>, B<--invert-match>
 
@@ -802,53 +803,37 @@ on one command line so that they can be easily copy & pasted.
 I<ack --perl foo> searches for foo in all perl files. I<ack --help=types>
 tells you, that perl files are files ending
 in .pl, .pm, .pod or .t. So what if you would like to include .xs
-files as well when searching for --perl files? I<ack --type-add perl=.xs --perl foo>
+files as well when searching for --perl files? I<ack --type-add perl:ext:xs --perl foo>
 does this for you. B<--type-add> appends
 additional extensions to an existing type.
 
 If you want to define a new type, or completely redefine an existing
-type, then use B<--type-set>. I<ack --type-set
-eiffel=.e,.eiffel> defines the type I<eiffel> to include files with
+type, then use B<--type-set>. I<ack --type-set eiffel:ext:e,eiffel> defines
+the type I<eiffel> to include files with
 the extensions .e or .eiffel. So to search for all eiffel files
-containing the word Bertrand use I<ack --type-set eiffel=.e,.eiffel --eiffel Bertrand>.
+containing the word Bertrand use I<ack --type-set eiffel:ext:e,eiffel --eiffel Bertrand>.
 As usual, you can also write B<--type=eiffel>
 instead of B<--eiffel>. Negation also works, so B<--noeiffel> excludes
-all eiffel files from a search. Redefining also works: I<ack --type-set cc=.c,.h>
+all eiffel files from a search. Redefining also works: I<ack --type-set cc:ext:c,h>
 and I<.xs> files no longer belong to the type I<cc>.
 
 When defining your own types in the F<.ackrc> file you have to use
 the following:
 
-  --type-set=eiffel=.e,.eiffel
+  --type-set=eiffel:ext:e,eiffel
 
 or writing on separate lines
 
   --type-set
-  eiffel=.e,.eiffel
+  eiffel:ext:e,eiffel
 
 The following does B<NOT> work in the F<.ackrc> file:
 
-  --type-set eiffel=.e,.eiffel
+  --type-set eiffel:ext:e,eiffel
 
 
 In order to see all currently defined types, use I<--help-types>, e.g.
-I<ack --type-set backup=.bak --type-add perl=.perl --help-types>
-
-Restrictions:
-
-=over 4
-
-=item
-
-The shebang line recognition of the types 'perl', 'ruby', 'php',
-'python', 'shell' and 'xml' cannot be redefined by I<--type-set>,
-it is always active. However, the shebang line is only examined for
-files where the extension is not recognised. Therefore it is possible
-to say I<ack --type-set perl=.perl --type-set foo=.pl,.pm,.pod,.t
---perl --nofoo> and only find your shiny new I<.perl> files (and
-all files with unrecognized extension and perl on the shebang line).
-
-=back
+I<ack --type-set backup:ext:bak --type-add perl:ext:perl --help-types>
 
 =head1 ENVIRONMENT VARIABLES
 
