@@ -46,6 +46,7 @@ my @other_long_opts = qw(
     --type
     --type-set
     --type-add
+    --type-del
     --[no]follow
     --noenv
     --ackrc
