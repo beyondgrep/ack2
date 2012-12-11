@@ -479,6 +479,7 @@ File type specification:
   --type-add TYPE:FILTER:FILTERARGS
                         Files with the given FILTERARGS applied to the given
                         FILTER are recognized as being of type TYPE.
+  --type-del TYPE       Removes all filters associated with TYPE.
 
 
 Miscellaneous:
