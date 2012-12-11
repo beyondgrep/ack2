@@ -728,6 +728,11 @@ Files with the given FILTERARGS applied to the given FILTER are recognized as
 being of type TYPE. This replaces an existing definition for type TYPE.  See
 also L</"Defining your own types">.
 
+=item B<--type-del I<TYPE>>
+
+The filters associated with TYPE are removed from Ack, and are no longer considered
+for searches.
+
 =item B<-v>, B<--invert-match>
 
 Invert match: select non-matching lines
