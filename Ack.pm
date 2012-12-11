@@ -472,14 +472,13 @@ File inclusion/exclusion:
                         See "ack --help-types" for supported filetypes.
 
 File type specification:
-  --type-set TYPE=.EXTENSION[,.EXT2[,...]]
-                        Files with the given EXTENSION(s) are recognized as
-                        being of type TYPE. This replaces an existing
-                        definition for type TYPE.
-  --type-add TYPE=.EXTENSION[,.EXT2[,...]]
-                        Files with the given EXTENSION(s) are recognized as
-                        being of (the existing) type TYPE
-
+  --type-set TYPE:FILTER:FILTERARGS
+                        Files with the given FILTERARGS applied to the given
+                        FILTER are recognized as being of type TYPE. This
+                        replaces an existing definition for type TYPE.
+  --type-add TYPE:FILTER:FILTERARGS
+                        Files with the given FILTERARGS applied to the given
+                        FILTER are recognized as being of type TYPE.
 
 
 Miscellaneous:
