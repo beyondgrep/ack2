@@ -840,6 +840,54 @@ The following does B<NOT> work in the F<.ackrc> file:
 In order to see all currently defined types, use I<--help-types>, e.g.
 I<ack --type-set backup:ext:bak --type-add perl:ext:perl --help-types>
 
+In addition to filtering based on extension (like ack 1.x allowed), ack 2
+offers additional filter types.  The generic syntax is
+I<--type-set TYPE:FILTER:FILTERARGS>; I<FILTERARGS> depends on the value
+of I<FILTER>.
+
+=over 4
+
+=item is:I<FILENAME>
+
+I<is> filters match the target filename exactly.  It takes exactly one
+argument, which is the name of the file to match.
+
+Example:
+
+    --type-set make:is:Makefile
+
+=item ext:I<EXTENSION>[,I<EXTENSION2>[,...]]
+
+I<ext> filters match the extension of the target file against a list
+of extensions.  No leading dot is needed for the extensions.
+
+Example:
+
+    --type-set perl:ext:pl,pm,t
+
+=item match:I<REGEX>
+
+I<match> filters match the target filename against a regular expression.
+The regular expression is made case insensitive for the search.
+
+Example:
+
+    --type-set make:match:/(gnu)?makefile/
+
+=item firstlinematch:I<REGEX>
+
+I<firstlinematch> matches the first line of the target file against a
+regular expression.  Like I<match>, the regular expression is made
+case insensitive.
+
+Example:
+
+    --type-add perl:firstlinematch:/perl/
+
+=back
+
+More filter types may be made available in the future.
+
 =head1 ENVIRONMENT VARIABLES
 
 For commonly-used ack options, environment variables can make life
