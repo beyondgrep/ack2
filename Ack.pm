@@ -368,7 +368,7 @@ Dumps the help page to the user.
 sub show_help {
     my $help_arg = shift || 0;
 
-#   return show_help_types() if $help_arg =~ /^types?/;
+    return show_help_types() if $help_arg =~ /^types?/;
 
     App::Ack::print( <<"END_OF_HELP" );
 Usage: ack [OPTION]... PATTERN [FILES OR DIRECTORIES]
