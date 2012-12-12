@@ -23,23 +23,24 @@ use Text::ParseWords 3.1 ();
 my @INVALID_COMBINATIONS;
 
 BEGIN {
+    my @context = qw( -A -B -C --after-context --before-context --context );
     @INVALID_COMBINATIONS = (
         # XXX normalize
-        [qw(-l)] => [qw(-A -B -C -L -o --passthru --output --max-count -h -H --with-filename --no-filename --column --after-context --before-context --context --heading --break --group -f -g --show-types)],
-        [qw(-L)] => [qw(-A -B -C -l -o --passthru --output --max-count -h -H --with-filename --no-filename --column --after-context --before-context --context --heading --break --group -f -g --show-types -c --count)],
-        [qw(--line)] => [qw(-l --files-with-matches --files-without-matches -L -o --passthru --match -m --max-count -1 -h -H --with-filename --no-filename -c --count --column -A --after-context -B --before-context -C --context --print0 -f -g --show-types)],
-        [qw(-o)] => [qw(--output -c --count --column -A -B -C --after-context --before-context --context --column -f --show-types)],
-        [qw(--passthru)] => [qw(--output -A -B -C --after-context --before-context --context --column -m --max-count -1 -c --count -f -g)],
-        [qw(--output)] => [qw(-c --count -f -g)],
-        [qw(--match)] => [qw(-f -g)],
-        [qw(-m --max-count)] => [qw(-1 -f -g -c --count)],
-        [qw(-h --no-filename)] => [qw(-H --with-filename -c --count -f -g --group --heading)],
+        [qw(-l)]                 => [@context, qw(-L -o --passthru --output --max-count -h -H --with-filename --no-filename --column --heading --break --group -f -g --show-types)],
+        [qw(-L)]                 => [@context, qw(-l -o --passthru --output --max-count -h -H --with-filename --no-filename --column --heading --break --group -f -g --show-types -c --count)],
+        [qw(--line)]             => [@context, qw(-l --files-with-matches --files-without-matches -L -o --passthru --match -m --max-count -1 -h -H --with-filename --no-filename -c --count --column --print0 -f -g --show-types)],
+        [qw(-o)]                 => [@context, qw(--output -c --count --column --column -f --show-types)],
+        [qw(--passthru)]         => [@context, qw(--output --column -m --max-count -1 -c --count -f -g)],
+        [qw(--output)]           => [qw(-c --count -f -g)],
+        [qw(--match)]            => [qw(-f -g)],
+        [qw(-m --max-count)]     => [qw(-1 -f -g -c --count)],
+        [qw(-h --no-filename)]   => [qw(-H --with-filename -c --count -f -g --group --heading)],
         [qw(-H --with-filename)] => [qw(-h --no-filename -c --count -f -g)],
-        [qw(-c --count)] => [qw(--column -A --after-context -B --before-context -C --context --heading --group --break -f -g)],
-        [qw(--column)] => [qw(-f -g)],
-        [qw(-A -B -C --after-context --before-context --context)] => [qw(-f -g)],
-        [qw(-f)] => [qw(-g --heading --group --break)],
-        [qw(-g)] => [qw(--heading --group --break)],
+        [qw(-c --count)]         => [@context, qw(--column --heading --group --break -f -g)],
+        [qw(--column)]           => [qw(-f -g)],
+        [@context]               => [qw(-f -g)],
+        [qw(-f)]                 => [qw(-g --heading --group --break)],
+        [qw(-g)]                 => [qw(--heading --group --break)],
     );
 }
 
