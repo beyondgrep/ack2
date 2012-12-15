@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 22;
+use Test::More tests => 24;
 
 use lib 't';
 use Util;
@@ -88,6 +88,14 @@ DASH_HC: {
     my @args     = qw( boy -i -c -h );
     my @files    = qw( t/text );
     my @expected = ( '3' );
+
+    ack_sets_match( [ @args, @files ], \@expected, 'ack -c -h should return one line of results' );
+}
+
+SINGLE_FILE_COUNT: {
+    my @args     = qw( boy -i -c -h );
+    my @files    = ( 't/text/boy-named-sue.txt' );
+    my @expected = ( '2' );
 
     ack_sets_match( [ @args, @files ], \@expected, 'ack -c -h should return one line of results' );
 }
