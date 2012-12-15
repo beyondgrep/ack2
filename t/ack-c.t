@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 20;
+use Test::More tests => 22;
 
 use lib 't';
 use Util;
@@ -82,6 +82,14 @@ PIPE_INTO_C: {
 
     is( scalar @results, 1, 'Piping into ack --count should return one line of results' );
     is( $results[0], '2', 'Piping into ack --count should return "<count>"' );
+}
+
+DASH_HC: {
+    my @args     = qw( boy -i -c -h );
+    my @files    = qw( t/text );
+    my @expected = ( '3' );
+
+    ack_sets_match( [ @args, @files ], \@expected, 'ack -c -h should return one line of results' );
 }
 
 done_testing();
