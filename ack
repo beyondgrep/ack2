@@ -782,11 +782,9 @@ Note that arguments with spaces in them do not need to be quoted,
 as they are not interpreted by the shell. Basically, each I<line>
 in the F<.ackrc> file is interpreted as one element of C<@ARGV>.
 
-F<ack> looks in your home directory for the F<.ackrc>.  You can
-specify another location with the F<ACKRC> variable, below.
-
-If B<--noenv> is specified on the command line, the F<.ackrc> file
-is ignored.
+F<ack> looks in several locations for F<.ackrc> files; the searching
+process is detailed in L</"ACKRC LOCATION SEMANTICS">.  These
+files are not considered if B<--noenv> is specified on the command line.
 
 =head1 Defining your own types
 
