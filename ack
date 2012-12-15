@@ -1208,7 +1208,7 @@ Andy Lester, C<< <andy at petdance.com> >>
 =head1 BUGS
 
 Please report any bugs or feature requests to the issues list at
-Github: L<https://github.com/petdance/ack/issues>
+Github: L<https://github.com/petdance/ack2/issues>
 
 =head1 ENHANCEMENTS
 
@@ -1218,7 +1218,7 @@ will not consider a request without it first getting seen by other
 ack users.  This includes requests for new filetypes.
 
 There is a list of enhancements I want to make to F<ack> in the ack
-issues list at Github: L<https://github.com/petdance/ack/issues>
+issues list at Github: L<https://github.com/petdance/ack2/issues>
 
 Patches are always welcome, but patches with tests get the most
 attention.
@@ -1239,7 +1239,7 @@ L<http://groups.google.com/group/ack-users>
 
 =item * The ack issues list at Github
 
-L<https://github.com/petdance/ack/issues>
+L<https://github.com/petdance/ack2/issues>
 
 =item * AnnoCPAN: Annotated CPAN documentation
 
@@ -1255,7 +1255,7 @@ L<http://search.cpan.org/dist/ack>
 
 =item * Git source repository
 
-L<https://github.com/petdance/ack>
+L<https://github.com/petdance/ack2>
 
 =back
 
