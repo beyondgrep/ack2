@@ -396,9 +396,9 @@ certain file types, based on both the extension on the file and,
 in some cases, the contents of the file.  These selections can be
 made with the B<--type> option.
 
-With no file selections, I<ack> only searches files of types that
-it recognizes.  If you have a file called F<foo.wango>, and I<ack>
-doesn't know what a .wango file is, I<ack> won't search it.
+With no file selection, I<ack> searches through regular files that
+are not explicitly excluded by B<--ignore-dir> and B<--ignore-file>
+options, either present in F<ackrc> files or on the command line.
 
 By default, I<ack> ignores certain files and directories.  These
 include:
