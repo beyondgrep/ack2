@@ -532,10 +532,6 @@ This is off by default.
 =item B<-g I<REGEX>>
 
 Print files where the relative path + filename matches I<REGEX>.
-This option is a convenience shortcut for B<-f> B<-G I<REGEX>>.
-
-The options B<-i>, B<-w>, B<-v>, and B<-Q> do not apply to this
-I<REGEX>.
 
 =item B<--group>, B<--nogroup>
 
@@ -570,9 +566,6 @@ Print all known types.
 =item B<-i>, B<--ignore-case>
 
 Ignore case in the search strings.
-
-This applies only to the PATTERN, not to the regexes given for the B<-g>
-and B<-G> options.
 
 =item B<--[no]ignore-dir=I<DIRNAME>>
 
@@ -673,9 +666,6 @@ helpful when dealing with filenames that contain whitespace, e.g.
 
 Quote all metacharacters in PATTERN, it is treated as a literal.
 
-This applies only to the PATTERN, not to the regexes given for the B<-g>
-and B<-G> options.
-
 =item B<-r>, B<-R>, B<--recurse>
 
 Recurse into sub-directories. This is the default and just here for
@@ -742,9 +732,6 @@ for searches.
 
 Invert match: select non-matching lines
 
-This applies only to the PATTERN, not to the regexes given for the B<-g>
-and B<-G> options.
-
 =item B<--version>
 
 Display version and copyright information.
@@ -753,9 +740,6 @@ Display version and copyright information.
 
 Force PATTERN to match only whole words.  The PATTERN is wrapped with
 C<\b> metacharacters.
-
-This applies only to the PATTERN, not to the regexes given for the B<-g>
-and B<-G> options.
 
 =item B<-1>
 
