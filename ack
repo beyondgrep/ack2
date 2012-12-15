@@ -422,7 +422,8 @@ it will search in a coredump.
 =head1 DIRECTORY SELECTION
 
 I<ack> descends through the directory tree of the starting directories
-specified.  However, it will ignore the shadow directories used by
+specified.  If no directories are specified, the current working directory is
+used.  However, it will ignore the shadow directories used by
 many version control systems, and the build directories used by the
 Perl MakeMaker system.  You may add or remove a directory from this
 list with the B<--[no]ignore-dir> option. The option may be repeated
