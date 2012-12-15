@@ -560,7 +560,7 @@ when used interactively.
 
 Print a short help statement.
 
-=item B<--help-types>
+=item B<--help-types>, B<--help=types>
 
 Print all known types.
 
