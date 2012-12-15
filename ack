@@ -1102,8 +1102,9 @@ this from the Unix shell:
 
 =head2 Can you make ack recognize F<.xyz> files?
 
-That's an enhancement.  Please see the section in the manual about
-enhancements.
+Yes!  Please see L</"Defining your own types">.  If you think
+that F<ack> should recognize a type by default, please see
+L</"ENHANCEMENTS">.
 
 =head2 There's already a program/package called ack.
 
