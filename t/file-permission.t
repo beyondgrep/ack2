@@ -50,13 +50,25 @@ SKIP: {
 }
 
 sub check_with {
+    my ( @args ) = @_;
+
+    my $opts = {};
+    foreach my $arg ( @args ) {
+        if ( ref($arg) eq 'HASH' ) {
+            $opts = $arg;
+        }
+    }
+    @args = grep { ref($_) ne 'HASH' } @args;
+
+    my $expected_stdout = $opts->{expected_stdout} || 0;
+
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    my ($stdout, $stderr) = run_ack_with_stderr( @_ );
+    my ($stdout, $stderr) = run_ack_with_stderr( @args );
     is( get_rc(), 1, 'Search normal: exit code ONE for no output for grep compatibility' );
             ## XXX Should be TWO for best grep compatibility since there was an error ...
             ##      but we agreed that wasn't required
-    is( scalar @{$stdout}, 0, 'Search normal: no normal output' );
+    is( scalar @{$stdout}, $expected_stdout, 'Search normal: no normal output' );
     is( scalar @{$stderr}, 1, 'Search normal: one line of stderr output' );
     # don't check for exact text of warning, the message text depends on LC_MESSAGES
     like( $stderr->[0], qr/file-permission[.]t:/, 'Search normal: warning message ok' );
