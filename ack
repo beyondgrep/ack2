@@ -166,7 +166,7 @@ sub show_types {
     my @types = App::Ack::filetypes( $resource );
     my $types = join( ',', @types );
     my $arrow = @types ? ' => ' : ' =>';
-    print $resource->name, $arrow, join( ',', @types ), $ors;
+    App::Ack::print( $resource->name, $arrow, join( ',', @types ), $ors );
 
     return;
 }
@@ -261,7 +261,7 @@ RESOURCES:
                 show_types( $resource, $ors );
             }
             else {
-                print $resource->name, $ors;
+                App::Ack::print( $resource->name, $ors );
             }
             ++$nmatches;
             last RESOURCES if defined($max_count) && $nmatches >= $max_count;
@@ -273,7 +273,7 @@ RESOURCES:
                     show_types( $resource, $ors );
                 }
                 else {
-                    print $resource->name, $ors;
+                    App::Ack::print( $resource->name, $ors );
                 }
                 ++$nmatches;
                 last RESOURCES if defined($max_count) && $nmatches >= $max_count;
@@ -320,12 +320,10 @@ RESOURCES:
 
             if ( !$opt->{l} || $matches_for_this_file > 0) {
                 if ( $print_filenames ) {
-                    # XXX printing should probably happen inside of App::Ack
-                    print $resource->name, ':', $matches_for_this_file, $ors;
+                    App::Ack::print( $resource->name, ':', $matches_for_this_file, $ors );
                 }
                 else {
-                    # XXX printing should probably happen inside of App::Ack
-                    print $matches_for_this_file, $ors;
+                    App::Ack::print( $matches_for_this_file, $ors );
                 }
             }
         }
@@ -333,8 +331,7 @@ RESOURCES:
             my $is_match = App::Ack::resource_has_match( $resource, $opt );
 
             if ( $opt->{v} ? !$is_match : $is_match ) {
-                # XXX printing should probably happen inside of App::Ack
-                print $resource->name, $ors;
+                App::Ack::print( $resource->name, $ors );
                 ++$nmatches;
 
                 last RESOURCES if $only_first;
