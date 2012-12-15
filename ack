@@ -1124,6 +1124,14 @@ To do that, run this with F<sudo> or as root:
 
    ln -s /usr/bin/ack-grep /usr/bin/ack
 
+Alternatively, you could use a shell alias:
+
+    # bash/zsh
+    alias ack=ack-grep
+
+    # csh
+    alias ack ack-grep
+
 =head2 What does F<ack> mean?
 
 Nothing.  I wanted a name that was easy to type and that you could
