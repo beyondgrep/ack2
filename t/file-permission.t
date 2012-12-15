@@ -37,7 +37,9 @@ SKIP: {
     check_with( 'regex', $program );
 
     # --count takes a different execution path
-    check_with( 'regex', '--count', $program );
+    check_with( 'regex', '--count', $program, {
+        expected_stdout => 1,
+    } );
 
     my($volume,$path) = File::Spec->splitpath($program);
 
