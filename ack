@@ -247,7 +247,8 @@ sub main {
     my $ors             = $opt->{print0} ? "\0" : "\n";
     my $only_first      = $opt->{1};
 
-    my $nmatches = 0;
+    my $nmatches    = 0;
+    my $total_count = 0;
 RESOURCES:
     while ( my $resource = $resources->next ) {
         # XXX this variable name combined with what we're trying
@@ -311,6 +312,12 @@ RESOURCES:
         }
         elsif ( $opt->{count} ) {
             my $matches_for_this_file = App::Ack::count_matches_in_resource( $resource, $opt );
+
+            unless ( $opt->{show_filename} ) {
+                $total_count += $matches_for_this_file;
+                next RESOURCES;
+            }
+
             if ( !$opt->{l} || $matches_for_this_file > 0) {
                 if ( $print_filenames ) {
                     # XXX printing should probably happen inside of App::Ack
@@ -340,6 +347,10 @@ RESOURCES:
                 last RESOURCES;
             }
         }
+    }
+
+    if ( $opt->{count} && !$opt->{show_filename} ) {
+        App::Ack::print( $total_count, "\n" );
     }
 
     close $App::Ack::fh;
