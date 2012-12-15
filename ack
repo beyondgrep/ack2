@@ -584,7 +584,8 @@ line.
 
 =item B<-k>, B<--known-types>
 
-Limit selected files to those with types that ack knows about.
+Limit selected files to those with types that ack knows about.  This is
+equivalent to the default behavior found in ack 1.
 
 =item B<--line=I<NUM>>
 
