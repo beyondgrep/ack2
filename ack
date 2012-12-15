@@ -536,7 +536,7 @@ Print files where the relative path + filename matches I<REGEX>.
 
 =item B<--group>, B<--nogroup>
 
-B<--group> groups matches by file name with.  This is the default
+B<--group> groups matches by file name.  This is the default
 when used interactively.
 
 B<--nogroup> prints one result per line, like grep.  This is the
