@@ -694,12 +694,9 @@ off by default.
 
 B<-i> always overrides this option.
 
-This applies only to the PATTERN, not to the regexes given for the
-B<-g> and B<-G> options.
-
 =item B<--sort-files>
 
-Sorts the found files lexically.  Use this if you want your file
+Sorts the found files lexicographically.  Use this if you want your file
 listings to be deterministic between runs of I<ack>.
 
 =item B<--show-types>
