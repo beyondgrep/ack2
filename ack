@@ -1152,7 +1152,7 @@ specifies the sources Ack looks for configuration; each one
 that is found is loaded in the order specified here, and
 each one overrides options set in any of the sources preceding
 it.  (For example, if I set --sort-files in my user ackrc, and
---nosort-files on the command line, the comand line takes
+--nosort-files on the command line, the command line takes
 precedence)
 
 =over 4
