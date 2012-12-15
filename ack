@@ -400,7 +400,7 @@ With no file selection, I<ack> searches through regular files that
 are not explicitly excluded by B<--ignore-dir> and B<--ignore-file>
 options, either present in F<ackrc> files or on the command line.
 
-By default, I<ack> ignores certain files and directories.  These
+The default options for I<ack> ignore certain files and directories.  These
 include:
 
 =over 4
