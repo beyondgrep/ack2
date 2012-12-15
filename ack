@@ -337,8 +337,8 @@ RESOURCES:
                 print $resource->name, $ors;
                 ++$nmatches;
 
-                last if $only_first;
-                last if defined($max_count) && $nmatches >= $max_count;
+                last RESOURCES if $only_first;
+                last RESOURCES if defined($max_count) && $nmatches >= $max_count;
             }
         }
         else {
