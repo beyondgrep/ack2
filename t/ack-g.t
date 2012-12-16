@@ -148,6 +148,18 @@ subtest '-Q works on -g' => sub {
     my @args  = ( '-Q', '-g', $regex );
 
     ack_sets_match( [ @args, @files ], \@expected, "Looking for $regex with quotemeta." );
+
+    @expected = (
+        't/text/4th-of-july.txt',
+        't/text/freedom-of-choice.txt',
+        't/text/science-of-myth.txt',
+    );
+    $regex = 'of';
+
+    @files = qw( t/text );
+    @args  = ( '-Q', '-g', $regex );
+
+    ack_sets_match( [ @args, @files ], \@expected, "Looking for $regex with quotemeta." );
 };
 
 subtest '-w works on -g' => sub {
@@ -156,6 +168,18 @@ subtest '-w works on -g' => sub {
 
     my @args  = ( '-w', '-g', $regex ); # The -w means "free" won't match "freedom"
     my @files = qw( t/text/ );
+
+    ack_sets_match( [ @args, @files ], \@expected, "Looking for $regex with '-w'." );
+
+    @expected = (
+        't/text/4th-of-july.txt',
+        't/text/freedom-of-choice.txt',
+        't/text/science-of-myth.txt',
+    );
+    $regex = 'of';
+
+    @files = qw( t/text );
+    @args  = ( '-w', '-g', $regex );
 
     ack_sets_match( [ @args, @files ], \@expected, "Looking for $regex with '-w'." );
 };
