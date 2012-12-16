@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 13;
+use Test::More tests => 14;
 
 use lib 't';
 use Util;
@@ -196,6 +196,19 @@ subtest '-v works on -g' => sub {
     my @files = qw( t/text/ );
 
     ack_sets_match( [ @args, @files ], \@expected, "Looking for file names that do not match $file_regex" );
+};
+
+subtest 'test exit codes' => sub {
+    my $file_regex = 'foo';
+    my @files      = ( 't/text/' );
+
+    run_ack( $file_regex, @files );
+    is( get_rc(), 1, '-g with no matches must exit with 1' );
+
+    $file_regex = 'boy';
+
+    run_ack( $file_regex, @files );
+    is( get_rc(), 0, '-g with matches must exit with 0' );
 };
 
 done_testing();
