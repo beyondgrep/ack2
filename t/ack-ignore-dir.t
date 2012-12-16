@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 22;
+use Test::More tests => 24;
 use File::Spec;
 
 use lib 't';
@@ -127,5 +127,14 @@ DASH_IGNORE_DIR_IGNORES_RELATIVE_PATHS: {
         [ @std_ignore, 'another_subdir',                   ],
         'ignore relative paths instead of just directory names',
     );
+    sets_match( \@results, \@expected, $test_description );
+}
+
+NOIGNORE_SUBDIR_WINS: {
+    set_up_assertion_that_these_options_will_ignore_those_directories(
+        [ '--ignore-dir=another_subdir', '--noignore-dir=CVS' ],
+        [ 'RCS', 'another_subdir(?!/CVS)' ],
+    );
+
     sets_match( \@results, \@expected, $test_description );
 }
