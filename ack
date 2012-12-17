@@ -1201,6 +1201,143 @@ Options are then loaded from the command line.
 
 =back
 
+=head1 DIFFERENCES BETWEEN ACK 1.X AND ACK 2.X
+
+A lot of changes were made for ack 2; here is a list of them.
+
+=head2 GENERAL CHANGES
+
+=over 4
+
+=item *
+
+When no selectors are specified, ack 1.x only searches through files that
+it can map to a file type.  ack 2.x, by constrast, will search through
+every regular, non-binary file that is not explicitly ignored via
+B<--ignore-file> or B<--ignore-dir>.  This is similar to the behavior of the
+B<-a/--all> option in ack 1.x.
+
+=item *
+
+A more flexible filter system has been added, so that more powerful file types
+may be created by the user.  For details, please consult
+L</"Defining your own types">.
+
+=item *
+
+ack now loads multiple ackrc files; see L</"ACKRC LOCATION SEMANTICS"> for
+details.
+
+=item *
+
+ack's default filter definitions aren't special; you may tell ack to
+completely disregard them if you don't like them.
+
+=back
+
+=head2 REMOVED OPTIONS
+
+=over 4
+
+=item *
+
+Because of the change in default search behavior, the B<-a/--all> and
+B<-u/--unrestricted> options have been removed.  In addition, the
+B<-k/--known-types> option was added to cause ack to behave with
+the default search behavior of ack 1.x.
+
+=item *
+
+The B<-G> option has been removed.  Two regular expressions on the
+command line was considered too confusing; to simulate B<-G>'s functionality,
+you may use the new B<-x> option to pipe filenames from one invocation of
+ack into another.
+
+=item *
+
+The B<--binary> option has been removed.
+
+=item *
+
+The B<--skipped> option has been removed.
+
+=item *
+
+The B<--text> option has been removed.
+
+=item *
+
+The B<--invert-file-match> option has been removed.  Instead, you may
+use B<-v> with B<-g>.
+
+=back
+
+=head2 CHANGED OPTIONS
+
+=over 4
+
+=item *
+
+The options that modify the regular expression's behavior (B<-i>, B<-w>,
+B<-Q>, and B<-v>) may now be used with B<-g>.
+
+=back
+
+=head2 ADDED OPTIONS
+
+=over 4
+
+=item *
+
+B<--files-from> was added so that a user may submit a list of filenames as
+a list of files to search.
+
+=item *
+
+B<-x> was added to tell ack to accept a list of filenames via standard input;
+this list is the list of filenames that will be used for the search.
+
+=item *
+
+B<-s> was added to tell ack to suppress error messages about non-existent or
+unreadable files.
+
+=item *
+
+B<--ignore-directory> and B<--noignore-directory> were added as aliases for
+B<--ignore-dir> and B<--noignore-dir> respectively.
+
+=item *
+
+B<--ignore-file> was added so that users may specify patterns of files to
+ignore (ex. /.*~$/).
+
+=item *
+
+B<--dump> was added to allow users to easily find out which options are
+set where.
+
+=item *
+
+B<--create-ackrc> was added so that users may create custom ackrc files based
+on the default settings loaded by ack, and so that users may easily view those
+defaults.
+
+=item *
+
+B<--type-del> was added to selectively remove file type definitions.
+
+=item *
+
+B<--ignore-ack-defaults> was added so that users may ignore ack's default
+options in favor of their own.
+
+=item *
+
+B<--bar> was added so ack users may consult Admiral Ackbar.
+
+=back
+
 =head1 AUTHOR
 
 Andy Lester, C<< <andy at petdance.com> >>
