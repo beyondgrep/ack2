@@ -10,6 +10,8 @@ allow_leading_tabs = 0
 
 [-Documentation::RequirePodAtEnd]
 [-Documentation::RequirePodSections]
+[-Documentation::RequireEndBeforeLastPod]
+# We could have __END__ at the end of ack if not for the squashing.
 
 [-ErrorHandling::RequireCarping]
 
