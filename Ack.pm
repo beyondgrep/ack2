@@ -553,20 +553,6 @@ sub show_man {
     return;
 }
 
-sub _listify {
-    my @whats = @_;
-
-    return '' if !@whats;
-
-    my $end = pop @whats;
-    my $str = @whats ? join( ', ', @whats ) . " and $end" : $end;
-
-    no warnings 'once';
-    require Text::Wrap;
-    $Text::Wrap::columns = 75;
-    return Text::Wrap::wrap( '', '    ', $str );
-}
-
 =head2 get_version_statement
 
 Returns the version information for ack.
