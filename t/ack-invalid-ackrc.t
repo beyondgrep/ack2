@@ -63,8 +63,8 @@ like $output, qr/Usage: ack/;
                      |Wide\ character\ in\ print
                      |Unknown\ escape\ E<0x[[:xdigit:]]+>/x, @{$stderr}),
         0,
-        "Should have no output to stderr: ack --env --man" )
-        or diag( join( "\n", "STDERR:", @{$stderr} ) );
+        'Should have no output to stderr: ack --env --man' )
+        or diag( join( "\n", 'STDERR:', @{$stderr} ) );
 
     if (is_win32()) {
         like join("\n", @{$output}[0,1]), qr/^NAME\s+ack(?:-standalone)?\s/;
