@@ -1,5 +1,12 @@
 History file for ack 2.0.  http://betterthangrep.com/
 
+2.00b02 Sat Dec 22 16:09:59 CST 2012
+
+Added the -k/--known-types option.
+
+Added checks for mutually exclusive options, like -f and --output.
+
+
 2.00a01 Thu Jun 14 22:02:24 CDT 2012
 
 This is the first alpha release of ack 2.0.

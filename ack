@@ -23,7 +23,7 @@ use Getopt::Long 2.36 ();
 
 use Carp 1.22 ();
 
-our $VERSION = '2.00a01';
+our $VERSION = '2.00b02';
 # Check http://betterthangrep.com/ for updates
 
 # These are all our globals.
