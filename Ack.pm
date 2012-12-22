@@ -733,14 +733,14 @@ sub does_match {
 
     if ( $invert ? $line !~ /$re/ : $line =~ /$re/ ) {
         if ( not $invert ) {
-            use English '-no_match_vars';
+            # @- = @LAST_MATCH_START
+            # @+ = @LAST_MATCH_END
+            $match_column_number = $-[0] + 1;
 
-            $match_column_number = $LAST_MATCH_START[0] + 1;
-
-            if ( @LAST_MATCH_START > 1 ) {
+            if ( @- > 1 ) {
                 @capture_indices = map {
-                    [ $LAST_MATCH_START[$_], $LAST_MATCH_END[$_] ]
-                } ( 1 .. $#LAST_MATCH_START );
+                    [ $-[$_], $+[$_] ]
+                } ( 1 .. $#- );
             }
         }
         return 1;
