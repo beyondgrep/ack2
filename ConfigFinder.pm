@@ -41,9 +41,9 @@ use Cwd 3.00 ();
 use File::Spec 3.00;
 
 BEGIN {
-    if($App::Ack::is_windows) {
+    if ($App::Ack::is_windows) {
         require Win32;
-    };
+    }
 }
 
 =head1 METHODS
