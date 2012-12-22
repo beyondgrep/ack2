@@ -15,10 +15,6 @@ sub prep_environment {
     $orig_wd = Cwd::getcwd();
 }
 
-# capture stderr & stdout output into these files (only on Win32)
-my $catchout_file = 'stdout.log';
-my $catcherr_file = 'stderr.log';
-
 sub is_win32 {
     return $^O =~ /Win32/;
 }
@@ -171,6 +167,10 @@ sub run_cmd {
     my ( @stdout, @stderr );
 
     if (is_win32) {
+# capture stderr & stdout output into these files (only on Win32)
+        my $catchout_file = 'stdout.log';
+        my $catcherr_file = 'stderr.log';
+
         open(SAVEOUT, ">&STDOUT") or die "Can't dup STDOUT: $!";
         open(SAVEERR, ">&STDERR") or die "Can't dup STDERR: $!";
         open(STDOUT, '>', $catchout_file) or die "Can't open $catchout_file: $!";
@@ -184,7 +184,8 @@ sub run_cmd {
         close SAVEERR;
         @stdout = read_file($catchout_file);
         @stderr = read_file($catcherr_file);
-    } else {
+    }
+    else {
 
         my ( $stdout_read, $stdout_write );
         my ( $stderr_read, $stderr_write );
