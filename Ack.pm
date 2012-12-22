@@ -101,7 +101,8 @@ sub retrieve_arg_sources {
         # XXX this is a potential race condition!
         if(open my $fh, '<', $ackrc) {
             close $fh;
-        } else {
+        }
+        else {
             die "Unable to load ackrc '$ackrc': $!"
         }
         push( @files, $ackrc );
@@ -1080,11 +1081,13 @@ sub get_file_id {
 
     if ( $is_windows ) {
         return File::Next::reslash( $filename );
-    } else {
+    }
+    else {
         # XXX is this the best method? it always hits the FS
         if( my ( $dev, $inode ) = (stat($filename))[0, 1] ) {
             return join(':', $dev, $inode);
-        } else {
+        }
+        else {
             # XXX this could be better
             return $filename;
         }

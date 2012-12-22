@@ -106,7 +106,8 @@ my ($stdout, $stderr);
 
 if (is_win32()) {
     ($stdout, $stderr) = run_cmd("@lhs_args | @rhs_args");
-} else {
+}
+else {
     my ( $stdout_read, $stdout_write );
     my ( $stderr_read, $stderr_write );
     my ( $lhs_rhs_read, $lhs_rhs_write );

@@ -92,10 +92,11 @@ sub bisect (&@) {
         local $_ = $values[$middle];
         my $result = $predicate->($_);
 
-        if($result) {
+        if ($result) {
             $last_good = $_;
             $high = $middle - 1;
-        } else {
+        }
+        else {
             $low = $middle + 1;
         }
     }

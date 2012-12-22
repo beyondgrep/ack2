@@ -71,7 +71,8 @@ sub _remove_redundancies {
         if( defined($dev) ) {
             if( $dev_and_inode_seen{"$dev:$inode"} ) {
                 undef $path;
-            } else {
+            }
+            else {
                 $dev_and_inode_seen{"$dev:$inode"} = 1;
             }
         }
@@ -108,7 +109,8 @@ sub find_config_files {
             Win32::GetFolderPath(Win32::CSIDL_COMMON_APPDATA()),
             Win32::GetFolderPath(Win32::CSIDL_APPDATA()),
         );
-    } else {
+    }
+    else {
         push @config_files, '/etc/ackrc';
     }
 

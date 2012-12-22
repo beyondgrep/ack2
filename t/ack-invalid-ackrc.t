@@ -42,7 +42,7 @@ like $output, qr/Usage: ack/;
     like $stderr, qr/Unknown option: frobnicate/;
 
     # the following was shamelessly copied from ack-help-types.t
-    for(my $i = 0; $i < @types; $i += 2) {
+    for (my $i = 0; $i < @types; $i += 2) {
         my ( $type, $checks ) = @types[ $i , $i + 1 ];
 
         my ( $matching_line ) = grep { /--\[no\]$type/ } @{$output};
@@ -68,7 +68,8 @@ like $output, qr/Usage: ack/;
 
     if (is_win32()) {
         like join("\n", @{$output}[0,1]), qr/^NAME\s+ack(?:-standalone)?\s/;
-    } else {
+    }
+    else {
         like $output->[0], qr/ACK(?:-STANDALONE)?\Q(1)\E/;
     }
 }

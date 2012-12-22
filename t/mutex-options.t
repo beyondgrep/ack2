@@ -27,7 +27,8 @@ sub are_mutually_exclusive {
        $error =~ /Options '$opt2_re' and '$opt1_re' are mutually exclusive/) {
 
         pass qq{Error message resembles "Options '$opt1' and '$opt2' are mutually exclusive"};
-    } else {
+    }
+    else {
         fail qq{Error message does not resemble "Options '$opt1' and '$opt2' are mutually exclusive"};
         diag("Error message: '$error'");
     }

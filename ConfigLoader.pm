@@ -405,7 +405,8 @@ sub explode_sources {
         # XXX refactor?
         if ( $arg =~ /(\w+)=/) {
             $arg_spec->{$1} = sub {};
-        } else {
+        }
+        else {
             ( $arg ) = split /:/, $arg;
             $arg_spec->{$arg} = sub {};
         }
@@ -513,11 +514,12 @@ sub remove_default_options_if_needed {
 
         my ( $name, $args ) = @{$sources}[ $index, $index + 1 ];
 
-        if(ref($args)) {
+        if (ref($args)) {
             Getopt::Long::GetOptionsFromArray($args,
                 'ignore-ack-defaults' => \$should_remove,
             );
-        } else {
+        }
+        else {
             ( undef, $sources->[$index + 1] ) = Getopt::Long::GetOptionsFromString($args,
                 'ignore-ack-defaults' => \$should_remove,
             );

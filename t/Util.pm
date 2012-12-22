@@ -386,7 +386,8 @@ sub record_option_coverage {
         $command_line = "$^X $record_options $command_line";
 
         system $command_line;
-    } else {
+    }
+    else {
         while ( @command_line && $command_line[0] !~ /ack/ ) {
             shift @command_line;
         }
@@ -405,7 +406,7 @@ BEGIN {
         1;
     };
 
-    if($ok) {
+    if ($ok) {
         no strict 'refs';
         *run_ack_interactive = sub {
             my ( @args) = @_;
@@ -432,7 +433,8 @@ BEGIN {
                     close $pty;
                     waitpid $pid, 0;
                     return @lines;
-                } else {
+                }
+                else {
                     my $output = '';
 
                     while(<$pty>) {
@@ -442,7 +444,8 @@ BEGIN {
                     waitpid $pid, 0;
                     return $output;
                 }
-            } else {
+            }
+            else {
                 $pty->make_slave_controlling_terminal();
                 my $slave = $pty->slave();
                 $slave->clone_winsize_from(\*STDIN);
