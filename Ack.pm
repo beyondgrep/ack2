@@ -1044,6 +1044,8 @@ sub print_line_with_context {
     }
 
     $is_first_match = 0;
+
+    return;
 }
 
 }
