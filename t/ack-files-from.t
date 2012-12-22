@@ -58,7 +58,7 @@ sub fill_temp_file {
     my @lines = @_;
 
     my $tempfile = File::Temp->new;
-    print $tempfile "$_\n" for @lines;
+    print {$tempfile} "$_\n" for @lines;
     close $tempfile;
 
     return $tempfile;
