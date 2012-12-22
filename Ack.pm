@@ -543,11 +543,14 @@ END_OF_HELP
 
 sub show_man {
     require Pod::Usage;
+
     Pod::Usage::pod2usage({
         -input   => $App::Ack::orig_program_name,
         -verbose => 2,
         -exitval => 0,
     });
+
+    return;
 }
 
 sub _listify {
