@@ -149,7 +149,7 @@ sub process_filetypes {
     $additional_specs{'k|known-types'} = sub {
         my ( undef, $value ) = @_;
 
-        my @filters = map { @$_ } values(%App::Ack::mappings);
+        my @filters = map { @{$_} } values(%App::Ack::mappings);
 
         push @{ $opt->{'filters'} }, @filters;
     };
@@ -538,13 +538,13 @@ sub check_for_mutually_exclusive_options {
     my ( $arg_sources ) = @_;
 
     my %mutually_exclusive_with;
-    my @copy = @$arg_sources;
+    my @copy = @{$arg_sources};
 
     for(my $i = 0; $i < @INVALID_COMBINATIONS; $i += 2) {
         my ( $lhs, $rhs ) = @INVALID_COMBINATIONS[ $i, $i + 1 ];
 
-        foreach my $l_opt ( @$lhs ) {
-            foreach my $r_opt ( @$rhs ) {
+        foreach my $l_opt ( @{$lhs} ) {
+            foreach my $r_opt ( @{$rhs} ) {
                 push @{ $mutually_exclusive_with{ $l_opt } }, $r_opt;
                 push @{ $mutually_exclusive_with{ $r_opt } }, $l_opt;
             }
@@ -555,9 +555,9 @@ sub check_for_mutually_exclusive_options {
         my %set_opts;
 
         my ( $source_name, $args ) = splice @copy, 0, 2;
-        $args = ref($args) ? [ @$args ] : [ Text::ParseWords::shellwords($args) ];
+        $args = ref($args) ? [ @{$args} ] : [ Text::ParseWords::shellwords($args) ];
 
-        foreach my $opt ( @$args ) {
+        foreach my $opt ( @{$args} ) {
             next unless $opt =~ /^[-+]/;
             last if $opt eq '--';
 
@@ -574,7 +574,7 @@ sub check_for_mutually_exclusive_options {
 
             next unless $mutex_opts;
 
-            foreach my $mutex_opt ( @$mutex_opts ) {
+            foreach my $mutex_opt ( @{$mutex_opts} ) {
                 if($set_opts{ $mutex_opt }) {
                     die "Options '$mutex_opt' and '$opt' are mutually exclusive\n";
                 }
