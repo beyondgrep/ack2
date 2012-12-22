@@ -97,7 +97,10 @@ t/swamp/0
 t/swamp/CMakeLists.txt
 t/swamp/Makefile
 t/swamp/Makefile.PL
+t/swamp/MasterPage.master
 t/swamp/Rakefile
+t/swamp/Sample.ascx
+t/swamp/Sample.asmx
 t/swamp/blib/ignore.pir
 t/swamp/blib/ignore.pm
 t/swamp/blib/ignore.pod
@@ -138,6 +141,7 @@ t/swamp/not-an-#emacs-workfile#
 t/swamp/notaMakefile
 t/swamp/notaRakefile
 t/swamp/notes.md
+t/swamp/options-crlf.pl
 t/swamp/options.pl
 t/swamp/options.pl.bak
 t/swamp/parrot.pir
@@ -150,7 +154,10 @@ t/swamp/perl.pm
 t/swamp/perl.pod
 t/swamp/perl.tar.gz
 t/swamp/pipe-stress-freaks.F
+t/swamp/sample.asp
+t/swamp/sample.aspx
 t/swamp/sample.rake
+t/swamp/service.svc
 t/swamp/solution8.tar
 t/swamp/stuff.cmake
 t/text/4th-of-july.txt
