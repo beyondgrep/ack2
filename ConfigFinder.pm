@@ -79,8 +79,7 @@ sub _remove_redundancies {
     return grep { defined() } @configs;
 }
 
-sub _check_for_ackrc
-{
+sub _check_for_ackrc {
     return unless defined $_[0];
 
     my @files = grep { -f }

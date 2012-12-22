@@ -112,7 +112,7 @@ called implicitly by stringification.
 sub to_string {
     my ( $self ) = @_;
 
-    return "(unimplemented to_string)";
+    return '(unimplemented to_string)';
 }
 
 =head2 $filter->inspect
