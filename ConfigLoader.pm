@@ -23,12 +23,15 @@ use Text::ParseWords 3.1 ();
 my @INVALID_COMBINATIONS;
 
 BEGIN {
-    my @context = qw( -A -B -C --after-context --before-context --context );
+    my @context  = qw( -A -B -C --after-context --before-context --context );
+    my @pretty   = qw( --heading --group --break );
+    my @filename = qw( -h -H --with-filename --no-filename );
+
     @INVALID_COMBINATIONS = (
         # XXX normalize
-        [qw(-l)]                 => [@context, qw(-L -o --passthru --output --max-count -h -H --with-filename --no-filename --column --heading --break --group -f -g --show-types)],
-        [qw(-L)]                 => [@context, qw(-l -o --passthru --output --max-count -h -H --with-filename --no-filename --column --heading --break --group -f -g --show-types -c --count)],
-        [qw(--line)]             => [@context, qw(-l --files-with-matches --files-without-matches -L -o --passthru --match -m --max-count -1 -h -H --with-filename --no-filename -c --count --column --print0 -f -g --show-types)],
+        [qw(-l)]                 => [@context, @pretty, @filename, qw(-L -o --passthru --output --max-count --column -f -g --show-types)],
+        [qw(-L)]                 => [@context, @pretty, @filename, qw(-l -o --passthru --output --max-count --column -f -g --show-types -c --count)],
+        [qw(--line)]             => [@context, @pretty, @filename, qw(-l --files-with-matches --files-without-matches -L -o --passthru --match -m --max-count -1 -c --count --column --print0 -f -g --show-types)],
         [qw(-o)]                 => [@context, qw(--output -c --count --column --column -f --show-types)],
         [qw(--passthru)]         => [@context, qw(--output --column -m --max-count -1 -c --count -f -g)],
         [qw(--output)]           => [qw(-c --count -f -g)],
@@ -36,11 +39,11 @@ BEGIN {
         [qw(-m --max-count)]     => [qw(-1 -f -g -c --count)],
         [qw(-h --no-filename)]   => [qw(-H --with-filename -f -g --group --heading)],
         [qw(-H --with-filename)] => [qw(-h --no-filename -f -g)],
-        [qw(-c --count)]         => [@context, qw(--column --heading --group --break -f -g)],
+        [qw(-c --count)]         => [@context, @pretty, qw(--column -f -g)],
         [qw(--column)]           => [qw(-f -g)],
         [@context]               => [qw(-f -g)],
-        [qw(-f)]                 => [qw(-g --heading --group --break)],
-        [qw(-g)]                 => [qw(--heading --group --break)],
+        [qw(-f)]                 => [qw(-g), @pretty],
+        [qw(-g)]                 => [qw(-f), @pretty],
     );
 }
 
