@@ -14,7 +14,7 @@ App::Ack - A container for functions for the ack program
 
 =head1 VERSION
 
-Version 2.00b02
+Version 2.00b03
 
 =cut
 
@@ -22,7 +22,7 @@ our $VERSION;
 our $GIT_REVISION;
 our $COPYRIGHT;
 BEGIN {
-    $VERSION = '2.00b02';
+    $VERSION = '2.00b03';
     $COPYRIGHT = 'Copyright 2005-2012 Andy Lester.';
     $GIT_REVISION = '';
 }

@@ -11,6 +11,7 @@ use App::Ack::Resources;
 use App::Ack::Resource::Basic ();
 
 # XXX Don't make this so brute force
+# See also: https://github.com/petdance/ack2/issues/89
 use App::Ack::Filter ();
 use App::Ack::Filter::Default;
 use App::Ack::Filter::Extension;
@@ -23,7 +24,7 @@ use Getopt::Long 2.36 ();
 
 use Carp 1.22 ();
 
-our $VERSION = '2.00b02';
+our $VERSION = '2.00b03';
 # Check http://betterthangrep.com/ for updates
 
 # These are all our globals.
