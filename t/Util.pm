@@ -401,12 +401,16 @@ sub record_option_coverage {
 }
 
 BEGIN {
-    my $ok = eval {
+    my $has_io_pty = eval {
         require IO::Pty;
         1;
     };
 
-    if ($ok) {
+    sub has_io_pty {
+        return $has_io_pty;
+    }
+
+    if ($has_io_pty) {
         no strict 'refs';
         *run_ack_interactive = sub {
             my ( @args) = @_;
