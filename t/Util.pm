@@ -317,8 +317,8 @@ sub lists_match {
         $path = File::Next::reslash( $path ); ## no critic (Variables::ProhibitPackageVars)
     }
 
-    eval 'use Test::Differences';
-    if ( !$@ ) {
+    my $rc = eval 'use Test::Differences; 1;';
+    if ( $rc ) {
         return eq_or_diff( [@actual], [@expected], $msg );
     }
     else {
