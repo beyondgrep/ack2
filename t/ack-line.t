@@ -3,10 +3,17 @@
 use warnings;
 use strict;
 
-use Test::More tests => 23;
+use Test::More;
 
 use lib 't';
 use Util;
+
+if ( not __PACKAGE__->can('run_ack_interactive') ) {
+    plan skip_all => q{You need to install IO::Pty to run this test};
+    exit(0);
+}
+
+plan tests => 23;
 
 prep_environment();
 
@@ -164,3 +171,5 @@ LINE_WITH_REGEX: {
     is( scalar @{$stderr}, 1, 'One line of stderr output' );
     like( $stderr->[0], qr/\Q(Sue)/, 'Error message must contain "(Sue)"' );
 }
+
+done_testing();
