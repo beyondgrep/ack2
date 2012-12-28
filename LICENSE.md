@@ -100,16 +100,16 @@ from the Standard Version, including, but not limited to, documenting
 any non-standard features, executables, or modules, and provided that
 you do at least ONE of the following:
 
-> (a) make the Modified Version available to the Copyright Holder of
+(a) make the Modified Version available to the Copyright Holder of
 the Standard Version, under the Original License, so that the Copyright
 Holder may include your modifications in the Standard Version.
 
-> (b) ensure that installation of your Modified Version does not prevent
+(b) ensure that installation of your Modified Version does not prevent
 the user installing or running the Standard Version. In addition, the
 Modified Version must bear a name that is different from the name of
 the Standard Version.
 
-> (c) allow anyone who receives a copy of the Modified Version to make
+(c) allow anyone who receives a copy of the Modified Version to make
 the Source form of the Modified Version available to others under (i)
 the Original License or (ii) a license that permits the licensee to
 freely copy, modify and redistribute the Modified Version using the
