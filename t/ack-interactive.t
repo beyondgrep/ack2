@@ -9,7 +9,7 @@ use Term::ANSIColor qw(color);
 use lib 't';
 use Util;
 
-if(! __PACKAGE__->can('run_ack_interactive')) {
+if ( not has_io_pty() ) {
     plan skip_all => q{You need to install IO::Pty to run this test};
     exit(0);
 }
