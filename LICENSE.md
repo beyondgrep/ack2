@@ -1,6 +1,6 @@
-ack is released under the Artistic License 2.0.
+ack is released under the [Artistic License 2.0][1].
 
-From http://opensource.org/licenses/Artistic-2.0
+[1]: http://www.perlfoundation.org/artistic_license_2_0
 
 Artistic License 2.0
 ====================
@@ -12,7 +12,7 @@ license document, but changing it is not allowed.
 
 
 Preamble
-========
+--------
 
 This license establishes the terms under which a given free software
 Package may be copied, modified, distributed, and/or redistributed. The
@@ -28,7 +28,7 @@ a different licensing arrangement.
 
 
 Definitions
-===========
+-----------
 
 "Copyright Holder" means the individual(s) or organization(s) named in
 the copyright notice for the entire Package.
@@ -71,7 +71,7 @@ the Source form.
 
 
 Permission for Use and Modification Without Distribution
-========================================================
+--------------------------------------------------------
 
 (1) You are permitted to use the Standard Version and create and use
 Modified Versions for any purpose without restriction, provided that you
@@ -79,7 +79,7 @@ do not Distribute the Modified Version.
 
 
 Permissions for Redistribution of the Standard Version
-======================================================
+------------------------------------------------------
 
 (2) You may Distribute verbatim copies of the Source form of the Standard
 Version of this Package in any medium without restriction, either gratis
@@ -117,7 +117,7 @@ prohibited but Distributor Fees are allowed.
 
 
 Distribution of Compiled Forms of the Standard Version or Modified Versions without the Source
-==============================================================================================
+----------------------------------------------------------------------------------------------
 
 (5) You may Distribute Compiled forms of the Standard Version without
 the Source, provided that you include complete instructions on how to
@@ -135,7 +135,7 @@ Source of the Modified Version.
 
 
 Aggregating or Linking the Package
-==================================
+----------------------------------
 
 (7) You may aggregate the Package (either the Standard Version or
 Modified Version) with other packages and Distribute the resulting
@@ -153,7 +153,7 @@ result does not expose a direct interface to the Package.
 
 
 Items That are Not Considered Part of a Modified Version
-========================================================
+--------------------------------------------------------
 
 (9) Works (including, but not limited to, modules and scripts) that
 merely extend or make use of the Package, do not, by themselves, cause
@@ -163,7 +163,7 @@ of this license.
 
 
 General Provisions
-==================
+------------------
 
 (10) Any use, modification, and distribution of the Standard or Modified
 Versions is governed by this Artistic License. By using, modifying or

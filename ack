@@ -1480,4 +1480,7 @@ Copyright 2005-2012 Andy Lester.
 This program is free software; you can redistribute it and/or modify
 it under the terms of the Artistic License v2.0.
 
+See http://www.perlfoundation.org/artistic_license_2_0 or the LICENSE.md
+file that comes with the ack distribution.
+
 =cut
