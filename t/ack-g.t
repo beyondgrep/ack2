@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 14;
+use Test::More tests => 15;
 
 use lib 't';
 use Util;
@@ -196,6 +196,25 @@ subtest '-v works on -g' => sub {
     my @files = qw( t/text/ );
 
     ack_sets_match( [ @args, @files ], \@expected, "Looking for file names that do not match $file_regex" );
+};
+
+subtest '--smart-case works on -g' => sub {
+    my @expected = qw(
+        t/swamp/pipe-stress-freaks.F
+        t/swamp/crystallography-weenies.f
+    );
+
+    my @files = qw( t/swamp );
+    my @args  = ( '--smart-case', '-g', 'f$' );
+
+    ack_sets_match( [ @args, @files ], \@expected, 'Looking for f$' );
+
+    @expected = qw(
+        t/swamp/pipe-stress-freaks.F
+    );
+    @args = ( '--smart-case', '-g', 'F$' );
+
+    ack_sets_match( [ @args, @files ], \@expected, 'Looking for f$' );
 };
 
 subtest 'test exit codes' => sub {
