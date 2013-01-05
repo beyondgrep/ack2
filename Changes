@@ -1,5 +1,11 @@
 History file for ack 2.0.  http://betterthangrep.com/
 
+2.00b04 Sat Jan  5 01:08:21 CST 2013
+====================================
+No longer run ack-standalone in the tests with perl -T.  This was causing
+make cpantesters failures.
+
+
 2.00b03 Fri Dec 28 16:24:49 CST 2012
 ====================================
 Fixed some failing tests in Win32.

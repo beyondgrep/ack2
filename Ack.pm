@@ -14,7 +14,7 @@ App::Ack - A container for functions for the ack program
 
 =head1 VERSION
 
-Version 2.00b03
+Version 2.00b04
 
 =cut
 
@@ -22,8 +22,8 @@ our $VERSION;
 our $GIT_REVISION;
 our $COPYRIGHT;
 BEGIN {
-    $VERSION = '2.00b03';
-    $COPYRIGHT = 'Copyright 2005-2012 Andy Lester.';
+    $VERSION = '2.00b04';
+    $COPYRIGHT = 'Copyright 2005-2013 Andy Lester.';
     $GIT_REVISION = '';
 }
 
@@ -1103,7 +1103,7 @@ sub create_ackrc {
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2005-2012 Andy Lester.
+Copyright 2005-2013 Andy Lester.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the Artistic License v2.0.

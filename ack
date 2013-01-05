@@ -24,7 +24,7 @@ use Getopt::Long 2.36 ();
 
 use Carp 1.22 ();
 
-our $VERSION = '2.00b03';
+our $VERSION = '2.00b04';
 # Check http://betterthangrep.com/ for updates
 
 # These are all our globals.
@@ -1476,7 +1476,7 @@ Rob Hoelz.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2005-2012 Andy Lester.
+Copyright 2005-2013 Andy Lester.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the Artistic License v2.0.
