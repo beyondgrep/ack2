@@ -1,6 +1,6 @@
 History file for ack 2.0.  http://betterthangrep.com/
 
-2.00b04 Sat Jan  5 01:08:21 CST 2013
+2.00b05 Sat Jan  5 14:48:05 CST 2013
 ====================================
 No longer run ack-standalone in the tests with perl -T.  This was causing
 make cpantesters failures.
