@@ -15,8 +15,9 @@ use Util;
 
         foreach my $line (@{$output}) {
             if ( $line =~ /^\s+-/ ) {
-                while ( $line =~ /(-(?:-\[no\])?[-a-zA-Z0-9]+)/g ) {
+                while ( $line =~ /(-[^\s=,]+)/g ) {
                     my $option = $1;
+                    chop $option if $option =~ /\[$/;
 
                     if ( $option =~ s/^--\[no\]/--/ ) {
                         my $negated_option = $option;
