@@ -506,6 +506,11 @@ editors that can place your cursor at a given position.
 Dumps the default ack options to standard output.  This is useful for
 when you want to customize the defaults.
 
+=item B<--dump>
+
+Writes the list of options loaded and where they came from to standard
+output.  Handy for debugging.
+
 =item B<--env>, B<--noenv>
 
 B<--noenv> disables all environment processing. No F<.ackrc> is
@@ -578,6 +583,12 @@ Print all known types.
 =item B<-i>, B<--ignore-case>
 
 Ignore case in the search strings.
+
+=item B<--ignore-ack-defaults>
+
+Tells ack to completely ignore the default definitions provided with ack.
+This is useful in combination with B<--create-ackrc> if you I<really> want
+to customize ack.
 
 =item B<--[no]ignore-dir=I<DIRNAME>>, B<--[no]ignore-directory=I<DIRNAME>>
 
