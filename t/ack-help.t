@@ -6,18 +6,53 @@ use lib 't';
 use Util;
 
 {
-    my $usage;
-    sub option_in_usage {
-        my $opt = shift;
+    my $help_options;
 
-        unless( $usage ) {
-            ( $usage, undef ) = run_ack_with_stderr( '--help' );
-            $usage            = join( "\n", @{$usage} );
+    sub _populate_help_options {
+        my ( $output, undef ) = run_ack_with_stderr( '--help' );
+
+        $help_options = [];
+
+        foreach my $line (@{$output}) {
+            if ( $line =~ /^\s+-/ ) {
+                while ( $line =~ /(-(?:-\[no\])?[-a-zA-Z0-9]+)/g ) {
+                    my $option = $1;
+
+                    if ( $option =~ s/^--\[no\]/--/ ) {
+                        my $negated_option = $option;
+                        substr $negated_option, 2, 0, 'no';
+                        push @{$help_options}, $negated_option;
+                    }
+
+                    push @{$help_options}, $option;
+                }
+            }
+        }
+    }
+
+    sub get_help_options {
+        unless ( $help_options ) {
+            _populate_help_options();
         }
 
-        local $Test::Builder::Level = $Test::Builder::Level + 1;
-        return ok( $usage =~ qr/\Q$opt\E\b/s, "Found $opt in usage" );
+        return @{ $help_options };
     }
+}
+
+sub option_in_usage {
+    my ( $expected_option ) = @_;
+
+    my @help_options = get_help_options();
+    my $found;
+
+    foreach my $option ( @help_options ) {
+        if ( $option eq $expected_option ) {
+            $found = 1;
+            last;
+        }
+    }
+
+    ok $found, "Option '$expected_option' found in --help output";
 }
 
 my @other_long_opts = qw(
@@ -36,26 +71,32 @@ my @other_long_opts = qw(
     --print0
     --pager
     --nopager
-    --[no]heading
-    --[no]break
+    --heading
+    --noheading
+    --break
+    --nobreak
     --group
     --nogroup
-    --[no]color
-    --[no]colour
+    --color
+    --nocolor
+    --colour
+    --nocolour
     --color-filename
     --color-match
     --color-lineno
     --flush
     --sort-files
     --show-types
-    --[no]ignore-dir
+    --ignore-dir
+    --noignore-dir
     --recurse
     --no-recurse
     --type
     --type-set
     --type-add
     --type-del
-    --[no]follow
+    --follow
+    --nofollow
     --noenv
     --ackrc
     --man
@@ -68,7 +109,8 @@ my @other_long_opts = qw(
     --version
     -i
     --ignore-case
-    --[no]smart-case
+    --smart-case
+    --nosmart-case
     -v
     --invert-match
     -w
