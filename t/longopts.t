@@ -12,55 +12,9 @@ This tests whether L<ack(1)>'s command line options work as expected.
 use Test::More;
 use File::Next (); # For the reslash() function
 
-my @other_long_opts = qw(
-    --passthru
-    --output
-    --match
-    -m
-    --max-count
-    --with-filename
-    --no-filename
-    --count
-    --column
-    --after-context
-    --before-context
-    --context
-    --print0
-    --pager
-    --nopager
-    --[no]heading
-    --[no]break
-    --group
-    --nogroup
-    --[no]color
-    --[no]colour
-    --color-filename
-    --color-match
-    --color-lineno
-    --flush
-    --sort-files
-    --show-types
-    --[no]ignore-dir
-    --recurse
-    --no-recurse
-    --type
-    --type-set
-    --type-add
-    --type-del
-    --[no]follow
-    --noenv
-    --ackrc
-    --man
-    --thpppt
-    --bar
-    --dump
-    --ignore-ack-defaults
-    -s
-);
-
 # --no-recurse is inconsistent w/--nogroup
 
-plan tests => 55 + @other_long_opts;
+plan tests => 39;
 
 use lib 't';
 use Util;
@@ -79,7 +33,6 @@ for my $arg ( qw( --help ) ) {
         qr{ ^Usage: .* Example: }xs,
         qq{$arg output is correct}
     );
-    option_in_usage( $arg );
 }
 
 # Version
@@ -91,7 +44,6 @@ for my $arg ( qw( --version ) ) {
         qr{ ^ack .* Copyright }xs,
         qq{$arg output is correct}
     );
-    option_in_usage( $arg );
 }
 
 # Ignore case
@@ -104,7 +56,6 @@ for my $arg ( qw( -i --ignore-case ) ) {
         qr{UPPER CASE},
         qq{$arg works correctly for ascii}
     );
-    option_in_usage( $arg );
 }
 
 SMART_CASE: {
@@ -120,7 +71,6 @@ SMART_CASE: {
         qr{UPPER CASE},
         qq{$opt does nothing when PATTERN has upper}
     );
-    option_in_usage( '--[no]smart-case' );
 
     like(
         +run_ack( $opt, '-i', 'UpPer CaSe', @files ),
@@ -142,7 +92,6 @@ for my $arg ( qw( -v --invert-match ) ) {
         qr{use strict;\n\n=head1 NAME}, # no 'use warnings' in between here
         qq{$arg works correctly}
     );
-    option_in_usage( $arg );
 }
 
 # Word regexp
@@ -160,7 +109,6 @@ for my $arg ( qw( -w --word-regexp ) ) {
         qr{notaword},
         qq{$arg ignores non-words}
     );
-    option_in_usage( $arg );
 }
 
 # Literal
@@ -173,7 +121,6 @@ for my $arg ( qw( -Q --literal ) ) {
         qr{\Q[abc]\E},
         qq{$arg matches a literal string}
     );
-    option_in_usage( $arg );
 }
 
 my $expected = File::Next::reslash( 't/swamp/options.pl' );
@@ -188,7 +135,6 @@ for my $arg ( qw( -l --files-with-matches ) ) {
         qr{\Q$expected},
         qq{$arg prints matching files}
     );
-    option_in_usage( $arg );
 }
 
 # Files without match
@@ -201,7 +147,6 @@ for my $arg ( qw( -L --files-without-matches ) ) {
         qr{\Q$expected},
         qq{$arg prints matching files}
     );
-    option_in_usage( $arg );
 }
 
 LINE: {
@@ -211,22 +156,4 @@ LINE: {
 
     is @lines, 1, 'only one line of output should be returned';
     is $lines[0], '#!/usr/bin/env perl', 'The first line should match';
-    option_in_usage( '--line' );
-}
-
-foreach my $opt (@other_long_opts) {
-    option_in_usage( $opt );
-}
-
-my $usage;
-sub option_in_usage {
-    my $opt = shift;
-
-    unless( $usage ) {
-        ( $usage, undef ) = run_ack_with_stderr( '--help' );
-        $usage            = join( "\n", @{$usage} );
-    }
-
-    local $Test::Builder::Level = $Test::Builder::Level + 1;
-    return ok( $usage =~ qr/\Q$opt\E\b/s, "Found $opt in usage" );
 }
