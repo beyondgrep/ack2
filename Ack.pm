@@ -396,7 +396,7 @@ Searching:
   -Q, --literal         Quote all metacharacters; PATTERN is literal
 
 Search output:
-  --line=NUM            Only print line(s) NUM of each file
+  --lines=NUM           Only print line(s) NUM of each file
   -l, --files-with-matches
                         Only print filenames containing matches
   -L, --files-without-matches
@@ -412,7 +412,7 @@ Search output:
   -H, --with-filename   Print the filename for each match
   -h, --no-filename     Suppress the prefixing filename on output
   -c, --count           Show number of lines matching per file
-  --column              Show the column number of the first match
+  --[no]column              Show the column number of the first match
 
   -A NUM, --after-context=NUM
                         Print NUM lines of trailing context after matching
@@ -463,6 +463,8 @@ File finding:
 
 File inclusion/exclusion:
   --[no]ignore-dir=name Add/Remove directory from the list of ignored dirs
+  --[no]ignore-directory=name Synonym for ignore-dir
+  --ignore-file=filter  Add filter for ignoring files
   -r, -R, --recurse     Recurse into subdirectories (ack's default behavior)
   -n, --no-recurse      No descending into subdirectories
   --[no]follow          Follow symlinks.  Default is off.
@@ -484,13 +486,14 @@ File type specification:
 
 
 Miscellaneous:
-  --noenv               Ignore environment variables and global ackrc files
+  --[no]env             Ignore environment variables and global ackrc files.  --env is legal but redundant.
   --ackrc=filename      Specify an ackrc file to use
   --ignore-ack-defaults Ignore the default definitions that ack includes.
   --create-ackrc        Outputs a default ackrc for your customization to standard output.
-  --help                This help
+  --help, -?            This help
   --help-types          Display all known types
   --dump                Dump information on which options are loaded from which RC files
+  --[no]filter          Force ack to treat standard input as a pipe (--filter) or tty (--nofilter)
   --man                 Man page
   --version             Display version & copyright
   --thpppt              Bill the Cat
