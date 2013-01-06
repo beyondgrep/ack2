@@ -603,10 +603,10 @@ identically to file type filters as seen in L</"Defining your own types">.
 Limit selected files to those with types that ack knows about.  This is
 equivalent to the default behavior found in ack 1.
 
-=item B<--line=I<NUM>>
+=item B<--lines=I<NUM>>
 
 Only print line I<NUM> of each file. Multiple lines can be given with multiple
-B<--line> options or as a comma separated list (B<--line=3,5,7>). B<--line=4-7>
+B<--lines> options or as a comma separated list (B<--lines=3,5,7>). B<--lines=4-7>
 also works. The lines are always output in ascending order, no matter the
 order given on the command line.
 
