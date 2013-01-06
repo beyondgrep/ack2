@@ -126,6 +126,8 @@ my @other_long_opts = qw(
 
 plan tests => scalar(@other_long_opts);
 
+prep_environment();
+
 foreach my $option ( @other_long_opts ) {
     option_in_usage( $option );
 }
