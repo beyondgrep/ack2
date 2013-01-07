@@ -1092,10 +1092,25 @@ the previous five lines from the log in each case.
 
 Following variables are useful in the expansion string
 
-  $&            The whole string matched by PATTERN
-  $1, $2 ....   The contents of the 1st,2nd ... bracketed group in PATTERN
-  $`            The string before the match.
-  $'            The string after the match.
+=over 4
+
+=item C<$&>
+
+The whole string matched by PATTERN.
+
+=item C<$1>, C<$2>, ...
+
+The contents of the 1st, 2nd ... bracketed group in PATTERN.
+
+=item C<$`>
+
+The string before the match.
+
+=item C<$'>
+
+The string after the match.
+
+=back
 
 For more details see
 L<http://perldoc.perl.org/perlvar.html#Variables-related-to-regular-expressions|perlvar>.
