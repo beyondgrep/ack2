@@ -1090,7 +1090,7 @@ the previous five lines from the log in each case.
 
 =head2 Examples of F<--output>
 
-Following variables are useful in the expansion string
+Following variables are useful in the expansion string:
 
 =over 4
 
