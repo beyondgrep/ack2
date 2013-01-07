@@ -661,6 +661,8 @@ highlighting)
 
 Output the evaluation of I<expr> for each line (turns off text
 highlighting)
+If PATTERN matches more than once then a line is output for each non-overlapping match.
+For more information please see the section "Examples of F<--output>"
 
 =item B<--pager=I<program>>, B<--nopager>
 
@@ -1085,6 +1087,32 @@ took the access log and scanned it with ack twice.
 The first ack finds only the lines in the Apache log for the given
 IP.  The second finds the match on my troublesome GIF, and shows
 the previous five lines from the log in each case.
+
+=head2 Examples of F<--output>
+
+Following variables are useful in the expansion string
+
+  $&            The whole string matched by PATTERN
+  $1, $2 ....   The contents of the 1st,2nd ... bracketed group in PATTERN
+  $`            The string before the match.
+  $'            The string after the match.
+
+For more details see
+L<http://perldoc.perl.org/perlvar.html#Variables-related-to-regular-expressions|perlvar>.
+
+This example shows how to add text around a particular pattern
+(in this case adding _ around word with "e")
+
+    ack2.pl "\w*e\w*" quick.txt --output="$`_$&_$'"
+    _The_ quick brown fox jumps over the lazy dog
+    The quick brown fox jumps _over_ the lazy dog
+    The quick brown fox jumps over _the_ lazy dog
+
+This shows how to pick out particular parts of a match using ( ) within regular expression.
+
+  ack '=head(\d+)\s+(.*)' --output=' $1 : $2'
+  input file contains "=head1 NAME"
+  output  "1 : NAME"
 
 =head2 Share your knowledge
 
