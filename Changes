@@ -1,5 +1,11 @@
 History file for ack 2.0.  http://betterthangrep.com/
 
+2.00b06 Mon Jan  7 09:46:08 CST 2013
+====================================
+Lowered the required version of Carp.  We may be able to lower it even
+more, but for now this should fix CPAN testers failures.
+
+
 2.00b05 Sat Jan  5 14:48:05 CST 2013
 ====================================
 No longer run ack-standalone in the tests with perl -T.  This was causing
