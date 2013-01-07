@@ -6,7 +6,7 @@ use overload
     '""' => 'to_string';
 
 use App::Ack::Filter::Inverse ();
-use Carp 1.22 ();
+use Carp 1.20 ();
 
 my %filter_types;
 

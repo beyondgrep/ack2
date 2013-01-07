@@ -22,7 +22,7 @@ use App::Ack::Filter::Match;
 
 use Getopt::Long 2.36 ();
 
-use Carp 1.22 ();
+use Carp 1.20 ();
 
 our $VERSION = '2.00b05';
 # Check http://betterthangrep.com/ for updates

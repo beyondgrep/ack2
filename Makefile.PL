@@ -31,7 +31,7 @@ my %parms = (
     },
     EXE_FILES           => [ 'ack' ],
     PREREQ_PM => {
-        'Carp'              => '1.22',
+        'Carp'              => '1.20',
         'Cwd'               => '3.00',
         'File::Basename'    => '1.00015',
         'File::Glob'        => '1.00015',
