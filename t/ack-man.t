@@ -4,7 +4,6 @@ use lib 't';
 
 use Test::More;
 use Util;
-use Data::Printer return_value => 'dump';
 
 sub strip_special_chars {
     my ( $s ) = @_;
