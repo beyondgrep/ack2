@@ -662,7 +662,7 @@ highlighting)
 Output the evaluation of I<expr> for each line (turns off text
 highlighting)
 If PATTERN matches more than once then a line is output for each non-overlapping match.
-For more information please see the section "Examples of F<--output>"
+For more information please see the section L</"Examples of F<--output>">.
 
 =item B<--pager=I<program>>, B<--nopager>
 
