@@ -126,8 +126,15 @@ sub _compile_file_filter {
     my %is_member_of_starting_set = map { (App::Ack::get_file_id($_) => 1) } @{$start};
 
     return sub {
+        # ack always selects files that are specified on the command
+        # line, regardless of filetype.  If you want to ack a JPEG,
+        # and say "ack foo whatever.jpg" it will do it for you.
         return 1 if $is_member_of_starting_set{ App::Ack::get_file_id($File::Next::name) };
 
+        # Ignore named pipes found in directory searching.  Named
+        # pipes created by subprocesses get specified on the command
+        # line, so the rule of "always select whatever is on the
+        # command line" wins.
         return 0 if -p $File::Next::name;
 
         foreach my $filter (@ifiles_filters) {
