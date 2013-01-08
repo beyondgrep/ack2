@@ -1047,6 +1047,12 @@ not finding matches you think it should find, run F<ack -f> to see
 what files have been selected.  You can also add the C<--show-types>
 options to show the type of each file selected.
 
+=head2 Use B<--dump>
+
+This lists the ackrc files that are loaded and the options loaded
+from them.
+So for example you can find a list of directories that do not get searched or where filetypes are defined.
+
 =head1 TIPS
 
 =head2 Use the F<.ackrc> file.
