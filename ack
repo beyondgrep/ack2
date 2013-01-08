@@ -128,6 +128,8 @@ sub _compile_file_filter {
     return sub {
         return 1 if $is_member_of_starting_set{ App::Ack::get_file_id($File::Next::name) };
 
+        return 0 if -p $File::Next::name;
+
         foreach my $filter (@ifiles_filters) {
             my $resource = App::Ack::Resource::Basic->new($File::Next::name);
             return 0 if ! $resource || $filter->filter($resource);
