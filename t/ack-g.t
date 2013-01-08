@@ -100,7 +100,7 @@ subtest 'Case-insensitive via -i' => sub {
     my $regex = 'PIPE';
 
     my @args  = ( '-i', '-g', $regex );
-    my @files = qw( . );
+    my @files = qw( t/swamp );
 
     ack_sets_match( [ @args, @files ], \@expected, "Looking for -i -g $regex " );
 };
@@ -111,7 +111,7 @@ subtest 'Case-insensitive via (?i:)' => sub {
     );
     my $regex = '(?i:PIPE)';
 
-    my @files = qw( . );
+    my @files = qw( t/swamp );
     my @args  = ( '-g', $regex );
 
     ack_sets_match( [ @args, @files ], \@expected, "Looking for $regex" );
