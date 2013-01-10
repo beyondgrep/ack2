@@ -17,6 +17,7 @@ ok( !$filter, 'Creating an unknown filter should fail' );
 like( $@, qr/unknown filter/i, 'Got the expected error' );
 
 App::Ack::Filter->register_filter(test => 'App::Ack::Filter::test');
+$INC{'App/Ack/Filter/test.pm'} = 1;
 
 $filter = eval {
     App::Ack::Filter->create_filter('test', qw/foo bar/);
