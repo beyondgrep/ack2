@@ -59,6 +59,7 @@ sub create_filter {
 
     my $ok = eval {
         require $path;
+        1;
     };
 
     if ( $ok ) {
