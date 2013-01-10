@@ -9,8 +9,6 @@ use Test::More tests => 1;
 
 use App::Ack::Filter::Default;
 
-App::Ack::Filter->register_filter('Default' => 'App::Ack::Filter::Default');
-
 filter_test(
     [ 'Default' ], [
         't/swamp/#emacs-workfile.pl#',

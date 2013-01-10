@@ -40,8 +40,4 @@ sub to_string {
     return join(' ', map { ".$_" } @{$exts});
 }
 
-BEGIN {
-    App::Ack::Filter->register_filter(ext => __PACKAGE__);
-}
-
 1;

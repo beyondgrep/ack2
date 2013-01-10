@@ -37,8 +37,4 @@ sub to_string {
     my $filename = $self->{'filename'};
 }
 
-BEGIN {
-    App::Ack::Filter->register_filter(is => __PACKAGE__);
-}
-
 1;

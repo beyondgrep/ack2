@@ -42,8 +42,4 @@ sub to_string {
     return "filename matches $re";
 }
 
-BEGIN {
-    App::Ack::Filter->register_filter(match => __PACKAGE__);
-}
-
 1;

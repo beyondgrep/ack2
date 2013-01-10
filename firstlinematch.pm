@@ -47,8 +47,4 @@ sub to_string {
     return "first line matches $re";
 }
 
-BEGIN {
-    App::Ack::Filter->register_filter(firstlinematch => __PACKAGE__);
-}
-
 1;

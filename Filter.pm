@@ -7,6 +7,7 @@ use overload
 
 use App::Ack::Filter::Inverse ();
 use Carp 1.10 ();
+use File::Spec 3.00 ();
 
 my %filter_types;
 
@@ -57,22 +58,20 @@ sub create_filter {
     if ( my $package = $filter_types{$type} ) {
         return $package->new(@args);
     }
-    Carp::croak "Unknown filter type '$type'";
-}
+    my $package = 'App::Ack::Filter::' . $type;
+    my $path    = File::Spec->catfile('App', 'Ack', 'Filter', $type . '.pm');
 
-=head2 App::Ack:Filter->register_filter($type, $package)
+    my $ok = eval {
+        require $path;
+    };
 
-Registers a filter implementation package C<$package> under
-the name C<$type>.
-
-=cut
-
-sub register_filter {
-    my ( undef, $type, $package ) = @_;
-
-    $filter_types{$type} = $package;
-
-    return;
+    if($ok) {
+        $filter_types{$type} = $package;
+        return $package->new(@args);
+    }
+    else {
+        Carp::croak "Unknown filter type '$type'";
+    }
 }
 
 =head2 $filter->filter($resource)
