@@ -18,7 +18,7 @@ App::Ack::Filter - Filter objects to filter files
 =head1 SYNOPSIS
 
     # filter implementation
-    package MyFilter;
+    package App::Ack::Filter::mine;
 
     use strict;
     use warnings;
@@ -26,10 +26,6 @@ App::Ack::Filter - Filter objects to filter files
 
     sub filter {
         my ( $self, $resource ) = @_;
-    }
-
-    BEGIN {
-        App::Ack::Filter->register_filter('mine' => __PACKAGE__);
     }
 
     1;
