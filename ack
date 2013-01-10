@@ -10,15 +10,9 @@ use App::Ack::ConfigLoader ();
 use App::Ack::Resources;
 use App::Ack::Resource::Basic ();
 
-# XXX Don't make this so brute force
-# See also: https://github.com/petdance/ack2/issues/89
 use App::Ack::Filter ();
 use App::Ack::Filter::Default;
-use App::Ack::Filter::ext;
-use App::Ack::Filter::firstlinematch;
 use App::Ack::Filter::Inverse;
-use App::Ack::Filter::is;
-use App::Ack::Filter::match;
 
 use Getopt::Long 2.36 ();
 
