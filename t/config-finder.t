@@ -10,9 +10,24 @@ use Cwd qw(getcwd realpath);
 use File::Spec;
 use File::Temp;
 use Test::Builder;
-use Test::More tests => 23;
+use Test::More;
 
 use App::Ack::ConfigFinder;
+
+my $tmpdir = $ENV{'TMPDIR'};
+my $home   = $ENV{'HOME'};
+
+chop $tmpdir if $tmpdir && $tmpdir =~ m{/$};
+chop $home   if $home   =~ m{/$};
+
+if ( $tmpdir && $tmpdir =~ /^$home/ ) {
+    plan tests => 1;
+
+    fail "Your \$TMPDIR ($tmpdir) is set to a descendant directory of ~; this test is known to fail with such a setting. Please set your TMPDIR to something else to get this test to pass.";
+    exit;
+}
+
+plan tests => 23;
 
 # Set HOME to a known value, so we get predictable results:
 $ENV{'HOME'} = realpath('t/home');
