@@ -5,6 +5,7 @@ use warnings;
 use base 'Exporter';
 
 use App::Ack::Resource::Basic;
+use App::Ack::Filter;
 use File::Find;
 use Util;
 use Test::More;

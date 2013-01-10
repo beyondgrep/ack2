@@ -7,8 +7,6 @@ use lib 't';
 use FilterTest;
 use Test::More tests => 1;
 
-use App::Ack::Filter::match;
-
 filter_test(
     [ match => '/^.akefile/' ], [
         't/swamp/Makefile',

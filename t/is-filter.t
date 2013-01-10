@@ -7,8 +7,6 @@ use lib 't';
 use FilterTest;
 use Test::More tests => 1;
 
-use App::Ack::Filter::is;
-
 filter_test(
     [ is => 'Makefile' ], [
         't/swamp/Makefile',
