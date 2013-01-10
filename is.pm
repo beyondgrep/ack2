@@ -1,4 +1,4 @@
-package App::Ack::Filter::Is;
+package App::Ack::Filter::is;
 
 use strict;
 use warnings;

@@ -1,4 +1,4 @@
-package App::Ack::Filter::Match;
+package App::Ack::Filter::match;
 
 use strict;
 use warnings;

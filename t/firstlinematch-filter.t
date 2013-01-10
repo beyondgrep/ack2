@@ -7,7 +7,7 @@ use lib 't';
 use FilterTest;
 use Test::More tests => 1;
 
-use App::Ack::Filter::FirstLineMatch;
+use App::Ack::Filter::firstlinematch;
 
 filter_test(
     [ firstlinematch => '/^#!.*perl/' ], [

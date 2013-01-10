@@ -1,4 +1,4 @@
-package App::Ack::Filter::FirstLineMatch;
+package App::Ack::Filter::firstlinematch;
 
 use strict;
 use warnings;

@@ -7,7 +7,7 @@ use lib 't';
 use FilterTest;
 use Test::More tests => 1;
 
-use App::Ack::Filter::Extension;
+use App::Ack::Filter::ext;
 
 filter_test(
     [ ext => qw/pl pod pm t/ ], [

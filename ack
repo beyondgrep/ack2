@@ -14,11 +14,11 @@ use App::Ack::Resource::Basic ();
 # See also: https://github.com/petdance/ack2/issues/89
 use App::Ack::Filter ();
 use App::Ack::Filter::Default;
-use App::Ack::Filter::Extension;
-use App::Ack::Filter::FirstLineMatch;
+use App::Ack::Filter::ext;
+use App::Ack::Filter::firstlinematch;
 use App::Ack::Filter::Inverse;
-use App::Ack::Filter::Is;
-use App::Ack::Filter::Match;
+use App::Ack::Filter::is;
+use App::Ack::Filter::match;
 
 use Getopt::Long 2.36 ();
 
