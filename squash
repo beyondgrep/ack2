@@ -70,6 +70,16 @@ for my $arg ( @ARGV ) {
         # I'd like to remove all comments, but this is a start
         s{\s*##.+critic.*}{};
         $code .= $_;
+
+        # if we're in a package, treat it like we've required() it
+        if ( $filename ne 'ack' && /^\s*package\s+([a-zA-Z0-9_:]+)\s*;/ ) {
+            my $path = $1;
+            $path =~ s{::}{/}g;
+            $path .= '.pm';
+
+            $code .= "BEGIN {\n    \$INC{'$path'} = 1;\n}\n";
+        }
+
     }
     close $fh;
 }
