@@ -16,18 +16,18 @@ $filter = eval {
 ok( !$filter, 'Creating an unknown filter should fail' );
 like( $@, qr/unknown filter/i, 'Got the expected error' );
 
-App::Ack::Filter->register_filter(test => 'TestFilter');
+App::Ack::Filter->register_filter(test => 'App::Ack::Filter::test');
 
 $filter = eval {
     App::Ack::Filter->create_filter('test', qw/foo bar/);
 };
 
 ok( $filter, 'Creating a registered filter should succeed' ) or diag($@);
-isa_ok( $filter, 'TestFilter', 'Creating a test filter should be a TestFilter' );
+isa_ok( $filter, 'App::Ack::Filter::test', 'Creating a test filter should be a App::Ack::Filter::test' );
 is_deeply( $filter, [qw/foo bar/], 'Extra arguments should get passed through to constructor' );
 
 
-package TestFilter;
+package App::Ack::Filter::test;
 
 use strict;
 use warnings;
