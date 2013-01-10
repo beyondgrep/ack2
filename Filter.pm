@@ -61,13 +61,12 @@ sub create_filter {
         require $path;
     };
 
-    if($ok) {
+    if ( $ok ) {
         $filter_types{$type} = $package;
         return $package->new(@args);
     }
-    else {
-        Carp::croak "Unknown filter type '$type'";
-    }
+
+    Carp::croak "Unknown filter type '$type'";
 }
 
 =head2 $filter->filter($resource)
