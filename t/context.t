@@ -101,7 +101,7 @@ EOF
 }
 
 # -C with overlapping contexts (adjacent lines)
-CONTEXT_DEFAULT: {
+CONTEXT_OVERLAPPING: {
     my @expected = split( /\n/, <<"EOF" );
 This is line 03
 This is line 04
@@ -119,7 +119,7 @@ EOF
 }
 
 # -C with contexts that touch
-CONTEXT_DEFAULT: {
+CONTEXT_ADJACENT: {
     my @expected = split( /\n/, <<"EOF" );
 This is line 01
 This is line 02
@@ -141,7 +141,7 @@ EOF
 }
 
 # -C with contexts that just don't touch
-CONTEXT_DEFAULT: {
+CONTEXT_NONADJACENT: {
     my @expected = split( /\n/, <<"EOF" );
 This is line 01
 This is line 02
