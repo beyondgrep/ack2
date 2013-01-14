@@ -102,6 +102,8 @@ EOF
 
 # -C with overlapping contexts (adjacent lines)
 CONTEXT_OVERLAPPING: {
+    local $TODO = 'Overlapping context needs implementing https://github.com/petdance/ack2/issues/195)'; 
+
     my @expected = split( /\n/, <<"EOF" );
 This is line 03
 This is line 04
