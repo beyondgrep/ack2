@@ -188,6 +188,7 @@ subtest '-v works on -g' => sub {
     my @expected = qw(
         t/text/boy-named-sue.txt
         t/text/me-and-bobbie-mcgee.txt
+        t/text/numbered-text.txt
         t/text/shut-up-be-happy.txt
     );
     my $file_regex = 'of';
