@@ -979,18 +979,30 @@ sub print_line_with_context {
 
     my ( $before_context, $after_context ) = get_context();
 
-    if($before_context) {
+    if ( $before_context ) {
         my $first_line = $. - @{$before_context};
-        if( !$is_first_match && $previous_line_printed != $first_line - 1 ) {
-            App::Ack::print('--', $ors);
+
+        if ( $first_line <= $previous_line_printed ) {
+            splice @{$before_context}, 0, $previous_line_printed - $first_line + 1;
+            $first_line = $. - @{$before_context};
         }
-        $previous_line_printed = $.; # XXX unless --after-context
-        my $offset = @{$before_context};
-        foreach my $line (@{$before_context}) {
-            chomp $line;
-            App::Ack::print_line_with_options($opt, $filename, $line, $. - $offset, '-');
-            $previous_line_printed = $. - $offset;
-            $offset--;
+        if ( @{$before_context} ) {
+            my $offset = @{$before_context};
+
+            if( !$is_first_match && $previous_line_printed != $first_line - 1 ) {
+                App::Ack::print('--', $ors);
+            }
+            foreach my $line (@{$before_context}) {
+                my $context_line_no = $. - $offset;
+                if ( $context_line_no <= $previous_line_printed ) {
+                    next;
+                }
+
+                chomp $line;
+                App::Ack::print_line_with_options($opt, $filename, $line, $context_line_no, '-');
+                $previous_line_printed = $context_line_no;
+                $offset--;
+            }
         }
     }
 
@@ -1036,6 +1048,9 @@ sub print_line_with_context {
         my $offset = 1;
         foreach my $line (@{$after_context}) {
             chomp $line;
+            if ( App::Ack::does_match( $opt, $line ) ) {
+                last;
+            }
             App::Ack::print_line_with_options($opt, $filename, $line, $. + $offset, '-');
             $previous_line_printed = $. + $offset;
             $offset++;
