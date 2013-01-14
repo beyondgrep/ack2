@@ -1006,52 +1006,57 @@ sub print_line_with_context {
         }
     }
 
-    if( $is_tracking_context && !$is_first_match && $previous_line_printed != $. - 1 ) {
-        App::Ack::print('--', $ors);
-    }
-
-    if($color) {
-        $filename = Term::ANSIColor::colored($filename,
-            $ENV{ACK_COLOR_FILENAME});
-        $line_no  = Term::ANSIColor::colored($line_no,
-            $ENV{ACK_COLOR_LINENO});
-    }
-
-    my @capture_indices  = get_capture_indices();
-    if( @capture_indices && !$output_expr ) {
-        my $offset = 0; # additional offset for when we add stuff
-
-        foreach my $index_pair ( @capture_indices ) {
-            my ( $match_start, $match_end ) = @{$index_pair};
-
-            my $substring = substr( $matching_line,
-                $offset + $match_start, $match_end - $match_start );
-            my $substitution = Term::ANSIColor::colored( $substring,
-                $ENV{ACK_COLOR_MATCH} );
-
-            substr( $matching_line, $offset + $match_start,
-                $match_end - $match_start, $substitution );
-
-            $offset += length( $substitution ) - length( $substring );
+    if ( $. > $previous_line_printed ) {
+        if( $is_tracking_context && !$is_first_match && $previous_line_printed != $. - 1 ) {
+            App::Ack::print('--', $ors);
         }
-    }
-    elsif($color) {
-        # XXX I know $& is a no-no; fix it later
-        $matching_line  =~ s/$re/Term::ANSIColor::colored($&, $ENV{ACK_COLOR_MATCH})/ge;
-        $matching_line .= "\033[0m\033[K";
-    }
 
-    App::Ack::print_line_with_options($opt, $filename, $matching_line, $line_no, ':');
-    $previous_line_printed = $.;
+        if($color) {
+            $filename = Term::ANSIColor::colored($filename,
+                $ENV{ACK_COLOR_FILENAME});
+            $line_no  = Term::ANSIColor::colored($line_no,
+                $ENV{ACK_COLOR_LINENO});
+        }
+
+        my @capture_indices  = get_capture_indices();
+        if( @capture_indices && !$output_expr ) {
+            my $offset = 0; # additional offset for when we add stuff
+
+            foreach my $index_pair ( @capture_indices ) {
+                my ( $match_start, $match_end ) = @{$index_pair};
+
+                my $substring = substr( $matching_line,
+                    $offset + $match_start, $match_end - $match_start );
+                my $substitution = Term::ANSIColor::colored( $substring,
+                    $ENV{ACK_COLOR_MATCH} );
+
+                substr( $matching_line, $offset + $match_start,
+                    $match_end - $match_start, $substitution );
+
+                $offset += length( $substitution ) - length( $substring );
+            }
+        }
+        elsif($color) {
+            # XXX I know $& is a no-no; fix it later
+            $matching_line  =~ s/$re/Term::ANSIColor::colored($&, $ENV{ACK_COLOR_MATCH})/ge;
+            $matching_line .= "\033[0m\033[K";
+        }
+
+        App::Ack::print_line_with_options($opt, $filename, $matching_line, $line_no, ':');
+        $previous_line_printed = $.;
+    }
 
     if($after_context) {
         my $offset = 1;
         foreach my $line (@{$after_context}) {
-            chomp $line;
-            if ( App::Ack::does_match( $opt, $line ) ) {
-                last;
+            # XXX improve this!
+            if ( $previous_line_printed >= $. + $offset ) {
+                $offset++;
+                next;
             }
-            App::Ack::print_line_with_options($opt, $filename, $line, $. + $offset, '-');
+            chomp $line;
+            my $separator = App::Ack::does_match( $opt, $line ) ? ':' : '-';
+            App::Ack::print_line_with_options($opt, $filename, $line, $. + $offset, $separator);
             $previous_line_printed = $. + $offset;
             $offset++;
         }
