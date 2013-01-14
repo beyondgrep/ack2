@@ -716,6 +716,8 @@ sub does_match {
     my $re     = $opt->{regex};
     my $invert = $opt->{v};
 
+    return unless $re;
+
     $match_column_number = undef;
     @capture_indices     = ();
 
