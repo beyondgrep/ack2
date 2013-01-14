@@ -868,13 +868,20 @@ sub iterate {
         }
 
         local $_ = $current_line;
-        local $. = $. - @after_ctx_lines;
+        my $former_dot_period = $.;
+        $. = $. - @after_ctx_lines;
 
         last unless $cb->();
 
-        push @before_ctx_lines, $current_line;
+        # I tried doing this with local(), but for some reason,
+        # $. continued to have its new value after the exit of the
+        # enclosing block.  I'm guessing that $. has some extra
+        # magic associated with it or something.  If someone can
+        # tell me why this happened, I would love to know!
+        $. = $former_dot_period; # XXX this won't happen on an exception
 
-        if($n_after_ctx_lines) {
+        push @before_ctx_lines, $current_line;
+if($n_after_ctx_lines) {
             $current_line = shift @after_ctx_lines;
         }
         elsif($resource->next_text()) {
@@ -886,7 +893,9 @@ sub iterate {
         shift @before_ctx_lines while @before_ctx_lines > $n_before_ctx_lines;
     }
 
-    $is_iterating = 0;
+    $is_iterating = 0; # XXX this won't happen on an exception
+                       #     then again, do we care? ack doesn't really
+                       #     handle exceptions anyway.
 
     return;
 }
