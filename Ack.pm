@@ -716,6 +716,8 @@ sub does_match {
     my $re     = $opt->{regex};
     my $invert = $opt->{v};
 
+    return unless $re;
+
     $match_column_number = undef;
     @capture_indices     = ();
 
@@ -866,13 +868,20 @@ sub iterate {
         }
 
         local $_ = $current_line;
-        local $. = $. - @after_ctx_lines;
+        my $former_dot_period = $.;
+        $. = $. - @after_ctx_lines;
 
         last unless $cb->();
 
-        push @before_ctx_lines, $current_line;
+        # I tried doing this with local(), but for some reason,
+        # $. continued to have its new value after the exit of the
+        # enclosing block.  I'm guessing that $. has some extra
+        # magic associated with it or something.  If someone can
+        # tell me why this happened, I would love to know!
+        $. = $former_dot_period; # XXX this won't happen on an exception
 
-        if($n_after_ctx_lines) {
+        push @before_ctx_lines, $current_line;
+if($n_after_ctx_lines) {
             $current_line = shift @after_ctx_lines;
         }
         elsif($resource->next_text()) {
@@ -884,7 +893,9 @@ sub iterate {
         shift @before_ctx_lines while @before_ctx_lines > $n_before_ctx_lines;
     }
 
-    $is_iterating = 0;
+    $is_iterating = 0; # XXX this won't happen on an exception
+                       #     then again, do we care? ack doesn't really
+                       #     handle exceptions anyway.
 
     return;
 }
@@ -979,64 +990,84 @@ sub print_line_with_context {
 
     my ( $before_context, $after_context ) = get_context();
 
-    if($before_context) {
+    if ( $before_context ) {
         my $first_line = $. - @{$before_context};
-        if( !$is_first_match && $previous_line_printed != $first_line - 1 ) {
+
+        if ( $first_line <= $previous_line_printed ) {
+            splice @{$before_context}, 0, $previous_line_printed - $first_line + 1;
+            $first_line = $. - @{$before_context};
+        }
+        if ( @{$before_context} ) {
+            my $offset = @{$before_context};
+
+            if( !$is_first_match && $previous_line_printed != $first_line - 1 ) {
+                App::Ack::print('--', $ors);
+            }
+            foreach my $line (@{$before_context}) {
+                my $context_line_no = $. - $offset;
+                if ( $context_line_no <= $previous_line_printed ) {
+                    next;
+                }
+
+                chomp $line;
+                App::Ack::print_line_with_options($opt, $filename, $line, $context_line_no, '-');
+                $previous_line_printed = $context_line_no;
+                $offset--;
+            }
+        }
+    }
+
+    if ( $. > $previous_line_printed ) {
+        if( $is_tracking_context && !$is_first_match && $previous_line_printed != $. - 1 ) {
             App::Ack::print('--', $ors);
         }
-        $previous_line_printed = $.; # XXX unless --after-context
-        my $offset = @{$before_context};
-        foreach my $line (@{$before_context}) {
-            chomp $line;
-            App::Ack::print_line_with_options($opt, $filename, $line, $. - $offset, '-');
-            $previous_line_printed = $. - $offset;
-            $offset--;
+
+        if($color) {
+            $filename = Term::ANSIColor::colored($filename,
+                $ENV{ACK_COLOR_FILENAME});
+            $line_no  = Term::ANSIColor::colored($line_no,
+                $ENV{ACK_COLOR_LINENO});
         }
-    }
 
-    if( $is_tracking_context && !$is_first_match && $previous_line_printed != $. - 1 ) {
-        App::Ack::print('--', $ors);
-    }
+        my @capture_indices  = get_capture_indices();
+        if( @capture_indices && !$output_expr ) {
+            my $offset = 0; # additional offset for when we add stuff
 
-    if($color) {
-        $filename = Term::ANSIColor::colored($filename,
-            $ENV{ACK_COLOR_FILENAME});
-        $line_no  = Term::ANSIColor::colored($line_no,
-            $ENV{ACK_COLOR_LINENO});
-    }
+            foreach my $index_pair ( @capture_indices ) {
+                my ( $match_start, $match_end ) = @{$index_pair};
 
-    my @capture_indices  = get_capture_indices();
-    if( @capture_indices && !$output_expr ) {
-        my $offset = 0; # additional offset for when we add stuff
+                my $substring = substr( $matching_line,
+                    $offset + $match_start, $match_end - $match_start );
+                my $substitution = Term::ANSIColor::colored( $substring,
+                    $ENV{ACK_COLOR_MATCH} );
 
-        foreach my $index_pair ( @capture_indices ) {
-            my ( $match_start, $match_end ) = @{$index_pair};
+                substr( $matching_line, $offset + $match_start,
+                    $match_end - $match_start, $substitution );
 
-            my $substring = substr( $matching_line,
-                $offset + $match_start, $match_end - $match_start );
-            my $substitution = Term::ANSIColor::colored( $substring,
-                $ENV{ACK_COLOR_MATCH} );
-
-            substr( $matching_line, $offset + $match_start,
-                $match_end - $match_start, $substitution );
-
-            $offset += length( $substitution ) - length( $substring );
+                $offset += length( $substitution ) - length( $substring );
+            }
         }
-    }
-    elsif($color) {
-        # XXX I know $& is a no-no; fix it later
-        $matching_line  =~ s/$re/Term::ANSIColor::colored($&, $ENV{ACK_COLOR_MATCH})/ge;
-        $matching_line .= "\033[0m\033[K";
-    }
+        elsif($color) {
+            # XXX I know $& is a no-no; fix it later
+            $matching_line  =~ s/$re/Term::ANSIColor::colored($&, $ENV{ACK_COLOR_MATCH})/ge;
+            $matching_line .= "\033[0m\033[K";
+        }
 
-    App::Ack::print_line_with_options($opt, $filename, $matching_line, $line_no, ':');
-    $previous_line_printed = $.;
+        App::Ack::print_line_with_options($opt, $filename, $matching_line, $line_no, ':');
+        $previous_line_printed = $.;
+    }
 
     if($after_context) {
         my $offset = 1;
         foreach my $line (@{$after_context}) {
+            # XXX improve this!
+            if ( $previous_line_printed >= $. + $offset ) {
+                $offset++;
+                next;
+            }
             chomp $line;
-            App::Ack::print_line_with_options($opt, $filename, $line, $. + $offset, '-');
+            my $separator = App::Ack::does_match( $opt, $line ) ? ':' : '-';
+            App::Ack::print_line_with_options($opt, $filename, $line, $. + $offset, $separator);
             $previous_line_printed = $. + $offset;
             $offset++;
         }
