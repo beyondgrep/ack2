@@ -45,7 +45,7 @@ sub no_home (&) { ## no critic (ProhibitSubroutinePrototypes)
     my $home = delete $ENV{'HOME'}; # localized delete isn't supported in
                                     # earlier perls
     $fn->();
-    $ENV{'HOME'} = $home;
+    $ENV{'HOME'} = $home; # XXX this won't work on exceptions...
 
     return;
 }

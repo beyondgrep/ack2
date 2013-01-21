@@ -131,6 +131,8 @@ sub find_config_files {
         pop @dirs;
     }
 
+    # XXX we only test for existence here, so if the file is
+    #     deleted out from under us, this will fail later. =(
     return _remove_redundancies( @config_files );
 }
 
