@@ -114,7 +114,12 @@ sub find_config_files {
         push @config_files, '/etc/ackrc';
     }
 
-    push @config_files, _check_for_ackrc($ENV{'HOME'});
+    if ( $ENV{'ACKRC'} && -f $ENV{'ACKRC'} ) {
+        push @config_files, $ENV{'ACKRC'};
+    }
+    else {
+        push @config_files, _check_for_ackrc($ENV{'HOME'});
+    }
 
     my @dirs = File::Spec->splitdir(Cwd::getcwd());
     while(@dirs) {
