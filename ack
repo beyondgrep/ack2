@@ -930,7 +930,7 @@ on the command line.
 
 =item ACKRC
 
-Specifies the location of the F<.ackrc> file.  If this file doesn't
+Specifies the location of the user's F<.ackrc> file.  If this file doesn't
 exist, F<ack> looks in the default location.
 
 =item ACK_OPTIONS
@@ -1270,7 +1270,9 @@ This can be omitted using C<--noenv>.
 
 Options are then loaded from the user's ackrc.  This is located at
 C<$HOME/.ackrc> on Unix-like systems, and
-C<C:\Documents and Settings\$USER\Application Data>.
+C<C:\Documents and Settings\$USER\Application Data>.  If a different
+ackrc is desired, it may be overriden with the C<$ACKRC> environment
+variable.
 This can be omitted using C<--noenv>.
 
 =item * Project ackrc
