@@ -27,7 +27,7 @@ if ( $tmpdir && $tmpdir =~ /^$home/ ) {
     exit;
 }
 
-plan tests => 23;
+plan tests => 26;
 
 # Set HOME to a known value, so we get predictable results:
 $ENV{'HOME'} = realpath('t/home');
@@ -185,6 +185,29 @@ do {
     touch_ackrc $user_file;
 
     expect_ackrcs [ @global_files, $user_file ], q{don't load the same ackrc file twice};
+    unlink($user_file);
+};
+
+do {
+    chdir $tempdir->dirname;
+    local $ENV{'HOME'} = File::Spec->catfile($tempdir->dirname, 'foo');
+
+    my $user_file = File::Spec->catfile($ENV{'HOME'}, '.ackrc');
+    touch_ackrc $user_file;
+
+    my $ackrc = File::Temp->new;
+    close $ackrc;
+    local $ENV{'ACKRC'} = $ackrc->filename;
+
+    expect_ackrcs [ @global_files, $ackrc->filename ], q{ACKRC overrides user's HOME ackrc};
+    unlink $ackrc->filename;
+
+    expect_ackrcs [ @global_files, $user_file ], q{ACKRC doesn't override if it doesn't exist};
+
+    touch_ackrc $ackrc->filename;
+    chdir 'foo';
+    expect_ackrcs [ @global_files, $ackrc->filename, $user_file ], q{~/.ackrc should still be found as a project ackrc};
+    unlink $ackrc->filename;
 };
 
 chdir $wd;
