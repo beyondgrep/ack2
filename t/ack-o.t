@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 6;
+use Test::More tests => 8;
 use File::Next ();
 
 use lib 't';
@@ -72,6 +72,23 @@ WITH_OUTPUT: {
         "$target_file[0]:1:xedx",
         "$target_file[1]:15:xs.x",
         "$target_file[1]:21:x.x",
+    );
+
+    ack_sets_match( [ @args, @files ], \@expected, 'Find all the things with --output function' );
+}
+
+OUTPUT_DOUBLE_QUOTES: {
+    my @files = qw( t/text/ );
+    my @args  = ( '--output="$1"', 'question(\\S+)' );
+
+    my @target_file = (
+        File::Next::reslash( 't/text/science-of-myth.txt' ),
+        File::Next::reslash( 't/text/shut-up-be-happy.txt' ),
+    );
+    my @expected = (
+        qq{$target_file[0]:1:"ed"},
+        qq{$target_file[1]:15:"s."},
+        qq{$target_file[1]:21:"."},
     );
 
     ack_sets_match( [ @args, @files ], \@expected, 'Find all the things with --output function' );
