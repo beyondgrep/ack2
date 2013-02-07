@@ -34,7 +34,7 @@ BEGIN {
         [qw(--line)]             => [@context, @pretty, @filename, qw(-l --files-with-matches --files-without-matches -L -o --passthru --match -m --max-count -1 -c --count --column --print0 -f -g --show-types)],
         [qw(-o)]                 => [@context, qw(--output -c --count --column --column -f --show-types)],
         [qw(--passthru)]         => [@context, qw(--output --column -m --max-count -1 -c --count -f -g)],
-        [qw(--output)]           => [qw(-c --count -f -g)],
+        [qw(--output)]           => [@context, qw(-c --count -f -g)],
         [qw(--match)]            => [qw(-f -g)],
         [qw(-m --max-count)]     => [qw(-1 -f -g -c --count)],
         [qw(-h --no-filename)]   => [qw(-H --with-filename -f -g --group --heading)],

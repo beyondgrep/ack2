@@ -208,6 +208,12 @@ are_mutually_exclusive('--output', '-c', ['--output=$&', '-c', 'science', 't/tex
 are_mutually_exclusive('--output', '--count', ['--output=$&', '--count', 'science', 't/text/science-of-myth.txt']);
 are_mutually_exclusive('--output', '-f', ['--output=$&', '-f', 't/text/science-of-myth.txt']);
 are_mutually_exclusive('--output', '-g', ['--output=$&', '-g', 'science', 't/text/science-of-myth.txt']);
+are_mutually_exclusive('--output', '-A', ['--output=$&', '-A2', 'science', 't/text/science-of-myth.txt']);
+are_mutually_exclusive('--output', '-B', ['--output=$&', '-B2', 'science', 't/text/science-of-myth.txt']);
+are_mutually_exclusive('--output', '-C', ['--output=$&', '-C2', 'science', 't/text/science-of-myth.txt']);
+are_mutually_exclusive('--output', '--after-context', ['--output=$&', '--after-context=2', 'science', 't/text/science-of-myth.txt']);
+are_mutually_exclusive('--output', '--before-context', ['--output=$&', '--before-context=2', 'science', 't/text/science-of-myth.txt']);
+are_mutually_exclusive('--output', '--context', ['--output=$&', '--context=2', 'science', 't/text/science-of-myth.txt']);
 
 # --match
 are_mutually_exclusive('--match', '-f', ['--match', 'science', '-f', 't/text/science-of-myth.txt']);
