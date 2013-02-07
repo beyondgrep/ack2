@@ -222,12 +222,12 @@ subtest 'test exit codes' => sub {
     my $file_regex = 'foo';
     my @files      = ( 't/text/' );
 
-    run_ack( $file_regex, @files );
+    run_ack( '-g', $file_regex, @files );
     is( get_rc(), 1, '-g with no matches must exit with 1' );
 
     $file_regex = 'boy';
 
-    run_ack( $file_regex, @files );
+    run_ack( '-g', $file_regex, @files );
     is( get_rc(), 0, '-g with matches must exit with 0' );
 };
 
