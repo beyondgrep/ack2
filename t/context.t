@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 24;
+use Test::More tests => 26;
 use File::Next (); # for reslash function
 
 use lib 't';
@@ -161,6 +161,27 @@ EOF
     my @args = ( '-C', $regex );
 
     ack_lists_match( [ @args, @files ], \@expected, "Looking for $regex with contexts that just don't touch" );
+}
+
+CONTEXT_OVERLAPPING_COLOR: {
+    my $match_start = "\e[30;43m";
+    my $match_end   = "\e[0m";
+    my $line_end    = "\e[0m\e[K";
+
+    my @expected = split( /\n/, <<"EOF" );
+This is line 03
+This is line 04
+This is line ${match_start}05${match_end}${line_end}
+This is line ${match_start}06${match_end}${line_end}
+This is line 07
+This is line 08
+EOF
+
+    my $regex = '05|06';
+    my @files = qw( t/text/numbered-text.txt );
+    my @args = ( '--color', '-C', $regex );
+
+    ack_lists_match( [ @args, @files ], \@expected, "Looking for $regex with overlapping contexts" );
 }
 
 # -m3 should work properly and show only 3 matches with correct context
