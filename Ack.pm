@@ -949,7 +949,7 @@ sub print_line_with_options {
     if( $output_expr ) {
         # XXX avoid re-evaluation if we can
         while( $line =~ /$re/g ) {
-            my $output = eval qq{"$output_expr"};
+            my $output = eval $output_expr;
             App::Ack::print( join( $separator, @line_parts, $output ), $ors );
         }
     }

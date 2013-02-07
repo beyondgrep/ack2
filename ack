@@ -203,6 +203,12 @@ sub main {
         $opt->{show_filename}= $opt->{H} && !$opt->{h};
     }
 
+    if ( my $output = $opt->{output} ) {
+        $output        =~ s{\\}{\\\\}g;
+        $output        =~ s{"}{\\"}g;
+        $opt->{output} = qq{"$output"};
+    }
+
     my $resources;
     if ( $App::Ack::is_filter_mode && !$opt->{files_from} ) { # probably -x
         $resources    = App::Ack::Resources->from_stdin( $opt );
