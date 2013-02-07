@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 15;
+use Test::More tests => 16;
 
 use lib 't';
 use Util;
@@ -229,6 +229,23 @@ subtest 'test exit codes' => sub {
 
     run_ack( $file_regex, @files );
     is( get_rc(), 0, '-g with matches must exit with 0' );
+};
+
+subtest 'test -g on a path' => sub {
+    my $file_regex = 'text';
+    my @expected   = (
+        't/context.t',
+        't/text/4th-of-july.txt',
+        't/text/boy-named-sue.txt',
+        't/text/freedom-of-choice.txt',
+        't/text/me-and-bobbie-mcgee.txt',
+        't/text/numbered-text.txt',
+        't/text/science-of-myth.txt',
+        't/text/shut-up-be-happy.txt',
+    );
+    my @args = ( '--sort-files', '-g', $file_regex );
+
+    ack_sets_match( [ @args ], \@expected, 'Make sure -g matches the whole path' );
 };
 
 done_testing();
