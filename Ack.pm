@@ -152,7 +152,7 @@ sub read_rcfile {
 Takes an array of options passed in on the command line and returns
 a hashref of information about them:
 
-* 
+*
 # is:  Match the filename exactly
 # ext: Match the extension
 # regex: Match against a Perl regular expression
@@ -452,6 +452,7 @@ File finding:
                                 The PATTERN must not be specified.
   -g                            Same as -f, but only select files matching PATTERN.
   --sort-files                  Sort the found files lexically.
+  --sort-files-mtime            Sort the found files based on modified time
   --show-types                  Show which types each file has.
   --files-from=FILE             Read the list of files to search from FILE.
   -x                            Read the list of files to search from STDIN.

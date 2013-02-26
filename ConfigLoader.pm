@@ -279,6 +279,7 @@ EOT
         'show-types'        => \$opt->{show_types},
         'smart-case!'       => \$opt->{smart_case},
         'sort-files'        => \$opt->{sort_files},
+        'sort-files-mtime'  => \$opt->{sort_files_mtime},
         'type=s'            => sub {
             my ( $getopt, $value ) = @_;
 
