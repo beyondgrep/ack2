@@ -59,8 +59,8 @@ sub expect_ackrcs {
     my $name     = shift;
 
     my @got      = map { realpath($_) } $finder->find_config_files;
-    @{$expected} = map { realpath($_) } @{$expected};
-    is_deeply( \@got, $expected, $name ) or diag(explain(\@got));
+    my @expected = map { realpath($_) } @{$expected};
+    is_deeply( \@got, \@expected, $name ) or diag(explain(\@got));
 
     return;
 }
