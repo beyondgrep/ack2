@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 6;
+use Test::More tests => 8;
 use File::Next ();
 
 use lib 't';
@@ -27,6 +27,7 @@ DASH_L: {
         t/text/freedom-of-choice.txt
         t/text/me-and-bobbie-mcgee.txt
         t/text/numbered-text.txt
+        t/text/science-of-myth.txt
         t/text/shut-up-be-happy.txt
     );
 
@@ -34,6 +35,8 @@ DASH_L: {
     my @files = qw( t/text );
 
     ack_sets_match( [ @args, @files ], \@expected, 'No religion please' );
+
+    ack_sets_match( [ '.*', '-l', '-v', 't/text' ], [], '-l -v with .* (which matches any line) should have no results' );
 }
 
 DASH_C: {
