@@ -81,6 +81,7 @@ my %defaults = (
     heading                   => undef,
     i                         => undef,
     l                         => undef,
+    L                         => undef,
     m                         => undef,
     n                         => undef,
     output                    => undef,

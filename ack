@@ -343,10 +343,10 @@ RESOURCES:
                 }
             }
         }
-        elsif ( $opt->{l} ) {
+        elsif ( $opt->{l} || $opt->{L} ) {
             my $is_match = App::Ack::resource_has_match( $resource, $opt );
 
-            if ( $opt->{v} ? !$is_match : $is_match ) {
+            if ( $opt->{L} ? !$is_match : $is_match ) {
                 App::Ack::print( $resource->name, $ors );
                 ++$nmatches;
 

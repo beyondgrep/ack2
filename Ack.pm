@@ -817,14 +817,7 @@ sub count_matches_in_resource {
 sub resource_has_match {
     my ( $resource, $opt ) = @_;
 
-    my $stash_v = $opt->{v};
-    $opt->{v} = 0;
-
-    my $n = count_matches_in_resource($resource, $opt) > 0;
-
-    $opt->{v} = $stash_v;
-
-    return $n;
+    return count_matches_in_resource($resource, $opt) > 0;
 }
 
 {
