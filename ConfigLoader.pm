@@ -246,7 +246,7 @@ EOT
         'l|files-with-matches'
                             => \$opt->{l},
         'L|files-without-matches'
-                            => sub { $opt->{l} = $opt->{v} = 1 },
+                            => \$opt->{L},
         'm|max-count=i'     => \$opt->{m},
         'match=s'           => \$opt->{regex},
         'n|no-recurse'      => \$opt->{n},

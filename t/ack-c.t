@@ -34,18 +34,38 @@ DASH_CAPITAL_L: {
     my @switches = (
         ['-L'],
         ['--files-without-matches'],
-
-        ['-l','-v'],
-        ['-l','--invert-match'],
-        ['--files-with-matches','-v'],
-        ['--files-with-matches','--invert-match'],
     );
-    # -L and -l -v are identical
+
     for my $switches ( @switches ) {
         my @files = qw( t/text );
         my @args  = ( 'religion', @{$switches} );
 
         ack_sets_match( [ @args, @files ], \@expected, "Looking for religion with @{$switches}" );
+    }
+}
+
+DASH_LV: {
+    my @expected = qw(
+        t/text/4th-of-july.txt
+        t/text/boy-named-sue.txt
+        t/text/me-and-bobbie-mcgee.txt
+        t/text/numbered-text.txt
+        t/text/freedom-of-choice.txt
+        t/text/science-of-myth.txt
+        t/text/shut-up-be-happy.txt
+    );
+    my @switches = (
+        ['-l','-v'],
+        ['-l','--invert-match'],
+        ['--files-with-matches','-v'],
+        ['--files-with-matches','--invert-match'],
+    );
+
+    for my $switches ( @switches ) {
+        my @files = qw( t/text );
+        my @args  = ( 'religion', @{$switches} );
+
+        ack_sets_match( [ @args, @files ], \@expected, "-l -v will mostly likely match all input files" );
     }
 }
 
