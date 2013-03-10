@@ -642,8 +642,7 @@ Only print the filenames of matching files, instead of the matching text.
 
 =item B<-L>, B<--files-without-matches>
 
-Only print the filenames of files that do I<NOT> match. This is equivalent
-to specifying B<-l> and B<-v>.
+Only print the filenames of files that do I<NOT> match.
 
 =item B<--match I<REGEX>>
 
