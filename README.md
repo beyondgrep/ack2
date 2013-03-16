@@ -71,4 +71,5 @@ Cat, `ack --bar` will draw (of course) Admiral Ackbar.
     make test
     sudo make install # for a system-wide installation (recommended)
     # - or -
+    make ack-standalone
     cp ack-standalone ~/bin/ack2 # for a personal installation
