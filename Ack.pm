@@ -611,7 +611,7 @@ Set default colors, load Term::ANSIColor
 =cut
 
 sub load_colors {
-    eval 'use Term::ANSIColor 1.12 ()';
+    eval 'use Term::ANSIColor 1.10 ()';
 
     $ENV{ACK_COLOR_MATCH}    ||= 'black on_yellow';
     $ENV{ACK_COLOR_FILENAME} ||= 'bold green';
