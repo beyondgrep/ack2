@@ -269,6 +269,8 @@ EOT
                                 @{ $opt->{idirs} } = grep {
                                     $_ ne $dir
                                 } @{ $opt->{idirs} };
+
+                                push @{ $opt->{no_ignore_dirs} }, $dir;
                                },
         'nopager'           => sub { $opt->{pager} = undef },
         'passthru'          => \$opt->{passthru},

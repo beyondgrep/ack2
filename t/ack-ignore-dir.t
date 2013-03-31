@@ -131,8 +131,6 @@ DASH_IGNORE_DIR_IGNORES_RELATIVE_PATHS: {
 }
 
 NOIGNORE_SUBDIR_WINS: {
-    local $TODO = 'Skipping failing test until we implement it';
-
     set_up_assertion_that_these_options_will_ignore_those_directories(
         [ '--ignore-dir=another_subdir', '--noignore-dir=CVS' ],
         [ 'RCS', 'another_subdir(?!/CVS)' ],

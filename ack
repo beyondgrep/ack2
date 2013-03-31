@@ -76,7 +76,13 @@ MAIN: {
 sub _compile_descend_filter {
     my ( $opt ) = @_;
 
-    my $idirs = $opt->{idirs};
+    my $idirs            = $opt->{idirs};
+    my $dont_ignore_dirs = $opt->{no_ignore_dirs};
+
+    # if we have one or more --noignore-dir directives, we can't ignore
+    # entire subdirectory hierarchies, so we return an "accept all"
+    # filter and scrutinize the files more in _compile_file_filter
+    return if $dont_ignore_dirs;
     return unless $idirs && @{$idirs};
 
     my %ignore_dirs;
@@ -91,7 +97,7 @@ sub _compile_descend_filter {
             }
         }
         else {
-            Carp::croak( qq{Invalid filter specification "$_"} );
+            Carp::croak( qq{Invalid filter specification "$idir"} );
         }
     }
 
@@ -125,11 +131,59 @@ sub _compile_file_filter {
 
     my %is_member_of_starting_set = map { (App::Ack::get_file_id($_) => 1) } @{$start};
 
+    my $ignore_dir_list      = $opt->{idirs};
+    my $dont_ignore_dir_list = $opt->{no_ignore_dirs};
+
+    my %ignore_dir_set;
+    my %dont_ignore_dir_set;
+
+    foreach my $filter (@{ $ignore_dir_list }) {
+        if ( $filter =~ /^(\w+):(.*)/ ) {
+            if ( $1 eq 'is' ) {
+                $ignore_dir_set{ $2 } = 1;
+            } else {
+                Carp::croak( 'Non-is filters are not yet supported for --ignore-dir' );
+            }
+        } else {
+            Carp::croak( qq{Invalid filter specification "$filter"} );
+        }
+    }
+    foreach my $filter (@{ $dont_ignore_dir_list }) {
+        if ( $filter =~ /^(\w+):(.*)/ ) {
+            if ( $1 eq 'is' ) {
+                $dont_ignore_dir_set{ $2 } = 1;
+            } else {
+                Carp::croak( 'Non-is filters are not yet supported for --ignore-dir' );
+            }
+        } else {
+            Carp::croak( qq{Invalid filter specification "$filter"} );
+        }
+    }
+
     return sub {
         # ack always selects files that are specified on the command
         # line, regardless of filetype.  If you want to ack a JPEG,
         # and say "ack foo whatever.jpg" it will do it for you.
         return 1 if $is_member_of_starting_set{ App::Ack::get_file_id($File::Next::name) };
+
+        if ( $dont_ignore_dir_list ) {
+            my ( undef, $dirname ) = File::Spec->splitpath($File::Next::name);
+            my @dirs               = File::Spec->splitdir($dirname);
+
+            my $is_ignoring = 0;
+
+            foreach my $dir ( @dirs ) {
+                if ( $ignore_dir_set{ $dir } ) {
+                    $is_ignoring = 1;
+                }
+                elsif ( $dont_ignore_dir_set{ $dir } ) {
+                    $is_ignoring = 0;
+                }
+            }
+            if ( $is_ignoring ) {
+                return 0;
+            }
+        }
 
         # Ignore named pipes found in directory searching.  Named
         # pipes created by subprocesses get specified on the command
