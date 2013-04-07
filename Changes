@@ -1,5 +1,15 @@
 History file for ack 2.0.  http://betterthangrep.com/
 
+2.00b07 *** ***  * **:**:** *** ****
+====================================
+  - Improve version requirements for Carp and friends
+  - Documentation improvements
+  - Fix for named pipes (the one this issue refers to)
+  - Fix issue with overlapping context
+  - Add ACKRC
+  - More tests
+  - Fix `--no-ignoredir`
+
 2.00b06 Mon Jan  7 09:46:08 CST 2013
 ====================================
 Lowered the required version of Carp.  We may be able to lower it even
