@@ -41,7 +41,7 @@ sub from_argv {
             file_filter     => $opt->{file_filter},
             descend_filter  => $descend_filter,
             error_handler   => sub { my $msg = shift; App::Ack::warn( $msg ) },
-            sort_files      => $opt->{sort_files},
+            ($opt->{sort_files_mtime}) ? (sort_files => \&File::Next::sort_mtime_standard) : (sort_files => $opt->{sort_files}),
             follow_symlinks => $opt->{follow},
         }, @{$start} );
 
@@ -64,7 +64,7 @@ sub from_file {
         File::Next::from_file( {
             error_handler   => sub { my $msg = shift; App::Ack::warn( $msg ) },
             warning_handler => sub { my $msg = shift; App::Ack::warn( $msg ) },
-            sort_files      => $opt->{sort_files},
+            ($opt->{sort_files_mtime}) ? (sort_files => \&File::Next::sort_mtime_standard) : (sort_files => $opt->{sort_files}),
         }, $file ) or return undef;
 
     return bless {

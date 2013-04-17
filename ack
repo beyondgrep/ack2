@@ -788,6 +788,10 @@ B<-i> always overrides this option.
 Sorts the found files lexicographically.  Use this if you want your file
 listings to be deterministic between runs of I<ack>.
 
+=item B<--sort-files-mtime>
+
+Sort the found files based on modified time.
+
 =item B<--show-types>
 
 Outputs the filetypes that ack associates with each file.

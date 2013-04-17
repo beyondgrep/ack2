@@ -143,7 +143,7 @@ $target_file[1]-4-#define YYBISON 1  /* Identify Bison output.  */
 EOF
 
     my @files = qw( t/swamp/ );
-    my @args = qw( --cc --lines=1 --after=3 --sort );
+    my @args = qw( --cc --lines=1 --after=3 --sort-files );
 
     ack_lists_match( [ @args, @files ], \@expected, 'Looking for first line in multiple files' );
 }
