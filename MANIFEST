@@ -110,6 +110,7 @@ t/swamp/crystallography-weenies.f
 t/swamp/example.R
 t/swamp/file.bar
 t/swamp/file.foo
+t/swamp/fresh.css
 t/swamp/groceries/CVS/fruit
 t/swamp/groceries/CVS/junk
 t/swamp/groceries/CVS/meat
@@ -153,6 +154,7 @@ t/swamp/perl.pl
 t/swamp/perl.pm
 t/swamp/perl.pod
 t/swamp/perl.tar.gz
+t/swamp/perltoot.jpg
 t/swamp/pipe-stress-freaks.F
 t/swamp/sample.asp
 t/swamp/sample.aspx

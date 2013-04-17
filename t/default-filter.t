@@ -21,6 +21,7 @@ filter_test(
         't/swamp/example.R',
         't/swamp/file.bar',
         't/swamp/file.foo',
+        't/swamp/fresh.css',
         't/swamp/html.htm',
         't/swamp/html.html',
         't/swamp/incomplete-last-line.txt',

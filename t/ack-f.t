@@ -19,6 +19,7 @@ DEFAULT_DIR_EXCLUSIONS: {
         t/swamp/example.R
         t/swamp/file.bar
         t/swamp/file.foo
+        t/swamp/fresh.css
         t/swamp/groceries/another_subdir/fruit
         t/swamp/groceries/another_subdir/junk
         t/swamp/groceries/another_subdir/meat

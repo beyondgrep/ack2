@@ -40,6 +40,7 @@ t/swamp/sample.aspx
 t/swamp/service.svc
 t/swamp/stuff.cmake
 t/swamp/example.R
+t/swamp/fresh.css
 );
 
 my @files_no_perl = qw(
@@ -63,6 +64,7 @@ t/swamp/sample.aspx
 t/swamp/service.svc
 t/swamp/stuff.cmake
 t/swamp/example.R
+t/swamp/fresh.css
 );
 
 ack_sets_match( [ '--known-types', '-f', 't/swamp' ], \@files);

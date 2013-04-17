@@ -46,6 +46,7 @@ UNFILTERED: {
             t/swamp/example.R
             t/swamp/file.bar
             t/swamp/file.foo
+            t/swamp/fresh.css
             t/swamp/groceries/another_subdir/CVS/fruit
             t/swamp/groceries/another_subdir/CVS/junk
             t/swamp/groceries/another_subdir/CVS/meat
@@ -91,6 +92,7 @@ UNFILTERED: {
             t/swamp/perl.pm
             t/swamp/perl.pod
             t/swamp/perl.tar.gz
+            t/swamp/perltoot.jpg
             t/swamp/pipe-stress-freaks.F
             t/swamp/Rakefile
             t/swamp/Sample.ascx
