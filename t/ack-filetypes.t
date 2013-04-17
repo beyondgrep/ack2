@@ -46,6 +46,7 @@ plone
 python
 rake
 ruby
+rust
 scala
 scheme
 shell

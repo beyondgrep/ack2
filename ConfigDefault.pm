@@ -226,6 +226,9 @@ sub _options_block {
 --type-add=ruby:is:Rakefile
 --type-add=ruby:firstlinematch:/#!.*\bruby/
 
+# Rust http://www.rust-lang.org/
+--type-add=rust:ext:rs
+
 # Scala http://www.scala-lang.org/
 --type-add=scala:ext:scala
 
