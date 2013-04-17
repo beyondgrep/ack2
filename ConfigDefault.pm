@@ -237,7 +237,7 @@ sub _options_block {
 
 # Shell
 --type-add=shell:ext:sh,bash,csh,tcsh,ksh,zsh
---type-add=shell:firstlinematch:/(?:ba|t?c|k|z)?sh\b/
+--type-add=shell:firstlinematch:/#!.*\b(?:ba|t?c|k|z)?sh\b/
 
 # Smalltalk http://www.smalltalk.org/
 --type-add=smalltalk:ext:st
