@@ -20,7 +20,7 @@ use App::Ack::Filter::Inverse;
 use App::Ack::Filter::Is;
 use App::Ack::Filter::Match;
 
-use Getopt::Long 2.36 ();
+use Getopt::Long 2.35 ();
 
 use Carp 1.04 ();
 

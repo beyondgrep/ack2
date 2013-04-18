@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 13;
+use Test::More tests => 2;
 
 use lib 't';
 use Util;
@@ -22,6 +22,7 @@ SINGLE_TEXT_MATCH: {
     lists_match( \@results, \@expected, 'Looking for first instance of Sue!' );
 }
 
+=pod
 
 DASH_V: {
     my @expected = (
