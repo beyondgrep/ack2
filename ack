@@ -24,8 +24,8 @@ use Getopt::Long 2.36 ();
 
 use Carp 1.04 ();
 
-our $VERSION = '2.00b07';
-# Check http://betterthangrep.com/ for updates
+our $VERSION = '2.00';
+# Check http://beyondgrep.com/ for updates
 
 # These are all our globals.
 
@@ -1519,7 +1519,7 @@ Support for and information about F<ack> can be found at:
 
 =item * The ack homepage
 
-L<http://betterthangrep.com/>
+L<http://beyondgrep.com/>
 
 =item * The ack-users mailing list
 

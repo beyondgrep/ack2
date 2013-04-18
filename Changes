@@ -1,43 +1,71 @@
-History file for ack 2.0.  http://betterthangrep.com/
+History file for ack 2.0.  http://beyondgrep.com/
 
-2.00b07 Sun Apr  7 11:15:38 CDT 2013
-====================================
-  - Improve version requirements for Carp and friends
-  - Documentation improvements
-  - Fix for named pipes
-  - Fix issue with overlapping context
-  - Add ACKRC
-  - More tests
-  - Fix `--no-ignoredir`
-
-2.00b06 Mon Jan  7 09:46:08 CST 2013
-====================================
-Lowered the required version of Carp.  We may be able to lower it even
-more, but for now this should fix CPAN testers failures.
-
-
-2.00b05 Sat Jan  5 14:48:05 CST 2013
-====================================
-No longer run ack-standalone in the tests with perl -T.  This was causing
-make cpantesters failures.
-
-
-2.00b03 Fri Dec 28 16:24:49 CST 2012
-====================================
-Fixed some failing tests in Win32.
-
-Added an explicit LICENSE.md file.
-
-
-2.00b02 Sat Dec 22 16:09:59 CST 2012
+2.00    Wed Apr 17 22:49:41 CDT 2013
 ====================================
 
-Added the -k/--known-types option.
-
-Added checks for mutually exclusive options, like -f and --output.
+The first version of ack 2.0.
 
 
-2.00a01 Thu Jun 14 22:02:24 CDT 2012
-====================================
+# Incompatibilities with ack 1.x
 
-This is the first alpha release of ack 2.0.
+ack 2 makes some big changes in its behaviors that could trip up
+users who are used to the idiosyncracies of ack 1.x.  These changes
+could affect your searching happiness, so please read them.
+
+* ack's default behavior is now to search all files that it identifies
+as being text.  ack 1.x would only search files that were of a file
+type that it recognized.
+
+* Removed the `-a` and `-u` options since the default is to search
+all text files.
+
+* Removed the `--binary` option.  ack 2.0 will not find and search
+through binary files.
+
+* Removed the `--skipped` option.
+
+* Removed the `--invert-file-match` option.  `-v` now works with
+`-g`.  To list files that do not match `/foo/`
+
+    ack -g foo -v
+
+* `-g` now obeys all regex options: `-i`, `-w`, `-Q`, `-v`
+
+* Removed the `-G` switch, because it was too confusing to have two
+regexes specified on the command line.  Now you use the `-x` switch
+to pipe filenames from one `ack` invocation into another.
+
+To search files with filename matching "sales" for the string "foo":
+
+    ack -g sales | ack -x foo
+
+# New features in ack 2.0
+
+ack 2.0 will:
+
+* By default searches all text files, as identified by Perl's `-T` operator
+    * We will no longer have a `-a` switch.
+
+* improved flexibility in defining filetype selectors
+    * name equality ($filename eq 'Makefile')
+    * glob-style matching (`*.pl` identifies a Perl file)
+    * regex-style matching (`/\.pl$/i` identifies a Perl file)
+    * shebang-line matching (shebang line matching `/usr/bin/perl/`
+    identifies a Perl file)
+
+* support for multiple ackrc files
+    * global ackrc (/etc/ackrc)
+        * https://github.com/petdance/ack/issues/#issue/79
+    * user-specific ackrc (~/.ackrc)
+    * per-project ackrc files (~/myproject/.ackrc)
+
+* you can use --dump to figure which options are set where
+
+* all inclusion/exclusion rules will be in the ackrc files
+    * ack 2.0 has a set of definitions for filetypes, directories to
+      include or exclude, etc, *but* these are only included so you don't
+      need to ship an ackrc file to a new machine.  You may tell ack to
+      disregard these defaults if you like.
+
+* In addition to the classic `--thpppt` option to draw Bill the
+Cat, `ack --bar` will draw (of course) Admiral Ackbar.
