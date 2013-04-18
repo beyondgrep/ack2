@@ -42,9 +42,9 @@ sub inspect {
 sub to_string {
     my ( $self ) = @_;
 
-    my $re = $self->{'regex'};
+    (my $re = $self->{regex}) =~ s{\([^:]*:(.*)\)$}{$1};
 
-    return "first line matches $re";
+    return "first line matches /$re/";
 }
 
 BEGIN {

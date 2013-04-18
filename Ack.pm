@@ -532,7 +532,7 @@ END_OF_HELP
         my $ext_list = $mappings{$type};
 
         if ( ref $ext_list ) {
-            $ext_list = join( ' ', map { $_->to_string } @{$ext_list} );
+            $ext_list = join( '; ', map { $_->to_string } @{$ext_list} );
         }
         App::Ack::print( sprintf( "    --[no]%-*.*s %s\n", $maxlen, $maxlen, $type, $ext_list ) );
     }
