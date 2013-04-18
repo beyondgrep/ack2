@@ -407,7 +407,8 @@ Search output:
   --match PATTERN               Specify PATTERN explicitly.
   -m, --max-count=NUM           Stop searching in each file after NUM matches
   -1                            Stop searching after one match of any kind
-  -H, --with-filename           Print the filename for each match
+  -H, --with-filename           Print the filename for each match (default:
+                                on unless explicitly searching a single file)
   -h, --no-filename             Suppress the prefixing filename on output
   -c, --count                   Show number of lines matching per file
   --[no]column                  Show the column number of the first match
