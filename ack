@@ -1066,6 +1066,11 @@ with F<ack> and easily step through the results in Vim:
 
   :grep Dumper perllib
 
+Miles Sterrett has written a Vim plugin for F<ack> which allows you to use
+C<:Ack> instead of C<:grep>, as well as several other advanced features.
+
+L<https://github.com/mileszs/ack.vim>
+
 =head2 Emacs integration
 
 Phil Jackson put together an F<ack.el> extension that "provides a
