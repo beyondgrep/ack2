@@ -18,7 +18,7 @@ sub _options_block {
 # is:  Match the filename exactly
 # ext: Match the extension of the filename exactly
 # match: Match the filename against a Perl regular expression
-# firstlinematch: Match the first 80 characters of the first line
+# firstlinematch: Match the first 100 characters of the first line
 #   of text against a Perl regular expression.  This is only for
 #   the --type-add option.
 
@@ -100,7 +100,7 @@ sub _options_block {
 
 # Perl http://perl.org/
 --type-add=perl:ext:pl,pm,pod,t
---type-add=perl:firstlinematch:/#!.*\bperl/
+--type-add=perl:firstlinematch:/^#!.*\bperl/
 
 # Makefiles http://www.gnu.org/s/make/
 --type-add=make:ext:mk
@@ -209,14 +209,14 @@ sub _options_block {
 
 # PHP http://www.php.net/
 --type-add=php:ext:php,phpt,php3,php4,php5,phtml
---type-add=php:firstlinematch:/#!.*\bphp/
+--type-add=php:firstlinematch:/^#!.*\bphp/
 
 # Plone http://plone.org/
 --type-add=plone:ext:pt,cpt,metadata,cpy,py
 
 # Python http://www.python.org/
 --type-add=python:ext:py
---type-add=python:firstlinematch:/#!.*\bpython/
+--type-add=python:firstlinematch:/^#!.*\bpython/
 
 # R http://www.r-project.org/
 --type-add=rr:ext:R
@@ -224,7 +224,7 @@ sub _options_block {
 # Ruby http://www.ruby-lang.org/
 --type-add=ruby:ext:rb,rhtml,rjs,rxml,erb,rake,spec
 --type-add=ruby:is:Rakefile
---type-add=ruby:firstlinematch:/#!.*\bruby/
+--type-add=ruby:firstlinematch:/^#!.*\bruby/
 
 # Rust http://www.rust-lang.org/
 --type-add=rust:ext:rs
@@ -237,7 +237,7 @@ sub _options_block {
 
 # Shell
 --type-add=shell:ext:sh,bash,csh,tcsh,ksh,zsh
---type-add=shell:firstlinematch:/#!.*\b(?:ba|t?c|k|z)?sh\b/
+--type-add=shell:firstlinematch:/^#!.*\b(?:ba|t?c|k|z)?sh\b/
 
 # Smalltalk http://www.smalltalk.org/
 --type-add=smalltalk:ext:st
