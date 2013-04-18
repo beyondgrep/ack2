@@ -15,20 +15,21 @@ sub new {
     }, $class;
 }
 
-# XXX This test checks the first "line" of the file, but we need
-# it to be less piggy.  If it's something like a .min.js file, then
-# the "line" could be the entire file.  Instead, it should read the
-# first, say, 100 characters of the first line.
+# This test reads the first 250 characters of a file, then just uses the
+# first line found in that. This prevents reading something  like an entire
+# .min.js file (which might be only one "line" long) into memory.
 
 sub filter {
     my ( $self, $resource ) = @_;
 
     my $re = $self->{'regex'};
 
-    local $_;
-    return unless $resource->next_text;
+    my $buffer;
+    my $rc = sysread( $resource->{fh}, $buffer, 250 );
+    return unless $rc;
+    $buffer =~ s/[\r\n].*//s;
 
-    return /$re/;
+    return $buffer =~ /$re/;
 }
 
 sub inspect {
