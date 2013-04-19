@@ -1118,10 +1118,7 @@ sub get_file_id {
 }
 
 sub create_ackrc {
-    my @lines = App::Ack::ConfigDefault::options();
-
-    print join("\n", '--ignore-ack-defaults', @lines);
-    print "\n";
+    print "$_\n" for ( '--ignore-ack-defaults', App::Ack::ConfigDefault::options() );
 }
 
 
