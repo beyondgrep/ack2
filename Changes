@@ -2,7 +2,15 @@ History file for ack 2.0.  http://beyondgrep.com/
 
 2.02
 ====================================
-[ENHANCEMENTS]
+[OPTIMIZATIONS]
+The firstlinematch file type detection option now only searches the
+first 250 characters of the first line of the file.  Otherwise, ack
+would read entire text files that were only one line long, such as
+minified JavaScript, and that would be slow.  Thanks, Michael
+McClimon.
+
+[DOCUMENTATION]
+Many clarifications and cleanups.  Thanks, Michael McClimon.
 
 
 2.00    Wed Apr 17 22:49:41 CDT 2013
