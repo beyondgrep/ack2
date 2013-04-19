@@ -1,6 +1,6 @@
-History file for ack 2.0.  http://beyondgrep.com/
+History file for ack.  http://beyondgrep.com/
 
-2.02
+2.02    Thu Apr 18 23:51:52 CDT 2013
 ====================================
 [OPTIMIZATIONS]
 The firstlinematch file type detection option now only searches the
