@@ -15,10 +15,14 @@ sub _options_block {
 # This is the default ackrc for ack 2.0
 
 # There are four different ways to match
+#
 # is:  Match the filename exactly
+#
 # ext: Match the extension of the filename exactly
+#
 # match: Match the filename against a Perl regular expression
-# firstlinematch: Match the first 100 characters of the first line
+#
+# firstlinematch: Match the first 250 characters of the first line
 #   of text against a Perl regular expression.  This is only for
 #   the --type-add option.
 
