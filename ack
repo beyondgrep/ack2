@@ -544,7 +544,7 @@ B<-l>, some line counts may be zeroes.
 If combined with B<-h> (B<--no-filename>) ack outputs only one total
 count.
 
-=item B<--color>, B<--nocolor>, B<--colour>, B<--nocolour>
+=item B<--[no]color>, B<--[no]colour>
 
 B<--color> highlights the matching text.  B<--nocolor> supresses
 the color.  This is on by default unless the output is redirected.
@@ -580,7 +580,7 @@ when you want to customize the defaults.
 Writes the list of options loaded and where they came from to standard
 output.  Handy for debugging.
 
-=item B<--env>, B<--noenv>
+=item B<--[no]env>
 
 B<--noenv> disables all environment processing. No F<.ackrc> is
 read and all environment variables are ignored. By default, F<ack>
@@ -608,18 +608,18 @@ from standard input.
 
 Forces ack to act as if it were recieving input via a pipe.
 
-=item B<--follow>, B<--nofollow>
+=item B<--[no]follow>
 
 Follow or don't follow symlinks, other than whatever starting files
 or directories were specified on the command line.
 
 This is off by default.
 
-=item B<-g I<REGEX>>
+=item B<-g I<PATTERN>>
 
-Print files where the relative path + filename matches I<REGEX>.
+Print files where the relative path + filename matches I<PATTERN>.
 
-=item B<--group>, B<--nogroup>
+=item B<--[no]group>
 
 B<--group> groups matches by file name.  This is the default
 when used interactively.
@@ -629,9 +629,10 @@ default when output is redirected.
 
 =item B<-H>, B<--with-filename>
 
-Print the filename for each match.
+Print the filename for each match. This is the default unless searching
+a single explicitly specified file.
 
-=item B<-h>, B<--no-filename>
+=item B<-h>, B<--no-filename>, B<--without-filename>
 
 Suppress the prefixing of filenames on output when multiple files are
 searched.
@@ -651,7 +652,7 @@ Print all known types.
 
 =item B<-i>, B<--ignore-case>
 
-Ignore case in the search strings.
+Ignore case distinctions in PATTERN
 
 =item B<--ignore-ack-defaults>
 
@@ -698,9 +699,9 @@ Only print the filenames of matching files, instead of the matching text.
 
 Only print the filenames of files that do I<NOT> match.
 
-=item B<--match I<REGEX>>
+=item B<--match I<PATTERN>>
 
-Specify the I<REGEX> explicitly. This is helpful if you don't want to put the
+Specify the I<PATTERN> explicitly. This is helpful if you don't want to put the
 regex as your first argument, e.g. when executing multiple searches over the
 same set of files.
 
@@ -779,7 +780,7 @@ from fgrep.
 
 Ignore case in the search strings if PATTERN contains no uppercase
 characters. This is similar to C<smartcase> in vim. This option is
-off by default.
+off by default, and ignored if C<-i> is specified.
 
 B<-i> always overrides this option.
 
@@ -794,7 +795,7 @@ Outputs the filetypes that ack associates with each file.
 
 Works with B<-f> and B<-g> options.
 
-=item B<--type=TYPE>, B<--type=noTYPE>
+=item B<--type=[no]TYPE>
 
 Specify the types of files to include or exclude from a search.
 TYPE is a filetype, like I<perl> or I<xml>.  B<--type=perl> can
@@ -941,7 +942,7 @@ of I<FILTER>.
 =item is:I<FILENAME>
 
 I<is> filters match the target filename exactly.  It takes exactly one
-argument, which is the name of the file to match.
+argumentck , which is the name of the file to match.
 
 Example:
 
@@ -956,7 +957,7 @@ Example:
 
     --type-set perl:ext:pl,pm,t
 
-=item match:I<REGEX>
+=item match:I<PATTERN>
 
 I<match> filters match the target filename against a regular expression.
 The regular expression is made case insensitive for the search.
@@ -965,7 +966,7 @@ Example:
 
     --type-set make:match:/(gnu)?makefile/
 
-=item firstlinematch:I<REGEX>
+=item firstlinematch:I<PATTERN>
 
 I<firstlinematch> matches the first line of the target file against a
 regular expression.  Like I<match>, the regular expression is made

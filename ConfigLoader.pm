@@ -225,7 +225,8 @@ EOT
         G                   => removed_option('-G'),
         'group!'            => sub { shift; $opt->{heading} = $opt->{break} = shift },
         'heading!'          => \$opt->{heading},
-        'h|no-filename'     => \$opt->{h},
+        'h|no-filename|without-filename'
+                            => \$opt->{h},
         'H|with-filename'   => \$opt->{H},
         'i|ignore-case'     => \$opt->{i},
         'ignore-directory|ignore-dir=s' # XXX Combine this version with the negated version below
