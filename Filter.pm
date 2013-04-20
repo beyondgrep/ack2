@@ -78,7 +78,8 @@ sub register_filter {
 =head2 $filter->filter($resource)
 
 Must be implemented by filter implementations.  Returns
-true if the filter passes, false otherwise.
+true if the filter passes, false otherwise.  This method
+must B<not> alter the passed-in C<$resource> object.
 
 =head2 $filter->invert()
 
