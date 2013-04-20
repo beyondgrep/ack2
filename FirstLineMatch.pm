@@ -24,12 +24,9 @@ sub filter {
 
     my $re = $self->{'regex'};
 
-    my $buffer;
-    my $rc = sysread( $resource->{fh}, $buffer, 250 );
-    return unless $rc;
-    $buffer =~ s/[\r\n].*//s;
+    my $line = $resource->firstliney;
 
-    return $buffer =~ /$re/;
+    return $line =~ /$re/;
 }
 
 sub inspect {

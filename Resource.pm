@@ -118,4 +118,17 @@ sub clone {
     return FAIL();
 }
 
+=head2 $res->firstliney
+
+Returns the first line (or first 250 characters, whichever comes first of a
+resource).  Resource subclasses are encouraged to cache this value.  If this
+method is called, it must B<NOT> affect the return value of
+L<next_text|/next_text>.
+
+=cut
+
+sub firstliney {
+    return FAIL();
+}
+
 1;
