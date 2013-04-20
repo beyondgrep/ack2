@@ -4,6 +4,14 @@ use strict;
 use warnings;
 use base 'App::Ack::Filter';
 
+=for Developers
+
+Ack has an optimization where the extensions to check
+are extracted and placed in a hash.  Therefore, the
+filter method may not be called.
+
+=cut
+
 sub new {
     my ( $class, @extensions ) = @_;
 

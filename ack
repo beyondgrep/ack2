@@ -152,6 +152,21 @@ sub _compile_file_filter {
     my $inverse_filters = [ grep {  $_->is_inverted() } @{$filters} ];
     @{$filters}         =   grep { !$_->is_inverted() } @{$filters};
 
+    # XXX do this for inverse filters, too?
+    my %extension_lookup;
+
+    foreach my $filter (@{$filters}) {
+        # XXX ->isa is often a bad idea
+        if ( $filter->isa('App::Ack::Filter::Extension') ) {
+            # XXX use a method in the future
+            foreach my $ext (@{ $filter->{extensions} }) {
+                $extension_lookup{lc($ext)} = 1;
+            }
+            undef $filter;
+        }
+    }
+    @{$filters} = grep { defined() } @{$filters};
+
     _sort_filters($filters);
     _sort_filters($inverse_filters);
 
@@ -223,13 +238,20 @@ sub _compile_file_filter {
             return 0 if $filter->filter($resource);
         }
         my $match_found = 1;
-        if ( @{$filters} ) {
-            $match_found = 0;
 
-            foreach my $filter (@{$filters}) {
-                if ($filter->filter($resource)) {
-                    $match_found = 1;
-                    last;
+        if ( %extension_lookup || @{$filters} ) {
+            # XXX this won't work properly if there is no extension
+            #     (consider a file named rb)
+            my $extension = $resource->name;
+            $extension    =~ s/^.*[.]//;
+            $match_found  = $extension_lookup{lc($extension)};
+
+            if ( !$match_found ) {
+                foreach my $filter (@{$filters}) {
+                    if ($filter->filter($resource)) {
+                        $match_found = 1;
+                        last;
+                    }
                 }
             }
         }
