@@ -948,28 +948,30 @@ sub print_line_with_options {
         }
     }
     else {
-        my @capture_indices = get_capture_indices();
-        if( @capture_indices ) {
-            my $offset = 0; # additional offset for when we add stuff
+        if ( $color ) {
+            my @capture_indices = get_capture_indices();
+            if( @capture_indices ) {
+                my $offset = 0; # additional offset for when we add stuff
 
-            foreach my $index_pair ( @capture_indices ) {
-                my ( $match_start, $match_end ) = @{$index_pair};
+                foreach my $index_pair ( @capture_indices ) {
+                    my ( $match_start, $match_end ) = @{$index_pair};
 
-                my $substring = substr( $line,
-                    $offset + $match_start, $match_end - $match_start );
-                my $substitution = Term::ANSIColor::colored( $substring,
-                    $ENV{ACK_COLOR_MATCH} );
+                    my $substring = substr( $line,
+                        $offset + $match_start, $match_end - $match_start );
+                    my $substitution = Term::ANSIColor::colored( $substring,
+                        $ENV{ACK_COLOR_MATCH} );
 
-                substr( $line, $offset + $match_start,
-                    $match_end - $match_start, $substitution );
+                    substr( $line, $offset + $match_start,
+                        $match_end - $match_start, $substitution );
 
-                $offset += length( $substitution ) - length( $substring );
+                    $offset += length( $substitution ) - length( $substring );
+                }
             }
-        }
-        elsif( $color ) {
-            # XXX I know $& is a no-no; fix it later
-            if($line  =~ s/$re/Term::ANSIColor::colored($&, $ENV{ACK_COLOR_MATCH})/ge) {
-                $line .= "\033[0m\033[K";
+            else {
+                # XXX I know $& is a no-no; fix it later
+                if($line  =~ s/$re/Term::ANSIColor::colored($&, $ENV{ACK_COLOR_MATCH})/ge) {
+                    $line .= "\033[0m\033[K";
+                }
             }
         }
 

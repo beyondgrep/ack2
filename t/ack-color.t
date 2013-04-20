@@ -27,7 +27,7 @@ NORMAL_COLOR: {
 
 MATCH_WITH_BACKREF: {
     my @files = qw( t/text/boy-named-sue.txt );
-    my @args = ( '(called).*\1' );
+    my @args = qw( (called).*\1 --color );
     my @results = run_ack( @args, @files );
 
     is( @results, 1, 'backref pattern matches once' );
