@@ -76,7 +76,9 @@ Cat, `ack --bar` will draw (of course) Admiral Ackbar.
 
 # Development
 
-Development is *not* done on master.  We use a dev branch named for
-the dev version of ack.  If the current version is 2.00, then the
-next release version is 2.02, and our dev releases will be 2.0101,
-2.0102, etc.  Therefore, the branch will be "dev201".
+Development is *not* done on master.  We use a dev branch named `dev`,
+and from there topic branches named for a specific topic
+
+    master -> dev -> docs
+                 \-> speedups
+                 \-> issue473
