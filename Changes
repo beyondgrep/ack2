@@ -1,5 +1,11 @@
 History file for ack.  http://beyondgrep.com/
 
+NEXT
+====================================
+[OPTIMIZATIONS]
+Sped up matching of regexes by removing extraneous compilation.
+
+
 2.02    Thu Apr 18 23:51:52 CDT 2013
 ====================================
 [OPTIMIZATIONS]

@@ -714,16 +714,16 @@ my $match_column_number;
 sub does_match {
     my ( $opt, $line ) = @_;
 
-    my $re     = $opt->{regex};
-    my $invert = $opt->{v};
-
-    return unless $re;
+    my $re = $opt->{regex} or return;
 
     $match_column_number = undef;
     @capture_indices     = ();
 
-    if ( $invert ? $line !~ /$re/ : $line =~ /$re/ ) {
-        if ( not $invert ) {
+    if ( $opt->{v} ) {
+        return ( $line !~ /$re/o );
+    }
+    else {
+        if ( $line =~ /$re/o ) {
             # @- = @LAST_MATCH_START
             # @+ = @LAST_MATCH_END
             $match_column_number = $-[0] + 1;
@@ -733,11 +733,11 @@ sub does_match {
                     [ $-[$_], $+[$_] ]
                 } ( 1 .. $#- );
             }
+            return 1;
         }
-        return 1;
-    }
-    else {
-        return;
+        else {
+            return;
+        }
     }
 }
 
