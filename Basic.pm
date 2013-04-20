@@ -7,6 +7,8 @@ package App::Ack::Resource::Basic;
 use warnings;
 use strict;
 
+use Fcntl ();
+
 use base 'App::Ack::Resource';
 
 =head1 METHODS
@@ -163,6 +165,23 @@ sub clone {
     my ( $self ) = @_;
 
     return __PACKAGE__->new($self->name);
+}
+
+sub firstliney {
+    my ( $self ) = @_;
+
+    unless(exists $self->{firstliney}) {
+        my $buffer = '';
+        my $rc     = sysread( $self->{fh}, $buffer, 250 );
+        unless($rc) { # XXX handle this better?
+            $buffer = '';
+        }
+        $buffer =~ s/[\r\n].*//s;
+        $self->{firstliney} = $buffer;
+        sysseek( $self->{fh}, 250, Fcntl::SEEK_SET ); # XXX check this return value
+    }
+
+    return $self->{firstliney};
 }
 
 
