@@ -106,6 +106,29 @@ sub _compile_descend_filter {
     };
 }
 
+sub _sort_filters {
+    my ( $filters ) = @_;
+
+    my $order = 1;
+
+    my %ordering = (
+        Extension      => $order++,
+        Match          => $order++,
+        Is             => $order++,
+        FirstLineMatch => $order++,
+    );
+
+    @{$filters} = sort {
+        my $type_a = ref($a->is_inverted ? $a->invert : $a);
+        my $type_b = ref($b->is_inverted ? $b->invert : $b);
+
+        $type_a =~ s/^App::Ack::Filter:://;
+        $type_b =~ s/^App::Ack::Filter:://;
+
+        $ordering{$type_a} <=> $ordering{$type_b}
+    } @{$filters};
+}
+
 sub _compile_file_filter {
     my ( $opt, $start ) = @_;
 
@@ -128,6 +151,9 @@ sub _compile_file_filter {
     my $filters         = $opt->{'filters'} || [];
     my $inverse_filters = [ grep {  $_->is_inverted() } @{$filters} ];
     @{$filters}         =   grep { !$_->is_inverted() } @{$filters};
+
+    _sort_filters($filters);
+    _sort_filters($inverse_filters);
 
     my %is_member_of_starting_set = map { (App::Ack::get_file_id($_) => 1) } @{$start};
 
