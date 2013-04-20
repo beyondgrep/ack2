@@ -35,12 +35,6 @@ sub new {
     if ( $self->{filename} eq '-' ) {
         $self->{fh} = *STDIN;
     }
-    else {
-        if ( !open( $self->{fh}, '<', $self->{filename} ) && $App::Ack::report_bad_filenames ) {
-            App::Ack::warn( "$self->{filename}: $!" );
-            return;
-        }
-    }
 
     return $self;
 }
@@ -76,6 +70,8 @@ sub needs_line_scan {
 
     return 1 if $opt->{v};
 
+    $self->_lazily_open;
+
     my $size = -s $self->{fh};
     if ( $size == 0 ) {
         return 0;
@@ -107,6 +103,11 @@ is true.
 sub reset {
     my $self = shift;
 
+    # return if we haven't opened the file yet
+    if ( !defined($self->{fh}) ) {
+        return;
+    }
+
     if( !seek( $self->{fh}, 0, 0 ) && $App::Ack::report_bad_filenames ) {
         App::Ack::warn( "$self->{filename}: $!" );
     }
@@ -125,13 +126,15 @@ the text.  This basically emulates a call to C<< <$fh> >>.
 =cut
 
 sub next_text {
-    if ( defined ($_ = readline $_[0]->{fh}) ) {
-        $. = ++$_[0]->{line};
+    my ( $self ) = @_;
 
-        # Normalize line endings if we need to
-        if ( /\r\n?$/ ) {
-            # Strip any trailing \r\n from the line and turn it to \n
-            s/[\r\n]+$/\n/;
+    $self->_lazily_open;
+    if ( defined ($_ = readline $self->{fh}) ) {
+        $. = ++$self->{line};
+
+        my $line_end;
+        while (($line_end = substr($_, -1)) eq "\n" || $line_end eq "\r") {
+            chop;
         }
         return 1;
     }
@@ -147,6 +150,11 @@ API: Close the resource.
 
 sub close {
     my $self = shift;
+
+    # return if we haven't opened the file yet
+    if ( !defined($self->{fh}) ) {
+        return;
+    }
 
     if ( !close($self->{fh}) && $App::Ack::report_bad_filenames ) {
         App::Ack::warn( $self->name() . ": $!" );
@@ -170,6 +178,8 @@ sub clone {
 sub firstliney {
     my ( $self ) = @_;
 
+    $self->_lazily_open;
+
     unless(exists $self->{firstliney}) {
         my $buffer = '';
         my $rc     = sysread( $self->{fh}, $buffer, 250 );
@@ -178,11 +188,20 @@ sub firstliney {
         }
         $buffer =~ s/[\r\n].*//s;
         $self->{firstliney} = $buffer;
-        sysseek( $self->{fh}, 250, Fcntl::SEEK_SET ); # XXX check this return value
+        $self->reset;
     }
 
     return $self->{firstliney};
 }
 
+sub _lazily_open {
+    my ( $self ) = @_;
+
+    return if defined($self->{fh});
+
+    if ( !open( $self->{fh}, '<', $self->{filename} ) && $App::Ack::report_bad_filenames ) {
+        App::Ack::warn( "$self->{filename}: $!" );
+    }
+}
 
 1;
