@@ -191,17 +191,16 @@ sub _compile_file_filter {
         # command line" wins.
         return 0 if -p $File::Next::name;
 
+        my $resource = App::Ack::Resource::Basic->new($File::Next::name);
+        return 0 if ! $resource;
         foreach my $filter (@ifiles_filters) {
-            my $resource = App::Ack::Resource::Basic->new($File::Next::name);
-            return 0 if ! $resource || $filter->filter($resource);
+            return 0 if $filter->filter($resource);
         }
         my $match_found = 1;
         if ( @{$filters} ) {
             $match_found = 0;
 
             foreach my $filter (@{$filters}) {
-                my $resource = App::Ack::Resource::Basic->new($File::Next::name);
-                return 0 if ! $resource;
                 if ($filter->filter($resource)) {
                     $match_found = 1;
                     last;
@@ -211,8 +210,6 @@ sub _compile_file_filter {
         # Don't bother invoking inverse filters unless we consider the current resource a match
         if ( $match_found && @{$inverse_filters} ) {
             foreach my $filter ( @{$inverse_filters} ) {
-                my $resource = App::Ack::Resource::Basic->new($File::Next::name);
-                return 0 if ! $resource;
                 if ( not $filter->filter( $resource ) ) {
                     $match_found = 0;
                     last;
