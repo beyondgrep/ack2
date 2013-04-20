@@ -133,6 +133,12 @@ test_classic: all
 test_standalone: all $(ACK_STANDALONE)
 	$(FULLPERLRUN) t/runtests.pl 1 $(TEST_VERBOSE) "$(INST_LIB)" "$(INST_ARCHLIB)" $(TEST_FILES)
 
+PROF_ARGS = -Mblib ./$(ACK) --noenv --color --group -w foo ~/parrot
+
+nytprof: all
+	$(PERL) -d:NYTProf $(PROF_ARGS) >> /dev/null 2>&1
+	nytprofhtml
+
 MAKE_FRAG
 
     return $postamble;
