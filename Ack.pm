@@ -5,7 +5,7 @@ use strict;
 
 use App::Ack::ConfigDefault;
 use App::Ack::ConfigFinder;
-use Getopt::Long 2.36 ();
+use Getopt::Long 2.35 ();
 use File::Next 1.10;
 
 =head1 NAME
