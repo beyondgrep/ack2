@@ -126,10 +126,9 @@ sub next_text {
     if ( defined ($_ = readline $_[0]->{fh}) ) {
         $. = ++$_[0]->{line};
 
-        my $line_end = substr $_, -1;
-        while ($line_end eq "\n" || $line_end eq "\r") {
+        my $line_end;
+        while (($line_end = substr($_,-1)) eq "\n" || $line_end eq "\r") {
             chop;
-            $line_end = substr $_, -1;
         }
 
         $_ .= "\n"; # add back newline (XXX make it native)
