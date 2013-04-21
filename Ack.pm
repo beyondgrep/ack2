@@ -846,7 +846,10 @@ sub iterate {
         # tell me why this happened, I would love to know!
         $. = $former_dot_period; # XXX this won't happen on an exception
 
-        push @before_ctx_lines, $current_line;
+        if ( $n_before_ctx_lines ) {
+            push @before_ctx_lines, $current_line;
+            shift @before_ctx_lines while @before_ctx_lines > $n_before_ctx_lines;
+        }
         if ( $n_after_ctx_lines ) {
             $current_line = shift @after_ctx_lines;
         }
@@ -856,7 +859,6 @@ sub iterate {
         else {
             undef $current_line;
         }
-        shift @before_ctx_lines while @before_ctx_lines > $n_before_ctx_lines;
     }
 
     $is_iterating = 0; # XXX this won't happen on an exception
