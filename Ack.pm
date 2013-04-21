@@ -225,7 +225,7 @@ sub build_regex {
         $str = "(?i)$str";
     }
 
-    my $re = eval { qr/$str/ };
+    my $re = eval { qr/$str/o };
     if ( !$re ) {
         die "Invalid regex '$str':\n  $@";
     }
@@ -693,7 +693,7 @@ sub does_match {
         return ( $line !~ $re );
     }
     else {
-        if ( $line =~ $re ) {
+        if ( $line =~ /$re/o ) {
             # @- = @LAST_MATCH_START
             # @+ = @LAST_MATCH_END
             $match_column_number = $-[0] + 1;
