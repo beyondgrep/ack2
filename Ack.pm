@@ -948,44 +948,46 @@ sub print_line_with_options {
         }
     }
     else {
-        my @capture_indices = get_capture_indices();
-        if( @capture_indices ) {
-            my $offset = 0; # additional offset for when we add stuff
+        if ( $color ) {
+            my @capture_indices = get_capture_indices();
+            if( @capture_indices ) {
+                my $offset = 0; # additional offset for when we add stuff
 
-            foreach my $index_pair ( @capture_indices ) {
-                my ( $match_start, $match_end ) = @{$index_pair};
+                foreach my $index_pair ( @capture_indices ) {
+                    my ( $match_start, $match_end ) = @{$index_pair};
 
-                my $substring = substr( $line,
-                    $offset + $match_start, $match_end - $match_start );
-                my $substitution = Term::ANSIColor::colored( $substring,
-                    $ENV{ACK_COLOR_MATCH} );
+                    my $substring = substr( $line,
+                        $offset + $match_start, $match_end - $match_start );
+                    my $substitution = Term::ANSIColor::colored( $substring,
+                        $ENV{ACK_COLOR_MATCH} );
 
-                substr( $line, $offset + $match_start,
-                    $match_end - $match_start, $substitution );
+                    substr( $line, $offset + $match_start,
+                        $match_end - $match_start, $substitution );
 
-                $offset += length( $substitution ) - length( $substring );
+                    $offset += length( $substitution ) - length( $substring );
+                }
             }
-        }
-        elsif( $color ) {
-            my $matched = 0; # flag; if matched, need to escape afterwards
+            else {
+                my $matched = 0; # flag; if matched, need to escape afterwards
 
-            while ($line =~ /$re/g) {
+                while ($line =~ /$re/g) {
 
-                $matched = 1;
-                my ( $match_start, $match_end ) = ($-[0], $+[0]);
+                    $matched = 1;
+                    my ( $match_start, $match_end ) = ($-[0], $+[0]);
 
-                my $substring = substr( $line, $match_start,
-                    $match_end - $match_start );
-                my $substitution = Term::ANSIColor::colored( $substring,
-                    $ENV{ACK_COLOR_MATCH} );
+                    my $substring = substr( $line, $match_start,
+                        $match_end - $match_start );
+                    my $substitution = Term::ANSIColor::colored( $substring,
+                        $ENV{ACK_COLOR_MATCH} );
 
-                substr( $line, $match_start, $match_end - $match_start,
-                    $substitution );
+                    substr( $line, $match_start, $match_end - $match_start,
+                        $substitution );
 
-                pos($line) = $match_end +
+                    pos($line) = $match_end +
                     (length( $substitution ) - length( $substring ));
+                }
+                $line .= "\033[0m\033[K" if $matched;
             }
-            $line .= "\033[0m\033[K" if $matched;
         }
 
         push @line_parts, $line;
