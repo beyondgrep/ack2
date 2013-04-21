@@ -238,32 +238,6 @@ sub build_regex {
     return $str;
 }
 
-=head2 check_regex( $regex_str )
-
-Checks that the $regex_str can be compiled into a perl regular expression.
-Dies with the error message if this is not the case.
-
-No return value.
-
-=cut
-
-sub check_regex {
-    my $regex = shift;
-
-    return unless defined $regex;
-
-    eval { qr/$regex/ };
-    if ($@) {
-        (my $error = $@) =~ s/ at \S+ line \d+.*//;
-        chomp($error);
-        App::Ack::die( "Invalid regex '$regex':\n  $error" );
-    }
-
-    return;
-}
-
-
-
 =head2 warn( @_ )
 
 Put out an ack-specific warning.
