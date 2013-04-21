@@ -967,10 +967,25 @@ sub print_line_with_options {
             }
         }
         elsif( $color ) {
-            # XXX I know $& is a no-no; fix it later
-            if($line  =~ s/$re/Term::ANSIColor::colored($&, $ENV{ACK_COLOR_MATCH})/ge) {
-                $line .= "\033[0m\033[K";
+            my $matched = 0; # flag; if matched, need to escape afterwards
+
+            while ($line =~ /$re/g) {
+
+                $matched = 1;
+                my ( $match_start, $match_end ) = ($-[0], $+[0]);
+
+                my $substring = substr( $line, $match_start,
+                    $match_end - $match_start );
+                my $substitution = Term::ANSIColor::colored( $substring,
+                    $ENV{ACK_COLOR_MATCH} );
+
+                substr( $line, $match_start, $match_end - $match_start,
+                    $substitution );
+
+                pos($line) = $match_end +
+                    (length( $substitution ) - length( $substring ));
             }
+            $line .= "\033[0m\033[K" if $matched;
         }
 
         push @line_parts, $line;
