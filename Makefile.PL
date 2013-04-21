@@ -108,7 +108,7 @@ tags:
 		--exclude=blib \
 		--exclude=.git \
 		--exclude='*~' \
-		--exclude=$(ACK) \
+		--exclude=$(ACK_STANDALONE) \
 		--languages=Perl --langmap=Perl:+.t \
 
 critic:
