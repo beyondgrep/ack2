@@ -225,17 +225,13 @@ sub build_regex {
         $str = "(?i)$str";
     }
 
-    my $ok = eval {
-        qr/$str/
-    };
-
-    my $error = $@;
-
-    if ( !$ok ) {
-        die "Invalid regex '$str':\n  $error";
+    my $re = eval { qr/$str/ };
+    if ( !$re ) {
+        die "Invalid regex '$str':\n  $@";
     }
 
-    return $str;
+    return $re;
+
 }
 
 =head2 warn( @_ )
@@ -694,10 +690,10 @@ sub does_match {
     @capture_indices     = ();
 
     if ( $opt->{v} ) {
-        return ( $line !~ /$re/o );
+        return ( $line !~ $re );
     }
     else {
-        if ( $line =~ /$re/o ) {
+        if ( $line =~ $re ) {
             # @- = @LAST_MATCH_START
             # @+ = @LAST_MATCH_END
             $match_column_number = $-[0] + 1;
@@ -890,7 +886,6 @@ sub print_line_with_options {
     my $ors            = $opt->{print0} ? "\0" : "\n";
     my $heading        = $opt->{heading};
     my $output_expr    = $opt->{output};
-    my $re             = $opt->{regex};
     my $color          = $opt->{color};
 
     my @line_parts;
@@ -915,8 +910,8 @@ sub print_line_with_options {
         }
     }
     if( $output_expr ) {
-        # XXX avoid re-evaluation if we can
-        while( $line =~ /$re/g ) {
+        my $re = $opt->{regex};
+        while ( $line =~ /$re/og ) {
             my $output = eval $output_expr;
             App::Ack::print( join( $separator, @line_parts, $output ), $ors );
         }
@@ -944,7 +939,8 @@ sub print_line_with_options {
             else {
                 my $matched = 0; # flag; if matched, need to escape afterwards
 
-                while ($line =~ /$re/g) {
+                my $re = $opt->{regex};
+                while ( $line =~ /$re/og ) {
 
                     $matched = 1;
                     my ( $match_start, $match_end ) = ($-[0], $+[0]);
@@ -999,7 +995,6 @@ sub print_line_with_context {
 
     my $ors                 = $opt->{print0} ? "\0" : "\n";
     my $match_word          = $opt->{w};
-    my $re                  = $opt->{regex};
     my $is_tracking_context = $opt->{after_context} || $opt->{before_context};
     my $output_expr         = $opt->{output};
 
