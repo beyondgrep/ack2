@@ -681,19 +681,19 @@ sub exit_from_ack {
 my @capture_indices;
 my $match_column_number;
 
+# does_match() MUST have an $opt->{regex} set.
+
 sub does_match {
     my ( $opt, $line ) = @_;
-
-    my $re = $opt->{regex} or return;
 
     $match_column_number = undef;
     @capture_indices     = ();
 
     if ( $opt->{v} ) {
-        return ( $line !~ $re );
+        return ( $line !~ $opt->{regex} );
     }
     else {
-        if ( $line =~ $re ) {
+        if ( $line =~ $opt->{regex} ) {
             # @- = @LAST_MATCH_START
             # @+ = @LAST_MATCH_END
             $match_column_number = $-[0] + 1;
@@ -736,7 +736,7 @@ sub print_matches_in_resource {
 
     my $has_printed_for_this_resource = 0;
 
-    App::Ack::iterate($resource, $opt, sub {
+    my $matching_sub = sub {
         if ( App::Ack::does_match($opt, $_) ) {
             if( !$has_printed_for_this_resource ) {
                 if( $break && has_printed_something() ) {
@@ -767,7 +767,9 @@ sub print_matches_in_resource {
             $has_printed_for_this_resource = 1;
         }
         return $max_count != 0;
-    });
+    };
+
+    App::Ack::iterate($resource, $opt, $matching_sub );
 
     return $nmatches;
 }
@@ -845,7 +847,7 @@ sub iterate {
         $. = $former_dot_period; # XXX this won't happen on an exception
 
         push @before_ctx_lines, $current_line;
-if($n_after_ctx_lines) {
+        if ( $n_after_ctx_lines ) {
             $current_line = shift @after_ctx_lines;
         }
         elsif($resource->next_text()) {
@@ -1047,7 +1049,7 @@ sub print_line_with_context {
                 next;
             }
             chomp $line;
-            my $separator = App::Ack::does_match( $opt, $line ) ? ':' : '-';
+            my $separator = ($opt->{regex} && App::Ack::does_match( $opt, $line )) ? ':' : '-';
             App::Ack::print_line_with_options($opt, $filename, $line, $. + $offset, $separator);
             $previous_line_printed = $. + $offset;
             $offset++;
