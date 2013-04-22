@@ -139,10 +139,10 @@ nytprof: all
 	nytprofhtml
 
 TIMER_ARGS=foo ~/parrot > /dev/null
-time-ack1:
+time-ack196:
 	time $(PERL) ./ack196 $(TIMER_ARGS)
 
-time-ack2:
+time-ack202:
 	time $(PERL) ./ack202 $(TIMER_ARGS)
 
 time-ack-standalone: ack-standalone
