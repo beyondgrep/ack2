@@ -1,6 +1,6 @@
 History file for ack.  http://beyondgrep.com/
 
-NEXT
+2.03_01 Mon Apr 22 09:41:12 CDT 2013
 ====================================
 [FIXES]
 ack now runs on a standard Perl 5.8.8 install with no module updates.
