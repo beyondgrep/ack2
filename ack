@@ -20,11 +20,11 @@ use App::Ack::Filter::Inverse;
 use App::Ack::Filter::Is;
 use App::Ack::Filter::Match;
 
-use Getopt::Long 2.36 ();
+use Getopt::Long 2.35 ();
 
 use Carp 1.04 ();
 
-our $VERSION = '2.02';
+our $VERSION = '2.0301';
 # Check http://beyondgrep.com/ for updates
 
 # These are all our globals.
@@ -1558,6 +1558,7 @@ L<https://github.com/petdance/ack2>
 How appropriate to have I<ack>nowledgements!
 
 Thanks to everyone who has contributed to ack in any way, including
+Dale Sedivic,
 Michael McClimon,
 Andrew Black,
 Ralph Bodenner,

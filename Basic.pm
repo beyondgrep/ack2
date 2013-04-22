@@ -50,9 +50,7 @@ Returns the name of the resource.
 =cut
 
 sub name {
-    my $self = shift;
-
-    return $self->{filename};
+    return $_[0]->{filename};
 }
 
 
@@ -127,8 +125,12 @@ the text.  This basically emulates a call to C<< <$fh> >>.
 sub next_text {
     if ( defined ($_ = readline $_[0]->{fh}) ) {
         $. = ++$_[0]->{line};
-        s/[\r\n]+$//; # chomp may not handle this
-        $_ .= "\n"; # add back newline (XXX make it native)
+
+        # Normalize line endings if we need to
+        if ( /\r\n?$/ ) {
+            # Strip any trailing \r\n from the line and turn it to \n
+            s/[\r\n]+$/\n/;
+        }
         return 1;
     }
 
