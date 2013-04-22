@@ -138,6 +138,16 @@ nytprof: all
 	$(PERL) -d:NYTProf $(PROF_ARGS) >> /dev/null 2>&1
 	nytprofhtml
 
+TIMER_ARGS=foo ~/parrot > /dev/null
+time-ack1:
+	time $(PERL) ./ack196 $(TIMER_ARGS)
+
+time-ack2:
+	time $(PERL) ./ack202 $(TIMER_ARGS)
+
+time-ack-standalone: ack-standalone
+	time $(PERL) ./ack-standalone $(TIMER_ARGS)
+
 MAKE_FRAG
 
     return $postamble;
