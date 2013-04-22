@@ -1,6 +1,6 @@
 package main;
 
-require 5.008000;
+require 5.008008;
 
 use strict;
 use warnings;
@@ -38,7 +38,7 @@ my %parms = (
         'File::Next'        => '1.10',
         'File::Spec'        => '3.00',
         'File::Temp'        => '0.19', # For newdir()
-        'Getopt::Long'      => '2.36', # For GetOptionsFromArray()
+        'Getopt::Long'      => '2.35',
         'Pod::Usage'        => '1.26',
         'Term::ANSIColor'   => '1.10',
         'Test::Harness'     => '2.50', # Something reasonably newish
@@ -81,7 +81,6 @@ sub MY::postamble {
 
     my $postamble = sprintf(<<'MAKE_FRAG', $debug_mode);
 ACK               = ack
-ACK_STANDALONE    = ack-standalone
 ACK_PM            = Ack.pm
 RESOURCE_PM       = Resource.pm
 RESOURCES_PM      = Resources.pm
@@ -108,18 +107,18 @@ tags:
 		--exclude=blib \
 		--exclude=.git \
 		--exclude='*~' \
-		--exclude=$(ACK) \
+		--exclude=ack-standalone \
 		--languages=Perl --langmap=Perl:+.t \
 
 critic:
 	perlcritic -1 -q -profile perlcriticrc $(ACK) $(ALL_PM) t/*.t
 
-$(ACK_STANDALONE) : $(ACK) $(ALL_PM) squash Makefile
-	$(PERL) squash %s $(ACK) File::Next $(ALL_PM) > $(ACK_STANDALONE)
-	$(FIXIN) $(ACK_STANDALONE)
-	-$(NOECHO) $(CHMOD) $(PERM_RWX) $(ACK_STANDALONE)
-	$(PERL) -i -p -e "s/\\\$$GIT_REVISION\s*=\s*''/\\\$$GIT_REVISION = q{$$(git rev-parse --short HEAD)}/" $(ACK_STANDALONE)
-	$(PERL) -c $(ACK_STANDALONE)
+ack-standalone : $(ACK) $(ALL_PM) squash Makefile
+	$(PERL) squash %s $(ACK) File::Next $(ALL_PM) > ack-standalone
+	$(FIXIN) ack-standalone
+	-$(NOECHO) $(CHMOD) $(PERM_RWX) ack-standalone
+	$(PERL) -i -p -e "s/\\\$$GIT_REVISION\s*=\s*''/\\\$$GIT_REVISION = q{$$(git rev-parse --short HEAD)}/" ack-standalone
+	$(PERL) -c ack-standalone
 
 bininst : $(ACK)
 	$(CP) $(ACK) ~/bin/ack2
@@ -130,14 +129,24 @@ test: test_classic test_standalone
 test_classic: all
 	$(FULLPERLRUN) t/runtests.pl 0 $(TEST_VERBOSE) "$(INST_LIB)" "$(INST_ARCHLIB)" $(TEST_FILES)
 
-test_standalone: all $(ACK_STANDALONE)
+test_standalone: all ack-standalone
 	$(FULLPERLRUN) t/runtests.pl 1 $(TEST_VERBOSE) "$(INST_LIB)" "$(INST_ARCHLIB)" $(TEST_FILES)
 
-PROF_ARGS = -Mblib ./$(ACK) --noenv --color --group -w foo ~/parrot
+PROF_ARGS = -Mblib blib/script/ack foo ~/parrot
 
 nytprof: all
 	$(PERL) -d:NYTProf $(PROF_ARGS) >> /dev/null 2>&1
 	nytprofhtml
+
+TIMER_ARGS=foo ~/parrot > /dev/null
+time-ack196:
+	time $(PERL) ./ack196 $(TIMER_ARGS)
+
+time-ack202:
+	time $(PERL) ./ack202 $(TIMER_ARGS)
+
+time-ack-standalone: ack-standalone
+	time $(PERL) ./ack-standalone $(TIMER_ARGS)
 
 MAKE_FRAG
 

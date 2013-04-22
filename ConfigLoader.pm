@@ -7,7 +7,7 @@ use App::Ack ();
 use App::Ack::Filter;
 use App::Ack::Filter::Default;
 use Carp 1.04 ();
-use Getopt::Long 2.36 ();
+use Getopt::Long 2.35 ();
 use Text::ParseWords 3.1 ();
 
 =head1 App::Ack::ConfigLoader
@@ -138,7 +138,9 @@ sub process_filetypes {
 
         if ( ref($args) ) {
             # $args are modified in place, so no need to munge $arg_sources
-            Getopt::Long::GetOptionsFromArray($args, %type_arg_specs);
+            local @ARGV = @{$args};
+            Getopt::Long::GetOptions(%type_arg_specs);
+            @{$args} = @ARGV;
         }
         else {
             ( undef, $arg_sources->[$i + 1] ) =
@@ -335,10 +337,11 @@ sub process_other {
 
     if ( $argv_source ) { # this *should* always be true, but you never know...
         my @copy = @{$argv_source};
+        local @ARGV = @copy;
 
         Getopt::Long::Configure('pass_through');
 
-        Getopt::Long::GetOptionsFromArray( \@copy,
+        Getopt::Long::GetOptions(
             'help-types' => \$is_help_types_active,
         );
 
@@ -352,7 +355,9 @@ sub process_other {
 
         my $ret;
         if ( ref($args) ) {
-            $ret = Getopt::Long::GetOptionsFromArray( $args, %{$arg_specs} );
+            local @ARGV = @{$args};
+            $ret = Getopt::Long::GetOptions( %{$arg_specs} );
+            @{$args} = @ARGV;
         }
         else {
             ( $ret, $arg_sources->[$i + 1] ) =
@@ -381,10 +386,12 @@ sub should_dump_options {
         my ( $name, $options ) = @{$sources}[$i, $i + 1];
         if($name eq 'ARGV') {
             my $dump;
+            local @ARGV = @{$options};
             Getopt::Long::Configure('default', 'pass_through', 'no_auto_help', 'no_auto_version');
-            Getopt::Long::GetOptionsFromArray($options,
+            Getopt::Long::GetOptions(
                 'dump' => \$dump,
             );
+            @{$options} = @ARGV;
             return $dump;
         }
     }
@@ -433,14 +440,15 @@ sub explode_sources {
             $j--;
 
             my @copy = @chunk;
-            Getopt::Long::GetOptionsFromArray(\@chunk,
+            local @ARGV = @chunk;
+            Getopt::Long::GetOptions(
                 'type-add=s' => $add_type,
                 'type-set=s' => $add_type,
                 'type-del=s' => $del_type,
             );
-            Getopt::Long::GetOptionsFromArray(\@chunk, %{$arg_spec});
+            Getopt::Long::GetOptions( %{$arg_spec} );
 
-            splice @copy, -1 * @chunk if @chunk; # XXX explain this
+            splice @copy, -1 * @ARGV if @ARGV; # XXX explain this
             push @new_sources, $name, \@copy;
         }
     }
@@ -517,9 +525,11 @@ sub remove_default_options_if_needed {
         my ( $name, $args ) = @{$sources}[ $index, $index + 1 ];
 
         if (ref($args)) {
-            Getopt::Long::GetOptionsFromArray($args,
+            local @ARGV = @{$args};
+            Getopt::Long::GetOptions(
                 'ignore-ack-defaults' => \$should_remove,
             );
+            @{$args} = @ARGV;
         }
         else {
             ( undef, $sources->[$index + 1] ) = Getopt::Long::GetOptionsFromString($args,

@@ -1,5 +1,24 @@
 History file for ack.  http://beyondgrep.com/
 
+2.03_01 Mon Apr 22 09:41:12 CDT 2013
+====================================
+[FIXES]
+ack now runs on a standard Perl 5.8.8 install with no module updates.
+Thanks, Michael McClimon.
+
+ack was colorizing captured groups even if --nocolor was given.
+Thanks, Dale Sedivic.
+
+[OPTIMIZATIONS]
+It turns out that ack 2 is a good deal slower than ack 1.96.  We have made
+a number of speedups but we are not yet at ack 1.x performance levels.
+You probably won't notice any differences unless you're working with very
+large code repositories, so please don't let this scare you from ack 2.
+
+Removed a use of $& that slowed down grouped matches.  Thanks,
+Michael McClimon.
+
+
 2.02    Thu Apr 18 23:51:52 CDT 2013
 ====================================
 [OPTIMIZATIONS]

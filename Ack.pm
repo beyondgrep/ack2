@@ -5,7 +5,7 @@ use strict;
 
 use App::Ack::ConfigDefault;
 use App::Ack::ConfigFinder;
-use Getopt::Long 2.36 ();
+use Getopt::Long 2.35 ();
 use File::Next 1.10;
 
 =head1 NAME
@@ -14,7 +14,7 @@ App::Ack - A container for functions for the ack program
 
 =head1 VERSION
 
-Version 2.02
+Version 2.03_01
 
 =cut
 
@@ -22,7 +22,7 @@ our $VERSION;
 our $GIT_REVISION;
 our $COPYRIGHT;
 BEGIN {
-    $VERSION = '2.02';
+    $VERSION = '2.03_01';
     $COPYRIGHT = 'Copyright 2005-2013 Andy Lester.';
     $GIT_REVISION = '';
 }
@@ -225,44 +225,14 @@ sub build_regex {
         $str = "(?i)$str";
     }
 
-    my $ok = eval {
-        qr/$str/
-    };
-
-    my $error = $@;
-
-    if ( !$ok ) {
-        die "Invalid regex '$str':\n  $error";
+    my $re = eval { qr/$str/ };
+    if ( !$re ) {
+        die "Invalid regex '$str':\n  $@";
     }
 
-    return $str;
+    return $re;
+
 }
-
-=head2 check_regex( $regex_str )
-
-Checks that the $regex_str can be compiled into a perl regular expression.
-Dies with the error message if this is not the case.
-
-No return value.
-
-=cut
-
-sub check_regex {
-    my $regex = shift;
-
-    return unless defined $regex;
-
-    eval { qr/$regex/ };
-    if ($@) {
-        (my $error = $@) =~ s/ at \S+ line \d+.*//;
-        chomp($error);
-        App::Ack::die( "Invalid regex '$regex':\n  $error" );
-    }
-
-    return;
-}
-
-
 
 =head2 warn( @_ )
 
@@ -711,19 +681,19 @@ sub exit_from_ack {
 my @capture_indices;
 my $match_column_number;
 
+# does_match() MUST have an $opt->{regex} set.
+
 sub does_match {
     my ( $opt, $line ) = @_;
-
-    my $re     = $opt->{regex};
-    my $invert = $opt->{v};
-
-    return unless $re;
 
     $match_column_number = undef;
     @capture_indices     = ();
 
-    if ( $invert ? $line !~ /$re/ : $line =~ /$re/ ) {
-        if ( not $invert ) {
+    if ( $opt->{v} ) {
+        return ( $line !~ $opt->{regex} );
+    }
+    else {
+        if ( $line =~ $opt->{regex} ) {
             # @- = @LAST_MATCH_START
             # @+ = @LAST_MATCH_END
             $match_column_number = $-[0] + 1;
@@ -733,11 +703,11 @@ sub does_match {
                     [ $-[$_], $+[$_] ]
                 } ( 1 .. $#- );
             }
+            return 1;
         }
-        return 1;
-    }
-    else {
-        return;
+        else {
+            return;
+        }
     }
 }
 
@@ -766,7 +736,7 @@ sub print_matches_in_resource {
 
     my $has_printed_for_this_resource = 0;
 
-    App::Ack::iterate($resource, $opt, sub {
+    my $matching_sub = sub {
         if ( App::Ack::does_match($opt, $_) ) {
             if( !$has_printed_for_this_resource ) {
                 if( $break && has_printed_something() ) {
@@ -797,7 +767,9 @@ sub print_matches_in_resource {
             $has_printed_for_this_resource = 1;
         }
         return $max_count != 0;
-    });
+    };
+
+    App::Ack::iterate($resource, $opt, $matching_sub );
 
     return $nmatches;
 }
@@ -863,7 +835,7 @@ sub iterate {
 
         local $_ = $current_line;
         my $former_dot_period = $.;
-        $. = $. - @after_ctx_lines;
+        $. -= @after_ctx_lines;
 
         last unless $cb->();
 
@@ -874,8 +846,11 @@ sub iterate {
         # tell me why this happened, I would love to know!
         $. = $former_dot_period; # XXX this won't happen on an exception
 
-        push @before_ctx_lines, $current_line;
-if($n_after_ctx_lines) {
+        if ( $n_before_ctx_lines ) {
+            push @before_ctx_lines, $current_line;
+            shift @before_ctx_lines while @before_ctx_lines > $n_before_ctx_lines;
+        }
+        if ( $n_after_ctx_lines ) {
             $current_line = shift @after_ctx_lines;
         }
         elsif($resource->next_text()) {
@@ -884,7 +859,6 @@ if($n_after_ctx_lines) {
         else {
             undef $current_line;
         }
-        shift @before_ctx_lines while @before_ctx_lines > $n_before_ctx_lines;
     }
 
     $is_iterating = 0; # XXX this won't happen on an exception
@@ -916,7 +890,6 @@ sub print_line_with_options {
     my $ors            = $opt->{print0} ? "\0" : "\n";
     my $heading        = $opt->{heading};
     my $output_expr    = $opt->{output};
-    my $re             = $opt->{regex};
     my $color          = $opt->{color};
 
     my @line_parts;
@@ -941,35 +914,53 @@ sub print_line_with_options {
         }
     }
     if( $output_expr ) {
-        # XXX avoid re-evaluation if we can
-        while( $line =~ /$re/g ) {
+        my $re = $opt->{regex};
+        while ( $line =~ /$re/og ) {
             my $output = eval $output_expr;
             App::Ack::print( join( $separator, @line_parts, $output ), $ors );
         }
     }
     else {
-        my @capture_indices = get_capture_indices();
-        if( @capture_indices ) {
-            my $offset = 0; # additional offset for when we add stuff
+        if ( $color ) {
+            my @capture_indices = get_capture_indices();
+            if( @capture_indices ) {
+                my $offset = 0; # additional offset for when we add stuff
 
-            foreach my $index_pair ( @capture_indices ) {
-                my ( $match_start, $match_end ) = @{$index_pair};
+                foreach my $index_pair ( @capture_indices ) {
+                    my ( $match_start, $match_end ) = @{$index_pair};
 
-                my $substring = substr( $line,
-                    $offset + $match_start, $match_end - $match_start );
-                my $substitution = Term::ANSIColor::colored( $substring,
-                    $ENV{ACK_COLOR_MATCH} );
+                    my $substring = substr( $line,
+                        $offset + $match_start, $match_end - $match_start );
+                    my $substitution = Term::ANSIColor::colored( $substring,
+                        $ENV{ACK_COLOR_MATCH} );
 
-                substr( $line, $offset + $match_start,
-                    $match_end - $match_start, $substitution );
+                    substr( $line, $offset + $match_start,
+                        $match_end - $match_start, $substitution );
 
-                $offset += length( $substitution ) - length( $substring );
+                    $offset += length( $substitution ) - length( $substring );
+                }
             }
-        }
-        elsif( $color ) {
-            # XXX I know $& is a no-no; fix it later
-            if($line  =~ s/$re/Term::ANSIColor::colored($&, $ENV{ACK_COLOR_MATCH})/ge) {
-                $line .= "\033[0m\033[K";
+            else {
+                my $matched = 0; # flag; if matched, need to escape afterwards
+
+                my $re = $opt->{regex};
+                while ( $line =~ /$re/og ) {
+
+                    $matched = 1;
+                    my ( $match_start, $match_end ) = ($-[0], $+[0]);
+
+                    my $substring = substr( $line, $match_start,
+                        $match_end - $match_start );
+                    my $substitution = Term::ANSIColor::colored( $substring,
+                        $ENV{ACK_COLOR_MATCH} );
+
+                    substr( $line, $match_start, $match_end - $match_start,
+                        $substitution );
+
+                    pos($line) = $match_end +
+                    (length( $substitution ) - length( $substring ));
+                }
+                $line .= "\033[0m\033[K" if $matched;
             }
         }
 
@@ -1008,7 +999,6 @@ sub print_line_with_context {
 
     my $ors                 = $opt->{print0} ? "\0" : "\n";
     my $match_word          = $opt->{w};
-    my $re                  = $opt->{regex};
     my $is_tracking_context = $opt->{after_context} || $opt->{before_context};
     my $output_expr         = $opt->{output};
 
@@ -1061,7 +1051,7 @@ sub print_line_with_context {
                 next;
             }
             chomp $line;
-            my $separator = App::Ack::does_match( $opt, $line ) ? ':' : '-';
+            my $separator = ($opt->{regex} && App::Ack::does_match( $opt, $line )) ? ':' : '-';
             App::Ack::print_line_with_options($opt, $filename, $line, $. + $offset, $separator);
             $previous_line_printed = $. + $offset;
             $offset++;
