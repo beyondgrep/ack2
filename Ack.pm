@@ -835,7 +835,7 @@ sub iterate {
 
         local $_ = $current_line;
         my $former_dot_period = $.;
-        $. = $. - @after_ctx_lines;
+        $. -= @after_ctx_lines;
 
         last unless $cb->();
 
