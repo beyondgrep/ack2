@@ -29,7 +29,7 @@ sub new {
     my $self = bless {
         filename => $filename,
         fh       => undef,
-        opened   => undef,
+        opened   => 0,
     }, $class;
 
     if ( $self->{filename} eq '-' ) {
@@ -128,7 +128,8 @@ the text.  This basically emulates a call to C<< <$fh> >>.
 sub next_text {
     my ( $self ) = @_;
 
-    $self->_lazily_open;
+    $self->_lazily_open unless $self->{opened};
+
     if ( defined ($_ = readline $self->{fh}) ) {
         $. = ++$self->{line};
 
@@ -159,6 +160,8 @@ sub close {
     if ( !close($self->{fh}) && $App::Ack::report_bad_filenames ) {
         App::Ack::warn( $self->name() . ": $!" );
     }
+
+    $self->{opened} = 0;
 
     return;
 }
@@ -202,6 +205,8 @@ sub _lazily_open {
     if ( !open( $self->{fh}, '<', $self->{filename} ) && $App::Ack::report_bad_filenames ) {
         App::Ack::warn( "$self->{filename}: $!" );
     }
+
+    $self->{opened} = 1;
 }
 
 1;
