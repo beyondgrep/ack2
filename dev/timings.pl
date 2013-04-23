@@ -23,8 +23,9 @@ sub grab_versions {
             $version = 'HEAD';
         } else {
             my $output = `$^X $ack --noenv --version 2>&1`;
-            if($output =~ /ack\s+(?<version>\d+[.]\d+)/) {
+            if($output =~ /ack\s+(?<version>\d+[.]\d+(_\d+)?)/) {
                 $version = $+{'version'};
+                $version =~ s/_//;
             } else {
                 # XXX uh-oh
             }
