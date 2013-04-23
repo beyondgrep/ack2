@@ -169,6 +169,9 @@ sub _options_block {
 # Erlang http://www.erlang.org/
 --type-add=erlang:ext:erl,hrl
 
+# Fish http://fishshell.com/
+--type-add=fish:ext:fish
+
 # Fortran http://en.wikipedia.org/wiki/Fortran
 --type-add=fortran:ext:f,f77,f90,f95,f03,for,ftn,fpp
 
