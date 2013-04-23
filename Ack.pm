@@ -891,9 +891,23 @@ sub count_matches_in_resource {
 sub resource_has_match {
     my ( $resource, $opt ) = @_;
 
-    # XXX This needs to short circuit.  If we are doing
-    # "ack -l" then we can stop searching after the first hit.
-    return count_matches_in_resource($resource, $opt) > 0;
+    my $fh = $resource->open();
+    if ( !$fh ) {
+        if ( $App::Ack::report_bad_filenames ) {
+            # XXX direct access to filename
+            App::Ack::warn( "$resource->{filename}: $!" );
+        }
+        return 0;
+    }
+
+    while ( <$fh> ) {
+        my $does_match = /$opt->{regex}/o;
+        $does_match = !$does_match if $opt->{v};
+        return 1 if $does_match;
+    }
+    close $fh;
+
+    return 0;
 }
 
 sub get_context {
