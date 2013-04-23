@@ -869,12 +869,21 @@ sub count_matches_in_resource {
 
     my $nmatches = 0;
 
-    App::Ack::iterate( $resource, $opt, sub {
-            my $does_match = /$opt->{regex}/o;
-            $does_match = !$does_match if $opt->{v};
-            ++$nmatches if $does_match;
-            return 1;
-        } );
+    my $fh = $resource->open();
+    if ( !$fh ) {
+        if ( $App::Ack::report_bad_filenames ) {
+            # XXX direct access to filename
+            App::Ack::warn( "$resource->{filename}: $!" );
+        }
+        return 0;
+    }
+
+    while ( <$fh> ) {
+        my $does_match = /$opt->{regex}/o;
+        $does_match = !$does_match if $opt->{v};
+        ++$nmatches if $does_match;
+    }
+    close $fh;
 
     return $nmatches;
 }
