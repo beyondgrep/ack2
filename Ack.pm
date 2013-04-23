@@ -690,10 +690,10 @@ sub does_match {
     @capture_indices     = ();
 
     if ( $opt->{v} ) {
-        return ( $line !~ $opt->{regex} );
+        return ( $line !~ /$opt->{regex}/o );
     }
     else {
-        if ( $line =~ $opt->{regex} ) {
+        if ( $line =~ /$opt->{regex}/o ) {
             # @- = @LAST_MATCH_START
             # @+ = @LAST_MATCH_END
             $match_column_number = $-[0] + 1;
@@ -1002,8 +1002,7 @@ sub print_line_with_options {
         }
     }
     if( $output_expr ) {
-        my $re = $opt->{regex};
-        while ( $line =~ /$re/og ) {
+        while ( $line =~ /$opt->{regex}/og ) {
             my $output = eval $output_expr;
             App::Ack::print( join( $separator, @line_parts, $output ), $ors );
         }
@@ -1031,8 +1030,7 @@ sub print_line_with_options {
             else {
                 my $matched = 0; # flag; if matched, need to escape afterwards
 
-                my $re = $opt->{regex};
-                while ( $line =~ /$re/og ) {
+                while ( $line =~ /$opt->{regex}/og ) {
 
                     $matched = 1;
                     my ( $match_start, $match_end ) = ($-[0], $+[0]);
