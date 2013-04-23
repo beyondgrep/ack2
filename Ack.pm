@@ -870,9 +870,11 @@ sub count_matches_in_resource {
     my $nmatches = 0;
 
     App::Ack::iterate( $resource, $opt, sub {
-        ++$nmatches if App::Ack::does_match($opt, $_);
-        return 1;
-    } );
+            my $does_match = /$opt->{regex}/o;
+            $does_match = !$does_match if $opt->{v};
+            ++$nmatches if $does_match;
+            return 1;
+        } );
 
     return $nmatches;
 }
