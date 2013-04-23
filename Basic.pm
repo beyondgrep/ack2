@@ -71,8 +71,6 @@ sub needs_line_scan {
 
     return 1 if $opt->{v};
 
-    $self->_lazily_open;
-
     my $size = -s $self->{fh};
     if ( $size == 0 ) {
         return 0;
@@ -129,8 +127,6 @@ the text.  This basically emulates a call to C<< <$fh> >>.
 sub next_text {
     my ( $self ) = @_;
 
-    $self->_lazily_open unless $self->{opened};
-
     if ( defined ($_ = readline $self->{fh}) ) {
         $. = ++$self->{line};
 
@@ -182,11 +178,11 @@ sub clone {
 sub firstliney {
     my ( $self ) = @_;
 
-    $self->_lazily_open;
+    my $fh = $self->open();
 
     unless(exists $self->{firstliney}) {
         my $buffer = '';
-        my $rc     = sysread( $self->{fh}, $buffer, 250 );
+        my $rc     = sysread( $fh, $buffer, 250 );
         unless($rc) { # XXX handle this better?
             $buffer = '';
         }
@@ -195,19 +191,9 @@ sub firstliney {
         $self->reset;
     }
 
+    $self->close;
+
     return $self->{firstliney};
-}
-
-sub _lazily_open {
-    my ( $self ) = @_;
-
-    return if defined($self->{fh});
-
-    if ( !open( $self->{fh}, '<', $self->{filename} ) && $App::Ack::report_bad_filenames ) {
-        App::Ack::warn( "$self->{filename}: $!" );
-    }
-
-    $self->{opened} = 1;
 }
 
 sub open {
