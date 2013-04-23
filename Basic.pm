@@ -114,32 +114,6 @@ sub reset {
     return;
 }
 
-=head2 $res->next_text()
-
-API: Gets the next line of text from the resource.  Returns true
-if there is one, or false if not.
-
-Sets C<$_> with the line of text, and C<$.> for the ID number of
-the text.  This basically emulates a call to C<< <$fh> >>.
-
-=cut
-
-sub next_text {
-    my ( $self ) = @_;
-
-    if ( defined ($_ = readline $self->{fh}) ) {
-        $. = ++$self->{line};
-
-        my $line_end;
-        while (($line_end = substr($_, -1)) eq "\n" || $line_end eq "\r") {
-            chop;
-        }
-        return 1;
-    }
-
-    return;
-}
-
 =head2 $res->close()
 
 API: Close the resource.

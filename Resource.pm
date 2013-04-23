@@ -84,20 +84,6 @@ sub reset {
     return FAIL();
 }
 
-=head2 $res->next_text()
-
-API: Gets the next line of text from the resource.  Returns true
-if there is one, or false if not.
-
-Sets C<$_> with the line of text, and C<$.> for the ID number of
-the text.  This basically emulates a call to C<< <$fh> >>.
-
-=cut
-
-sub next_text {
-    return FAIL();
-}
-
 =head2 $res->close()
 
 API: Close the resource.
@@ -121,9 +107,7 @@ sub clone {
 =head2 $res->firstliney
 
 Returns the first line (or first 250 characters, whichever comes first of a
-resource).  Resource subclasses are encouraged to cache this value.  If this
-method is called, it must B<NOT> affect the return value of
-L<next_text|/next_text>.
+resource).  Resource subclasses are encouraged to cache this value.
 
 =cut
 
