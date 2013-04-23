@@ -53,6 +53,17 @@ sub is_binary {
     return FAIL();
 }
 
+=head2 $res->open()
+
+Opens a filehandle for reading this resource and returns it, or returns
+undef if the operation fails (the error is in C<$!>).  Instead of calling
+C<close $fh>, C<$res-E<gt>close> should be called.
+
+=cut
+
+sub open {
+    return FAIL();
+}
 
 =head2 $res->needs_line_scan( \%opts )
 
