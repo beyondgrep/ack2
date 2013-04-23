@@ -33,7 +33,8 @@ sub new {
     }, $class;
 
     if ( $self->{filename} eq '-' ) {
-        $self->{fh} = *STDIN;
+        $self->{fh}     = *STDIN;
+        $self->{opened} = 1;
     }
 
     return $self;
