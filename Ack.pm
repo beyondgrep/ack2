@@ -822,16 +822,16 @@ sub iterate {
 
     my $n_before_ctx_lines = $opt->{before_context} || 0;
     my $n_after_ctx_lines  = $opt->{after_context}  || 0;
-    my $current_line;
+    my $current_line; # XXX can we avoid $current_line? I bet $_ is optimized
 
     @after_ctx_lines = @before_ctx_lines = ();
 
-    if ( $resource->next_text() ) {
-        $current_line = $_; # prime the first line of input
-    }
+    my $fh = $resource->open();
+    $current_line = <$fh>; # prime the first line of input
 
+    # XXX roll out the context/non-context version for optimization
     while ( defined $current_line ) {
-        while ( (@after_ctx_lines < $n_after_ctx_lines) && $resource->next_text() ) {
+        while ( (@after_ctx_lines < $n_after_ctx_lines) && defined($_ = <$fh>) ) {
             push @after_ctx_lines, $_;
         }
 
@@ -855,11 +855,8 @@ sub iterate {
         if ( $n_after_ctx_lines ) {
             $current_line = shift @after_ctx_lines;
         }
-        elsif($resource->next_text()) {
-            $current_line = $_;
-        }
         else {
-            undef $current_line;
+            $current_line = <$fh>;
         }
     }
 
