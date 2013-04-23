@@ -1001,7 +1001,8 @@ sub print_line_with_context {
     my $is_tracking_context = $opt->{after_context} || $opt->{before_context};
     my $output_expr         = $opt->{output};
 
-    chomp $matching_line;
+    # XXX apply @mmcclimon's substr magic here; see how much it helps
+    $matching_line =~ s/[\r\n]+//g;
 
     my ( $before_context, $after_context ) = get_context();
 
