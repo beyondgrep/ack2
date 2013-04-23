@@ -759,7 +759,7 @@ sub print_matches_in_resource {
             # XXX direct access to filename
             App::Ack::warn( "$resource->{filename}: $!" );
         }
-        return;
+        return 0;
     }
 
     # check for context before the main loop, so we don't
