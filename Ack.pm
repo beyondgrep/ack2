@@ -725,6 +725,12 @@ my @before_ctx_lines;
 my @after_ctx_lines;
 my $is_iterating;
 
+my $has_printed_something;
+
+BEGIN {
+    $has_printed_something = 0;
+}
+
 sub print_matches_in_resource {
     my ( $resource, $opt ) = @_;
 
@@ -758,6 +764,11 @@ sub print_matches_in_resource {
         return 0;
     }
 
+    my $display_filename = $filename;
+    if ( $print_filename && $heading && $color ) {
+        $display_filename = Term::ANSIColor::colored($display_filename, $ENV{ACK_COLOR_FILENAME});
+    }
+
     # check for context before the main loop, so we don't
     # pay for it if we don't need it
     if ( $n_before_ctx_lines || $n_after_ctx_lines ) {
@@ -774,20 +785,11 @@ sub print_matches_in_resource {
 
             if ( App::Ack::does_match($opt, $_) ) {
                 if ( !$has_printed_for_this_resource ) {
-                    # XXX inline this call?
-                    if ( $break && has_printed_something() ) {
+                    if ( $break && $has_printed_something ) {
                         App::Ack::print_blank_line();
                     }
-                    if ( $print_filename ) {
-                        if ( $heading ) {
-                            # XXX move out of loop
-                            my $filename = $resource->name;
-                            if($color) {
-                                $filename = Term::ANSIColor::colored($filename,
-                                    $ENV{ACK_COLOR_FILENAME});
-                            }
-                            App::Ack::print_filename( $filename, $ors );
-                        }
+                    if ( $print_filename && $heading ) {
+                        App::Ack::print_filename( $display_filename, $ors );
                     }
                 }
                 App::Ack::print_line_with_context($opt, $filename, $_, $.);
@@ -798,7 +800,7 @@ sub print_matches_in_resource {
             elsif ( $passthru ) {
                 chomp; # XXX proper newline handling?
                 # XXX inline this call?
-                if ( $break && !$has_printed_for_this_resource && has_printed_something() ) {
+                if ( $break && !$has_printed_for_this_resource && $has_printed_something ) {
                     App::Ack::print_blank_line();
                 }
                 App::Ack::print_line_with_options($opt, $filename, $_, $., ':');
@@ -831,20 +833,11 @@ sub print_matches_in_resource {
         while ( <$fh> ) {
             if ( App::Ack::does_match($opt, $_) ) {
                 if ( !$has_printed_for_this_resource ) {
-                    # XXX inline this call?
-                    if ( $break && has_printed_something() ) {
+                    if ( $break && $has_printed_something ) {
                         App::Ack::print_blank_line();
                     }
-                    if ( $print_filename ) {
-                        if ( $heading ) {
-                            # XXX move out of loop
-                            my $filename = $resource->name;
-                            if($color) {
-                                $filename = Term::ANSIColor::colored($filename,
-                                    $ENV{ACK_COLOR_FILENAME});
-                            }
-                            App::Ack::print_filename( $filename, $ors );
-                        }
+                    if ( $print_filename && $heading ) {
+                        App::Ack::print_filename( $display_filename, $ors );
                     }
                 }
                 App::Ack::print_line_with_context($opt, $filename, $_, $.);
@@ -854,8 +847,7 @@ sub print_matches_in_resource {
             }
             elsif ( $passthru ) {
                 chomp; # XXX proper newline handling?
-                # XXX inline this call?
-                if ( $break && !$has_printed_for_this_resource && has_printed_something() ) {
+                if ( $break && !$has_printed_for_this_resource && $has_printed_something ) {
                     App::Ack::print_blank_line();
                 }
                 App::Ack::print_line_with_options($opt, $filename, $_, $., ':');
@@ -974,16 +966,6 @@ sub iterate {
                        #     handle exceptions anyway.
 
     return;
-}
-
-my $has_printed_something;
-
-BEGIN {
-    $has_printed_something = 0;
-}
-
-sub has_printed_something {
-    return $has_printed_something;
 }
 
 sub print_line_with_options {
