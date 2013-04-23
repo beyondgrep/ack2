@@ -790,6 +790,8 @@ sub count_matches_in_resource {
 sub resource_has_match {
     my ( $resource, $opt ) = @_;
 
+    # XXX This needs to short circuit.  If we are doing
+    # "ack -l" then we can stop searching after the first hit.
     return count_matches_in_resource($resource, $opt) > 0;
 }
 
