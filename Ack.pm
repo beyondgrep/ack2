@@ -827,6 +827,13 @@ sub iterate {
     @after_ctx_lines = @before_ctx_lines = ();
 
     my $fh = $resource->open();
+    if ( !$fh ) {
+        if ( $App::Ack::report_bad_filenames ) {
+            # XXX direct access to filename
+            App::Ack::warn( "$resource->{filename}: $!" );
+        }
+        return;
+    }
     $current_line = <$fh>; # prime the first line of input
 
     # XXX roll out the context/non-context version for optimization
