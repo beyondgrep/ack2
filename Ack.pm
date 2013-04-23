@@ -822,7 +822,6 @@ sub iterate {
 
     my $n_before_ctx_lines = $opt->{before_context} || 0;
     my $n_after_ctx_lines  = $opt->{after_context}  || 0;
-    my $current_line; # XXX can we avoid $current_line? I bet $_ is optimized
 
     @after_ctx_lines = @before_ctx_lines = ();
 
@@ -834,36 +833,47 @@ sub iterate {
         }
         return;
     }
-    $current_line = <$fh>; # prime the first line of input
 
-    # XXX roll out the context/non-context version for optimization
-    while ( defined $current_line ) {
-        while ( (@after_ctx_lines < $n_after_ctx_lines) && defined($_ = <$fh>) ) {
-            push @after_ctx_lines, $_;
+    # check for context before the main loop, so we don't
+    # pay for it if we don't need it
+    if ( $n_before_ctx_lines || $n_after_ctx_lines ) {
+        my $current_line = <$fh>; # prime the first line of input
+
+        while ( defined $current_line ) {
+            while ( (@after_ctx_lines < $n_after_ctx_lines) && defined($_ = <$fh>) ) {
+                push @after_ctx_lines, $_;
+            }
+
+            local $_ = $current_line;
+            my $former_dot_period = $.;
+            $. -= @after_ctx_lines;
+
+            last unless $cb->();
+
+            # I tried doing this with local(), but for some reason,
+            # $. continued to have its new value after the exit of the
+            # enclosing block.  I'm guessing that $. has some extra
+            # magic associated with it or something.  If someone can
+            # tell me why this happened, I would love to know!
+            $. = $former_dot_period; # XXX this won't happen on an exception
+
+            if ( $n_before_ctx_lines ) {
+                push @before_ctx_lines, $current_line;
+                shift @before_ctx_lines while @before_ctx_lines > $n_before_ctx_lines;
+            }
+            if ( $n_after_ctx_lines ) {
+                $current_line = shift @after_ctx_lines;
+            }
+            else {
+                $current_line = <$fh>;
+            }
         }
+    }
+    else {
+        local $_;
 
-        local $_ = $current_line;
-        my $former_dot_period = $.;
-        $. -= @after_ctx_lines;
-
-        last unless $cb->();
-
-        # I tried doing this with local(), but for some reason,
-        # $. continued to have its new value after the exit of the
-        # enclosing block.  I'm guessing that $. has some extra
-        # magic associated with it or something.  If someone can
-        # tell me why this happened, I would love to know!
-        $. = $former_dot_period; # XXX this won't happen on an exception
-
-        if ( $n_before_ctx_lines ) {
-            push @before_ctx_lines, $current_line;
-            shift @before_ctx_lines while @before_ctx_lines > $n_before_ctx_lines;
-        }
-        if ( $n_after_ctx_lines ) {
-            $current_line = shift @after_ctx_lines;
-        }
-        else {
-            $current_line = <$fh>;
+        while ( <$fh> ) {
+            last unless $cb->();
         }
     }
 
