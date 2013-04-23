@@ -1009,7 +1009,7 @@ sub print_line_with_context {
     my $output_expr         = $opt->{output};
 
     # XXX apply @mmcclimon's substr magic here; see how much it helps
-    $matching_line =~ s/[\r\n]+//g;
+    $matching_line =~ s/[\r\n]+$//g;
 
     my ( $before_context, $after_context ) = get_context();
 
