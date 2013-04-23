@@ -209,4 +209,16 @@ sub _lazily_open {
     $self->{opened} = 1;
 }
 
+sub open {
+    my ( $self ) = @_;
+
+    return $self->{fh} if $self->{opened};
+
+    open $self->{fh}, '<', $self->{filename};
+
+    $self->{opened} = 1;
+
+    return $self->{fh};
+}
+
 1;
