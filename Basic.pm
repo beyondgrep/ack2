@@ -214,7 +214,9 @@ sub open {
 
     return $self->{fh} if $self->{opened};
 
-    open $self->{fh}, '<', $self->{filename};
+    unless ( open $self->{fh}, '<', $self->{filename} ) {
+        return;
+    }
 
     $self->{opened} = 1;
 
