@@ -191,6 +191,14 @@ sub _compile_file_filter {
         # command line" wins.
         return 0 if -p $File::Next::name;
 
+        # we can't handle unreadable filenames; report them
+        unless ( -r _ ) {
+            if ( $App::Ack::report_bad_filenames ) {
+                App::Ack::warn( "${File::Next::name}: cannot open file for reading" );
+            }
+            return 0;
+        }
+
         my $resource = App::Ack::Resource::Basic->new($File::Next::name);
         return 0 if ! $resource;
         foreach my $filter (@ifiles_filters) {
