@@ -740,9 +740,6 @@ sub print_matches_in_resource {
 
     my $has_printed_for_this_resource = 0;
 
-    my $matching_sub = sub {
-    };
-
     $is_iterating = 1;
 
     local $opt->{before_context} = $opt->{output} ? 0 : $opt->{before_context};
