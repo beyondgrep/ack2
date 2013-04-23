@@ -721,6 +721,10 @@ sub get_match_column {
 
 }
 
+my @before_ctx_lines;
+my @after_ctx_lines;
+my $is_iterating;
+
 sub print_matches_in_resource {
     my ( $resource, $opt ) = @_;
 
@@ -737,39 +741,137 @@ sub print_matches_in_resource {
     my $has_printed_for_this_resource = 0;
 
     my $matching_sub = sub {
-        if ( App::Ack::does_match($opt, $_) ) {
-            if( !$has_printed_for_this_resource ) {
-                if( $break && has_printed_something() ) {
-                    App::Ack::print_blank_line();
-                }
-                if( $print_filename) {
-                    if( $heading ) {
-                        my $filename = $resource->name;
-                        if($color) {
-                            $filename = Term::ANSIColor::colored($filename,
-                                $ENV{ACK_COLOR_FILENAME});
-                        }
-                        App::Ack::print_filename( $filename, $ors );
-                    }
-                }
-            }
-            App::Ack::print_line_with_context($opt, $filename, $_, $.);
-            $has_printed_for_this_resource = 1;
-            $nmatches++;
-            $max_count--;
-        }
-        elsif ( $passthru ) {
-            chomp;
-            if( $break && !$has_printed_for_this_resource && has_printed_something() ) {
-                App::Ack::print_blank_line();
-            }
-            App::Ack::print_line_with_options($opt, $filename, $_, $., ':');
-            $has_printed_for_this_resource = 1;
-        }
-        return $max_count != 0;
     };
 
-    App::Ack::iterate($resource, $opt, $matching_sub );
+    $is_iterating = 1;
+
+    local $opt->{before_context} = $opt->{output} ? 0 : $opt->{before_context};
+    local $opt->{after_context}  = $opt->{output} ? 0 : $opt->{after_context};
+
+    my $n_before_ctx_lines = $opt->{before_context} || 0;
+    my $n_after_ctx_lines  = $opt->{after_context}  || 0;
+
+    @after_ctx_lines = @before_ctx_lines = ();
+
+    my $fh = $resource->open();
+    if ( !$fh ) {
+        if ( $App::Ack::report_bad_filenames ) {
+            # XXX direct access to filename
+            App::Ack::warn( "$resource->{filename}: $!" );
+        }
+        return;
+    }
+
+    # check for context before the main loop, so we don't
+    # pay for it if we don't need it
+    if ( $n_before_ctx_lines || $n_after_ctx_lines ) {
+        my $current_line = <$fh>; # prime the first line of input
+
+        while ( defined $current_line ) {
+            while ( (@after_ctx_lines < $n_after_ctx_lines) && defined($_ = <$fh>) ) {
+                push @after_ctx_lines, $_;
+            }
+
+            local $_ = $current_line;
+            my $former_dot_period = $.;
+            $. -= @after_ctx_lines;
+
+            if ( App::Ack::does_match($opt, $_) ) {
+                if ( !$has_printed_for_this_resource ) {
+                    # XXX inline this call?
+                    if ( $break && has_printed_something() ) {
+                        App::Ack::print_blank_line();
+                    }
+                    if ( $print_filename ) {
+                        if ( $heading ) {
+                            # XXX move out of loop
+                            my $filename = $resource->name;
+                            if($color) {
+                                $filename = Term::ANSIColor::colored($filename,
+                                    $ENV{ACK_COLOR_FILENAME});
+                            }
+                            App::Ack::print_filename( $filename, $ors );
+                        }
+                    }
+                }
+                App::Ack::print_line_with_context($opt, $filename, $_, $.);
+                $has_printed_for_this_resource = 1;
+                $nmatches++;
+                $max_count--;
+            }
+            elsif ( $passthru ) {
+                chomp; # XXX proper newline handling?
+                # XXX inline this call?
+                if ( $break && !$has_printed_for_this_resource && has_printed_something() ) {
+                    App::Ack::print_blank_line();
+                }
+                App::Ack::print_line_with_options($opt, $filename, $_, $., ':');
+                $has_printed_for_this_resource = 1;
+            }
+            last unless $max_count != 0;
+
+            # I tried doing this with local(), but for some reason,
+            # $. continued to have its new value after the exit of the
+            # enclosing block.  I'm guessing that $. has some extra
+            # magic associated with it or something.  If someone can
+            # tell me why this happened, I would love to know!
+            $. = $former_dot_period; # XXX this won't happen on an exception
+
+            if ( $n_before_ctx_lines ) {
+                push @before_ctx_lines, $current_line;
+                shift @before_ctx_lines while @before_ctx_lines > $n_before_ctx_lines;
+            }
+            if ( $n_after_ctx_lines ) {
+                $current_line = shift @after_ctx_lines;
+            }
+            else {
+                $current_line = <$fh>;
+            }
+        }
+    }
+    else {
+        local $_;
+
+        while ( <$fh> ) {
+            if ( App::Ack::does_match($opt, $_) ) {
+                if ( !$has_printed_for_this_resource ) {
+                    # XXX inline this call?
+                    if ( $break && has_printed_something() ) {
+                        App::Ack::print_blank_line();
+                    }
+                    if ( $print_filename ) {
+                        if ( $heading ) {
+                            # XXX move out of loop
+                            my $filename = $resource->name;
+                            if($color) {
+                                $filename = Term::ANSIColor::colored($filename,
+                                    $ENV{ACK_COLOR_FILENAME});
+                            }
+                            App::Ack::print_filename( $filename, $ors );
+                        }
+                    }
+                }
+                App::Ack::print_line_with_context($opt, $filename, $_, $.);
+                $has_printed_for_this_resource = 1;
+                $nmatches++;
+                $max_count--;
+            }
+            elsif ( $passthru ) {
+                chomp; # XXX proper newline handling?
+                # XXX inline this call?
+                if ( $break && !$has_printed_for_this_resource && has_printed_something() ) {
+                    App::Ack::print_blank_line();
+                }
+                App::Ack::print_line_with_options($opt, $filename, $_, $., ':');
+                $has_printed_for_this_resource = 1;
+            }
+            last unless $max_count != 0;
+        }
+    }
+
+    $is_iterating = 0; # XXX this won't happen on an exception
+                       #     then again, do we care? ack doesn't really
+                       #     handle exceptions anyway.
 
     return $nmatches;
 }
@@ -794,12 +896,6 @@ sub resource_has_match {
     # "ack -l" then we can stop searching after the first hit.
     return count_matches_in_resource($resource, $opt) > 0;
 }
-
-{
-
-my @before_ctx_lines;
-my @after_ctx_lines;
-my $is_iterating;
 
 sub get_context {
     if ( not $is_iterating ) {
@@ -882,8 +978,6 @@ sub iterate {
                        #     handle exceptions anyway.
 
     return;
-}
-
 }
 
 my $has_printed_something;
