@@ -4,6 +4,8 @@ ack 2.0 is a text searching utility optimized for searching trees of source code
 
 # Building
 
+ack requires Perl 5.8.8 or higher.  Perl 5.8.8 was released January 2006.
+
     # Required
     perl Makefile.PL
     make

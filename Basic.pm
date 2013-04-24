@@ -7,6 +7,8 @@ package App::Ack::Resource::Basic;
 use warnings;
 use strict;
 
+use Fcntl ();
+
 use base 'App::Ack::Resource';
 
 =head1 METHODS
@@ -27,17 +29,12 @@ sub new {
     my $self = bless {
         filename => $filename,
         fh       => undef,
-        opened   => undef,
+        opened   => 0,
     }, $class;
 
     if ( $self->{filename} eq '-' ) {
-        $self->{fh} = *STDIN;
-    }
-    else {
-        if ( !open( $self->{fh}, '<', $self->{filename} ) && $App::Ack::report_bad_filenames ) {
-            App::Ack::warn( "$self->{filename}: $!" );
-            return;
-        }
+        $self->{fh}     = *STDIN;
+        $self->{opened} = 1;
     }
 
     return $self;
@@ -105,33 +102,13 @@ is true.
 sub reset {
     my $self = shift;
 
-    if( !seek( $self->{fh}, 0, 0 ) && $App::Ack::report_bad_filenames ) {
-        App::Ack::warn( "$self->{filename}: $!" );
+    # return if we haven't opened the file yet
+    if ( !defined($self->{fh}) ) {
+        return;
     }
 
-    return;
-}
-
-=head2 $res->next_text()
-
-API: Gets the next line of text from the resource.  Returns true
-if there is one, or false if not.
-
-Sets C<$_> with the line of text, and C<$.> for the ID number of
-the text.  This basically emulates a call to C<< <$fh> >>.
-
-=cut
-
-sub next_text {
-    if ( defined ($_ = readline $_[0]->{fh}) ) {
-        $. = ++$_[0]->{line};
-
-        # Normalize line endings if we need to
-        if ( /\r\n?$/ ) {
-            # Strip any trailing \r\n from the line and turn it to \n
-            s/[\r\n]+$/\n/;
-        }
-        return 1;
+    if( !seek( $self->{fh}, 0, 0 ) && $App::Ack::report_bad_filenames ) {
+        App::Ack::warn( "$self->{filename}: $!" );
     }
 
     return;
@@ -146,9 +123,16 @@ API: Close the resource.
 sub close {
     my $self = shift;
 
+    # return if we haven't opened the file yet
+    if ( !defined($self->{fh}) ) {
+        return;
+    }
+
     if ( !close($self->{fh}) && $App::Ack::report_bad_filenames ) {
         App::Ack::warn( $self->name() . ": $!" );
     }
+
+    $self->{opened} = 0;
 
     return;
 }
@@ -165,5 +149,39 @@ sub clone {
     return __PACKAGE__->new($self->name);
 }
 
+sub firstliney {
+    my ( $self ) = @_;
+
+    my $fh = $self->open();
+
+    unless(exists $self->{firstliney}) {
+        my $buffer = '';
+        my $rc     = sysread( $fh, $buffer, 250 );
+        unless($rc) { # XXX handle this better?
+            $buffer = '';
+        }
+        $buffer =~ s/[\r\n].*//s;
+        $self->{firstliney} = $buffer;
+        $self->reset;
+    }
+
+    $self->close;
+
+    return $self->{firstliney};
+}
+
+sub open {
+    my ( $self ) = @_;
+
+    return $self->{fh} if $self->{opened};
+
+    unless ( open $self->{fh}, '<', $self->{filename} ) {
+        return;
+    }
+
+    $self->{opened} = 1;
+
+    return $self->{fh};
+}
 
 1;

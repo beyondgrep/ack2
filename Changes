@@ -1,5 +1,15 @@
 History file for ack.  http://beyondgrep.com/
 
+2.03_02 Tue Apr 23 22:08:22 CDT 2013
+====================================
+The minimum Perl requirement for ack is now explicitly 5.8.8.  Anything
+before 5.8.8 will not work, and we've added checks.
+
+[OPTIMIZATIONS]
+Massive speedups of ack internals to get us back to where performance
+was back on 1.96, but we're not there yet.
+
+
 2.03_01 Mon Apr 22 09:41:12 CDT 2013
 ====================================
 [FIXES]

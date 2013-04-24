@@ -14,7 +14,7 @@ App::Ack - A container for functions for the ack program
 
 =head1 VERSION
 
-Version 2.03_01
+Version 2.03_02
 
 =cut
 
@@ -22,7 +22,7 @@ our $VERSION;
 our $GIT_REVISION;
 our $COPYRIGHT;
 BEGIN {
-    $VERSION = '2.03_01';
+    $VERSION = '2.03_02';
     $COPYRIGHT = 'Copyright 2005-2013 Andy Lester.';
     $GIT_REVISION = '';
 }
@@ -690,10 +690,10 @@ sub does_match {
     @capture_indices     = ();
 
     if ( $opt->{v} ) {
-        return ( $line !~ $opt->{regex} );
+        return ( $line !~ /$opt->{regex}/o );
     }
     else {
-        if ( $line =~ $opt->{regex} ) {
+        if ( $line =~ /$opt->{regex}/o ) {
             # @- = @LAST_MATCH_START
             # @+ = @LAST_MATCH_END
             $match_column_number = $-[0] + 1;
@@ -721,6 +721,16 @@ sub get_match_column {
 
 }
 
+my @before_ctx_lines;
+my @after_ctx_lines;
+my $is_iterating;
+
+my $has_printed_something;
+
+BEGIN {
+    $has_printed_something = 0;
+}
+
 sub print_matches_in_resource {
     my ( $resource, $opt ) = @_;
 
@@ -736,40 +746,120 @@ sub print_matches_in_resource {
 
     my $has_printed_for_this_resource = 0;
 
-    my $matching_sub = sub {
-        if ( App::Ack::does_match($opt, $_) ) {
-            if( !$has_printed_for_this_resource ) {
-                if( $break && has_printed_something() ) {
-                    App::Ack::print_blank_line();
-                }
-                if( $print_filename) {
-                    if( $heading ) {
-                        my $filename = $resource->name;
-                        if($color) {
-                            $filename = Term::ANSIColor::colored($filename,
-                                $ENV{ACK_COLOR_FILENAME});
-                        }
-                        App::Ack::print_filename( $filename, $ors );
+    $is_iterating = 1;
+
+    local $opt->{before_context} = $opt->{output} ? 0 : $opt->{before_context};
+    local $opt->{after_context}  = $opt->{output} ? 0 : $opt->{after_context};
+
+    my $n_before_ctx_lines = $opt->{before_context} || 0;
+    my $n_after_ctx_lines  = $opt->{after_context}  || 0;
+
+    @after_ctx_lines = @before_ctx_lines = ();
+
+    my $fh = $resource->open();
+    if ( !$fh ) {
+        if ( $App::Ack::report_bad_filenames ) {
+            App::Ack::warn( "$filename: $!" );
+        }
+        return 0;
+    }
+
+    my $display_filename = $filename;
+    if ( $print_filename && $heading && $color ) {
+        $display_filename = Term::ANSIColor::colored($display_filename, $ENV{ACK_COLOR_FILENAME});
+    }
+
+    # check for context before the main loop, so we don't
+    # pay for it if we don't need it
+    if ( $n_before_ctx_lines || $n_after_ctx_lines ) {
+        my $current_line = <$fh>; # prime the first line of input
+
+        while ( defined $current_line ) {
+            while ( (@after_ctx_lines < $n_after_ctx_lines) && defined($_ = <$fh>) ) {
+                push @after_ctx_lines, $_;
+            }
+
+            local $_ = $current_line;
+            my $former_dot_period = $.;
+            $. -= @after_ctx_lines;
+
+            if ( App::Ack::does_match($opt, $_) ) {
+                if ( !$has_printed_for_this_resource ) {
+                    if ( $break && $has_printed_something ) {
+                        App::Ack::print_blank_line();
+                    }
+                    if ( $print_filename && $heading ) {
+                        App::Ack::print_filename( $display_filename, $ors );
                     }
                 }
+                App::Ack::print_line_with_context($opt, $filename, $_, $.);
+                $has_printed_for_this_resource = 1;
+                $nmatches++;
+                $max_count--;
             }
-            App::Ack::print_line_with_context($opt, $filename, $_, $.);
-            $has_printed_for_this_resource = 1;
-            $nmatches++;
-            $max_count--;
-        }
-        elsif ( $passthru ) {
-            chomp;
-            if( $break && !$has_printed_for_this_resource && has_printed_something() ) {
-                App::Ack::print_blank_line();
+            elsif ( $passthru ) {
+                chomp; # XXX proper newline handling?
+                # XXX inline this call?
+                if ( $break && !$has_printed_for_this_resource && $has_printed_something ) {
+                    App::Ack::print_blank_line();
+                }
+                App::Ack::print_line_with_options($opt, $filename, $_, $., ':');
+                $has_printed_for_this_resource = 1;
             }
-            App::Ack::print_line_with_options($opt, $filename, $_, $., ':');
-            $has_printed_for_this_resource = 1;
-        }
-        return $max_count != 0;
-    };
+            last unless $max_count != 0;
 
-    App::Ack::iterate($resource, $opt, $matching_sub );
+            # I tried doing this with local(), but for some reason,
+            # $. continued to have its new value after the exit of the
+            # enclosing block.  I'm guessing that $. has some extra
+            # magic associated with it or something.  If someone can
+            # tell me why this happened, I would love to know!
+            $. = $former_dot_period; # XXX this won't happen on an exception
+
+            if ( $n_before_ctx_lines ) {
+                push @before_ctx_lines, $current_line;
+                shift @before_ctx_lines while @before_ctx_lines > $n_before_ctx_lines;
+            }
+            if ( $n_after_ctx_lines ) {
+                $current_line = shift @after_ctx_lines;
+            }
+            else {
+                $current_line = <$fh>;
+            }
+        }
+    }
+    else {
+        local $_;
+
+        while ( <$fh> ) {
+            if ( App::Ack::does_match($opt, $_) ) {
+                if ( !$has_printed_for_this_resource ) {
+                    if ( $break && $has_printed_something ) {
+                        App::Ack::print_blank_line();
+                    }
+                    if ( $print_filename && $heading ) {
+                        App::Ack::print_filename( $display_filename, $ors );
+                    }
+                }
+                App::Ack::print_line_with_context($opt, $filename, $_, $.);
+                $has_printed_for_this_resource = 1;
+                $nmatches++;
+                $max_count--;
+            }
+            elsif ( $passthru ) {
+                chomp; # XXX proper newline handling?
+                if ( $break && !$has_printed_for_this_resource && $has_printed_something ) {
+                    App::Ack::print_blank_line();
+                }
+                App::Ack::print_line_with_options($opt, $filename, $_, $., ':');
+                $has_printed_for_this_resource = 1;
+            }
+            last unless $max_count != 0;
+        }
+    }
+
+    $is_iterating = 0; # XXX this won't happen on an exception
+                       #     then again, do we care? ack doesn't really
+                       #     handle exceptions anyway.
 
     return $nmatches;
 }
@@ -779,10 +869,21 @@ sub count_matches_in_resource {
 
     my $nmatches = 0;
 
-    App::Ack::iterate( $resource, $opt, sub {
-        ++$nmatches if App::Ack::does_match($opt, $_);
-        return 1;
-    } );
+    my $fh = $resource->open();
+    if ( !$fh ) {
+        if ( $App::Ack::report_bad_filenames ) {
+            # XXX direct access to filename
+            App::Ack::warn( "$resource->{filename}: $!" );
+        }
+        return 0;
+    }
+
+    while ( <$fh> ) {
+        my $does_match = /$opt->{regex}/o;
+        $does_match = !$does_match if $opt->{v};
+        ++$nmatches if $does_match;
+    }
+    close $fh;
 
     return $nmatches;
 }
@@ -790,14 +891,24 @@ sub count_matches_in_resource {
 sub resource_has_match {
     my ( $resource, $opt ) = @_;
 
-    return count_matches_in_resource($resource, $opt) > 0;
+    my $fh = $resource->open();
+    if ( !$fh ) {
+        if ( $App::Ack::report_bad_filenames ) {
+            # XXX direct access to filename
+            App::Ack::warn( "$resource->{filename}: $!" );
+        }
+        return 0;
+    }
+
+    while ( <$fh> ) {
+        my $does_match = /$opt->{regex}/o;
+        $does_match = !$does_match if $opt->{v};
+        return 1 if $does_match;
+    }
+    close $fh;
+
+    return 0;
 }
-
-{
-
-my @before_ctx_lines;
-my @after_ctx_lines;
-my $is_iterating;
 
 sub get_context {
     if ( not $is_iterating ) {
@@ -820,44 +931,58 @@ sub iterate {
 
     my $n_before_ctx_lines = $opt->{before_context} || 0;
     my $n_after_ctx_lines  = $opt->{after_context}  || 0;
-    my $current_line;
 
     @after_ctx_lines = @before_ctx_lines = ();
 
-    if ( $resource->next_text() ) {
-        $current_line = $_; # prime the first line of input
+    my $fh = $resource->open();
+    if ( !$fh ) {
+        if ( $App::Ack::report_bad_filenames ) {
+            # XXX direct access to filename
+            App::Ack::warn( "$resource->{filename}: $!" );
+        }
+        return;
     }
 
-    while ( defined $current_line ) {
-        while ( (@after_ctx_lines < $n_after_ctx_lines) && $resource->next_text() ) {
-            push @after_ctx_lines, $_;
-        }
+    # check for context before the main loop, so we don't
+    # pay for it if we don't need it
+    if ( $n_before_ctx_lines || $n_after_ctx_lines ) {
+        my $current_line = <$fh>; # prime the first line of input
 
-        local $_ = $current_line;
-        my $former_dot_period = $.;
-        $. -= @after_ctx_lines;
+        while ( defined $current_line ) {
+            while ( (@after_ctx_lines < $n_after_ctx_lines) && defined($_ = <$fh>) ) {
+                push @after_ctx_lines, $_;
+            }
 
-        last unless $cb->();
+            local $_ = $current_line;
+            my $former_dot_period = $.;
+            $. -= @after_ctx_lines;
 
-        # I tried doing this with local(), but for some reason,
-        # $. continued to have its new value after the exit of the
-        # enclosing block.  I'm guessing that $. has some extra
-        # magic associated with it or something.  If someone can
-        # tell me why this happened, I would love to know!
-        $. = $former_dot_period; # XXX this won't happen on an exception
+            last unless $cb->();
 
-        if ( $n_before_ctx_lines ) {
-            push @before_ctx_lines, $current_line;
-            shift @before_ctx_lines while @before_ctx_lines > $n_before_ctx_lines;
+            # I tried doing this with local(), but for some reason,
+            # $. continued to have its new value after the exit of the
+            # enclosing block.  I'm guessing that $. has some extra
+            # magic associated with it or something.  If someone can
+            # tell me why this happened, I would love to know!
+            $. = $former_dot_period; # XXX this won't happen on an exception
+
+            if ( $n_before_ctx_lines ) {
+                push @before_ctx_lines, $current_line;
+                shift @before_ctx_lines while @before_ctx_lines > $n_before_ctx_lines;
+            }
+            if ( $n_after_ctx_lines ) {
+                $current_line = shift @after_ctx_lines;
+            }
+            else {
+                $current_line = <$fh>;
+            }
         }
-        if ( $n_after_ctx_lines ) {
-            $current_line = shift @after_ctx_lines;
-        }
-        elsif($resource->next_text()) {
-            $current_line = $_;
-        }
-        else {
-            undef $current_line;
+    }
+    else {
+        local $_;
+
+        while ( <$fh> ) {
+            last unless $cb->();
         }
     }
 
@@ -866,18 +991,6 @@ sub iterate {
                        #     handle exceptions anyway.
 
     return;
-}
-
-}
-
-my $has_printed_something;
-
-BEGIN {
-    $has_printed_something = 0;
-}
-
-sub has_printed_something {
-    return $has_printed_something;
 }
 
 sub print_line_with_options {
@@ -914,8 +1027,7 @@ sub print_line_with_options {
         }
     }
     if( $output_expr ) {
-        my $re = $opt->{regex};
-        while ( $line =~ /$re/og ) {
+        while ( $line =~ /$opt->{regex}/og ) {
             my $output = eval $output_expr;
             App::Ack::print( join( $separator, @line_parts, $output ), $ors );
         }
@@ -943,8 +1055,7 @@ sub print_line_with_options {
             else {
                 my $matched = 0; # flag; if matched, need to escape afterwards
 
-                my $re = $opt->{regex};
-                while ( $line =~ /$re/og ) {
+                while ( $line =~ /$opt->{regex}/og ) {
 
                     $matched = 1;
                     my ( $match_start, $match_end ) = ($-[0], $+[0]);
@@ -1002,7 +1113,7 @@ sub print_line_with_context {
     my $is_tracking_context = $opt->{after_context} || $opt->{before_context};
     my $output_expr         = $opt->{output};
 
-    chomp $matching_line;
+    $matching_line =~ s/[\r\n]+$//g;
 
     my ( $before_context, $after_context ) = get_context();
 

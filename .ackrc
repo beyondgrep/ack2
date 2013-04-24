@@ -1,0 +1,5 @@
+--ignore-file=is:ack-standalone
+--ignore-file=is:ack196
+--ignore-file=is:ack202
+--ignore-file=is:ack20301
+--ignore-file=is:tags

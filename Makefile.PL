@@ -13,6 +13,7 @@ my %parms = (
     AUTHOR              => 'Andy Lester <andy@petdance.com>',
     ABSTRACT            => 'A grep-like program for searching source code',
     VERSION_FROM        => 'Ack.pm',
+
     PM                  => {
         'Ack.pm'            => '$(INST_LIBDIR)/App/Ack.pm',
         'Resource.pm'       => '$(INST_LIBDIR)/App/Ack/Resource.pm',
@@ -29,7 +30,9 @@ my %parms = (
         'Default.pm'        => '$(INST_LIBDIR)/App/Ack/Filter/Default.pm',
         'Inverse.pm'        => '$(INST_LIBDIR)/App/Ack/Filter/Inverse.pm',
     },
-    EXE_FILES           => [ 'ack' ],
+    EXE_FILES               => [ 'ack' ],
+
+    MIN_PERL_VERSION        => 5.008008,
     PREREQ_PM => {
         'Carp'              => '1.04',
         'Cwd'               => '3.00',
@@ -140,13 +143,16 @@ nytprof: all
 
 TIMER_ARGS=foo ~/parrot > /dev/null
 time-ack196:
-	time $(PERL) ./ack196 $(TIMER_ARGS)
+	time $(PERL) ./garage/ack196 --noenv $(TIMER_ARGS)
 
 time-ack202:
-	time $(PERL) ./ack202 $(TIMER_ARGS)
+	time $(PERL) ./garage/ack202 --noenv $(TIMER_ARGS)
+
+time-ack20301:
+	time $(PERL) ./garage/ack20301 --noenv $(TIMER_ARGS)
 
 time-ack-standalone: ack-standalone
-	time $(PERL) ./ack-standalone $(TIMER_ARGS)
+	time $(PERL) ./ack-standalone --noenv $(TIMER_ARGS)
 
 MAKE_FRAG
 

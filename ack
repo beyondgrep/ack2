@@ -24,7 +24,7 @@ use Getopt::Long 2.35 ();
 
 use Carp 1.04 ();
 
-our $VERSION = '2.03_01';
+our $VERSION = '2.03_02';
 # Check http://beyondgrep.com/ for updates
 
 # These are all our globals.
@@ -191,17 +191,24 @@ sub _compile_file_filter {
         # command line" wins.
         return 0 if -p $File::Next::name;
 
+        # we can't handle unreadable filenames; report them
+        unless ( -r _ ) {
+            if ( $App::Ack::report_bad_filenames ) {
+                App::Ack::warn( "${File::Next::name}: cannot open file for reading" );
+            }
+            return 0;
+        }
+
+        my $resource = App::Ack::Resource::Basic->new($File::Next::name);
+        return 0 if ! $resource;
         foreach my $filter (@ifiles_filters) {
-            my $resource = App::Ack::Resource::Basic->new($File::Next::name);
-            return 0 if ! $resource || $filter->filter($resource);
+            return 0 if $filter->filter($resource);
         }
         my $match_found = 1;
         if ( @{$filters} ) {
             $match_found = 0;
 
             foreach my $filter (@{$filters}) {
-                my $resource = App::Ack::Resource::Basic->new($File::Next::name);
-                return 0 if ! $resource;
                 if ($filter->filter($resource)) {
                     $match_found = 1;
                     last;
@@ -211,8 +218,6 @@ sub _compile_file_filter {
         # Don't bother invoking inverse filters unless we consider the current resource a match
         if ( $match_found && @{$inverse_filters} ) {
             foreach my $filter ( @{$inverse_filters} ) {
-                my $resource = App::Ack::Resource::Basic->new($File::Next::name);
-                return 0 if ! $resource;
                 if ( not $filter->filter( $resource ) ) {
                     $match_found = 0;
                     last;
