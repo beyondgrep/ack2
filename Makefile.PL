@@ -151,7 +151,10 @@ time-ack202:
 time-ack20301:
 	time $(PERL) ./garage/ack20301 --noenv $(TIMER_ARGS)
 
-time-ack-standalone: ack-standalone
+time-ack20302:
+	time $(PERL) ./garage/ack20302 --noenv $(TIMER_ARGS)
+
+time-head: ack-standalone
 	time $(PERL) ./ack-standalone --noenv $(TIMER_ARGS)
 
 MAKE_FRAG
