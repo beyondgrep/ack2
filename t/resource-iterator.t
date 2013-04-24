@@ -47,6 +47,8 @@ UNFILTERED: {
             t/swamp/file.bar
             t/swamp/file.foo
             t/swamp/fresh.css
+            t/swamp/fresh.css.min
+            t/swamp/fresh.min.css
             t/swamp/groceries/another_subdir/CVS/fruit
             t/swamp/groceries/another_subdir/CVS/junk
             t/swamp/groceries/another_subdir/CVS/meat
@@ -75,6 +77,7 @@ UNFILTERED: {
             t/swamp/Makefile
             t/swamp/Makefile.PL
             t/swamp/MasterPage.master
+            t/swamp/minified.js.min
             t/swamp/minified.min.js
             t/swamp/moose-andy.jpg
             t/swamp/notaMakefile
