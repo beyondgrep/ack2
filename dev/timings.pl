@@ -6,7 +6,7 @@ use autodie;
 use 5.10.0;
 
 use Getopt::Long;
-use File::Slurp qw(read_dir write_file);
+use File::Slurp qw(read_dir read_file write_file);
 use File::Spec;
 use JSON;
 use Time::HiRes qw(gettimeofday tv_interval);
@@ -108,6 +108,12 @@ if($perfom_clear) {
     unlink('.timings.json');
 }
 
+my $json = JSON->new->utf8->pretty;
+my $previous_timings;
+if(-e '.timings.json') {
+    $previous_timings = $json->decode(scalar(read_file('.timings.json')));
+}
+
 my @acks = map { File::Spec->catfile('garage', $_) } read_dir('garage');
 push @acks, 'ack-standalone';
 
@@ -117,6 +123,12 @@ push @acks, 'ack-standalone';
     return -1 if $b->{'version'} eq 'HEAD';
     return $a->{'version'} <=> $b->{'version'};
 } @acks;
+
+if($previous_timings) {
+    splice @acks, -1, 0, {
+        version => 'previous',
+    };
+}
 
 my $format = create_format(\@invocations, \@acks);
 my $header = sprintf $format, '', map { $_->{'version'} } @acks;
@@ -129,6 +141,10 @@ foreach my $invocation (@invocations) {
     my @timings;
 
     foreach my $ack (@acks) {
+        unless($ack->{'path'}) {
+            push @timings, $previous_timings->{join(' ', 'ack', @$invocation)};
+            next;
+        }
         my @args = ( $^X, $ack->{'path'}, '--noenv', @$invocation );
 
         if ( $ack->{'path'} =~ /ack1/ ) {
@@ -161,6 +177,5 @@ foreach my $invocation (@invocations) {
 }
 
 if($perform_store) {
-    my $json = JSON->new->utf8->pretty;
     write_file('.timings.json', $json->encode(\%stored_timings));
 }
