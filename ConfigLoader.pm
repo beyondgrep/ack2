@@ -448,7 +448,6 @@ sub explode_sources {
             );
             Getopt::Long::GetOptions( %{$arg_spec} );
 
-            splice @copy, -1 * @ARGV if @ARGV; # XXX explain this
             push @new_sources, $name, \@copy;
         }
     }
