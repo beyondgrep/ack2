@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use 5.008;
+use 5.008008;
 
 use App::Ack ();
 use App::Ack::ConfigLoader ();

@@ -65,6 +65,8 @@ Cat, `ack --bar` will draw (of course) Admiral Ackbar.
 
 # Building
 
+ack requires Perl 5.8.8 or higher.  Perl 5.8.8 was released January 2006.
+
     # Required
     perl Makefile.PL
     make

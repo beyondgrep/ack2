@@ -2,6 +2,10 @@ History file for ack.  http://beyondgrep.com/
 
 NEXT
 ====================================
+The minimum Perl requirement for ack is 5.8.8.  Anything before 5.8.8
+will not work.
+
+
 [FIXES]
 ack now runs on a standard Perl 5.8.8 install with no module updates.
 Thanks, Michael McClimon.
