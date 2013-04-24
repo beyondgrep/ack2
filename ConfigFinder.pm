@@ -36,15 +36,10 @@ Finally, ack takes settings from the command line.
 use strict;
 use warnings;
 
-use App::Ack ();
 use Cwd 3.00 ();
 use File::Spec 3.00;
 
-BEGIN {
-    if ($App::Ack::is_windows) {
-        require Win32;
-    }
-}
+use if ($^O =~ /MSWin32/ ? 1 : 0), "Win32";
 
 =head1 METHODS
 
@@ -104,7 +99,7 @@ a list of them.
 sub find_config_files {
     my @config_files;
 
-    if($App::Ack::is_windows) {
+    if($^O =~ /MSWin32/) {
         push @config_files, map { File::Spec->catfile($_, 'ackrc') } (
             Win32::GetFolderPath(Win32::CSIDL_COMMON_APPDATA()),
             Win32::GetFolderPath(Win32::CSIDL_APPDATA()),
