@@ -61,7 +61,7 @@ sub create_format {
 
     for(0..$#$acks) {
         if(length($acks->[$_]{'version'}) > $max_version_lengths[$_]) {
-            $max_version_lengths[$_] = $acks->[$_]{'version'};
+            $max_version_lengths[$_] = length($acks->[$_]{'version'});
         }
     }
 
