@@ -98,6 +98,11 @@ sub _options_block {
 
 # minified Javascript
 --ignore-file=match:/[.]min[.]js$/
+--ignore-file=match:/[.]js[.]min$/
+
+# minified CSS
+--ignore-file=match:/[.]min[.]css$/
+--ignore-file=match:/[.]css[.]min$/
 
 
 # Filetypes defined
