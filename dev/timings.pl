@@ -97,10 +97,16 @@ my @invocations = (
 );
 
 my $perform_store;
+my $perfom_clear;
 
 GetOptions(
+    'clear' => \$perfom_clear,
     'store' => \$perform_store,
 );
+
+if($perfom_clear) {
+    unlink('.timings.json');
+}
 
 my @acks = map { File::Spec->catfile('garage', $_) } read_dir('garage');
 push @acks, 'ack-standalone';
