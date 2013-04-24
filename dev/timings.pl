@@ -9,6 +9,7 @@ use Getopt::Long;
 use File::Slurp qw(read_dir read_file write_file);
 use File::Spec;
 use JSON;
+use List::MoreUtils qw(any);
 use Time::HiRes qw(gettimeofday tv_interval);
 
 my $SOURCE_DIR = File::Spec->catdir($ENV{HOME}, 'parrot');
@@ -125,10 +126,12 @@ my @invocations = (
 
 my $perform_store;
 my $perfom_clear;
+my @use_acks;
 
 GetOptions(
-    'clear' => \$perfom_clear,
-    'store' => \$perform_store,
+    'clear'  => \$perfom_clear,
+    'store'  => \$perform_store,
+    'ack=s@' => \@use_acks,
 );
 
 if($perfom_clear) {
@@ -145,6 +148,16 @@ my @acks = map { File::Spec->catfile('garage', $_) } read_dir('garage');
 push @acks, 'ack-standalone';
 
 @acks = grab_versions(@acks);
+if(@use_acks) {
+    foreach my $ack (@acks) {
+        next if $ack->{'version'} eq 'HEAD';
+        next if $ack->{'version'} eq 'previous';
+        unless(any { $_ eq $ack->{'version'} } @use_acks) {
+            undef $ack;
+        }
+    }
+    @acks = grep { defined() } @acks;
+}
 @acks = sort {
     return 1  if $a->{'version'} eq 'HEAD';
     return -1 if $b->{'version'} eq 'HEAD';
