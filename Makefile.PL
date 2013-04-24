@@ -157,6 +157,9 @@ time-ack20302:
 time-head: ack-standalone
 	time $(PERL) ./ack-standalone --noenv $(TIMER_ARGS)
 
+timings: ack-standalone
+	./dev/timings.pl
+
 MAKE_FRAG
 
     return $postamble;

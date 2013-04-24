@@ -111,6 +111,10 @@ foreach my $invocation (@invocations) {
     foreach my $ack (@acks) {
         my @args = ( $^X, $ack->{'path'}, '--noenv', @$invocation );
 
+        if ( $ack->{'path'} =~ /ack1/ ) {
+            @args = grep { !/--known/ } @args;
+        }
+
         my $end;
         my $start = [gettimeofday()];
         my $pid   = fork;
