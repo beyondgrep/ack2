@@ -70,6 +70,33 @@ sub create_format {
     } @max_version_lengths) . "\n";
 }
 
+sub time_ack {
+    my ( $ack, $invocation ) = @_;
+
+    my @args = ( $^X, $ack->{'path'}, '--noenv', @$invocation );
+
+    if ( $ack->{'path'} =~ /ack1/ ) {
+        @args = grep { !/--known/ } @args;
+    }
+
+    my $end;
+    my $start = [gettimeofday()];
+    my $pid   = fork;
+
+    if($pid) {
+        waitpid $pid, 0;
+        # XXX handle failure?
+        $end = [gettimeofday()];
+    } else {
+        close STDOUT;
+        close STDERR;
+        exec @args;
+        exit 255;
+    }
+
+    return tv_interval($start, $end);
+}
+
 my @invocations = (
     # normal mode
     [ 'foo', $SOURCE_DIR ],
@@ -145,28 +172,7 @@ foreach my $invocation (@invocations) {
             push @timings, $previous_timings->{join(' ', 'ack', @$invocation)};
             next;
         }
-        my @args = ( $^X, $ack->{'path'}, '--noenv', @$invocation );
-
-        if ( $ack->{'path'} =~ /ack1/ ) {
-            @args = grep { !/--known/ } @args;
-        }
-
-        my $end;
-        my $start = [gettimeofday()];
-        my $pid   = fork;
-
-        if($pid) {
-            waitpid $pid, 0;
-            # XXX handle failure?
-            $end = [gettimeofday()];
-        } else {
-            close STDOUT;
-            close STDERR;
-            exec @args;
-            exit 255;
-        }
-
-        my $elapsed = tv_interval($start, $end);
+        my $elapsed = time_ack($ack, $invocation);
         push @timings, $elapsed;
 
         if($perform_store && $ack->{'store_timings'}) {
