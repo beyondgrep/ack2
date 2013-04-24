@@ -1,6 +1,6 @@
 package main;
 
-require 5.008000;
+require 5.008008;
 
 use strict;
 use warnings;
@@ -13,6 +13,7 @@ my %parms = (
     AUTHOR              => 'Andy Lester <andy@petdance.com>',
     ABSTRACT            => 'A grep-like program for searching source code',
     VERSION_FROM        => 'Ack.pm',
+
     PM                  => {
         'Ack.pm'            => '$(INST_LIBDIR)/App/Ack.pm',
         'Resource.pm'       => '$(INST_LIBDIR)/App/Ack/Resource.pm',
@@ -29,7 +30,9 @@ my %parms = (
         'Default.pm'        => '$(INST_LIBDIR)/App/Ack/Filter/Default.pm',
         'Inverse.pm'        => '$(INST_LIBDIR)/App/Ack/Filter/Inverse.pm',
     },
-    EXE_FILES           => [ 'ack' ],
+    EXE_FILES               => [ 'ack' ],
+
+    MIN_PERL_VERSION        => 5.008008,
     PREREQ_PM => {
         'Carp'              => '1.04',
         'Cwd'               => '3.00',
@@ -148,8 +151,14 @@ time-ack202:
 time-ack20301:
 	time $(PERL) ./garage/ack20301 --noenv $(TIMER_ARGS)
 
-time-ack-standalone: ack-standalone
+time-ack20302:
+	time $(PERL) ./garage/ack20302 --noenv $(TIMER_ARGS)
+
+time-head: ack-standalone
 	time $(PERL) ./ack-standalone --noenv $(TIMER_ARGS)
+
+timings: ack-standalone
+	./dev/timings.pl
 
 MAKE_FRAG
 

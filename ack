@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use 5.008;
+use 5.008008;
 
 use App::Ack ();
 use App::Ack::ConfigLoader ();
@@ -24,7 +24,7 @@ use Getopt::Long 2.35 ();
 
 use Carp 1.04 ();
 
-our $VERSION = '2.0301';
+our $VERSION = '2.03_02';
 # Check http://beyondgrep.com/ for updates
 
 # These are all our globals.
