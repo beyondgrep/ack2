@@ -72,9 +72,9 @@ sub create_format {
 }
 
 sub time_ack {
-    my ( $ack, $invocation ) = @_;
+    my ( $ack, $invocation, $perl ) = @_;
 
-    my @args = ( $^X, $ack->{'path'}, '--noenv', @$invocation );
+    my @args = ( $perl, $ack->{'path'}, '--noenv', @$invocation );
 
     if ( $ack->{'path'} =~ /ack1/ ) {
         @args = grep { !/--known/ } @args;
@@ -127,11 +127,13 @@ my @invocations = (
 my $perform_store;
 my $perfom_clear;
 my @use_acks;
+my $perl = $^X;
 
 GetOptions(
     'clear'  => \$perfom_clear,
     'store'  => \$perform_store,
     'ack=s@' => \@use_acks,
+    'perl=s' => \$perl,
 );
 
 if($perfom_clear) {
@@ -185,7 +187,7 @@ foreach my $invocation (@invocations) {
             push @timings, $previous_timings->{join(' ', 'ack', @$invocation)};
             next;
         }
-        my $elapsed = time_ack($ack, $invocation);
+        my $elapsed = time_ack($ack, $invocation, $perl);
         push @timings, $elapsed;
 
         if($perform_store && $ack->{'store_timings'}) {
