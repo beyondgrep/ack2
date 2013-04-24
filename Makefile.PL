@@ -1,6 +1,6 @@
 package main;
 
-require 5.008000;
+require 5.008008;
 
 use strict;
 use warnings;
