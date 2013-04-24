@@ -5,8 +5,10 @@ use warnings;
 use autodie;
 use 5.10.0;
 
-use File::Slurp qw(read_dir);
+use Getopt::Long;
+use File::Slurp qw(read_dir write_file);
 use File::Spec;
+use JSON;
 use Time::HiRes qw(gettimeofday tv_interval);
 
 my $SOURCE_DIR = File::Spec->catdir($ENV{HOME}, 'parrot');
@@ -35,6 +37,10 @@ sub grab_versions {
             path    => $ack,
             version => $version,
         };
+
+        if($version eq 'HEAD') {
+            $annotated_acks[-1]{'store_timings'} = 1;
+        }
     }
 
     return @annotated_acks;
@@ -90,6 +96,12 @@ my @invocations = (
     [ 'foo', '-c', '--known', $SOURCE_DIR ],
 );
 
+my $perform_store;
+
+GetOptions(
+    'store' => \$perform_store,
+);
+
 my @acks = map { File::Spec->catfile('garage', $_) } read_dir('garage');
 push @acks, 'ack-standalone';
 
@@ -104,6 +116,8 @@ my $format = create_format(\@invocations, \@acks);
 my $header = sprintf $format, '', map { $_->{'version'} } @acks;
 print $header;
 print '-' x (length($header) - 1), "\n"; # -1 for the newline
+
+my %stored_timings;
 
 foreach my $invocation (@invocations) {
     my @timings;
@@ -132,6 +146,15 @@ foreach my $invocation (@invocations) {
 
         my $elapsed = tv_interval($start, $end);
         push @timings, $elapsed;
+
+        if($perform_store && $ack->{'store_timings'}) {
+            $stored_timings{join(' ', 'ack', @$invocation)} = $elapsed;
+        }
     }
     printf $format, join(' ', 'ack', @$invocation), map { sprintf '%.2f', $_ } @timings;
+}
+
+if($perform_store) {
+    my $json = JSON->new->utf8->pretty;
+    write_file('.timings.json', $json->encode(\%stored_timings));
 }
