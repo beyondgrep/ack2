@@ -7,6 +7,7 @@ use lib 't';
 
 use Test::More tests => 3;
 use Util;
+use App::Ack::ConfigDefault ();
 
 prep_environment();
 
