@@ -45,7 +45,7 @@ sub touch_ackrc {
 # we make so we can delete them later
 my @created_windows_globals;
 
-sub setup_windows_globals {
+sub set_up_windows_globals {
     my (@files) = @_;
 
     foreach my $path (@files) {
@@ -56,7 +56,7 @@ sub setup_windows_globals {
     }
 }
 
-sub cleanup_windows_globals {
+sub clean_up_windows_globals {
     foreach my $path (@created_windows_globals) {
         unlink $path;
     }
@@ -99,7 +99,7 @@ if ( $^O eq 'MSWin32') {
         Win32::GetFolderPath(Win32::CSIDL_APPDATA()),
     );
 
-    setup_windows_globals( @global_files );
+    set_up_windows_globals( @global_files );
 }
 else {
     @global_files = (
@@ -236,5 +236,5 @@ do {
     unlink $ackrc->filename;
 };
 
-cleanup_windows_globals();
+clean_up_windows_globals();
 chdir $wd;
