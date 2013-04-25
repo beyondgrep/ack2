@@ -132,7 +132,8 @@ foreach my $dep (@dependencies) {
         my $tempdir = File::Temp->newdir;
         my $status;
         capture_merged {
-            system 'cpanm', '--notest', '--local-lib', $tempdir->dirname, $_->{'url'};
+            $status = system 'cpanm', '--notest', '--local-lib', $tempdir->dirname, $_->{'url'};
+            return if $status;
 
             local $ENV{'PERL5LIB'} = File::Spec->catdir($tempdir->dirname, 'lib/perl5');
 
@@ -143,7 +144,17 @@ foreach my $dep (@dependencies) {
     } @releases;
 
     print "\n";
-    push @output, "$dep - $first_good_release->{'version'}";
+    if (!defined $first_good_release) {
+        push @output, "$dep - no suitable version found";
+    }
+    elsif ($first_good_release == $releases[0]) {
+        # All tested versions are ok. Earlier, untested versions might also work
+        push @output, "$dep - <=$first_good_release->{'version'}";
+    }
+    else {
+        push @output, "$dep - $first_good_release->{'version'}";
+    }
+    print "$output[-1]\n";
 }
 
 print "\n";
