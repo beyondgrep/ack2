@@ -14,6 +14,10 @@ my @expected = (
 
 prep_environment();
 
+if ( $^O eq 'MSWin32' ) {
+    plan skip_all => 'Test unreliable on Windows.';
+}
+
 system 'bash', '-c', 'exit';
 if ( $? ) {
     plan skip_all => 'You need bash to run this test';
