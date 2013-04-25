@@ -209,3 +209,12 @@ foreach my $invocation (@invocations) {
 if($perform_store) {
     write_file('.timings.json', $json->encode(\%stored_timings));
 }
+
+__DATA__
+
+TODO:
+
+  * Fancy colors
+  * Percentage slowdown per invocation
+  * Overall stats dump at the end.
+  * Stop passing bad options to 1.x (--rust, --known)
