@@ -82,15 +82,24 @@ sub time_ack {
 
     my $end;
     my $start = [gettimeofday()];
+    my ( $read, $write );
+    pipe $read, $write;
     my $pid   = fork;
 
+    my $has_error_lines;
+
     if($pid) {
+        close $write;
+        while(<$read>) {
+            $has_error_lines = 1;
+        }
         waitpid $pid, 0;
-        # XXX handle failure?
+        return if $has_error_lines;
         $end = [gettimeofday()];
     } else {
+        close $read;
         close STDOUT;
-        close STDERR;
+        open STDERR, '>&', $write;
         exec @args;
         exit 255;
     }
@@ -194,7 +203,7 @@ foreach my $invocation (@invocations) {
             $stored_timings{join(' ', 'ack', @$invocation)} = $elapsed;
         }
     }
-    printf $format, join(' ', 'ack', @$invocation), map { sprintf '%.2f', $_ } @timings;
+    printf $format, join(' ', 'ack', @$invocation), map { defined() ? sprintf('%.2f', $_) : 'x_x' } @timings;
 }
 
 if($perform_store) {
