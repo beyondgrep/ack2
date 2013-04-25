@@ -18,7 +18,7 @@ my $tmpdir = $ENV{'TMPDIR'};
 my $home   = $ENV{'HOME'};
 
 chop $tmpdir if $tmpdir && $tmpdir =~ m{/$};
-chop $home   if $home   =~ m{/$};
+chop $home   if $home && $home   =~ m{/$};
 
 if ( $tmpdir && $tmpdir =~ /^$home/ ) {
     plan tests => 1;
@@ -39,6 +39,30 @@ sub touch_ackrc {
     return;
 }
 
+{
+# the tests blow up on Windows if the global files don't exist,
+# so here we create them if they don't, keeping track of the ones
+# we make so we can delete them later
+my @created_windows_globals;
+
+sub setup_windows_globals {
+    my (@files) = @_;
+
+    foreach my $path (@files) {
+        unless ( -e $path ) {
+            touch_ackrc( $path );
+            push @created_windows_globals, $path;
+        }
+    }
+}
+
+sub cleanup_windows_globals {
+    foreach my $path (@created_windows_globals) {
+        unlink $path;
+    }
+}
+
+}
 sub no_home (&) { ## no critic (ProhibitSubroutinePrototypes)
     my ( $fn ) = @_;
 
@@ -74,6 +98,8 @@ if ( $^O eq 'MSWin32') {
         Win32::GetFolderPath(Win32::CSIDL_COMMON_APPDATA()),
         Win32::GetFolderPath(Win32::CSIDL_APPDATA()),
     );
+
+    setup_windows_globals( @global_files );
 }
 else {
     @global_files = (
@@ -210,4 +236,5 @@ do {
     unlink $ackrc->filename;
 };
 
+cleanup_windows_globals();
 chdir $wd;

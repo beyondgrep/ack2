@@ -22,6 +22,11 @@ END
 chomp $expected_norecurse;
 chomp $expected_recurse;
 
+if ( $^O =~ /MSWin32/ ) {
+    $expected_norecurse =~ s{/}{\\}g;
+    $expected_recurse =~ s{/}{\\}g;
+}
+
 my @args;
 my $lines;
 
