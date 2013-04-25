@@ -50,7 +50,7 @@ sub set_up_globals {
 
     foreach my $path (@files) {
         unless ( -e $path ) {
-           touch_ackrc( $path );
+            touch_ackrc( $path );
             push @created_globals, $path;
         }
     }
