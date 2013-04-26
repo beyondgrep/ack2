@@ -890,23 +890,27 @@ sub count_matches_in_resource {
 sub resource_has_match {
     my ( $resource, $opt ) = @_;
 
+    my $has_match = 0;
     my $fh = $resource->open();
     if ( !$fh ) {
         if ( $App::Ack::report_bad_filenames ) {
             # XXX direct access to filename
             App::Ack::warn( "$resource->{filename}: $!" );
         }
-        return 0;
+    }
+    else {
+        my $opt_v = $opt->{v};
+        my $re    = $opt->{regex};
+        while ( <$fh> ) {
+            if (/$re/o xor $opt_v) {
+                $has_match = 1;
+                last;
+            }
+        }
+        close $fh;
     }
 
-    while ( <$fh> ) {
-        my $does_match = /$opt->{regex}/o;
-        $does_match = !$does_match if $opt->{v};
-        return 1 if $does_match;
-    }
-    close $fh;
-
-    return 0;
+    return $has_match;
 }
 
 sub get_context {
