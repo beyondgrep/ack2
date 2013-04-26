@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use App::Ack ();
+use App::Ack::ConfigDefault ();
 use App::Ack::Filter;
 use App::Ack::Filter::Default;
 use Carp 1.04 ();
@@ -210,7 +211,7 @@ EOT
         'color-lineno=s'    => \$ENV{ACK_COLOR_LINENO},
         'column!'           => \$opt->{column},
         count               => \$opt->{count},
-        'create-ackrc'      => sub { App::Ack::create_ackrc(); exit; },
+        'create-ackrc'      => sub { print "$_\n" for ( '--ignore-ack-defaults', App::Ack::ConfigDefault::options() ); exit; },
         'env!'              => sub {
             my ( undef, $value ) = @_;
 
