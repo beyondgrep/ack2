@@ -1,11 +1,13 @@
 History file for ack.  http://beyondgrep.com/
 
 
-2.03_03
+2.03_03 Fri Apr 26 01:09:14 CDT 2013
 ====================================
 [OPTIMIZATIONS]
 Sped up the -l and -c flags by optimizing them into their own special
 cases.
+
+Made other speed improvements.  Thanks, Rob and Michael.
 
 
 2.03_02 Tue Apr 23 22:08:22 CDT 2013

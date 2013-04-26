@@ -111,6 +111,8 @@ t/swamp/example.R
 t/swamp/file.bar
 t/swamp/file.foo
 t/swamp/fresh.css
+t/swamp/fresh.css.min
+t/swamp/fresh.min.css
 t/swamp/groceries/CVS/fruit
 t/swamp/groceries/CVS/junk
 t/swamp/groceries/CVS/meat
@@ -136,6 +138,7 @@ t/swamp/html.htm
 t/swamp/html.html
 t/swamp/incomplete-last-line.txt
 t/swamp/javascript.js
+t/swamp/minified.js.min
 t/swamp/minified.min.js
 t/swamp/moose-andy.jpg
 t/swamp/not-an-#emacs-workfile#
