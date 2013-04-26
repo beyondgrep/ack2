@@ -1,5 +1,10 @@
 History file for ack.  http://beyondgrep.com/
 
+NEXT
+====================================
+[ENHANCEMENTS]
+The --shell file type now recognizes the fish shell.
+
 
 2.03_03 Fri Apr 26 01:09:14 CDT 2013
 ====================================
