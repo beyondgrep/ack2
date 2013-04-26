@@ -5,8 +5,11 @@ use warnings;
 use autodie;
 use 5.10.0;
 
-use File::Slurp qw(read_dir);
+use Getopt::Long;
+use File::Slurp qw(read_dir read_file write_file);
 use File::Spec;
+use JSON;
+use List::MoreUtils qw(any);
 use Time::HiRes qw(gettimeofday tv_interval);
 
 my $SOURCE_DIR = File::Spec->catdir($ENV{HOME}, 'parrot');
@@ -35,6 +38,10 @@ sub grab_versions {
             path    => $ack,
             version => $version,
         };
+
+        if($version eq 'HEAD') {
+            $annotated_acks[-1]{'store_timings'} = 1;
+        }
     }
 
     return @annotated_acks;
@@ -55,13 +62,49 @@ sub create_format {
 
     for(0..$#$acks) {
         if(length($acks->[$_]{'version'}) > $max_version_lengths[$_]) {
-            $max_version_lengths[$_] = $acks->[$_]{'version'};
+            $max_version_lengths[$_] = length($acks->[$_]{'version'});
         }
     }
 
     return join(' | ', "%${max_invocation_length}s", map {
         "%${_}s"
     } @max_version_lengths) . "\n";
+}
+
+sub time_ack {
+    my ( $ack, $invocation, $perl ) = @_;
+
+    my @args = ( $perl, $ack->{'path'}, '--noenv', @$invocation );
+
+    if ( $ack->{'path'} =~ /ack1/ ) {
+        @args = grep { !/--known/ } @args;
+    }
+
+    my $end;
+    my $start = [gettimeofday()];
+    my ( $read, $write );
+    pipe $read, $write;
+    my $pid   = fork;
+
+    my $has_error_lines;
+
+    if($pid) {
+        close $write;
+        while(<$read>) {
+            $has_error_lines = 1;
+        }
+        waitpid $pid, 0;
+        return if $has_error_lines;
+        $end = [gettimeofday()];
+    } else {
+        close $read;
+        close STDOUT;
+        open STDERR, '>&', $write;
+        exec @args;
+        exit 255;
+    }
+
+    return tv_interval($start, $end);
 }
 
 my @invocations = (
@@ -90,48 +133,88 @@ my @invocations = (
     [ 'foo', '-c', '--known', $SOURCE_DIR ],
 );
 
+my $perform_store;
+my $perfom_clear;
+my @use_acks;
+my $perl = $^X;
+
+GetOptions(
+    'clear'  => \$perfom_clear,
+    'store'  => \$perform_store,
+    'ack=s@' => \@use_acks,
+    'perl=s' => \$perl,
+);
+
+if($perfom_clear) {
+    unlink('.timings.json');
+}
+
+my $json = JSON->new->utf8->pretty;
+my $previous_timings;
+if(-e '.timings.json') {
+    $previous_timings = $json->decode(scalar(read_file('.timings.json')));
+}
+
 my @acks = map { File::Spec->catfile('garage', $_) } read_dir('garage');
 push @acks, 'ack-standalone';
 
 @acks = grab_versions(@acks);
+if(@use_acks) {
+    foreach my $ack (@acks) {
+        next if $ack->{'version'} eq 'HEAD';
+        next if $ack->{'version'} eq 'previous';
+        unless(any { $_ eq $ack->{'version'} } @use_acks) {
+            undef $ack;
+        }
+    }
+    @acks = grep { defined() } @acks;
+}
 @acks = sort {
     return 1  if $a->{'version'} eq 'HEAD';
     return -1 if $b->{'version'} eq 'HEAD';
     return $a->{'version'} <=> $b->{'version'};
 } @acks;
 
+if($previous_timings) {
+    splice @acks, -1, 0, {
+        version => 'previous',
+    };
+}
+
 my $format = create_format(\@invocations, \@acks);
 my $header = sprintf $format, '', map { $_->{'version'} } @acks;
 print $header;
 print '-' x (length($header) - 1), "\n"; # -1 for the newline
 
+my %stored_timings;
+
 foreach my $invocation (@invocations) {
     my @timings;
 
     foreach my $ack (@acks) {
-        my @args = ( $^X, $ack->{'path'}, '--noenv', @$invocation );
-
-        if ( $ack->{'path'} =~ /ack1/ ) {
-            @args = grep { !/--known/ } @args;
+        unless($ack->{'path'}) {
+            push @timings, $previous_timings->{join(' ', 'ack', @$invocation)};
+            next;
         }
-
-        my $end;
-        my $start = [gettimeofday()];
-        my $pid   = fork;
-
-        if($pid) {
-            waitpid $pid, 0;
-            # XXX handle failure?
-            $end = [gettimeofday()];
-        } else {
-            close STDOUT;
-            close STDERR;
-            exec @args;
-            exit 255;
-        }
-
-        my $elapsed = tv_interval($start, $end);
+        my $elapsed = time_ack($ack, $invocation, $perl);
         push @timings, $elapsed;
+
+        if($perform_store && $ack->{'store_timings'}) {
+            $stored_timings{join(' ', 'ack', @$invocation)} = $elapsed;
+        }
     }
-    printf $format, join(' ', 'ack', @$invocation), map { sprintf '%.2f', $_ } @timings;
+    printf $format, join(' ', 'ack', @$invocation), map { defined() ? sprintf('%.2f', $_) : 'x_x' } @timings;
 }
+
+if($perform_store) {
+    write_file('.timings.json', $json->encode(\%stored_timings));
+}
+
+__DATA__
+
+TODO:
+
+  * Fancy colors
+  * Percentage slowdown per invocation
+  * Overall stats dump at the end.
+  * Stop passing bad options to 1.x (--rust, --known)
