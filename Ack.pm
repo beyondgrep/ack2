@@ -1222,11 +1222,6 @@ sub get_file_id {
     }
 }
 
-sub create_ackrc {
-    print "$_\n" for ( '--ignore-ack-defaults', App::Ack::ConfigDefault::options() );
-}
-
-
 =head1 COPYRIGHT & LICENSE
 
 Copyright 2005-2013 Andy Lester.
