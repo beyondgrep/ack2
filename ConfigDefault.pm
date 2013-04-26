@@ -245,8 +245,8 @@ sub _options_block {
 --type-add=scheme:ext:scm,ss
 
 # Shell
---type-add=shell:ext:sh,bash,csh,tcsh,ksh,zsh
---type-add=shell:firstlinematch:/^#!.*\b(?:ba|t?c|k|z)?sh\b/
+--type-add=shell:ext:sh,bash,csh,tcsh,ksh,zsh,fish
+--type-add=shell:firstlinematch:/^#!.*\b(?:ba|t?c|k|z|fi)?sh\b/
 
 # Smalltalk http://www.smalltalk.org/
 --type-add=smalltalk:ext:st
