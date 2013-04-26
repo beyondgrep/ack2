@@ -24,6 +24,7 @@ css
 delphi
 elisp
 erlang
+fish
 fortran
 go
 groovy
