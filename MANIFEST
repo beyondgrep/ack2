@@ -23,6 +23,7 @@ Resources.pm
 
 record-options
 squash
+test-pager
 
 t/FilterTest.pm
 t/Util.pm
