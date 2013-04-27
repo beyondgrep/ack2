@@ -76,7 +76,7 @@ sub time_ack {
 
     my @args = ( $perl, $ack->{'path'}, '--noenv', @$invocation );
 
-    if ( $ack->{'path'} =~ /ack1/ ) {
+    if ( $ack->{'path'} =~ /ack-1/ ) {
         @args = grep { !/--known/ } @args;
     }
 
