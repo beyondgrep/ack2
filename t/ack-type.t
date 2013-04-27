@@ -4,8 +4,10 @@ use strict;
 use warnings;
 use lib 't';
 
-use Test::More tests => 10;
+use Cwd ();
+use Test::More tests => 12;
 use File::Next ();
+use File::Temp ();
 use Util;
 
 prep_environment();
@@ -77,4 +79,20 @@ TEST_NOTYPES: {
     is scalar(@$stdout), 0;
     ok scalar(@$stderr) > 0;
     like $stderr->[0], qr/Unknown type 'perl'/ or diag(explain($stderr));
+}
+
+TEST_NOTYPE_ACKRC_CMD_LINE_OVERRIDE: {
+    my $ackrc = <<'END_ACKRC';
+--nohtml
+END_ACKRC
+
+    my @expected = (
+File::Next::reslash('t/swamp/html.html') . ':2:<html><head><title>Boring test file </title></head>',
+File::Next::reslash('t/swamp/html.htm') . ':2:<html><head><title>Boring test file </title></head>',
+    );
+
+    my @lines = run_ack('--html', '<title>', 't/swamp', {
+        ackrc => \$ackrc,
+    });
+    is_deeply \@lines, \@expected;
 }
