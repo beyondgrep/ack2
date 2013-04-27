@@ -81,7 +81,7 @@ sub _options_block {
 --ignore-directory=is:cover_db
 
 # Node modules
---ignore-directory=node_modules
+--ignore-directory=is:node_modules
 
 
 # Files to ignore
