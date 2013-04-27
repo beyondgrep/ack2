@@ -80,39 +80,6 @@ sub remove_dir_sep {
     return $path;
 }
 
-=head2 build_regex( $str, \%opts )
-
-Returns a regex object based on a string and command-line options.
-
-Dies when the regex $str is undefinied (i.e. not given on command line).
-
-=cut
-
-sub build_regex {
-    my $str = shift;
-    my $opt = shift;
-
-    defined $str or App::Ack::die( 'No regular expression found.' );
-
-    $str = quotemeta( $str ) if $opt->{Q};
-    if ( $opt->{w} ) {
-        $str = "\\b$str" if $str =~ /^\w/;
-        $str = "$str\\b" if $str =~ /\w$/;
-    }
-
-    my $regex_is_lc = $str eq lc $str;
-    if ( $opt->{i} || ($opt->{smart_case} && $regex_is_lc) ) {
-        $str = "(?i)$str";
-    }
-
-    my $re = eval { qr/$str/ };
-    if ( !$re ) {
-        die "Invalid regex '$str':\n  $@";
-    }
-
-    return $re;
-
-}
 
 =head2 warn( @_ )
 

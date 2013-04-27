@@ -240,6 +240,35 @@ sub show_types {
     return;
 }
 
+# Returns a regex object based on a string and command-line options.
+# Dies when the regex $str is undefinied (i.e. not given on command line).
+
+sub build_regex {
+    my $str = shift;
+    my $opt = shift;
+
+    defined $str or App::Ack::die( 'No regular expression found.' );
+
+    $str = quotemeta( $str ) if $opt->{Q};
+    if ( $opt->{w} ) {
+        $str = "\\b$str" if $str =~ /^\w/;
+        $str = "$str\\b" if $str =~ /\w$/;
+    }
+
+    my $regex_is_lc = $str eq lc $str;
+    if ( $opt->{i} || ($opt->{smart_case} && $regex_is_lc) ) {
+        $str = "(?i)$str";
+    }
+
+    my $re = eval { qr/$str/ };
+    if ( !$re ) {
+        die "Invalid regex '$str':\n  $@";
+    }
+
+    return $re;
+
+}
+
 {
 
 my @before_ctx_lines;
@@ -780,7 +809,7 @@ sub main {
         $resources    = App::Ack::Resources->from_stdin( $opt );
         my $regex = $opt->{regex};
         $regex = shift @ARGV if not defined $regex;
-        $opt->{regex} = App::Ack::build_regex( $regex, $opt );
+        $opt->{regex} = build_regex( $regex, $opt );
     }
     else {
         if ( $opt->{f} || $opt->{lines} ) {
@@ -792,7 +821,7 @@ sub main {
         else {
             my $regex = $opt->{regex};
             $regex = shift @ARGV if not defined $regex;
-            $opt->{regex} = App::Ack::build_regex( $regex, $opt );
+            $opt->{regex} = build_regex( $regex, $opt );
         }
         my @start;
         if ( not defined $opt->{files_from} ) {
