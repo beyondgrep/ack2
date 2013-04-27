@@ -80,9 +80,8 @@ sub _options_block {
 # Perl Devel::Cover module's output directory
 --ignore-directory=is:cover_db
 
-# Node modules
+# Node modules created by npm
 --ignore-directory=is:node_modules
-
 
 # Files to ignore
 # Backup files
