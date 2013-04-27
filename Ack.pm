@@ -3,9 +3,6 @@ package App::Ack;
 use warnings;
 use strict;
 
-use Getopt::Long 2.35 ();
-use File::Next 1.10;
-
 =head1 NAME
 
 App::Ack - A container for functions for the ack program
@@ -45,7 +42,6 @@ our $is_cygwin;
 our $is_windows;
 
 use File::Spec 1.00015 ();
-use File::Glob 1.00015 ':glob';
 
 BEGIN {
     # These have to be checked before any filehandle diddling.
@@ -422,22 +418,6 @@ sub get_copyright {
     return $COPYRIGHT;
 }
 
-=head2 load_colors
-
-Set default colors, load Term::ANSIColor
-
-=cut
-
-sub load_colors {
-    eval 'use Term::ANSIColor 1.10 ()';
-
-    $ENV{ACK_COLOR_MATCH}    ||= 'black on_yellow';
-    $ENV{ACK_COLOR_FILENAME} ||= 'bold green';
-    $ENV{ACK_COLOR_LINENO}   ||= 'bold yellow';
-
-    return;
-}
-
 
 # print subs added in order to make it easy for a third party
 # module (such as App::Wack) to redefine the display methods
@@ -523,51 +503,6 @@ sub exit_from_ack {
     exit $rc;
 }
 
-
-
-
-# inefficient, but functional
-sub filetypes {
-    my ( $resource ) = @_;
-
-    my @matches;
-
-    foreach my $k (keys %mappings) {
-        my $filters = $mappings{$k};
-
-        foreach my $filter (@{$filters}) {
-            # clone the resource
-            my $clone = $resource->clone;
-            if ( $filter->filter($clone) ) {
-                push @matches, $k;
-                last;
-            }
-        }
-    }
-
-    return sort @matches;
-}
-
-# returns a (fairly) unique identifier for a file
-# use this function to compare two files to see if they're
-# equal (ie. the same file, but with a different path/links/etc)
-sub get_file_id {
-    my ( $filename ) = @_;
-
-    if ( $is_windows ) {
-        return File::Next::reslash( $filename );
-    }
-    else {
-        # XXX is this the best method? it always hits the FS
-        if( my ( $dev, $inode ) = (stat($filename))[0, 1] ) {
-            return join(':', $dev, $inode);
-        }
-        else {
-            # XXX this could be better
-            return $filename;
-        }
-    }
-}
 
 =head1 COPYRIGHT & LICENSE
 

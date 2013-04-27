@@ -54,7 +54,7 @@ MAIN: {
         my @keys = ( 'ACKRC', grep { /^ACK_/ } keys %ENV );
         delete @ENV{@keys};
     }
-    App::Ack::load_colors();
+    load_colors();
 
     Getopt::Long::Configure('default', 'no_auto_help', 'no_auto_version');
     Getopt::Long::Configure('pass_through', 'no_auto_abbrev');
@@ -129,7 +129,7 @@ sub _compile_file_filter {
     my $inverse_filters = [ grep {  $_->is_inverted() } @{$filters} ];
     @{$filters}         =   grep { !$_->is_inverted() } @{$filters};
 
-    my %is_member_of_starting_set = map { (App::Ack::get_file_id($_) => 1) } @{$start};
+    my %is_member_of_starting_set = map { (get_file_id($_) => 1) } @{$start};
 
     my $ignore_dir_list      = $opt->{idirs};
     my $dont_ignore_dir_list = $opt->{no_ignore_dirs};
@@ -164,7 +164,7 @@ sub _compile_file_filter {
         # ack always selects files that are specified on the command
         # line, regardless of filetype.  If you want to ack a JPEG,
         # and say "ack foo whatever.jpg" it will do it for you.
-        return 1 if $is_member_of_starting_set{ App::Ack::get_file_id($File::Next::name) };
+        return 1 if $is_member_of_starting_set{ get_file_id($File::Next::name) };
 
         if ( $dont_ignore_dir_list ) {
             my ( undef, $dirname ) = File::Spec->splitpath($File::Next::name);
@@ -232,12 +232,66 @@ sub show_types {
     my $resource = shift;
     my $ors      = shift;
 
-    my @types = App::Ack::filetypes( $resource );
+    my @types = filetypes( $resource );
     my $types = join( ',', @types );
     my $arrow = @types ? ' => ' : ' =>';
     App::Ack::print( $resource->name, $arrow, join( ',', @types ), $ors );
 
     return;
+}
+
+# Set default colors, load Term::ANSIColor
+sub load_colors {
+    eval 'use Term::ANSIColor 1.10 ()';
+
+    $ENV{ACK_COLOR_MATCH}    ||= 'black on_yellow';
+    $ENV{ACK_COLOR_FILENAME} ||= 'bold green';
+    $ENV{ACK_COLOR_LINENO}   ||= 'bold yellow';
+
+    return;
+}
+
+# inefficient, but functional
+sub filetypes {
+    my ( $resource ) = @_;
+
+    my @matches;
+
+    foreach my $k (keys %App::Ack::mappings) {
+        my $filters = $App::Ack::mappings{$k};
+
+        foreach my $filter (@{$filters}) {
+            # clone the resource
+            my $clone = $resource->clone;
+            if ( $filter->filter($clone) ) {
+                push @matches, $k;
+                last;
+            }
+        }
+    }
+
+    return sort @matches;
+}
+
+# returns a (fairly) unique identifier for a file
+# use this function to compare two files to see if they're
+# equal (ie. the same file, but with a different path/links/etc)
+sub get_file_id {
+    my ( $filename ) = @_;
+
+    if ( $App::Ack::is_windows ) {
+        return File::Next::reslash( $filename );
+    }
+    else {
+        # XXX is this the best method? it always hits the FS
+        if( my ( $dev, $inode ) = (stat($filename))[0, 1] ) {
+            return join(':', $dev, $inode);
+        }
+        else {
+            # XXX this could be better
+            return $filename;
+        }
+    }
 }
 
 # Returns a regex object based on a string and command-line options.
