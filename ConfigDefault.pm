@@ -165,6 +165,9 @@ sub _options_block {
 # CSS http://www.w3.org/Style/CSS/
 --type-add=css:ext:css
 
+# Dart http://www.dartlang.org/
+--type-add=dart:ext:dart
+
 # Delphi http://en.wikipedia.org/wiki/Embarcadero_Delphi
 --type-add=delphi:ext:pas,int,dfm,nfm,dof,dpk,dproj,groupproj,bdsgroup,bdsproj
 

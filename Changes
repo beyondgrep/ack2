@@ -8,6 +8,8 @@ The --shell file type now recognizes the fish shell.
 We now ignore minified CSS or Javascript, in the form of either *.css.min
 or *.min.css, or *.js.min or *.min.js.
 
+Added support for the Dart language.
+
 
 2.03_03 Fri Apr 26 01:09:14 CDT 2013
 ====================================
