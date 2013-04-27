@@ -1,7 +1,16 @@
 History file for ack.  http://beyondgrep.com/
 
-NEXT
+2.04    Fri Apr 26 22:47:55 CDT 2013
 ====================================
+ack now runs on a standard Perl 5.8.8 install with no module updates.
+The minimum Perl requirement for ack is now explicitly 5.8.8.  Anything
+before 5.8.8 will not work, and we've added checks.  Thanks, Michael
+McClimon.
+
+[FIXES]
+ack was colorizing captured groups even if --nocolor was given.
+Thanks, Dale Sedivic.
+
 [ENHANCEMENTS]
 The --shell file type now recognizes the fish shell.
 
@@ -10,48 +19,14 @@ or *.min.css, or *.js.min or *.min.js.
 
 Added support for the Dart language.
 
-
-2.03_03 Fri Apr 26 01:09:14 CDT 2013
-====================================
-[OPTIMIZATIONS]
-Sped up the -l and -c flags by optimizing them into their own special
-cases.
-
-Made other speed improvements.  Thanks, Rob and Michael.
-
-
-2.03_02 Tue Apr 23 22:08:22 CDT 2013
-====================================
-The minimum Perl requirement for ack is now explicitly 5.8.8.  Anything
-before 5.8.8 will not work, and we've added checks.
-
-[OPTIMIZATIONS]
-Massive speedups of ack internals to get us back to where performance
-was back on 1.96, but we're not there yet.
-
-
-2.03_01 Mon Apr 22 09:41:12 CDT 2013
-====================================
-[FIXES]
-ack now runs on a standard Perl 5.8.8 install with no module updates.
-Thanks, Michael McClimon.
-
-ack was colorizing captured groups even if --nocolor was given.
-Thanks, Dale Sedivic.
-
-[OPTIMIZATIONS]
-It turns out that ack 2 is a good deal slower than ack 1.96.  We have made
-a number of speedups but we are not yet at ack 1.x performance levels.
-You probably won't notice any differences unless you're working with very
-large code repositories, so please don't let this scare you from ack 2.
-
-Removed a use of $& that slowed down grouped matches.  Thanks,
-Michael McClimon.
+ack 2.02 was much slower than ack 1.96, up to 8x slower in some cases.
+These slowdowns have been mostly eliminated, and in some cases ack 2.04
+is now faster than 1.96.
 
 
 2.02    Thu Apr 18 23:51:52 CDT 2013
 ====================================
-[OPTIMIZATIONS]
+[ENHANCEMENTS]
 The firstlinematch file type detection option now only searches the
 first 250 characters of the first line of the file.  Otherwise, ack
 would read entire text files that were only one line long, such as
