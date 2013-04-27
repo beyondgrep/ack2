@@ -748,7 +748,7 @@ sub count_matches_in_resource {
 }
 
 sub main {
-    my @arg_sources = App::Ack::retrieve_arg_sources();
+    my @arg_sources = App::Ack::ConfigLoader::retrieve_arg_sources();
 
     my $opt = App::Ack::ConfigLoader::process_args( @arg_sources );
 

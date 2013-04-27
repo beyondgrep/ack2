@@ -36,6 +36,7 @@ Finally, ack takes settings from the command line.
 use strict;
 use warnings;
 
+use App::Ack::ConfigDefault;
 use Cwd 3.00 ();
 use File::Spec 3.00;
 
@@ -152,6 +153,35 @@ sub find_config_files {
     # XXX we only test for existence here, so if the file is
     #     deleted out from under us, this will fail later. =(
     return _remove_redundancies( @config_files );
+}
+
+=head2 read_ackrc
+
+Reads the contents of the .ackrc file and returns the arguments.
+
+=cut
+
+sub read_rcfile {
+    my $file = shift;
+
+    return unless defined $file && -e $file;
+
+    my @lines;
+
+    open( my $fh, '<', $file ) or App::Ack::die( "Unable to read $file: $!" );
+    while ( my $line = <$fh> ) {
+        chomp $line;
+        $line =~ s/^\s+//;
+        $line =~ s/\s+$//;
+
+        next if $line eq '';
+        next if $line =~ /^#/;
+
+        push( @lines, $line );
+    }
+    close $fh;
+
+    return @lines;
 }
 
 1;

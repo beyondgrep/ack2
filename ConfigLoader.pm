@@ -5,6 +5,7 @@ use warnings;
 
 use App::Ack ();
 use App::Ack::ConfigDefault ();
+use App::Ack::ConfigFinder ();
 use App::Ack::Filter;
 use App::Ack::Filter::Default;
 use Carp 1.04 ();
@@ -636,6 +637,58 @@ sub process_args {
         push @{$filters}, App::Ack::Filter::Default->new();
     }
     return \%opt;
+}
+
+
+sub retrieve_arg_sources {
+    my @arg_sources;
+
+    my $noenv;
+    my $ackrc;
+
+    Getopt::Long::Configure('default', 'no_auto_help', 'no_auto_version');
+    Getopt::Long::Configure('pass_through');
+    Getopt::Long::Configure('no_auto_abbrev');
+
+    Getopt::Long::GetOptions(
+        'noenv'   => \$noenv,
+        'ackrc=s' => \$ackrc,
+    );
+
+    Getopt::Long::Configure('default', 'no_auto_help', 'no_auto_version');
+
+    my @files;
+
+    if ( !$noenv ) {
+        my $finder = App::Ack::ConfigFinder->new;
+        @files  = $finder->find_config_files;
+    }
+    if ( $ackrc ) {
+        # we explicitly use open so we get a nice error message
+        # XXX this is a potential race condition!
+        if(open my $fh, '<', $ackrc) {
+            close $fh;
+        }
+        else {
+            die "Unable to load ackrc '$ackrc': $!"
+        }
+        push( @files, $ackrc );
+    }
+
+    push @arg_sources, Defaults => [ App::Ack::ConfigDefault::options() ];
+
+    foreach my $file ( @files) {
+        my @lines = App::Ack::ConfigFinder::read_rcfile($file);
+        push ( @arg_sources, $file, \@lines ) if @lines;
+    }
+
+    if ( $ENV{ACK_OPTIONS} && !$noenv ) {
+        push( @arg_sources, 'ACK_OPTIONS' => $ENV{ACK_OPTIONS} );
+    }
+
+    push( @arg_sources, 'ARGV' => [ @ARGV ] );
+
+    return @arg_sources;
 }
 
 1; # End of App::Ack::ConfigLoader

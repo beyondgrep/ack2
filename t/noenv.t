@@ -8,7 +8,7 @@ use Test::More tests => 5;
 use lib 't';
 use Util;
 
-use App::Ack;
+use App::Ack::ConfigLoader;
 use Cwd qw( realpath getcwd );
 use File::Spec ();
 use File::Temp ();
@@ -58,7 +58,7 @@ subtest 'without --noenv' => sub {
     local @ARGV = ('-f', 'lib/');
     local $ENV{'ACK_OPTIONS'} = '--perl';
 
-    my @sources = App::Ack::retrieve_arg_sources();
+    my @sources = App::Ack::ConfigLoader::retrieve_arg_sources();
     @sources    = remove_defaults_and_globals(@sources);
 
     is_deeply( [ realpath($sources[0]), @sources[1..5] ], [
@@ -75,7 +75,7 @@ subtest 'with --noenv' => sub {
     local @ARGV = ('--noenv', '-f', 'lib/');
     local $ENV{'ACK_OPTIONS'} = '--perl';
 
-    my @sources = App::Ack::retrieve_arg_sources();
+    my @sources = App::Ack::ConfigLoader::retrieve_arg_sources();
     @sources    = remove_defaults_and_globals(@sources);
 
     is_deeply( \@sources, [

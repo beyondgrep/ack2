@@ -3,8 +3,6 @@ package App::Ack;
 use warnings;
 use strict;
 
-use App::Ack::ConfigDefault;
-use App::Ack::ConfigFinder;
 use Getopt::Long 2.35 ();
 use File::Next 1.10;
 
@@ -67,85 +65,8 @@ No user-serviceable parts inside.  F<ack> is all that should use this.
 
 =head1 FUNCTIONS
 
-=head2 read_ackrc
-
-Reads the contents of the .ackrc file and returns the arguments.
-
 =cut
 
-sub retrieve_arg_sources {
-    my @arg_sources;
-
-    my $noenv;
-    my $ackrc;
-
-    Getopt::Long::Configure('default', 'no_auto_help', 'no_auto_version');
-    Getopt::Long::Configure('pass_through');
-    Getopt::Long::Configure('no_auto_abbrev');
-
-    Getopt::Long::GetOptions(
-        'noenv'   => \$noenv,
-        'ackrc=s' => \$ackrc,
-    );
-
-    Getopt::Long::Configure('default', 'no_auto_help', 'no_auto_version');
-
-    my @files;
-
-    if ( !$noenv ) {
-        my $finder = App::Ack::ConfigFinder->new;
-        @files  = $finder->find_config_files;
-    }
-    if ( $ackrc ) {
-        # we explicitly use open so we get a nice error message
-        # XXX this is a potential race condition!
-        if(open my $fh, '<', $ackrc) {
-            close $fh;
-        }
-        else {
-            die "Unable to load ackrc '$ackrc': $!"
-        }
-        push( @files, $ackrc );
-    }
-
-    push @arg_sources, Defaults => [ App::Ack::ConfigDefault::options() ];
-
-    foreach my $file ( @files) {
-        my @lines = read_rcfile($file);
-        push ( @arg_sources, $file, \@lines ) if @lines;
-    }
-
-    if ( $ENV{ACK_OPTIONS} && !$noenv ) {
-        push( @arg_sources, 'ACK_OPTIONS' => $ENV{ACK_OPTIONS} );
-    }
-
-    push( @arg_sources, 'ARGV' => [ @ARGV ] );
-
-    return @arg_sources;
-}
-
-sub read_rcfile {
-    my $file = shift;
-
-    return unless defined $file && -e $file;
-
-    my @lines;
-
-    open( my $fh, '<', $file ) or App::Ack::die( "Unable to read $file: $!" );
-    while ( my $line = <$fh> ) {
-        chomp $line;
-        $line =~ s/^\s+//;
-        $line =~ s/\s+$//;
-
-        next if $line eq '';
-        next if $line =~ /^#/;
-
-        push( @lines, $line );
-    }
-    close $fh;
-
-    return @lines;
-}
 
 =head2 create_ignore_rules( $what, $where, \@opts )
 
