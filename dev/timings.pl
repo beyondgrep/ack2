@@ -24,11 +24,11 @@ sub grab_versions {
 
         if($ack =~ /standalone/) {
             $version = 'HEAD';
-        } else {
+        }
+        else {
             my $output = `$^X $ack --noenv --version 2>&1`;
             if($output =~ /ack\s+(?<version>\d+[.]\d+(_\d+)?)/) {
                 $version = $+{'version'};
-                $version =~ s/_//;
             } else {
                 # XXX uh-oh
             }
@@ -172,7 +172,7 @@ if(@use_acks) {
 @acks = sort {
     return 1  if $a->{'version'} eq 'HEAD';
     return -1 if $b->{'version'} eq 'HEAD';
-    return $a->{'version'} <=> $b->{'version'};
+    return eval($a->{'version'}) + 0 <=> eval($b->{'version'}) + 0;
 } @acks;
 
 if($previous_timings) {
