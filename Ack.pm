@@ -67,47 +67,6 @@ No user-serviceable parts inside.  F<ack> is all that should use this.
 
 =cut
 
-
-=head2 create_ignore_rules( $what, $where, \@opts )
-
-Takes an array of options passed in on the command line and returns
-a hashref of information about them:
-
-*
-# is:  Match the filename exactly
-# ext: Match the extension
-# regex: Match against a Perl regular expression
-
-=cut
-
-sub create_ignore_rules {
-    my $what  = shift;
-    my $where = shift;
-    my $opts  = shift;
-
-    my @opts = @{$opts};
-
-    my %rules;
-
-    for my $opt ( @opts ) {
-        if ( $opt =~ /^(is|ext|regex),(.+)$/ ) {
-            my $method = $1;
-            my $arg    = $2;
-            if ( $method eq 'regex' ) {
-                push( @{$rules{regex}}, qr/$arg/ );
-            }
-            else {
-                ++$rules{$method}{$arg};
-            }
-        }
-        else {
-            App::Ack::die( "Invalid argument for --$what: $opt" );
-        }
-    }
-
-    return \%rules;
-}
-
 =head2 remove_dir_sep( $path )
 
 This functions removes a trailing path separator, if there is one, from its argument
