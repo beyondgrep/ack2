@@ -102,6 +102,7 @@ ALL_PM            = $(ACK_PM) $(RESOURCE_PM) $(RESOURCES_PM) $(BASIC_PM) $(FILTE
 
 TEST_VERBOSE=0
 TEST_FILES=t/*.t t/lib/*.t
+TEST_XT_FILES=xt/*.t
 
 .PHONY: tags critic
 
@@ -129,11 +130,16 @@ bininst : $(ACK)
 
 test: test_classic test_standalone
 
+testfull: test_classic test_standalone test_xt
+
 test_classic: all
 	$(FULLPERLRUN) t/runtests.pl 0 $(TEST_VERBOSE) "$(INST_LIB)" "$(INST_ARCHLIB)" $(TEST_FILES)
 
 test_standalone: all ack-standalone
 	$(FULLPERLRUN) t/runtests.pl 1 $(TEST_VERBOSE) "$(INST_LIB)" "$(INST_ARCHLIB)" $(TEST_FILES)
+
+test_xt: all
+	$(FULLPERLRUN) t/runtests.pl 0 $(TEST_VERBOSE) "$(INST_LIB)" "$(INST_ARCHLIB)" $(TEST_XT_FILES)
 
 PROF_ARGS = -Mblib blib/script/ack foo ~/parrot
 
