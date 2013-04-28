@@ -130,7 +130,7 @@ bininst : $(ACK)
 
 test: test_classic test_standalone
 
-testfull: test_classic test_standalone test_xt
+fulltest: test_classic test_standalone test_xt
 
 test_classic: all
 	$(FULLPERLRUN) t/runtests.pl 0 $(TEST_VERBOSE) "$(INST_LIB)" "$(INST_ARCHLIB)" $(TEST_FILES)
