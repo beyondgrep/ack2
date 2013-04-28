@@ -107,7 +107,7 @@ TEST_XT_FILES=xt/*.t
 .PHONY: tags critic
 
 tags:
-	/usr/local/bin/ctags -f tags --recurse --totals \
+	ctags -f tags --recurse --totals \
 		--exclude=blib \
 		--exclude=.git \
 		--exclude='*~' \
