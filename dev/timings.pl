@@ -157,6 +157,7 @@ if(-e '.timings.json') {
 
 my @acks = map { File::Spec->catfile('garage', $_) } read_dir('garage');
 push @acks, 'ack-standalone';
+@acks = grep { !/_/ } @acks;  # Skip dev versions
 
 @acks = grab_versions(@acks);
 if(@use_acks) {
