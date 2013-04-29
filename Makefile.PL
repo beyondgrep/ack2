@@ -15,20 +15,20 @@ my %parms = (
     VERSION_FROM        => 'Ack.pm',
 
     PM                  => {
-        'Ack.pm'            => '$(INST_LIBDIR)/App/Ack.pm',
-        'Resource.pm'       => '$(INST_LIBDIR)/App/Ack/Resource.pm',
-        'Resources.pm'      => '$(INST_LIBDIR)/App/Ack/Resources.pm',
-        'Basic.pm'          => '$(INST_LIBDIR)/App/Ack/Resource/Basic.pm',
-        'ConfigDefault.pm'  => '$(INST_LIBDIR)/App/Ack/ConfigDefault.pm',
-        'ConfigFinder.pm'   => '$(INST_LIBDIR)/App/Ack/ConfigFinder.pm',
-        'ConfigLoader.pm'   => '$(INST_LIBDIR)/App/Ack/ConfigLoader.pm',
-        'Filter.pm'         => '$(INST_LIBDIR)/App/Ack/Filter.pm',
-        'Extension.pm'      => '$(INST_LIBDIR)/App/Ack/Filter/Extension.pm',
-        'FirstLineMatch.pm' => '$(INST_LIBDIR)/App/Ack/Filter/FirstLineMatch.pm',
-        'Is.pm'             => '$(INST_LIBDIR)/App/Ack/Filter/Is.pm',
-        'Match.pm'          => '$(INST_LIBDIR)/App/Ack/Filter/Match.pm',
-        'Default.pm'        => '$(INST_LIBDIR)/App/Ack/Filter/Default.pm',
-        'Inverse.pm'        => '$(INST_LIBDIR)/App/Ack/Filter/Inverse.pm',
+        'Ack.pm'                    => '$(INST_LIBDIR)/App/Ack.pm',
+        'Resource.pm'               => '$(INST_LIBDIR)/App/Ack/Resource.pm',
+        'Resource/Resources.pm'     => '$(INST_LIBDIR)/App/Ack/Resources.pm',
+        'Resource/Basic.pm'         => '$(INST_LIBDIR)/App/Ack/Resource/Basic.pm',
+        'Config/ConfigDefault.pm'   => '$(INST_LIBDIR)/App/Ack/ConfigDefault.pm',
+        'Config/ConfigFinder.pm'    => '$(INST_LIBDIR)/App/Ack/ConfigFinder.pm',
+        'Config/ConfigLoader.pm'    => '$(INST_LIBDIR)/App/Ack/ConfigLoader.pm',
+        'Filter.pm'                 => '$(INST_LIBDIR)/App/Ack/Filter.pm',
+        'Filter/Extension.pm'       => '$(INST_LIBDIR)/App/Ack/Filter/Extension.pm',
+        'Filter/FirstLineMatch.pm'  => '$(INST_LIBDIR)/App/Ack/Filter/FirstLineMatch.pm',
+        'Filter/Is.pm'              => '$(INST_LIBDIR)/App/Ack/Filter/Is.pm',
+        'Filter/Match.pm'           => '$(INST_LIBDIR)/App/Ack/Filter/Match.pm',
+        'Filter/Default.pm'         => '$(INST_LIBDIR)/App/Ack/Filter/Default.pm',
+        'Filter/Inverse.pm'         => '$(INST_LIBDIR)/App/Ack/Filter/Inverse.pm',
     },
     EXE_FILES               => [ 'ack' ],
 
@@ -86,18 +86,18 @@ sub MY::postamble {
 ACK               = ack
 ACK_PM            = Ack.pm
 RESOURCE_PM       = Resource.pm
-RESOURCES_PM      = Resources.pm
-BASIC_PM          = Basic.pm
-CONFIG_DEFAULT_PM = ConfigDefault.pm
-CONFIG_FINDER_PM  = ConfigFinder.pm
-CONFIG_LOADER_PM  = ConfigLoader.pm
+RESOURCES_PM      = Resource/Resources.pm
+BASIC_PM          = Resource/Basic.pm
+CONFIG_DEFAULT_PM = Config/ConfigDefault.pm
+CONFIG_FINDER_PM  = Config/ConfigFinder.pm
+CONFIG_LOADER_PM  = Config/ConfigLoader.pm
 FILTER_PM         = Filter.pm
-EXT_FILTER_PM     = Extension.pm
-FIRST_FILTER_PM   = FirstLineMatch.pm
-IS_FILTER_PM      = Is.pm
-MATCH_FILTER_PM   = Match.pm
-DEFAULT_FILTER_PM = Default.pm
-INVERSE_FILTER_PM = Inverse.pm
+EXT_FILTER_PM     = Filter/Extension.pm
+FIRST_FILTER_PM   = Filter/FirstLineMatch.pm
+IS_FILTER_PM      = Filter/Is.pm
+MATCH_FILTER_PM   = Filter/Match.pm
+DEFAULT_FILTER_PM = Filter/Default.pm
+INVERSE_FILTER_PM = Filter/Inverse.pm
 ALL_PM            = $(ACK_PM) $(RESOURCE_PM) $(RESOURCES_PM) $(BASIC_PM) $(FILTER_PM) $(EXT_FILTER_PM) $(FIRST_FILTER_PM) $(IS_FILTER_PM) $(MATCH_FILTER_PM) $(DEFAULT_FILTER_PM) $(INVERSE_FILTER_PM) $(CONFIG_FINDER_PM) $(CONFIG_LOADER_PM) $(CONFIG_DEFAULT_PM)
 
 TEST_VERBOSE=0
@@ -115,10 +115,10 @@ tags:
 		--languages=Perl --langmap=Perl:+.t \
 
 critic:
-	perlcritic -1 -q -profile perlcriticrc $(ACK) $(ALL_PM) t/*.t
+	perlcritic -1 -q -profile dev/perlcriticrc $(ACK) $(ALL_PM) t/*.t
 
-ack-standalone : $(ACK) $(ALL_PM) squash Makefile
-	$(PERL) squash %s $(ACK) File::Next $(ALL_PM) > ack-standalone
+ack-standalone : $(ACK) $(ALL_PM) dev/squash Makefile
+	$(PERL) dev/squash %s $(ACK) File::Next $(ALL_PM) > ack-standalone
 	$(FIXIN) ack-standalone
 	-$(NOECHO) $(CHMOD) $(PERM_RWX) ack-standalone
 	$(PERL) -i -p -e "s/\\\$$GIT_REVISION\s*=\s*''/\\\$$GIT_REVISION = q{$$(git rev-parse --short HEAD)}/" ack-standalone
