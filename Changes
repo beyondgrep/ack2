@@ -6,6 +6,9 @@ NEXT
 We now ignore the node_modules directories created by npm.  Thanks,
 Konrad Borowski.
 
+[FIXES]
+Command-line options now override options set in ackrc files.
+
 
 2.04    Fri Apr 26 22:47:55 CDT 2013
 ====================================
