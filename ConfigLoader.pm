@@ -623,7 +623,9 @@ sub check_for_mutually_exclusive_options {
 sub process_args {
     my $arg_sources = \@_;
 
-    my %opt;
+    my %opt = (
+        pager => $ENV{ACK_PAGER},
+    );
 
     check_for_mutually_exclusive_options($arg_sources);
 
