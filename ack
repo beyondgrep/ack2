@@ -1907,14 +1907,14 @@ using C<--ignore-ack-defaults>.
 
 Options are then loaded from the global ackrc.  This is located at
 C</etc/ackrc> on Unix-like systems, and
-C<C:\Documents and Settings\All Users\Application Data> on Windows.
+C<C:\Documents and Settings\All Users\Application Data\ackrc> on Windows.
 This can be omitted using C<--noenv>.
 
 =item * User ackrc
 
 Options are then loaded from the user's ackrc.  This is located at
 C<$HOME/.ackrc> on Unix-like systems, and
-C<C:\Documents and Settings\$USER\Application Data>.  If a different
+C<C:\Documents and Settings\$USER\Application Data\ackrc>.  If a different
 ackrc is desired, it may be overriden with the C<$ACKRC> environment
 variable.
 This can be omitted using C<--noenv>.
