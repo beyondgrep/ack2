@@ -73,6 +73,25 @@ sub process_filter_spec {
     }
 }
 
+sub uninvert_filter {
+    my ( $opt, @filters ) = @_;
+
+    return unless defined $opt->{filters} && @filters;
+
+    # loop through all the registered filters
+    # If we hit one that matches this extension and it's inverted, we need
+    # to delete it from the options
+    for ( my $i = 0; $i < @{ $opt->{filters} }; $i++ ) {
+        my $opt_filter = @{ $opt->{filters} }[$i];
+
+        # XXX do a real list comparison? This just checks string equivalence
+        if ( $opt_filter->is_inverted() && "$opt_filter->{filter}" eq "@filters" ) {
+            splice @{ $opt->{filters} }, $i, 1;
+            $i--;
+        }
+    }
+}
+
 sub process_filetypes {
     my ( $opt, $arg_sources ) = @_;
 
@@ -97,6 +116,9 @@ sub process_filetypes {
             my @filters = @{ $App::Ack::mappings{$name} };
             if ( not $value ) {
                 @filters = map { $_->invert() } @filters;
+            }
+            else {
+                uninvert_filter( $opt, @filters );
             }
 
             push @{ $opt->{'filters'} }, @filters;

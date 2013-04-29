@@ -5,7 +5,7 @@ use warnings;
 use lib 't';
 
 use Cwd ();
-use Test::More tests => 12;
+use Test::More tests => 14;
 use File::Next ();
 use File::Temp ();
 use Util;
@@ -87,11 +87,24 @@ TEST_NOTYPE_ACKRC_CMD_LINE_OVERRIDE: {
 END_ACKRC
 
     my @expected = (
-File::Next::reslash('t/swamp/html.html') . ':2:<html><head><title>Boring test file </title></head>',
 File::Next::reslash('t/swamp/html.htm') . ':2:<html><head><title>Boring test file </title></head>',
+File::Next::reslash('t/swamp/html.html') . ':2:<html><head><title>Boring test file </title></head>',
     );
 
     my @lines = run_ack('--html', '<title>', 't/swamp', {
+        ackrc => \$ackrc,
+    });
+    is_deeply \@lines, \@expected;
+}
+
+TEST_TYPE_ACKRC_CMD_LINE_OVERRIDE: {
+    my $ackrc = <<'END_ACKRC';
+--html
+END_ACKRC
+
+    my @expected = ();
+
+    my @lines = run_ack('--nohtml', '<title>', 't/swamp', {
         ackrc => \$ackrc,
     });
     is_deeply \@lines, \@expected;
