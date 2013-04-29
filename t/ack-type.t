@@ -5,7 +5,7 @@ use warnings;
 use lib 't';
 
 use Cwd ();
-use Test::More tests => 14;
+use Test::More tests => 18;
 use File::Next ();
 use File::Temp ();
 use Util;
@@ -79,6 +79,21 @@ TEST_NOTYPES: {
     is scalar(@$stdout), 0;
     ok scalar(@$stderr) > 0;
     like $stderr->[0], qr/Unknown type 'perl'/ or diag(explain($stderr));
+}
+
+TEST_NOTYPE_OVERRIDE: {
+    my @expected = (
+File::Next::reslash('t/swamp/html.html') . ':2:<html><head><title>Boring test file </title></head>',
+File::Next::reslash('t/swamp/html.htm') . ':2:<html><head><title>Boring test file </title></head>',
+    );
+
+    my @lines = run_ack('--nohtml', '--html', '<title>', 't/swamp');
+    is_deeply \@lines, \@expected;
+}
+
+TEST_TYPE_OVERRIDE: {
+    my @lines = run_ack('--html', '--nohtml', '<title>', 't/swamp');
+    is_deeply \@lines, [];
 }
 
 TEST_NOTYPE_ACKRC_CMD_LINE_OVERRIDE: {
