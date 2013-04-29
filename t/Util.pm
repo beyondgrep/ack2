@@ -452,7 +452,11 @@ BEGIN {
             else {
                 $pty->make_slave_controlling_terminal();
                 my $slave = $pty->slave();
-                $slave->clone_winsize_from(\*STDIN);
+                if(-t *STDIN) {
+                    # XXX is there something we can fall back on? Maybe
+                    #     re-opening /dev/console?
+                    $slave->clone_winsize_from(\*STDIN);
+                }
                 $slave->set_raw();
 
                 open STDIN,  '<&', $slave->fileno();
