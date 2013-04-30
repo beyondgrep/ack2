@@ -98,7 +98,7 @@ sub _options_block {
 --ignore-file=match:/core\.\d+$/
 
 # minified Javascript
---ignore-file=match:/[.]min[.]js$/
+--ignore-file=match:/[.-]min[.]js$/
 --ignore-file=match:/[.]js[.]min$/
 
 # minified CSS
