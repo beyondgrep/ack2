@@ -317,13 +317,20 @@ sub lists_match {
         $path = File::Next::reslash( $path ); ## no critic (Variables::ProhibitPackageVars)
     }
 
+    my $ok;
     my $rc = eval 'use Test::Differences; 1;';
     if ( $rc ) {
-        return eq_or_diff( [@actual], [@expected], $msg );
+        $ok = eq_or_diff( [@actual], [@expected], $msg );
     }
     else {
-        return is_deeply( [@actual], [@expected], $msg );
+        $ok = is_deeply( [@actual], [@expected], $msg );
     }
+
+    if ( !$ok ) {
+        diag( explain( actual => [@actual], expected => [@expected] ) );
+    }
+
+    return $ok;
 }
 
 sub ack_lists_match {
