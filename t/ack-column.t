@@ -63,4 +63,3 @@ HERE
 
     lists_match( \@results, \@expected, 'Checking without column numbers' );
 }
-

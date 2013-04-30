@@ -116,4 +116,3 @@ EOF
         lists_match( \@results, \@expected, 'No grouping' );
     }
 }
-
