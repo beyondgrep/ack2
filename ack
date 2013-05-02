@@ -516,6 +516,8 @@ sub print_line_with_options {
                 foreach my $index_pair ( @capture_indices ) {
                     my ( $match_start, $match_end ) = @{$index_pair};
 
+                    next unless defined($match_start);
+
                     my $substring = substr( $line,
                         $offset + $match_start, $match_end - $match_start );
                     my $substitution = Term::ANSIColor::colored( $substring,
@@ -534,6 +536,7 @@ sub print_line_with_options {
 
                     $matched = 1;
                     my ( $match_start, $match_end ) = ($-[0], $+[0]);
+                    next unless defined($match_start);
 
                     my $substring = substr( $line, $match_start,
                         $match_end - $match_start );
