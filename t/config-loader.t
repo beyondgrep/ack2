@@ -229,6 +229,8 @@ do {
         expected_targets => [],
         'PAGER is not used if --pager is specified with an argument',
     );
+
+    # XXX what if --pager is specified but PAGER isn't set?
 };
 
 done_testing;
