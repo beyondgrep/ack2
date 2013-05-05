@@ -206,4 +206,29 @@ do {
     );
 };
 
+do {
+    local $ENV{'PAGER'} = './test-pager';
+
+    test_loader(
+        argv             => [],
+        expected_opts    => { %defaults },
+        expected_targets => [],
+        q{PAGER doesn't affect ack by default},
+    );
+
+    test_loader(
+        argv             => ['--pager'],
+        expected_opts    => { %defaults, pager => './test-pager' },
+        expected_targets => [],
+        'PAGER is used if --pager is specified with no argument',
+    );
+
+    test_loader(
+        argv             => ['--pager=./test-pager --skip=2'],
+        expected_opts    => { %defaults, pager => './test-pager --skip=2' },
+        expected_targets => [],
+        'PAGER is not used if --pager is specified with an argument',
+    );
+};
+
 done_testing;
