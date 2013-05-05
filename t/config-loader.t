@@ -131,4 +131,15 @@ test_loader(
     '--before-context should set before_context'
 );
 
+do {
+    local $ENV{'ACK_PAGER'} = './test-pager --skip=2';
+
+    test_loader(
+        argv             => [],
+        expected_opts    => { %defaults, pager => './test-pager --skip=2' },
+        expected_targets => [],
+        'ACK_PAGER should set the default pager',
+    );
+};
+
 done_testing;
