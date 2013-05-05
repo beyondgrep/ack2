@@ -278,7 +278,11 @@ EOT
         'n|no-recurse'      => \$opt->{n},
         o                   => sub { $opt->{output} = '$&' },
         'output=s'          => \$opt->{output},
-        'pager=s'           => \$opt->{pager},
+        'pager:s'           => sub {
+            my ( undef, $value ) = @_;
+
+            $opt->{pager} = $value || $ENV{PAGER};
+        },
         'noignore-directory|noignore-dir=s'
                             => sub {
                                 my ( undef, $dir ) = @_;
