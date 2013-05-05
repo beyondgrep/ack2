@@ -624,7 +624,7 @@ sub process_args {
     my $arg_sources = \@_;
 
     my %opt = (
-        pager => $ENV{ACK_PAGER},
+        pager => $ENV{ACK_PAGER_COLOR} || $ENV{ACK_PAGER},
     );
 
     check_for_mutually_exclusive_options($arg_sources);
