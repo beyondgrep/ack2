@@ -131,6 +131,8 @@ test_loader(
     '--before-context should set before_context'
 );
 
+# XXX These tests should all be replicated to work off of the ack command line
+#     tools instead of its internal APIs!
 do {
     local $ENV{'ACK_PAGER'} = './test-pager --skip=2';
 
@@ -139,6 +141,68 @@ do {
         expected_opts    => { %defaults, pager => './test-pager --skip=2' },
         expected_targets => [],
         'ACK_PAGER should set the default pager',
+    );
+
+    test_loader(
+        argv             => ['--pager=./test-pager'],
+        expected_opts    => { %defaults, pager => './test-pager' },
+        expected_targets => [],
+        '--pager should override ACK_PAGER',
+    );
+
+    test_loader(
+        argv             => ['--nopager'],
+        expected_opts    => { %defaults },
+        expected_targets => [],
+        '--nopager should suppress ACK_PAGER',
+    );
+};
+
+do {
+    local $ENV{'ACK_PAGER_COLOR'} = './test-pager --skip=2';
+
+    test_loader(
+        argv             => [],
+        expected_opts    => { %defaults, pager => './test-pager --skip=2' },
+        expected_targets => [],
+        'ACK_PAGER_COLOR should set the default pager',
+    );
+
+    test_loader(
+        argv             => ['--pager=./test-pager'],
+        expected_opts    => { %defaults, pager => './test-pager' },
+        expected_targets => [],
+        '--pager should override ACK_PAGER_COLOR',
+    );
+
+    test_loader(
+        argv             => ['--nopager'],
+        expected_opts    => { %defaults },
+        expected_targets => [],
+        '--nopager should suppress ACK_PAGER_COLOR',
+    );
+
+    local $ENV{'ACK_PAGER'} = './test-pager --skip=3';
+
+    test_loader(
+        argv             => [],
+        expected_opts    => { %defaults, pager => './test-pager --skip=2' },
+        expected_targets => [],
+        'ACK_PAGER_COLOR should override ACK_PAGER',
+    );
+
+    test_loader(
+        argv             => ['--pager=./test-pager'],
+        expected_opts    => { %defaults, pager => './test-pager' },
+        expected_targets => [],
+        '--pager should override ACK_PAGER_COLOR and ACK_PAGER',
+    );
+
+    test_loader(
+        argv             => ['--nopager'],
+        expected_opts    => { %defaults },
+        expected_targets => [],
+        '--nopager should suppress ACK_PAGER_COLOR and ACK_PAGER',
     );
 };
 
