@@ -109,7 +109,7 @@ sub _options_block {
 # Filetypes defined
 
 # Perl http://perl.org/
---type-add=perl:ext:pl,pm,pod,t
+--type-add=perl:ext:pl,pm,pod,t,psgi
 --type-add=perl:firstlinematch:/^#!.*\bperl/
 
 # Makefiles http://www.gnu.org/s/make/
