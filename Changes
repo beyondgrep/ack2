@@ -15,9 +15,11 @@ Command-line options now override options set in ackrc files.
 
 ACK_PAGER and ACK_PAGER_COLOR now work as advertised.
 
-Fix a bug resulting in uninitialized variable warnings.
+Fix a bug resulting in uninitialized variable warnings when more
+than one capture group was specified in the search pattern.
 
-Make sure ack is happy to build and test under cron and other console-less environments.
+Make sure ack is happy to build and test under cron and other
+console-less environments.
 
 
 2.04    Fri Apr 26 22:47:55 CDT 2013
