@@ -6,10 +6,18 @@ NEXT
 We now ignore the node_modules directories created by npm.  Thanks,
 Konrad Borowski.
 
+--pager without an argument implies --pager=$PAGER.
+
 --perl now recognizes Plack-style .psgi files.  Thanks, Ron Savage.
 
 [FIXES]
 Command-line options now override options set in ackrc files.
+
+ACK_PAGER and ACK_PAGER_COLOR now work as advertised.
+
+Fix a bug resulting in uninitialized variable warnings.
+
+Make sure ack is happy to build and test under cron and other console-less environments.
 
 
 2.04    Fri Apr 26 22:47:55 CDT 2013
