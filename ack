@@ -846,7 +846,7 @@ sub main {
     }
 
     if ( not defined $opt->{color} ) {
-        $opt->{color} = !App::Ack::output_to_pipe() && !$App::Ack::is_windows;
+        $opt->{color} = !App::Ack::output_to_pipe();
     }
     if ( not defined $opt->{heading} and not defined $opt->{break}  ) {
         $opt->{heading} = $opt->{break} = !App::Ack::output_to_pipe();
