@@ -21,6 +21,7 @@ than one capture group was specified in the search pattern.
 Make sure ack is happy to build and test under cron and other
 console-less environments.
 
+Colored output is now supported on Windows.
 
 2.04    Fri Apr 26 22:47:55 CDT 2013
 ====================================
