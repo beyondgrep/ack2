@@ -846,7 +846,11 @@ sub main {
     }
 
     if ( not defined $opt->{color} ) {
-        $opt->{color} = !App::Ack::output_to_pipe();
+        my $windows_color = 1;
+        if ( $App::Ack::is_windows ) {
+            $windows_color = eval { require Win32::Console::ANSI; }
+        }
+        $opt->{color} = !App::Ack::output_to_pipe() && $windows_color;
     }
     if ( not defined $opt->{heading} and not defined $opt->{break}  ) {
         $opt->{heading} = $opt->{break} = !App::Ack::output_to_pipe();
