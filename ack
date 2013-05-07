@@ -243,6 +243,7 @@ sub show_types {
 # Set default colors, load Term::ANSIColor
 sub load_colors {
     eval 'use Term::ANSIColor 1.10 ()';
+    eval 'use Win32::Console::ANSI' if $App::Ack::is_windows;
 
     $ENV{ACK_COLOR_MATCH}    ||= 'black on_yellow';
     $ENV{ACK_COLOR_FILENAME} ||= 'bold green';
