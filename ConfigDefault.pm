@@ -202,6 +202,9 @@ sub _options_block {
 # JSP http://www.oracle.com/technetwork/java/javaee/jsp/index.html
 --type-add=jsp:ext:jsp,jspx,jhtm,jhtml
 
+# Less http://www.lesscss.org/
+--type-add=less:ext:less
+
 # Common Lisp http://common-lisp.net/
 --type-add=lisp:ext:lisp,lsp
 

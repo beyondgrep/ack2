@@ -33,6 +33,7 @@ html
 java
 js
 jsp
+less
 lisp
 lua
 make
