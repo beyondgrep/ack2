@@ -18,6 +18,7 @@ batch
 cc
 cfmx
 clojure
+coffeescript
 cpp
 csharp
 css

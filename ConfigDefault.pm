@@ -157,6 +157,9 @@ sub _options_block {
 # C header files
 --type-add=hh:ext:h
 
+# CoffeeScript http://coffeescript.org/
+--type-add=coffeescript:ext:coffee
+
 # C++
 --type-add=cpp:ext:cpp,cc,cxx,m,hpp,hh,h,hxx
 
