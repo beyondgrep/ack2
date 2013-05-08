@@ -47,6 +47,7 @@ python
 rake
 ruby
 rust
+sass
 scala
 scheme
 shell

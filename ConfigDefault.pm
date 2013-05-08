@@ -242,6 +242,9 @@ sub _options_block {
 # Rust http://www.rust-lang.org/
 --type-add=rust:ext:rs
 
+# Sass http://sass-lang.com
+--type-add=sass:ext:sass,scss
+
 # Scala http://www.scala-lang.org/
 --type-add=scala:ext:scala
 
