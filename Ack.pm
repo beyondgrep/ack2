@@ -226,10 +226,10 @@ Search output:
   -c, --count                   Show number of lines matching per file
   --[no]column                  Show the column number of the first match
 
-  -A NUM, --after-context=NUM   Print NUM lines of trailing context after matching
-                                lines.
-  -B NUM, --before-context=NUM  Print NUM lines of leading context before matching
-                                lines.
+  -A NUM, --after-context=NUM   Print NUM lines of trailing context after
+                                matching lines.
+  -B NUM, --before-context=NUM  Print NUM lines of leading context before
+                                matching lines.
   -C [NUM], --context[=NUM]     Print NUM lines (default 2) of output context.
 
   --print0                      Print null byte as separator between filenames,
@@ -240,14 +240,16 @@ Search output:
 
 
 File presentation:
-  --pager=COMMAND               Pipes all ack output through COMMAND.  For example,
-                                --pager="less -R".  Ignored if output is redirected.
-  --nopager                     Do not send output through a pager.  Cancels any
-                                setting in ~/.ackrc, ACK_PAGER or ACK_PAGER_COLOR.
-  --[no]heading                 Print a filename heading above each file's results.
-                                (default: on when used interactively)
-  --[no]break                   Print a break between results from different files.
-                                (default: on when used interactively)
+  --pager=COMMAND               Pipes all ack output through COMMAND.  For
+                                example, --pager="less -R".  Ignored if output
+                                is redirected.
+  --nopager                     Do not send output through a pager.  Cancels
+                                any setting in ~/.ackrc, ACK_PAGER or
+                                ACK_PAGER_COLOR.
+  --[no]heading                 Print a filename heading above each file's
+                                results.  (default: on when used interactively)
+  --[no]break                   Print a break between results from different
+                                files.  (default: on when used interactively)
   --group                       Same as --heading --break
   --nogroup                     Same as --noheading --nobreak
   --[no]color                   Highlight the matching text (default: on unless
@@ -255,54 +257,62 @@ File presentation:
   --[no]colour                  Same as --[no]color
   --color-filename=COLOR
   --color-match=COLOR
-  --color-lineno=COLOR          Set the color for filenames, matches, and line numbers.
+  --color-lineno=COLOR          Set the color for filenames, matches, and line
+                                numbers.
   --flush                       Flush output immediately, even when ack is used
                                 non-interactively (when output goes to a pipe or
                                 file).
 
 
 File finding:
-  -f                            Only print the files selected, without searching.
-                                The PATTERN must not be specified.
-  -g                            Same as -f, but only select files matching PATTERN.
+  -f                            Only print the files selected, without
+                                searching.  The PATTERN must not be specified.
+  -g                            Same as -f, but only select files matching
+                                PATTERN.
   --sort-files                  Sort the found files lexically.
   --show-types                  Show which types each file has.
   --files-from=FILE             Read the list of files to search from FILE.
   -x                            Read the list of files to search from STDIN.
 
 File inclusion/exclusion:
-  --[no]ignore-dir=name         Add/Remove directory from the list of ignored dirs
+  --[no]ignore-dir=name         Add/remove directory from list of ignored dirs
   --[no]ignore-directory=name   Synonym for ignore-dir
   --ignore-file=filter          Add filter for ignoring files
-  -r, -R, --recurse             Recurse into subdirectories (ack's default behavior)
+  -r, -R, --recurse             Recurse into subdirectories (default: on)
   -n, --no-recurse              No descending into subdirectories
   --[no]follow                  Follow symlinks.  Default is off.
-  -k, --known-types             Include only files with types that ack recognizes.
+  -k, --known-types             Include only files of types that ack recognizes.
 
-  --type=X                      Include only X files, where X is a recognized filetype.
+  --type=X                      Include only X files, where X is a recognized
+                                filetype.
   --type=noX                    Exclude X files.
                                 See "ack --help-types" for supported filetypes.
 
 File type specification:
   --type-set TYPE:FILTER:FILTERARGS
-                                Files with the given FILTERARGS applied to the given
-                                FILTER are recognized as being of type TYPE. This
-                                replaces an existing definition for type TYPE.
+                                Files with the given FILTERARGS applied to the
+                                given FILTER are recognized as being of type
+                                TYPE. This replaces an existing definition for
+                                type TYPE.
   --type-add TYPE:FILTER:FILTERARGS
-                                Files with the given FILTERARGS applied to the given
-                                FILTER are recognized as being of type TYPE.
+                                Files with the given FILTERARGS applied to the
+                                given FILTER are recognized as being type TYPE.
   --type-del TYPE               Removes all filters associated with TYPE.
 
 
 Miscellaneous:
-  --[no]env                     Ignore environment variables and global ackrc files.  --env is legal but redundant.
+  --[no]env                     Ignore environment variables and global ackrc
+                                files.  --env is legal but redundant.
   --ackrc=filename              Specify an ackrc file to use
-  --ignore-ack-defaults         Ignore the default definitions that ack includes.
-  --create-ackrc                Outputs a default ackrc for your customization to standard output.
+  --ignore-ack-defaults         Ignore default definitions included with ack.
+  --create-ackrc                Outputs a default ackrc for your customization
+                                to standard output.
   --help, -?                    This help
   --help-types                  Display all known types
-  --dump                        Dump information on which options are loaded from which RC files
-  --[no]filter                  Force ack to treat standard input as a pipe (--filter) or tty (--nofilter)
+  --dump                        Dump information on which options are loaded
+                                from which RC files
+  --[no]filter                  Force ack to treat standard input as a pipe
+                                (--filter) or tty (--nofilter)
   --man                         Man page
   --version                     Display version & copyright
   --thpppt                      Bill the Cat
