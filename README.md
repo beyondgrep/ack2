@@ -1,5 +1,7 @@
 # ack 2.0
 
+[![Build Status](https://travis-ci.org/lenniboy/ack2.png?branch=dev)](https://travis-ci.org/lenniboy/ack2)
+
 ack 2.0 is a text searching utility optimized for searching trees of source code.
 
 # Building

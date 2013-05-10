@@ -1,0 +1,8 @@
+language: perl
+perl:
+  - "5.10"
+notifications:
+email:
+  on_success: never
+  on_failure: change
+
