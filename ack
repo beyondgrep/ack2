@@ -296,7 +296,7 @@ sub get_file_id {
 }
 
 # Returns a regex object based on a string and command-line options.
-# Dies when the regex $str is undefinied (i.e. not given on command line).
+# Dies when the regex $str is undefined (i.e. not given on command line).
 
 sub build_regex {
     my $str = shift;
@@ -1150,7 +1150,7 @@ count.
 
 =item B<--[no]color>, B<--[no]colour>
 
-B<--color> highlights the matching text.  B<--nocolor> supresses
+B<--color> highlights the matching text.  B<--nocolor> suppresses
 the color.  This is on by default unless the output is redirected.
 
 On Windows, this option is off by default unless the
@@ -1205,12 +1205,12 @@ as a path to search.
 =item B<--files-from=I<FILE>>
 
 The list of files to be searched is specified in I<FILE>.  The list of
-files are seperated by newlines.  If I<FILE> is C<->, the list is loaded
+files are separated by newlines.  If I<FILE> is C<->, the list is loaded
 from standard input.
 
 =item B<--[no]filter>
 
-Forces ack to act as if it were recieving input via a pipe.
+Forces ack to act as if it were receiving input via a pipe.
 
 =item B<--[no]follow>
 
@@ -1923,7 +1923,7 @@ This can be omitted using C<--noenv>.
 Options are then loaded from the user's ackrc.  This is located at
 C<$HOME/.ackrc> on Unix-like systems, and
 C<C:\Documents and Settings\$USER\Application Data\ackrc>.  If a different
-ackrc is desired, it may be overriden with the C<$ACKRC> environment
+ackrc is desired, it may be overridden with the C<$ACKRC> environment
 variable.
 This can be omitted using C<--noenv>.
 
@@ -1936,7 +1936,7 @@ directory, etc.  This can be omitted using C<--noenv>.
 
 =item * ACK_OPTIONS
 
-Options are then loaded from the enviroment variable C<ACK_OPTIONS>.  This can
+Options are then loaded from the environment variable C<ACK_OPTIONS>.  This can
 be omitted using C<--noenv>.
 
 =item * Command line
@@ -1956,7 +1956,7 @@ A lot of changes were made for ack 2; here is a list of them.
 =item *
 
 When no selectors are specified, ack 1.x only searches through files that
-it can map to a file type.  ack 2.x, by constrast, will search through
+it can map to a file type.  ack 2.x, by contrast, will search through
 every regular, non-binary file that is not explicitly ignored via
 B<--ignore-file> or B<--ignore-dir>.  This is similar to the behavior of the
 B<-a/--all> option in ack 1.x.
