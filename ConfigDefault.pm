@@ -157,6 +157,9 @@ sub _options_block {
 # C header files
 --type-add=hh:ext:h
 
+# CoffeeScript http://coffeescript.org/
+--type-add=coffeescript:ext:coffee
+
 # C++
 --type-add=cpp:ext:cpp,cc,cxx,m,hpp,hh,h,hxx
 
@@ -202,6 +205,9 @@ sub _options_block {
 # JSP http://www.oracle.com/technetwork/java/javaee/jsp/index.html
 --type-add=jsp:ext:jsp,jspx,jhtm,jhtml
 
+# Less http://www.lesscss.org/
+--type-add=less:ext:less
+
 # Common Lisp http://common-lisp.net/
 --type-add=lisp:ext:lisp,lsp
 
@@ -241,6 +247,9 @@ sub _options_block {
 
 # Rust http://www.rust-lang.org/
 --type-add=rust:ext:rs
+
+# Sass http://sass-lang.com
+--type-add=sass:ext:sass,scss
 
 # Scala http://www.scala-lang.org/
 --type-add=scala:ext:scala
