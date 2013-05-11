@@ -10,6 +10,8 @@ Konrad Borowski.
 
 --perl now recognizes Plack-style .psgi files.  Thanks, Ron Savage.
 
+Added filetypes for Coffescript, LESS, and SASS.
+
 [FIXES]
 Command-line options now override options set in ackrc files.
 
