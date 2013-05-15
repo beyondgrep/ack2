@@ -33,6 +33,7 @@ hh
 html
 java
 js
+json
 jsp
 less
 lisp
