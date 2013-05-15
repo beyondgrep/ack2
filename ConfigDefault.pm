@@ -205,6 +205,9 @@ sub _options_block {
 # JSP http://www.oracle.com/technetwork/java/javaee/jsp/index.html
 --type-add=jsp:ext:jsp,jspx,jhtm,jhtml
 
+# JSON http://www.json.org/
+--type-add=json:ext:json
+
 # Less http://www.lesscss.org/
 --type-add=less:ext:less
 
