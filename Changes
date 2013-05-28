@@ -1,6 +1,6 @@
 History file for ack.  http://beyondgrep.com/
 
-NEXT
+2.05_01 Tue May 28 10:12:04 CDT 2013
 ====================================
 [ENHANCEMENTS]
 We now ignore the node_modules directories created by npm.  Thanks,
@@ -10,7 +10,7 @@ Konrad Borowski.
 
 --perl now recognizes Plack-style .psgi files.  Thanks, Ron Savage.
 
-Added filetypes for Coffescript, JSON, LESS, and SASS.
+Added filetypes for Coffescript, JSON, LESS, and Sass.
 
 [FIXES]
 Command-line options now override options set in ackrc files.
