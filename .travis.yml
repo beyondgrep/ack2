@@ -1,0 +1,9 @@
+language: perl
+perl:
+  - "5.10"
+notifications:
+install: "cpanm --installdeps --notest . && cpanm IO::Pty"
+email:
+  on_success: never
+  on_failure: change
+
