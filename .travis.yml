@@ -1,0 +1,15 @@
+language: perl
+perl:
+  - "5.10"
+notifications:
+install: "cpanm --installdeps --notest . && cpanm IO::Pty"
+email:
+  recipients:
+    - andy@petdance.com
+    - rob@hoelz.ro
+  #on_success: never
+  #on_failure: change
+# Until we get it working
+  on_success: always
+  on_failure: always
+
