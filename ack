@@ -514,10 +514,13 @@ sub print_line_with_options {
             if( @capture_indices ) {
                 my $offset = 0; # additional offset for when we add stuff
 
+                my $previous_match_end = 0;
+
                 foreach my $index_pair ( @capture_indices ) {
                     my ( $match_start, $match_end ) = @{$index_pair};
 
                     next unless defined($match_start);
+                    next if $match_start < $previous_match_end;
 
                     my $substring = substr( $line,
                         $offset + $match_start, $match_end - $match_start );
@@ -527,7 +530,8 @@ sub print_line_with_options {
                     substr( $line, $offset + $match_start,
                         $match_end - $match_start, $substitution );
 
-                    $offset += length( $substitution ) - length( $substring );
+                    $previous_match_end  = $match_end; # offsets do not need to be applied
+                    $offset             += length( $substitution ) - length( $substring );
                 }
             }
             else {
