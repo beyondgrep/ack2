@@ -515,6 +515,7 @@ END_FAIL
 # more elegant way to generate this list.
 sub get_options {
     return (
+        '--ackrc',
         '--after-context',
         '--bar',
         '--before-context',
