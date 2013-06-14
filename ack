@@ -515,26 +515,29 @@ sub print_line_with_options {
                                        # capture groups are set
 
             if ( @+ > 1 ) { # if we have captures
-                my $offset = 0; # additional offset for when we add stuff
+                while ( $line =~ /$opt->{regex}/og ) {
+                    my $offset = 0; # additional offset for when we add stuff
+                    my $previous_match_end = 0;
 
-                my $previous_match_end = 0;
+                    for ( my $i = 1; $i < @+; $i++ ) {
+                        my ( $match_start, $match_end ) = ( $-[$i], $+[$i] );
 
-                for ( my $i = 1; $i < @+; $i++ ) {
-                    my ( $match_start, $match_end ) = ( $-[$i], $+[$i] );
+                        next unless defined($match_start);
+                        next if $match_start < $previous_match_end;
 
-                    next unless defined($match_start);
-                    next if $match_start < $previous_match_end;
+                        my $substring = substr( $line,
+                            $offset + $match_start, $match_end - $match_start );
+                        my $substitution = Term::ANSIColor::colored( $substring,
+                            $ENV{ACK_COLOR_MATCH} );
 
-                    my $substring = substr( $line,
-                        $offset + $match_start, $match_end - $match_start );
-                    my $substitution = Term::ANSIColor::colored( $substring,
-                        $ENV{ACK_COLOR_MATCH} );
+                        substr( $line, $offset + $match_start,
+                            $match_end - $match_start, $substitution );
 
-                    substr( $line, $offset + $match_start,
-                        $match_end - $match_start, $substitution );
+                        $previous_match_end  = $match_end; # offsets do not need to be applied
+                        $offset             += length( $substitution ) - length( $substring );
+                    }
 
-                    $previous_match_end  = $match_end; # offsets do not need to be applied
-                    $offset             += length( $substitution ) - length( $substring );
+                    pos($line) = $+[0] + $offset;
                 }
             }
             else {
