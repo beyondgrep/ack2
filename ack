@@ -510,14 +510,17 @@ sub print_line_with_options {
     }
     else {
         if ( $color ) {
-            my @capture_indices = get_capture_indices();
-            if( @capture_indices ) {
+            $line =~ /$opt->{regex}/o; # this match is redundant, but we need
+                                       # to perfom it in order to get if
+                                       # capture groups are set
+
+            if ( @+ > 1 ) { # if we have captures
                 my $offset = 0; # additional offset for when we add stuff
 
                 my $previous_match_end = 0;
 
-                foreach my $index_pair ( @capture_indices ) {
-                    my ( $match_start, $match_end ) = @{$index_pair};
+                for ( my $i = 1; $i < @+; $i++ ) {
+                    my ( $match_start, $match_end ) = ( $-[$i], $+[$i] );
 
                     next unless defined($match_start);
                     next if $match_start < $previous_match_end;
@@ -554,6 +557,7 @@ sub print_line_with_options {
                     pos($line) = $match_end +
                     (length( $substitution ) - length( $substring ));
                 }
+                # XXX why do we do this?
                 $line .= "\033[0m\033[K" if $matched;
             }
         }
@@ -746,7 +750,6 @@ sub print_line_with_context {
 
 {
 
-my @capture_indices;
 my $match_column_number;
 
 # does_match() MUST have an $opt->{regex} set.
@@ -755,7 +758,6 @@ sub does_match {
     my ( $opt, $line ) = @_;
 
     $match_column_number = undef;
-    @capture_indices     = ();
 
     if ( $opt->{v} ) {
         return ( $line !~ /$opt->{regex}/o );
@@ -765,22 +767,12 @@ sub does_match {
             # @- = @LAST_MATCH_START
             # @+ = @LAST_MATCH_END
             $match_column_number = $-[0] + 1;
-
-            if ( @- > 1 ) {
-                @capture_indices = map {
-                    [ $-[$_], $+[$_] ]
-                } ( 1 .. $#- );
-            }
             return 1;
         }
         else {
             return;
         }
     }
-}
-
-sub get_capture_indices {
-    return @capture_indices;
 }
 
 sub get_match_column {
