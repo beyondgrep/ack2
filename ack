@@ -1120,6 +1120,10 @@ or needs exit 2 on IO error, use I<grep>.
 
 =over 4
 
+=item B<--ackrc>
+
+Specifies an ackrc file to load after all others; see L</"ACKRC LOCATION SEMANTICS">.
+
 =item B<-A I<NUM>>, B<--after-context=I<NUM>>
 
 Print I<NUM> lines of trailing context after matching lines.
@@ -1932,6 +1936,12 @@ Options are then loaded from the project ackrc.  The project ackrc is
 the first ackrc file with the name C<.ackrc> or C<_ackrc>, first searching
 in the current directory, then the parent directory, then the grandparent
 directory, etc.  This can be omitted using C<--noenv>.
+
+=item * --ackrc
+
+The C<--ackrc> option may be included on the command line to specify an
+ackrc file that can override all others.  It is consulted even if C<--noenv>
+is present.
 
 =item * ACK_OPTIONS
 
