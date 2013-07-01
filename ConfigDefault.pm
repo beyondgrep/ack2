@@ -83,6 +83,9 @@ sub _options_block {
 # Node modules created by npm
 --ignore-directory=is:node_modules
 
+# CMake cache
+--ignore-directory=is:CMakeFiles
+
 # Files to ignore
 # Backup files
 --ignore-file=ext:bak
