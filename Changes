@@ -3,7 +3,8 @@ History file for ack.  http://beyondgrep.com/
 NEXT
 ====================================
 [ENHANCEMENTS]
-ack now ignores CMake's build/cache directories by default.
+ack now ignores CMake's build/cache directories by default.  Thanks,
+Volodymyr Medvid.
 
 
 2.05_01 Tue May 28 10:12:04 CDT 2013
