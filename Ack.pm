@@ -46,7 +46,7 @@ use File::Spec 1.00015 ();
 BEGIN {
     # These have to be checked before any filehandle diddling.
     $output_to_pipe  = not -t *STDOUT;
-    $is_filter_mode = -p STDIN;
+    $is_filter_mode = not -t *STDIN;
 
     $is_cygwin       = ($^O eq 'cygwin');
     $is_windows      = ($^O =~ /MSWin32/);
