@@ -177,6 +177,12 @@ sub read_rcfile {
         next if $line eq '';
         next if $line =~ /^#/;
 
+        if ( $line =~ /^\s*--include=(.*)\s*/ ) {
+            my $filename = $1;
+            push( @lines, read_rcfile($filename) );
+            next;
+        }
+
         push( @lines, $line );
     }
     close $fh;
