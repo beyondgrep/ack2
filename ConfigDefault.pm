@@ -219,6 +219,7 @@ sub _options_block {
 
 # Lua http://www.lua.org/
 --type-add=lua:ext:lua
+--type-add=lua:firstlinematch:/^#!.*\blua(jit)?/
 
 # Objective-C
 --type-add=objc:ext:m,h
