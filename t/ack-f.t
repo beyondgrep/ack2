@@ -33,6 +33,7 @@ DEFAULT_DIR_EXCLUSIONS: {
         t/swamp/html.html
         t/swamp/incomplete-last-line.txt
         t/swamp/javascript.js
+        t/swamp/lua-shebang-test
         t/swamp/Makefile
         t/swamp/Makefile.PL
         t/swamp/MasterPage.master
