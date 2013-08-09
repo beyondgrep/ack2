@@ -5,7 +5,7 @@ use warnings;
 use lib 't';
 
 use Util;
-use Test::More tests => 8;
+use Test::More tests => 10;
 use File::Temp;
 
 prep_environment();
@@ -87,7 +87,18 @@ END_ACKRC
     }
 }
 
-# XXX don't allow --include on the command line?
+INCLUDE_COMMAND_LINE: {
+    write_file($existing_ackrc, <<'END_ACKRC');
+--type-del=foo
+--type-del=bar
+END_ACKRC
+
+    ( $stdout, $stderr ) = run_ack_with_stderr('--include=' . $existing_ackrc);
+
+    is(scalar(@$stdout), 0, 'When providing --include on the command line, no lines should be printed to standard output');
+    ok(@$stderr > 0, 'When providing --include on the command line, at least one line should be printed to standard error');
+}
+
 # XXX relative include paths?
 # XXX subincludes
 # XXX subinclude depth limit
