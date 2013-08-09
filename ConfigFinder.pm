@@ -155,6 +155,8 @@ sub find_config_files {
     return _remove_redundancies( @config_files );
 }
 
+our $include_depth = 0;
+
 =head2 read_rcfile
 
 Reads the contents of the .ackrc file and returns the arguments.
@@ -163,6 +165,8 @@ Reads the contents of the .ackrc file and returns the arguments.
 
 sub read_rcfile {
     my $file = shift;
+
+    local $include_depth = $include_depth + 1;
 
     return unless defined $file && -e $file;
 
@@ -178,9 +182,14 @@ sub read_rcfile {
         next if $line =~ /^#/;
 
         if ( $line =~ /^\s*--include=(.*)\s*/ ) {
-            my $filename = $1;
-            push( @lines, read_rcfile($filename) );
-            next;
+            if ( $include_depth == 1 ) {
+                my $filename = $1;
+                push( @lines, read_rcfile($filename) );
+                next;
+            }
+            else {
+                App::Ack::die( "--include not allowed in --include'd files" );
+            }
         }
 
         push( @lines, $line );
