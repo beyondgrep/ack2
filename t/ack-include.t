@@ -5,7 +5,7 @@ use warnings;
 use lib 't';
 
 use Util;
-use Test::More tests => 10;
+use Test::More tests => 12;
 use File::Temp;
 
 prep_environment();
@@ -99,8 +99,21 @@ END_ACKRC
     ok(@$stderr > 0, 'When providing --include on the command line, at least one line should be printed to standard error');
 }
 
+# XXX If we do allow this in the future, consider and add tests for a depth limit and cycles
+SUBINCLUDE: {
+    write_file($existing_ackrc, <<"END_ACKRC");
+--include=$non_existing_ackrc
+END_ACKRC
+
+    ( $stdout, $stderr ) = run_ack_with_stderr('-f', 't/swamp/', {
+        ackrc => \<<"END_ACKRC",
+--include=$existing_ackrc
+END_ACKRC
+    });
+
+    is(scalar(@$stdout), 0, 'An --include directive in an included file should result in nothing being printed to standard output');
+    ok(@$stderr > 0, 'An --include directive in an included file should result in at least one line being printed to standard error');
+}
+
 # XXX relative include paths?
-# XXX subincludes
-# XXX subinclude depth limit
-# XXX subinclude cycles
 # XXX --dump
