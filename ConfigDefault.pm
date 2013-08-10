@@ -178,6 +178,9 @@ sub _options_block {
 # Delphi http://en.wikipedia.org/wiki/Embarcadero_Delphi
 --type-add=delphi:ext:pas,int,dfm,nfm,dof,dpk,dproj,groupproj,bdsgroup,bdsproj
 
+# Elixir http://elixir-lang.org/
+--type-add=elixir:ext:ex,exs
+
 # Emacs Lisp http://www.gnu.org/software/emacs
 --type-add=elisp:ext:el
 
