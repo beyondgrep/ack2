@@ -25,7 +25,7 @@ ack requires Perl 5.8.8 or higher.  Perl 5.8.8 was released January 2006.
     make ack-standalone
     cp ack-standalone ~/bin/ack2 # for a personal installation
 
-[![Build Status](https://travis-ci.org/petdance/ack2.png?branch=dev)](https://travis-ci.org/petdance/ack2)
+Build status: [![Build Status](https://travis-ci.org/petdance/ack2.png?branch=dev)](https://travis-ci.org/petdance/ack2)
 
 # Development
 
