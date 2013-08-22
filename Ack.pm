@@ -378,6 +378,7 @@ Miscellaneous:
   --version                     Display version & copyright
   --thpppt                      Bill the Cat
   --bar                         The warning admiral
+  --cathy                       Chocolate! Chocolate! Chocolate!
 
 Exit status is 0 if match, 1 if no match.
 

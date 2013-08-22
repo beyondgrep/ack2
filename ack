@@ -1471,6 +1471,10 @@ a regular expression.
 
 Check with the admiral for traps.
 
+=item B<--cathy>
+
+Chocolate, Chocolate, Chocolate!
+
 =back
 
 =head1 THE .ackrc FILE
