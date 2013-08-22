@@ -1850,7 +1850,7 @@ this from the Unix shell:
 
     $ perl -i -p -e's/foo/bar/g' $(ack -f --php)
 
-=head2 Can you make ack recognize F<.xyz> files?
+=head2 Can I make ack recognize F<.xyz> files?
 
 Yes!  Please see L</"Defining your own types">.  If you think
 that F<ack> should recognize a type by default, please see
@@ -1901,6 +1901,11 @@ ack treats command line options beginning with C<+> or C<-> as options; if you
 would like to search for these, you may prefix your search term with C<--> or
 use the C<--match> option.  (However, don't forget that C<+> is a regular
 expression metacharacter!)
+
+=head2 Why does C<"ack '.{40000,}'"> fail?  Isn't that a valid regex?
+
+The Perl language limits the repetition quanitifier to 32K.  You
+can search for C<.{32767}> but not C<.{32768}>.
 
 =head1 ACKRC LOCATION SEMANTICS
 
