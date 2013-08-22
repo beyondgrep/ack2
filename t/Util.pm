@@ -520,6 +520,7 @@ sub get_options {
         '--bar',
         '--before-context',
         '--break',
+        '--cathy',
         '--color',
         '--color-filename',
         '--color-lineno',
