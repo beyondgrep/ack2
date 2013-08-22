@@ -16,7 +16,7 @@ my @types = (
     ruby   => [qw{.rb Rakefile}],
 );
 
-plan tests => sum(map { ref($_) ? scalar(@$_) : 1 } @types) + 12;
+plan tests => sum(map { ref($_) ? scalar(@$_) : 1 } @types) + 14;
 
 prep_environment();
 
@@ -79,6 +79,9 @@ like $output, qr/ack --thpppt/;
 
 $output = run_ack( '--env', '--bar' );
 like $output, qr/It's a grep/;
+
+$output = run_ack( '--env', '--cathy' );
+like $output, qr/CHOCOLATE/;
 
 $output = run_ack( '--env', '--version' );
 like $output, qr/ack 2[.]\d+/;
