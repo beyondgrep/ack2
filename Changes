@@ -6,9 +6,6 @@ NEXT
 ack now ignores CMake's build/cache directories by default.  Thanks,
 Volodymyr Medvid.
 
-Fixed some bugs, namely:
-  - https://github.com/petdance/ack2/issues/276
-
 Add shebang matching for --lua files.
 
 Add documentation for --ackrc.
@@ -21,6 +18,9 @@ Add some helpful debugging tips when an invalid option is found.
 Thanks to Charles Lee.
 
 [FIXES]
+Ack's colorizing of output would get confused with multiple sets
+of parentheses.  This has been fixed.  (Issue #276)
+
 Ack would get confused when trying to colorize the output in
 DOS-format files.  This has been fixed.  (Issue #145)
 
