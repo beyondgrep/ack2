@@ -17,6 +17,13 @@ Add Elixir filetype.
 
 Add --cathy option.  Thanks to Joe McMahon.
 
+Add some helpful debugging tips when an invalid option is found.
+Thanks to Charles Lee.
+
+[FIXES]
+Ack would get confused when trying to colorize the output in
+DOS-format files.  This has been fixed.  (Issue #145)
+
 
 2.05_01 Tue May 28 10:12:04 CDT 2013
 ====================================
