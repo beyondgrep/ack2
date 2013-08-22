@@ -41,9 +41,10 @@ MAIN: {
     for ( @ARGV ) {
         last if ( $_ eq '--' );
 
-        # Get the --thpppt and --bar checking out of the way.
+        # Get the --thpppt, --bar, --cathy checking out of the way.
         /^--th[pt]+t+$/ && App::Ack::_thpppt($_);
         /^--bar$/ && App::Ack::_bar();
+        /^--cathy$/ && App::Ack::_cathy();
 
         # See if we want to ignore the environment. (Don't tell Al Gore.)
         if ( /^--(no)?env$/ ) {
