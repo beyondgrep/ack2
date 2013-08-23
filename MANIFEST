@@ -168,6 +168,7 @@ t/swamp/html.htm
 t/swamp/html.html
 t/swamp/incomplete-last-line.txt
 t/swamp/javascript.js
+t/swamp/lua-shebang-test
 t/swamp/minified.js.min
 t/swamp/minified.min.js
 t/swamp/moose-andy.jpg
