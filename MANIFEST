@@ -70,7 +70,6 @@ t/anchored.t
 t/asp-net-ext.t
 t/bad-ackrc-opt.t
 t/basic.t
-t/coding-standards.t
 t/command-line-files.t
 t/config-backwards-compat.t
 t/config-finder.t
@@ -169,6 +168,7 @@ t/swamp/html.htm
 t/swamp/html.html
 t/swamp/incomplete-last-line.txt
 t/swamp/javascript.js
+t/swamp/lua-shebang-test
 t/swamp/minified.js.min
 t/swamp/minified.min.js
 t/swamp/moose-andy.jpg
