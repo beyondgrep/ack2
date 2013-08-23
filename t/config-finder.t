@@ -20,7 +20,7 @@ my $home   = $ENV{'HOME'};
 chop $tmpdir if $tmpdir && $tmpdir =~ m{/$};
 chop $home   if $home && $home   =~ m{/$};
 
-if ( $tmpdir && $tmpdir =~ /^$home/ ) {
+if ( $tmpdir && $tmpdir =~ /^\Q$home/ ) {
     plan tests => 1;
 
     fail "Your \$TMPDIR ($tmpdir) is set to a descendant directory of ~; this test is known to fail with such a setting. Please set your TMPDIR to something else to get this test to pass.";
@@ -40,9 +40,9 @@ sub touch_ackrc {
 }
 
 {
-# the tests blow up on Windows if the global files don't exist,
+# The tests blow up on Windows if the global files don't exist,
 # so here we create them if they don't, keeping track of the ones
-# we make so we can delete them later
+# we make so we can delete them later.
 my @created_globals;
 
 sub set_up_globals {
