@@ -70,7 +70,6 @@ t/anchored.t
 t/asp-net-ext.t
 t/bad-ackrc-opt.t
 t/basic.t
-t/coding-standards.t
 t/command-line-files.t
 t/config-backwards-compat.t
 t/config-finder.t
