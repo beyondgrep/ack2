@@ -22,7 +22,7 @@ use Getopt::Long 2.35 ();
 
 use Carp 1.04 ();
 
-our $VERSION = '2.05_01';
+our $VERSION = '2.08';
 # Check http://beyondgrep.com/ for updates
 
 # These are all our globals.
@@ -2493,9 +2493,9 @@ our $VERSION;
 our $GIT_REVISION;
 our $COPYRIGHT;
 BEGIN {
-    $VERSION = '2.05_01';
+    $VERSION = '2.08';
     $COPYRIGHT = 'Copyright 2005-2013 Andy Lester.';
-    $GIT_REVISION = q{d92ec88};
+    $GIT_REVISION = q{3a7e928};
 }
 
 our $fh;
