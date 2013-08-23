@@ -27,7 +27,8 @@ sub _options_block {
 #   the --type-add option.
 
 
-# Directories to ignore
+### Directories to ignore
+
 # Bazaar
 --ignore-directory=is:.bzr
 
@@ -86,7 +87,8 @@ sub _options_block {
 # CMake cache
 --ignore-directory=is:CMakeFiles
 
-# Files to ignore
+### Files to ignore
+
 # Backup files
 --ignore-file=ext:bak
 --ignore-file=match:/~$/
@@ -108,8 +110,14 @@ sub _options_block {
 --ignore-file=match:/[.]min[.]css$/
 --ignore-file=match:/[.]css[.]min$/
 
+# PDFs, because they pass Perl's -T detection
+--ignore-file=ext:pdf
 
-# Filetypes defined
+# Common graphics, just as an optimization
+--ignore-file=ext:gif,jpg,jpeg,png
+
+
+### Filetypes defined
 
 # Perl http://perl.org/
 --type-add=perl:ext:pl,pm,pod,t,psgi
