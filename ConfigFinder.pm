@@ -155,7 +155,7 @@ sub find_config_files {
     return _remove_redundancies( @config_files );
 }
 
-=head2 read_ackrc
+=head2 read_rcfile
 
 Reads the contents of the .ackrc file and returns the arguments.
 

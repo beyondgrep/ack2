@@ -199,6 +199,8 @@ sub get_arg_spec {
     my $dash_a_explanation = <<EOT;
 This is because we now have -k/--known-types which makes it only select files
 of known types, rather than any text file (which is the behavior of ack 1.x).
+You may have options in a .ackrc, or in the ACKRC_OPTIONS environment variable.
+Try using the --dump flag.
 EOT
 
 =for Adding-Options

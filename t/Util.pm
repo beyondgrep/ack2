@@ -37,8 +37,6 @@ sub build_ack_invocation {
 
     $options ||= {};
 
-    @args = grep { ref($_) ne 'HASH' } @args;
-
     if ( my $ackrc = $options->{ackrc} ) {
         if ( ref($ackrc) eq 'SCALAR' ) {
             my $temp_ackrc = File::Temp->new;
@@ -58,18 +56,6 @@ sub build_ack_invocation {
         unshift( @args, '--noenv' );
     }
 
-    if ( is_win32() ) {
-        for ( @args ) {
-            s/(\\+)$/$1$1/;     # Double all trailing backslashes
-            s/"/\\"/g;          # Backslash all quotes
-            $_ = qq{"$_"};
-        }
-    }
-    else {
-        # XXX This is not a good way to shoo
-        #@args = map { quotemeta $_ } @args;
-    }
-
     if ( $ENV{'ACK_TEST_STANDALONE'} ) {
         unshift( @args, File::Spec->rel2abs( 'ack-standalone', $orig_wd ) );
     }
@@ -77,7 +63,7 @@ sub build_ack_invocation {
         unshift( @args, File::Spec->rel2abs( 'blib/script/ack', $orig_wd ) );
     }
 
-    return wantarray ? @args : join( ' ', @args );
+    return @args;
 }
 
 # Use this instead of File::Slurp::read_file()
@@ -162,11 +148,23 @@ sub run_cmd {
     # my $cmd = join( ' ', @cmd );
     # diag( "Running command: $cmd" );
 
+    my $options = {};
+
+    foreach my $arg (@cmd) {
+        if ( ref($arg) eq 'HASH' ) {
+            $options = $arg;
+        }
+    }
+    @cmd = grep { ref($_) ne 'HASH' } @cmd;
+
     record_option_coverage(@cmd);
 
     my ( @stdout, @stderr );
 
     if (is_win32) {
+        if($options->{'input'}) {
+            die('input options have not been implemented for Win32 yet');
+        }
 # capture stderr & stdout output into these files (only on Win32)
         my $catchout_file = 'stdout.log';
         my $catcherr_file = 'stderr.log';
@@ -244,6 +242,11 @@ sub run_cmd {
             close $stdout_read;
             close $stderr_read;
 
+            if(my $input = $options->{'input'}) {
+                # XXX check error
+                open STDIN, '-|', @$input;
+            }
+
             open STDOUT, '>&', $stdout_write;
             open STDERR, '>&', $stderr_write;
 
@@ -290,11 +293,25 @@ sub pipe_into_ack_with_stderr {
     my $input = shift;
     my @args = @_;
 
-    my $cmd = build_ack_invocation( @args );
-    $cmd = "$^X -pe1 $input | $cmd";
+    my $tempfile;
 
-    my ($stdout, $stderr) = run_cmd( $cmd );
-    return ( $stdout, $stderr );
+    if ( ref($input) eq 'SCALAR' ) {
+        # XXX we could easily do this without temp files,
+        #     but that would take slightly more time than
+        #     I'm willing to spend on this right now.
+        $tempfile = File::Temp->new;
+        print {$tempfile} $$input . "\n";
+        close $tempfile;
+        $input = $tempfile->filename;
+    }
+
+    return run_ack_with_stderr(@args, {
+        # you might be wondering why we use perl here as opposed
+        # to simply using 'cat'.  The answer is that we have no
+        # idea what the user's environment is like; they may not
+        # have cat.  We *do* know, however, that they have perl.
+        input => [$^X, '-pe1', $input],
+    });
 }
 
 # pipe into ack and return STDOUT as array, for arguments see pipe_into_ack_with_stderr
@@ -423,6 +440,7 @@ BEGIN {
             my ( @args) = @_;
 
             my @cmd = build_ack_invocation(@args);
+            @cmd    = grep { ref($_) ne 'HASH' } @cmd;
 
             record_option_coverage(@cmd);
 
@@ -497,10 +515,12 @@ END_FAIL
 # more elegant way to generate this list.
 sub get_options {
     return (
+        '--ackrc',
         '--after-context',
         '--bar',
         '--before-context',
         '--break',
+        '--cathy',
         '--color',
         '--color-filename',
         '--color-lineno',

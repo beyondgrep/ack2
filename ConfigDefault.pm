@@ -27,7 +27,8 @@ sub _options_block {
 #   the --type-add option.
 
 
-# Directories to ignore
+### Directories to ignore
+
 # Bazaar
 --ignore-directory=is:.bzr
 
@@ -83,7 +84,11 @@ sub _options_block {
 # Node modules created by npm
 --ignore-directory=is:node_modules
 
-# Files to ignore
+# CMake cache
+--ignore-directory=is:CMakeFiles
+
+### Files to ignore
+
 # Backup files
 --ignore-file=ext:bak
 --ignore-file=match:/~$/
@@ -105,8 +110,14 @@ sub _options_block {
 --ignore-file=match:/[.]min[.]css$/
 --ignore-file=match:/[.]css[.]min$/
 
+# PDFs, because they pass Perl's -T detection
+--ignore-file=ext:pdf
 
-# Filetypes defined
+# Common graphics, just as an optimization
+--ignore-file=ext:gif,jpg,jpeg,png
+
+
+### Filetypes defined
 
 # Perl http://perl.org/
 --type-add=perl:ext:pl,pm,pod,t,psgi
@@ -175,6 +186,9 @@ sub _options_block {
 # Delphi http://en.wikipedia.org/wiki/Embarcadero_Delphi
 --type-add=delphi:ext:pas,int,dfm,nfm,dof,dpk,dproj,groupproj,bdsgroup,bdsproj
 
+# Elixir http://elixir-lang.org/
+--type-add=elixir:ext:ex,exs
+
 # Emacs Lisp http://www.gnu.org/software/emacs
 --type-add=elisp:ext:el
 
@@ -216,6 +230,7 @@ sub _options_block {
 
 # Lua http://www.lua.org/
 --type-add=lua:ext:lua
+--type-add=lua:firstlinematch:/^#!.*\blua(jit)?/
 
 # Objective-C
 --type-add=objc:ext:m,h

@@ -1,5 +1,36 @@
 History file for ack.  http://beyondgrep.com/
 
+NEXT
+====================================
+[ENHANCEMENTS]
+ack now ignores CMake's build/cache directories by default.  Thanks,
+Volodymyr Medvid.
+
+Add shebang matching for --lua files.
+
+Add documentation for --ackrc.
+
+Add Elixir filetype.
+
+Add --cathy option.  Thanks to Joe McMahon.
+
+Add some helpful debugging tips when an invalid option is found.
+Thanks to Charles Lee.
+
+Ignore PDF files by default, because Perl will detect them as text.
+
+Ignore .gif, .jpg, .jpeg and .png files.  They won't normally be
+selected, but this is an optimization so that ack doesn't have to
+open them to know.
+
+[FIXES]
+Ack's colorizing of output would get confused with multiple sets
+of parentheses.  This has been fixed.  (Issue #276)
+
+Ack would get confused when trying to colorize the output in
+DOS-format files.  This has been fixed.  (Issue #145)
+
+
 2.05_01 Tue May 28 10:12:04 CDT 2013
 ====================================
 [ENHANCEMENTS]

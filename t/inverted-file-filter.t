@@ -31,6 +31,7 @@ EXCLUDE_ONLY: {
         t/swamp/html.html
         t/swamp/incomplete-last-line.txt
         t/swamp/javascript.js
+        t/swamp/lua-shebang-test
         t/swamp/Makefile
         t/swamp/MasterPage.master
         t/swamp/notaMakefile

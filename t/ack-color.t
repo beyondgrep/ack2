@@ -9,7 +9,7 @@ use File::Next ();
 use lib 't';
 use Util;
 
-plan tests => 10;
+plan tests => 13;
 
 prep_environment();
 
@@ -51,4 +51,15 @@ MULTIPLE_MATCHES: {
     is( @results, 1, 'multiple matches on 1 line' );
     is( $results[0], "A ${match_start}victim${match_end} of ${match_start}collision${match_end} on the open sea$line_end",
         'multiple matches highlighted' );
+}
+
+ADJACENT_CAPTURE_COLORING: {
+    my @files = qw( t/text/boy-named-sue.txt );
+    my @args = qw( (cal)(led) --color );
+    my @results = run_ack( @args, @files );
+
+    is( @results, 1, 'backref pattern matches once' );
+    # the double end + start is kinda weird; this test could probably be
+    # more robust
+    is( $results[0], "I ${match_start}cal${match_end}${match_start}led${match_end} him my pa, and he ${match_start}cal${match_end}${match_start}led${match_end} me his son,", 'adjacent capture groups should highlight correctly');
 }

@@ -41,9 +41,10 @@ MAIN: {
     for ( @ARGV ) {
         last if ( $_ eq '--' );
 
-        # Get the --thpppt and --bar checking out of the way.
+        # Get the --thpppt, --bar, --cathy checking out of the way.
         /^--th[pt]+t+$/ && App::Ack::_thpppt($_);
         /^--bar$/ && App::Ack::_bar();
+        /^--cathy$/ && App::Ack::_cathy();
 
         # See if we want to ignore the environment. (Don't tell Al Gore.)
         if ( /^--(no)?env$/ ) {
@@ -510,24 +511,34 @@ sub print_line_with_options {
     }
     else {
         if ( $color ) {
-            my @capture_indices = get_capture_indices();
-            if( @capture_indices ) {
-                my $offset = 0; # additional offset for when we add stuff
+            $line =~ /$opt->{regex}/o; # this match is redundant, but we need
+                                       # to perfom it in order to get if
+                                       # capture groups are set
 
-                foreach my $index_pair ( @capture_indices ) {
-                    my ( $match_start, $match_end ) = @{$index_pair};
+            if ( @+ > 1 ) { # if we have captures
+                while ( $line =~ /$opt->{regex}/og ) {
+                    my $offset = 0; # additional offset for when we add stuff
+                    my $previous_match_end = 0;
 
-                    next unless defined($match_start);
+                    for ( my $i = 1; $i < @+; $i++ ) {
+                        my ( $match_start, $match_end ) = ( $-[$i], $+[$i] );
 
-                    my $substring = substr( $line,
-                        $offset + $match_start, $match_end - $match_start );
-                    my $substitution = Term::ANSIColor::colored( $substring,
-                        $ENV{ACK_COLOR_MATCH} );
+                        next unless defined($match_start);
+                        next if $match_start < $previous_match_end;
 
-                    substr( $line, $offset + $match_start,
-                        $match_end - $match_start, $substitution );
+                        my $substring = substr( $line,
+                            $offset + $match_start, $match_end - $match_start );
+                        my $substitution = Term::ANSIColor::colored( $substring,
+                            $ENV{ACK_COLOR_MATCH} );
 
-                    $offset += length( $substitution ) - length( $substring );
+                        substr( $line, $offset + $match_start,
+                            $match_end - $match_start, $substitution );
+
+                        $previous_match_end  = $match_end; # offsets do not need to be applied
+                        $offset             += length( $substitution ) - length( $substring );
+                    }
+
+                    pos($line) = $+[0] + $offset;
                 }
             }
             else {
@@ -550,6 +561,7 @@ sub print_line_with_options {
                     pos($line) = $match_end +
                     (length( $substitution ) - length( $substring ));
                 }
+                # XXX why do we do this?
                 $line .= "\033[0m\033[K" if $matched;
             }
         }
@@ -742,7 +754,6 @@ sub print_line_with_context {
 
 {
 
-my @capture_indices;
 my $match_column_number;
 
 # does_match() MUST have an $opt->{regex} set.
@@ -751,7 +762,6 @@ sub does_match {
     my ( $opt, $line ) = @_;
 
     $match_column_number = undef;
-    @capture_indices     = ();
 
     if ( $opt->{v} ) {
         return ( $line !~ /$opt->{regex}/o );
@@ -761,22 +771,12 @@ sub does_match {
             # @- = @LAST_MATCH_START
             # @+ = @LAST_MATCH_END
             $match_column_number = $-[0] + 1;
-
-            if ( @- > 1 ) {
-                @capture_indices = map {
-                    [ $-[$_], $+[$_] ]
-                } ( 1 .. $#- );
-            }
             return 1;
         }
         else {
             return;
         }
     }
-}
-
-sub get_capture_indices {
-    return @capture_indices;
 }
 
 sub get_match_column {
@@ -1120,6 +1120,10 @@ or needs exit 2 on IO error, use I<grep>.
 =head1 OPTIONS
 
 =over 4
+
+=item B<--ackrc>
+
+Specifies an ackrc file to load after all others; see L</"ACKRC LOCATION SEMANTICS">.
 
 =item B<-A I<NUM>>, B<--after-context=I<NUM>>
 
@@ -1466,6 +1470,10 @@ a regular expression.
 =item B<--bar>
 
 Check with the admiral for traps.
+
+=item B<--cathy>
+
+Chocolate, Chocolate, Chocolate!
 
 =back
 
@@ -1842,7 +1850,7 @@ this from the Unix shell:
 
     $ perl -i -p -e's/foo/bar/g' $(ack -f --php)
 
-=head2 Can you make ack recognize F<.xyz> files?
+=head2 Can I make ack recognize F<.xyz> files?
 
 Yes!  Please see L</"Defining your own types">.  If you think
 that F<ack> should recognize a type by default, please see
@@ -1894,6 +1902,11 @@ would like to search for these, you may prefix your search term with C<--> or
 use the C<--match> option.  (However, don't forget that C<+> is a regular
 expression metacharacter!)
 
+=head2 Why does C<"ack '.{40000,}'"> fail?  Isn't that a valid regex?
+
+The Perl language limits the repetition quanitifier to 32K.  You
+can search for C<.{32767}> but not C<.{32768}>.
+
 =head1 ACKRC LOCATION SEMANTICS
 
 Ack can load its configuration from many sources.  This list
@@ -1933,6 +1946,12 @@ Options are then loaded from the project ackrc.  The project ackrc is
 the first ackrc file with the name C<.ackrc> or C<_ackrc>, first searching
 in the current directory, then the parent directory, then the grandparent
 directory, etc.  This can be omitted using C<--noenv>.
+
+=item * --ackrc
+
+The C<--ackrc> option may be included on the command line to specify an
+ackrc file that can override all others.  It is consulted even if C<--noenv>
+is present.
 
 =item * ACK_OPTIONS
 
@@ -2145,6 +2164,12 @@ L<https://github.com/petdance/ack2>
 How appropriate to have I<ack>nowledgements!
 
 Thanks to everyone who has contributed to ack in any way, including
+Charles Lee,
+Joe McMahon,
+John Warwick,
+David Steinbrunner,
+Kara Martens,
+Volodymyr Medvid,
 Ron Savage,
 Konrad Borowski,
 Dale Sedivic,

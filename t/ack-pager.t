@@ -108,7 +108,6 @@ END_TEXT
 
 PAGER_ENV_OVERRIDE: {
     local $ENV{'ACK_PAGER'} = './test-pager --skip=2';
-    local $TODO             = q{Setting ACK_PAGER in tests won't work for the time being};
 
     my @args = ('--nocolor', '--nopager', 'Sue', 't/text');
 
