@@ -368,6 +368,9 @@ Miscellaneous:
   --ignore-ack-defaults         Ignore default definitions included with ack.
   --create-ackrc                Outputs a default ackrc for your customization
                                 to standard output.
+  --include=filename            Include the contents of the target file at the
+                                current location in the current ackrc file.
+                                See --man for details on this feature's rules.
   --help, -?                    This help
   --help-types                  Display all known types
   --dump                        Dump information on which options are loaded
