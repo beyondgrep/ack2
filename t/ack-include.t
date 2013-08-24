@@ -6,9 +6,31 @@ use lib 't';
 
 use Util;
 use Cwd qw(getcwd);
-use Test::More tests => 18;
+use Test::More tests => 19;
 use File::Spec;
 use File::Temp;
+
+sub parse_dump {
+    my ( $lines ) = @_;
+
+    my %parsed;
+
+    my @separator_indices = grep {
+        $lines->[$_] =~ /^===/;
+    } ( 0 .. $#$lines );
+
+    push @separator_indices, @$lines + 1; # introduce a fake separator
+
+    for my $i ( 0 .. ($#separator_indices - 1) ) {
+        my ( $begin, $end ) = @separator_indices[$i, $i + 1];
+
+        my $filename       = $lines->[$begin - 1];
+        my @section_lines  = map { s/^\s+//; $_ } @{$lines}[ ($begin + 1) .. ($end - 2) ];
+        $parsed{$filename} = \@section_lines;
+    }
+
+    return %parsed;
+}
 
 prep_environment();
 
@@ -193,4 +215,20 @@ END_ACKRC
     ok(!$has_seen_foo, '--included files with paths beginning in ~ should be resolved relative to HOME');
 }
 
-# XXX --dump
+DUMP: {
+    write_file($existing_ackrc, <<'END_ACKRC');
+--type-add=foo:ext:badextension
+END_ACKRC
+
+    ( $stdout, $stderr ) = run_ack_with_stderr('--dump', {
+        ackrc => \<<"END_ACKRC",
+--include=$existing_ackrc
+END_ACKRC
+    });
+
+    my %dump = parse_dump($stdout);
+
+    is_deeply($dump{$existing_ackrc}, [
+        '--type-add=foo:ext:badextension',
+    ], 'The definitions from an included file should be listed with it in --dump output') or diag(explain($stdout));
+}
