@@ -184,6 +184,12 @@ sub read_rcfile {
         if ( $line =~ /^\s*--include=(.*)\s*/ ) {
             if ( $include_depth == 1 ) {
                 my $filename = $1;
+
+                unless ( File::Spec->file_name_is_absolute($filename) ) {
+                    my ( $volume, $basedir ) = File::Spec->splitpath($file);
+                    $filename = File::Spec->catpath($volume, $basedir, $filename);
+                }
+
                 push( @lines, read_rcfile($filename) );
                 next;
             }
