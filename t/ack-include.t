@@ -6,7 +6,7 @@ use lib 't';
 
 use Util;
 use Cwd qw(getcwd);
-use Test::More tests => 16;
+use Test::More tests => 18;
 use File::Spec;
 use File::Temp;
 
@@ -165,6 +165,32 @@ END_ACKRC
     chdir $orig_wd or die "Unable to change directory: $!";
 
     unlink(File::Spec->catfile($tempdir->dirname, '.ackrc')) or die "Unable to clean up ackrc file: $!";
+}
+
+HOME_INCLUDE: {
+    local $ENV{HOME} = $tempdir->dirname;
+
+    write_file($existing_ackrc, <<'END_ACKRC');
+--type-del=foo
+END_ACKRC
+
+    ( $stdout, $stderr ) = run_ack_with_stderr('--help-types', {
+        ackrc => \<<'END_ACKRC',
+--type-add=foo:ext:foo
+--include=~/existing-ackrc
+END_ACKRC
+    });
+
+    my $has_seen_foo = 0;
+
+    foreach my $line (@$stdout) {
+        if($line =~ /\Q--[no]foo\E/) {
+            $has_seen_foo = 1;
+        }
+    }
+
+    ok(@$stderr == 0, q{~ includes shouldn't print anything to standard error}) or diag(explain($stderr));
+    ok(!$has_seen_foo, '--included files with paths beginning in ~ should be resolved relative to HOME');
 }
 
 # XXX --dump
