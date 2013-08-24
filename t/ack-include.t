@@ -5,11 +5,14 @@ use warnings;
 use lib 't';
 
 use Util;
-use Test::More tests => 12;
+use Cwd qw(getcwd);
+use Test::More tests => 14;
+use File::Spec;
 use File::Temp;
 
 prep_environment();
 
+my $orig_wd            = getcwd();
 my $tempdir            = File::Temp->newdir;
 my $existing_ackrc     = File::Spec->catfile($tempdir->dirname, 'existing-ackrc');
 my $non_existing_ackrc = File::Spec->catfile($tempdir->dirname, 'non-existing-ackrc');
@@ -115,5 +118,34 @@ END_ACKRC
     ok(@$stderr > 0, 'An --include directive in an included file should result in at least one line being printed to standard error');
 }
 
-# XXX relative include paths?
+RELATIVE_INCLUDE: {
+    write_file($existing_ackrc, <<'END_ACKRC');
+--type-del=foo
+END_ACKRC
+
+    my ( undef, undef, $ackrc_basename ) = File::Spec->splitpath($existing_ackrc);
+
+    chdir $tempdir->dirname or die "Unable to change directory: $!";
+
+    ( $stdout, $stderr ) = run_ack_with_stderr('--help-types', {
+        ackrc => \<<"END_ACKRC",
+--type-add=foo:ext:foo
+--include=$ackrc_basename
+END_ACKRC
+    });
+
+    my $has_seen_foo = 0;
+
+    foreach my $line (@$stdout) {
+        if($line =~ /\Q--[no]foo\E/) {
+            $has_seen_foo = 1;
+        }
+    }
+
+    chdir $orig_wd or die "Unable to change directory: $!";
+
+    ok(@$stderr == 0, q{Relative includes shouldn't print anything to standard error}) or diag(explain($stderr));
+    ok(!$has_seen_foo, '--included files with relative paths should be resolved relative to the including file');
+}
+
 # XXX --dump
