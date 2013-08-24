@@ -194,7 +194,13 @@ sub read_rcfile {
                     $filename = File::Spec->catpath($volume, $basedir, $filename);
                 }
 
-                push( @lines, read_rcfile($filename) );
+                # inflate lines from included file so we know where they came
+                # from (for dumping)
+                my @extra_lines = map {
+                    [ $_, $filename ]
+                } read_rcfile($filename);
+
+                push( @lines, @extra_lines );
                 next;
             }
             else {
