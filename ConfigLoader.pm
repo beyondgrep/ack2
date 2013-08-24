@@ -12,6 +12,8 @@ use Carp 1.04 ();
 use Getopt::Long 2.35 ();
 use Text::ParseWords 3.1 ();
 
+# XXX If you want to add options, search this file for Adding-Options
+
 =head1 App::Ack::ConfigLoader
 
 =head1 FUNCTIONS
