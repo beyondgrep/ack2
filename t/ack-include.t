@@ -6,7 +6,7 @@ use lib 't';
 
 use Util;
 use Cwd qw(getcwd);
-use Test::More tests => 14;
+use Test::More tests => 16;
 use File::Spec;
 use File::Temp;
 
@@ -119,20 +119,19 @@ END_ACKRC
 }
 
 RELATIVE_INCLUDE: {
+    my ( undef, undef, $ackrc_basename ) = File::Spec->splitpath($existing_ackrc);
+
     write_file($existing_ackrc, <<'END_ACKRC');
 --type-del=foo
 END_ACKRC
 
-    my ( undef, undef, $ackrc_basename ) = File::Spec->splitpath($existing_ackrc);
-
-    chdir $tempdir->dirname or die "Unable to change directory: $!";
-
-    ( $stdout, $stderr ) = run_ack_with_stderr('--help-types', {
-        ackrc => \<<"END_ACKRC",
+    write_file(File::Spec->catfile($tempdir->dirname, '.ackrc'), <<"END_ACKRC");
 --type-add=foo:ext:foo
 --include=$ackrc_basename
 END_ACKRC
-    });
+    chdir $tempdir->dirname or die "Unable to change directory: $!";
+
+    ( $stdout, $stderr ) = run_ack_with_stderr('--help-types');
 
     my $has_seen_foo = 0;
 
@@ -142,10 +141,28 @@ END_ACKRC
         }
     }
 
-    chdir $orig_wd or die "Unable to change directory: $!";
+    ok(@$stderr == 0, q{Relative includes shouldn't print anything to standard error}) or diag(explain($stderr));
+    ok(!$has_seen_foo, '--included files with relative paths should be resolved relative to the including file');
+
+    mkdir 'subdir' or die "Unable to create subdirectory for testing: $!";
+    chdir 'subdir' or die "Unable to change to test subdirectory: $!";
+
+    ( $stdout, $stderr ) = run_ack_with_stderr('--help-types');
+
+    $has_seen_foo = 0;
+
+    foreach my $line (@$stdout) {
+        if($line =~ /\Q--[no]foo\E/) {
+            $has_seen_foo = 1;
+        }
+    }
 
     ok(@$stderr == 0, q{Relative includes shouldn't print anything to standard error}) or diag(explain($stderr));
     ok(!$has_seen_foo, '--included files with relative paths should be resolved relative to the including file');
+
+    chdir $orig_wd or die "Unable to change directory: $!";
+
+    unlink(File::Spec->catfile($tempdir->dirname, '.ackrc')) or die "Unable to clean up ackrc file: $!";
 }
 
 # XXX --dump
