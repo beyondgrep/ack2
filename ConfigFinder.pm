@@ -155,7 +155,11 @@ sub find_config_files {
     return _remove_redundancies( @config_files );
 }
 
-our $include_depth = 0;
+our $include_depth;
+
+BEGIN {
+    $include_depth = 0;
+}
 
 =head2 read_rcfile
 
