@@ -12,6 +12,8 @@ use Carp 1.04 ();
 use Getopt::Long 2.35 ();
 use Text::ParseWords 3.1 ();
 
+# XXX If you want to add options, search this file for Adding-Options
+
 =head1 App::Ack::ConfigLoader
 
 =head1 FUNCTIONS
@@ -219,6 +221,7 @@ EOT
     * Go through the list of options already available, and consider
       whether your new option can be considered mutually exclusive
       with another option.
+    * Add your option to t/Util.pm under the get_options subroutine.
 =cut
     return {
         1                   => sub { $opt->{1} = $opt->{m} = 1 },
@@ -457,12 +460,27 @@ sub explode_sources {
         delete $arg_spec->{$arg};
     };
 
+    my @included_lines;
     for(my $i = 0; $i < @{$sources}; $i += 2) {
         my ( $name, $options ) = @{$sources}[$i, $i + 1];
         if ( ref($options) ne 'ARRAY' ) {
             $sources->[$i + 1] = $options =
                 [ Text::ParseWords::shellwords($options) ];
         }
+        for ( my $j = 0; $j < @{$options}; $j++ ) {
+            next unless ref($options->[$j]) eq 'ARRAY';
+
+            my $included_filename = $options->[$j][1];
+            my $orig_j            = $j;
+            while ( ++$j < @{$options} &&
+                    ref($options->[$j]) eq 'ARRAY' &&
+                    $options->[$j][1] eq $included_filename) {}
+            push @included_lines,
+                $included_filename,
+                [ map { $_->[0] } splice( @{$options}, $orig_j, ($j - $orig_j), "--include=$included_filename # see below" ) ];
+            $j = $orig_j - 1;
+        }
+
         for ( my $j = 0; $j < @{$options}; $j++ ) {
             next unless $options->[$j] =~ /^-/;
             my @chunk = ( $options->[$j] );
@@ -479,6 +497,11 @@ sub explode_sources {
             Getopt::Long::GetOptions( %{$arg_spec} );
 
             push @new_sources, $name, \@copy;
+        }
+
+        if ( $i == @{$sources} - 2 && @included_lines ) {
+            push @{$sources}, @included_lines;
+            @included_lines = ();
         }
     }
 
@@ -640,6 +663,17 @@ sub process_args {
     if ( should_dump_options($arg_sources) ) {
         dump_options($arg_sources);
         exit(0);
+    }
+    else {
+        # deflate lines from --included files (see ConfigFinder::read_rcfile)
+        for my $i (0 .. $#$arg_sources ) {
+            next if $i % 2 == 0; # skip source names
+
+            my $lines = $arg_sources->[$i];
+            @$lines = map {
+                ref($_) eq 'ARRAY' ? $_->[0] : $_
+            } @$lines;
+        }
     }
 
     my $type_specs = process_filetypes(\%opt, $arg_sources);

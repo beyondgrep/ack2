@@ -547,6 +547,7 @@ sub get_options {
         '--ignore-dir',
         '--ignore-directory',
         '--ignore-file',
+        '--include',
         '--invert-match',
         '--lines',
         '--literal',
