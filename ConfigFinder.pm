@@ -185,6 +185,10 @@ sub read_rcfile {
             if ( $include_depth == 1 ) {
                 my $filename = $1;
 
+                if ( $filename =~ /^~/ ) {
+                    $filename =~ s/^~/$ENV{HOME}/;
+                }
+
                 unless ( File::Spec->file_name_is_absolute($filename) ) {
                     my ( $volume, $basedir ) = File::Spec->splitpath($file);
                     $filename = File::Spec->catpath($volume, $basedir, $filename);
