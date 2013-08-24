@@ -1287,6 +1287,25 @@ line.
 Ignore files matching I<FILTERTYPE:FILTERARGS>.  The filters are specified
 identically to file type filters as seen in L</"Defining your own types">.
 
+=item B<--include=I<FILENAME>>
+
+Includes the contents of I<FILENAME> at the current position in the including
+ackrc file.  This means that if a file containing C<--type-del=foo> is included
+like so:
+
+    --type-add=foo:ext:foo
+    --include=$FILE
+    --type-add=foo:ext:bar
+
+Type C<--foo> will only select files ending in C<.bar>.
+
+If the I<FILENAME> doesn't exist, ack will silently continue.
+
+If I<FILENAME> is an absolute path, it is used as-is.  If I<FILENAME> begins
+with the C<~> character, the path is considered relative to the user's home
+directory (taken from C<$ENV{HOME}>).  Otherwise, the path is considered
+relative to the including ackrc file.
+
 =item B<-k>, B<--known-types>
 
 Limit selected files to those with types that ack knows about.  This is
