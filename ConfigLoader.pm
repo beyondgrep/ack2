@@ -221,6 +221,7 @@ EOT
     * Go through the list of options already available, and consider
       whether your new option can be considered mutually exclusive
       with another option.
+    * Add your option to t/Util.pm under the get_options subroutine.
 =cut
     return {
         1                   => sub { $opt->{1} = $opt->{m} = 1 },
