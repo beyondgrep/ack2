@@ -160,6 +160,8 @@ END_ACKRC
     ok(@$stderr == 0, q{Relative includes shouldn't print anything to standard error}) or diag(explain($stderr));
     ok(!$has_seen_foo, '--included files with relative paths should be resolved relative to the including file');
 
+    chdir '..';
+    rmdir 'subdir' or die "Unable to clean up test directory: $!";
     chdir $orig_wd or die "Unable to change directory: $!";
 
     unlink(File::Spec->catfile($tempdir->dirname, '.ackrc')) or die "Unable to clean up ackrc file: $!";
