@@ -73,6 +73,8 @@ sub create_format {
     } @max_version_lengths) . "\n";
 }
 
+my $num_iterations = 1;
+
 sub time_ack {
     my ( $ack, $invocation, $perl ) = @_;
 
@@ -84,29 +86,31 @@ sub time_ack {
 
     my $end;
     my $start = [gettimeofday()];
-    my ( $read, $write );
-    pipe $read, $write;
-    my $pid   = fork;
+    for ( 1 .. $num_iterations ) {
+        my ( $read, $write );
+        pipe $read, $write;
+        my $pid   = fork;
 
-    my $has_error_lines;
+        my $has_error_lines;
 
-    if($pid) {
-        close $write;
-        while(<$read>) {
-            $has_error_lines = 1;
+        if($pid) {
+            close $write;
+            while(<$read>) {
+                $has_error_lines = 1;
+            }
+            waitpid $pid, 0;
+            return if $has_error_lines;
+        } else {
+            close $read;
+            close STDOUT;
+            open STDERR, '>&', $write;
+            exec @args;
+            exit 255;
         }
-        waitpid $pid, 0;
-        return if $has_error_lines;
-        $end = [gettimeofday()];
-    } else {
-        close $read;
-        close STDOUT;
-        open STDERR, '>&', $write;
-        exec @args;
-        exit 255;
     }
+    $end = [gettimeofday()];
 
-    return tv_interval($start, $end);
+    return tv_interval($start, $end) / $num_iterations;
 }
 
 my $show_colors;
@@ -166,11 +170,12 @@ my @use_acks;
 my $perl = $^X;
 
 GetOptions(
-    'clear'  => \$perfom_clear,
-    'store'  => \$perform_store,
-    'color'  => \$show_colors,
-    'ack=s@' => \@use_acks,
-    'perl=s' => \$perl,
+    'clear'   => \$perfom_clear,
+    'store'   => \$perform_store,
+    'color'   => \$show_colors,
+    'times=i' => \$num_iterations,
+    'ack=s@'  => \@use_acks,
+    'perl=s'  => \$perl,
 );
 
 if($perfom_clear) {
