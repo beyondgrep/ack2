@@ -117,15 +117,3 @@ sub next {
 }
 
 1;
-
-__END__
-
-# ABSTRACT: Description for home::rob::projects::ack2::FindResources
-
-=head1 SYNOPSIS
-
-=head1 DESCRIPTION
-
-=head1 FUNCTIONS
-
-=cut
