@@ -1,6 +1,7 @@
 package App::Ack::GitGrepResources;
 
 use App::Ack;
+use App::Ack::Resources;
 
 use Cwd;
 use File::Spec;
@@ -28,11 +29,17 @@ sub from_argv {
     my $opt   = shift;
     my $start = shift;
 
-    my $self = bless { pipe => undef }, $class;
+    my $self = bless {
+        count   => 0,
+        fallback=> [],
+        pipe    => undef,
+    }, $class;
 
     $self->{iter} = sub {
         while (@{$start}) {
             unless ($self->{pipe}) {
+                $self->{count} = 0;
+
                 # Stolen from GARU's Data::Printer ;)
                 my (undef, $regex) = ("$opt->{regex}" =~ m{
                     \(
@@ -44,17 +51,19 @@ sub from_argv {
 
                 my $cwd = cwd();
                 chdir($start->[0]) or next;
-                open(
+                my $opened = open(
                     $self->{pipe}, '-|',
                     qw(git grep -P -l),
                     ($opt->{i} ? '-i' : ()),
                     ($opt->{v} ? '-v' : ()),
                     $regex,
-                ) or next;
+                );
                 chdir($cwd);
+                next unless $opened;
             }
 
             while (my $filename = readline($self->{pipe})) {
+                ++$self->{count};
                 chomp $filename;
                 $filename = File::Spec->catfile($start->[0], $filename);
 
@@ -64,9 +73,17 @@ sub from_argv {
                 return $filename;
             }
             close $self->{pipe};
+
+            push @{$self->{fallback}}, $start->[0] unless $self->{count};
         } continue {
             undef $self->{pipe};
             shift @{$start};
+        }
+
+        if (@{$self->{fallback}}) {
+            my $resources = App::Ack::Resources->from_argv($opt, $self->{fallback});
+            $self->{iter} = $resources->{iter};
+            return $self->{iter}->();
         }
 
         return;
