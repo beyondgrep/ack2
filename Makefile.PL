@@ -29,6 +29,7 @@ my %parms = (
         'Match.pm'          => '$(INST_LIBDIR)/App/Ack/Filter/Match.pm',
         'Default.pm'        => '$(INST_LIBDIR)/App/Ack/Filter/Default.pm',
         'Inverse.pm'        => '$(INST_LIBDIR)/App/Ack/Filter/Inverse.pm',
+        'GitResources.pm'   => '$(INST_LIBDIR)/App/Ack/GitResources.pm',
     },
     EXE_FILES               => [ 'ack' ],
 
@@ -98,7 +99,8 @@ IS_FILTER_PM      = Is.pm
 MATCH_FILTER_PM   = Match.pm
 DEFAULT_FILTER_PM = Default.pm
 INVERSE_FILTER_PM = Inverse.pm
-ALL_PM            = $(ACK_PM) $(RESOURCE_PM) $(RESOURCES_PM) $(BASIC_PM) $(FILTER_PM) $(EXT_FILTER_PM) $(FIRST_FILTER_PM) $(IS_FILTER_PM) $(MATCH_FILTER_PM) $(DEFAULT_FILTER_PM) $(INVERSE_FILTER_PM) $(CONFIG_FINDER_PM) $(CONFIG_LOADER_PM) $(CONFIG_DEFAULT_PM)
+GIT_RESOURCES_PM  = GitResources.pm
+ALL_PM            = $(ACK_PM) $(RESOURCE_PM) $(RESOURCES_PM) $(BASIC_PM) $(FILTER_PM) $(EXT_FILTER_PM) $(FIRST_FILTER_PM) $(IS_FILTER_PM) $(MATCH_FILTER_PM) $(DEFAULT_FILTER_PM) $(INVERSE_FILTER_PM) $(CONFIG_FINDER_PM) $(CONFIG_LOADER_PM) $(CONFIG_DEFAULT_PM) $(GIT_RESOURCES_PM)
 
 TEST_VERBOSE=0
 TEST_FILES=t/*.t t/lib/*.t
