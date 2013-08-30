@@ -215,6 +215,7 @@ if($previous_timings) {
     };
 }
 
+system 'make', 'ack-standalone';
 my $format = create_format(\@invocations, \@acks, $show_colors);
 my $header = sprintf $format, '', map { color($_->{'version'})  } @acks;
 print $header;
