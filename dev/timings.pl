@@ -10,6 +10,7 @@ use File::Slurp qw(read_dir read_file write_file);
 use File::Spec;
 use JSON;
 use List::MoreUtils qw(any);
+use Term::ANSIColor qw(colored);
 use Time::HiRes qw(gettimeofday tv_interval);
 
 my $SOURCE_DIR = File::Spec->catdir($ENV{HOME}, 'parrot');
@@ -48,7 +49,7 @@ sub grab_versions {
 }
 
 sub create_format {
-    my ( $invocations, $acks ) = @_;
+    my ( $invocations, $acks, $show_colors ) = @_;
 
     my $max_invocation_length = -1;
 
@@ -58,7 +59,8 @@ sub create_format {
             $max_invocation_length = $length;
         }
     }
-    my @max_version_lengths = (length('000.00')) x @$acks;
+
+    my @max_version_lengths = (length(color('000.00'))) x @$acks;
 
     for(0..$#$acks) {
         if(length($acks->[$_]{'version'}) > $max_version_lengths[$_]) {
@@ -71,6 +73,8 @@ sub create_format {
     } @max_version_lengths) . "\n";
 }
 
+my $num_iterations = 1;
+
 sub time_ack {
     my ( $ack, $invocation, $perl ) = @_;
 
@@ -82,29 +86,56 @@ sub time_ack {
 
     my $end;
     my $start = [gettimeofday()];
-    my ( $read, $write );
-    pipe $read, $write;
-    my $pid   = fork;
+    for ( 1 .. $num_iterations ) {
+        my ( $read, $write );
+        pipe $read, $write;
+        my $pid   = fork;
 
-    my $has_error_lines;
+        my $has_error_lines;
 
-    if($pid) {
-        close $write;
-        while(<$read>) {
-            $has_error_lines = 1;
+        if($pid) {
+            close $write;
+            while(<$read>) {
+                $has_error_lines = 1;
+            }
+            waitpid $pid, 0;
+            return if $has_error_lines;
+        } else {
+            close $read;
+            close STDOUT;
+            open STDERR, '>&', $write;
+            exec @args;
+            exit 255;
         }
-        waitpid $pid, 0;
-        return if $has_error_lines;
-        $end = [gettimeofday()];
-    } else {
-        close $read;
-        close STDOUT;
-        open STDERR, '>&', $write;
-        exec @args;
-        exit 255;
+    }
+    $end = [gettimeofday()];
+
+    return tv_interval($start, $end) / $num_iterations;
+}
+
+my $show_colors;
+
+sub color {
+    my ( $previous_value, $value );
+
+    if ( @_ == 2 ) {
+        ( $previous_value, $value ) = @_;
+    }
+    else {
+        ( $value ) = @_;
     }
 
-    return tv_interval($start, $end);
+    return $value if !$show_colors;
+    return $value if !defined($value);
+
+    return colored(['white'], $value) if !defined($previous_value);
+
+    if ( $previous_value < $value ) {
+        return colored(['red'], $value);
+    }
+    else {
+        return colored(['green'], $value);
+    }
 }
 
 my @invocations = (
@@ -139,10 +170,12 @@ my @use_acks;
 my $perl = $^X;
 
 GetOptions(
-    'clear'  => \$perfom_clear,
-    'store'  => \$perform_store,
-    'ack=s@' => \@use_acks,
-    'perl=s' => \$perl,
+    'clear'   => \$perfom_clear,
+    'store'   => \$perform_store,
+    'color'   => \$show_colors,
+    'times=i' => \$num_iterations,
+    'ack=s@'  => \@use_acks,
+    'perl=s'  => \$perl,
 );
 
 if($perfom_clear) {
@@ -182,8 +215,8 @@ if($previous_timings) {
     };
 }
 
-my $format = create_format(\@invocations, \@acks);
-my $header = sprintf $format, '', map { $_->{'version'} } @acks;
+my $format = create_format(\@invocations, \@acks, $show_colors);
+my $header = sprintf $format, '', map { color($_->{'version'})  } @acks;
 print $header;
 print '-' x (length($header) - 1), "\n"; # -1 for the newline
 
@@ -192,19 +225,28 @@ my %stored_timings;
 foreach my $invocation (@invocations) {
     my @timings;
 
+    my $previous_timing;
+
     foreach my $ack (@acks) {
-        unless($ack->{'path'}) {
-            push @timings, $previous_timings->{join(' ', 'ack', @$invocation)};
-            next;
+        my $elapsed;
+
+        if($ack->{'path'}) {
+            $elapsed = time_ack($ack, $invocation, $perl);
+        } else {
+            $elapsed = $previous_timings->{join(' ', 'ack', @$invocation)};
         }
-        my $elapsed = time_ack($ack, $invocation, $perl);
-        push @timings, $elapsed;
+
+        if(defined $elapsed) {
+            $elapsed = sprintf('%.2f', $elapsed);
+        }
+        push @timings, color($previous_timing, $elapsed);
+        $previous_timing = $elapsed if defined $elapsed;
 
         if($perform_store && $ack->{'store_timings'}) {
             $stored_timings{join(' ', 'ack', @$invocation)} = $elapsed;
         }
     }
-    printf $format, join(' ', 'ack', @$invocation), map { defined() ? sprintf('%.2f', $_) : 'x_x' } @timings;
+    printf $format, join(' ', 'ack', @$invocation), map { defined() ? $_ : color('x_x') } @timings;
 }
 
 if($perform_store) {
@@ -215,7 +257,6 @@ __DATA__
 
 TODO:
 
-  * Fancy colors
   * Percentage slowdown per invocation
   * Overall stats dump at the end.
   * Stop passing bad options to 1.x (--rust, --known)
