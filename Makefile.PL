@@ -15,20 +15,21 @@ my %parms = (
     VERSION_FROM        => 'Ack.pm',
 
     PM                  => {
-        'Ack.pm'            => '$(INST_LIBDIR)/App/Ack.pm',
-        'Resource.pm'       => '$(INST_LIBDIR)/App/Ack/Resource.pm',
-        'Resources.pm'      => '$(INST_LIBDIR)/App/Ack/Resources.pm',
-        'Basic.pm'          => '$(INST_LIBDIR)/App/Ack/Resource/Basic.pm',
-        'ConfigDefault.pm'  => '$(INST_LIBDIR)/App/Ack/ConfigDefault.pm',
-        'ConfigFinder.pm'   => '$(INST_LIBDIR)/App/Ack/ConfigFinder.pm',
-        'ConfigLoader.pm'   => '$(INST_LIBDIR)/App/Ack/ConfigLoader.pm',
-        'Filter.pm'         => '$(INST_LIBDIR)/App/Ack/Filter.pm',
-        'Extension.pm'      => '$(INST_LIBDIR)/App/Ack/Filter/Extension.pm',
-        'FirstLineMatch.pm' => '$(INST_LIBDIR)/App/Ack/Filter/FirstLineMatch.pm',
-        'Is.pm'             => '$(INST_LIBDIR)/App/Ack/Filter/Is.pm',
-        'Match.pm'          => '$(INST_LIBDIR)/App/Ack/Filter/Match.pm',
-        'Default.pm'        => '$(INST_LIBDIR)/App/Ack/Filter/Default.pm',
-        'Inverse.pm'        => '$(INST_LIBDIR)/App/Ack/Filter/Inverse.pm',
+        'Ack.pm'               => '$(INST_LIBDIR)/App/Ack.pm',
+        'Resource.pm'          => '$(INST_LIBDIR)/App/Ack/Resource.pm',
+        'Resources.pm'         => '$(INST_LIBDIR)/App/Ack/Resources.pm',
+        'Basic.pm'             => '$(INST_LIBDIR)/App/Ack/Resource/Basic.pm',
+        'ConfigDefault.pm'     => '$(INST_LIBDIR)/App/Ack/ConfigDefault.pm',
+        'ConfigFinder.pm'      => '$(INST_LIBDIR)/App/Ack/ConfigFinder.pm',
+        'ConfigLoader.pm'      => '$(INST_LIBDIR)/App/Ack/ConfigLoader.pm',
+        'Filter.pm'            => '$(INST_LIBDIR)/App/Ack/Filter.pm',
+        'Extension.pm'         => '$(INST_LIBDIR)/App/Ack/Filter/Extension.pm',
+        'FirstLineMatch.pm'    => '$(INST_LIBDIR)/App/Ack/Filter/FirstLineMatch.pm',
+        'Is.pm'                => '$(INST_LIBDIR)/App/Ack/Filter/Is.pm',
+        'Match.pm'             => '$(INST_LIBDIR)/App/Ack/Filter/Match.pm',
+        'Default.pm'           => '$(INST_LIBDIR)/App/Ack/Filter/Default.pm',
+        'Inverse.pm'           => '$(INST_LIBDIR)/App/Ack/Filter/Inverse.pm',
+        'ParallelResources.pm' => '$(INST_LIBDIR)/App/Ack/ParallelResources.pm',
     },
     EXE_FILES               => [ 'ack' ],
 
@@ -98,7 +99,8 @@ IS_FILTER_PM      = Is.pm
 MATCH_FILTER_PM   = Match.pm
 DEFAULT_FILTER_PM = Default.pm
 INVERSE_FILTER_PM = Inverse.pm
-ALL_PM            = $(ACK_PM) $(RESOURCE_PM) $(RESOURCES_PM) $(BASIC_PM) $(FILTER_PM) $(EXT_FILTER_PM) $(FIRST_FILTER_PM) $(IS_FILTER_PM) $(MATCH_FILTER_PM) $(DEFAULT_FILTER_PM) $(INVERSE_FILTER_PM) $(CONFIG_FINDER_PM) $(CONFIG_LOADER_PM) $(CONFIG_DEFAULT_PM)
+PARALLEL_RESOURCES_PM = ParallelResources.pm
+ALL_PM            = $(ACK_PM) $(RESOURCE_PM) $(RESOURCES_PM) $(BASIC_PM) $(FILTER_PM) $(EXT_FILTER_PM) $(FIRST_FILTER_PM) $(IS_FILTER_PM) $(MATCH_FILTER_PM) $(DEFAULT_FILTER_PM) $(INVERSE_FILTER_PM) $(CONFIG_FINDER_PM) $(CONFIG_LOADER_PM) $(CONFIG_DEFAULT_PM) $(PARALLEL_RESOURCES_PM)
 
 TEST_VERBOSE=0
 TEST_FILES=t/*.t t/lib/*.t
