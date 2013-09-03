@@ -28,9 +28,21 @@ options.
 
 ### dev/display-option-coverage.pl
 
-TODO
+The test suite can build what we call an "option coverage" file if the `ACK_OPTION_COVERAGE`
+environment variable is set to a truthy value.  The option coverage file lists all of the options
+provided to the various options provided to the various invocations of ack used in the test suite.
+`dev/display-options-coverage.pl` reads this file and prints the options that are *not* used in
+the test suite.  This helps find new options that haven't had tests written for them yet.
 
 ### Helpful Makefile rules
+
+#### nytprof
+
+Runs ack through `Devel::NYTProf`.
+
+#### timings
+
+Shorthand for `dev/timings.pl`.
 
 ## Running Tests
 
@@ -53,6 +65,11 @@ placed under `blib/lib`, so be sure to run `make` before running `prove`!
 
 ### Getting debug output from a test
 
+ack's test suite captures standard output and standard error, so writing debug messages
+to standard error will show up in the captured output, and cause the test suite to fail.
+We have an `App::Ack::Debug` module for emitting test-safe debugging output, but it doesn't
+get placed under `blib` by default.
+
 ## Branching
 
 Development is *not* done on master.  We use a dev branch named
@@ -73,7 +90,8 @@ will remove them later.
 
 ### perlcritic/perltidy
 
-TODO
+We have a perlcriticrc and a perltidyrc file for checking the Perl source
+files.
 
 ## Guidelines
 
@@ -91,4 +109,17 @@ TODO
 
 ### Milestones
 
-TODO
+#### 2.0x
+
+Issues with this milestone should be resolved on the `dev` branch.  These
+are usually bug fixes.
+
+#### 2.1
+
+Issues with this milestone should be resolved on the `2.1-work` branch.  These
+are usually new features.
+
+#### Indefinite future
+
+Issues with this milestone are either questionable features, or features that are too far
+out to schedule on another milestone.
