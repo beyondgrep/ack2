@@ -35,6 +35,8 @@ sub to_string {
     my ( $self ) = @_;
 
     my $filename = $self->{'filename'};
+
+    return $filename;
 }
 
 BEGIN {
