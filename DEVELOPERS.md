@@ -93,6 +93,39 @@ will remove them later.
 We have a perlcriticrc and a perltidyrc file for checking the Perl source
 files.
 
+## How to cut a release
+
+### For all releases
+
+These can be done by anyone, except for the upload to CPAN.
+
+* Prep all source files for release.
+    * If this is a final release, replace all `2.XX_01` version numbers with `2.YY`, where XX is odd and YY is even.
+    * Update the `Changes` file with the new version numbers and put a date in the header.
+* `make clean` and `make test` repeatedly.
+* `make disttest`
+    * Should pass.
+* `make tardist`
+    * Creates a tarball
+* Upload the tarball to pause.cpan.org
+* Tag the release
+    * `git tag 2.XX`
+    * `git push --tags`
+
+### For an official release (like `2.06`)
+
+Do all of the above for a development release, plus:
+
+* Put a version of standalone into the garage.
+* Update beyondgrep.com
+    * https://github.com/petdance/beyondgrep
+    * Front page version number
+    * man page archive
+* Announce it
+    * Mail to ack-users and ack-announce.
+    * Post to ack's Google+ page.
+    * Tweet on @beyondgrep.
+
 ## Guidelines
 
 ### Adding new files to ack2
