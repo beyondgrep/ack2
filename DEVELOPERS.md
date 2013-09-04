@@ -149,6 +149,10 @@ are usually bug fixes.
 
 #### 2.1
 
+XXX I want to not call this "2.1" because it conflates with "2.10"
+which is coming soon.  Let's give it some easy-to-type textual name,
+like "goober" or "lemon" or who knows what.
+
 Issues with this milestone should be resolved on the `2.1-work` branch.  These
 are usually new features.
 
