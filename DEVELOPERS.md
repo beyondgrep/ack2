@@ -160,3 +160,17 @@ are usually new features.
 
 Issues with this milestone are either questionable features, or features that are too far
 out to schedule on another milestone.
+
+## But I Can't Contribute to ack, because...
+
+### ...I don't have any spare time.
+
+TODO
+
+### ...I don't know Perl.
+
+TODO
+
+### ...I don't know where to start.
+
+TODO
