@@ -74,6 +74,7 @@ for my $arg ( @ARGV ) {
     close $fh;
 }
 
+# We only use two of the four constructors in File::Next, so delete the other two.
 for my $unused_func ( qw( dirs everything ) ) {
     $code =~ s/^sub $unused_func\b.*?^}//sm; # It's OK if we can't find it
 }
