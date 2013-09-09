@@ -162,9 +162,6 @@ sub run_cmd {
     my ( @stdout, @stderr );
 
     if (is_win32) {
-        if($options->{'input'}) {
-            die('input options have not been implemented for Win32 yet');
-        }
 # capture stderr & stdout output into these files (only on Win32)
         my $catchout_file = 'stdout.log';
         my $catcherr_file = 'stderr.log';

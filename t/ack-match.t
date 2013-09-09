@@ -28,12 +28,14 @@ test_match( @{$_} ) for @tests;
 # result in an error
 run_ack( '--match', 'Sue' );
 
-# not giving a regex when piping into ack should result in an error
-my ($stdout, $stderr) = pipe_into_ack_with_stderr( 't/text/4th-of-july.txt', '--perl' );
-ok( get_rc() != 0, 'ack should return an error when piped into without a regex' );
-is( scalar @{$stdout}, 0, 'ack should return no STDOUT when piped into without a regex' );
-is( scalar @{$stderr}, 1, 'ack should return one line of error message when piped into without a regex' ) or diag(explain($stderr));
-
+TODO: {
+    local $TODO = "input options have not been implemented for Win32 yet" if is_win32;
+    # not giving a regex when piping into ack should result in an error
+    my ($stdout, $stderr) = pipe_into_ack_with_stderr( 't/text/4th-of-july.txt', '--perl' );
+    ok( get_rc() != 0, 'ack should return an error when piped into without a regex' );
+    is( scalar @{$stdout}, 0, 'ack should return no STDOUT when piped into without a regex' );
+    is( scalar @{$stderr}, 1, 'ack should return one line of error message when piped into without a regex' ) or diag(explain($stderr));
+}
 done_testing;
 
 # call ack normally and compare output to calling with --match regex
