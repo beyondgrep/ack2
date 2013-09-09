@@ -97,6 +97,8 @@ DASH_LC: {
     ack_sets_match( [ @args, @files ], \@expected, 'Religion counts -l -c' );
 }
 
+TODO: {
+    local $TODO = "input options have not been implemented for Win32 yet" if is_win32;
 PIPE_INTO_C: {
     my $file = 't/text/science-of-myth.txt';
     my @args = qw( religion -i -c );
@@ -104,6 +106,7 @@ PIPE_INTO_C: {
 
     is( scalar @results, 1, 'Piping into ack --count should return one line of results' );
     is( $results[0], '2', 'Piping into ack --count should return "<count>"' );
+}
 }
 
 DASH_HC: {
