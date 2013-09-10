@@ -174,3 +174,72 @@ TODO
 ### ...I don't know where to start.
 
 TODO
+
+## Source file overview
+
+### ack
+
+This is the main entry point for ack.  It contains a great deal of the code,
+as well as the POD documentation that is used to generate man pages.
+
+### Ack.pm
+
+This contains the App::Ack package, which stores more of the general "helper" code
+for ack.  Chances are that if you want to change something, it'll be in `Ack.pm`
+or `ack`.
+
+### Resource.pm
+
+TODO
+
+### Resources.pm
+
+TODO
+
+### Filter.pm
+
+TODO
+
+### Basic.pm
+
+Implements a basic (on-filesystem) `Resource` object.
+
+### ConfigDefault.pm
+
+TODO
+
+### ConfigFinder.pm
+
+TODO
+
+### ConfigLoader.pm
+
+TODO
+
+### Debug.pm
+
+TODO
+
+### Default.pm
+
+TODO
+
+### Extension.pm
+
+TODO
+
+### FirstLineMatch.pm
+
+TODO
+
+### Inverse.pm
+
+TODO
+
+### Is.pm
+
+TODO
+
+### Match.pm
+
+TODO
