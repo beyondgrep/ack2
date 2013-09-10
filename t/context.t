@@ -249,15 +249,12 @@ EOF
 }
 
 # highlighting works with context
-TODO: {
-    local $TODO = "input options have not been implemented for Win32 yet" if is_win32;
 HIGHLIGHTING: {
     my @ack_args = qw( July -C5 --color );
     my @results = pipe_into_ack( 't/text/4th-of-july.txt', @ack_args );
     my @escaped_lines = grep { /\e/ } @results;
     is( scalar @escaped_lines, 2, 'Only two lines are highlighted' );
     is( scalar @results, 18, 'Expecting altogether 18 lines back' );
-}
 }
 
 # grouping works with context (single file)
