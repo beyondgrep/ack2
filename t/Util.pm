@@ -162,6 +162,7 @@ sub run_cmd {
     my ( @stdout, @stderr );
 
     if (is_win32) {
+        require Win32::ShellQuote;
 # capture stderr & stdout output into these files (only on Win32)
         my $catchout_file = 'stdout.log';
         my $catcherr_file = 'stderr.log';
@@ -170,7 +171,12 @@ sub run_cmd {
         open(SAVEERR, ">&STDERR") or die "Can't dup STDERR: $!";
         open(STDOUT, '>', $catchout_file) or die "Can't open $catchout_file: $!";
         open(STDERR, '>', $catcherr_file) or die "Can't open $catcherr_file: $!";
-        system @cmd;
+        my $cmd = Win32::ShellQuote::quote_system_string(@cmd);
+        if ( my $input = $options->{input} ) {
+            my $input_command = Win32::ShellQuote::quote_system_string(@{$input});
+            $cmd = "$input_command | $cmd";
+        }
+        system $cmd;
         close STDOUT;
         close STDERR;
         open(STDOUT, ">&SAVEOUT") or die "Can't restore STDOUT: $!";
