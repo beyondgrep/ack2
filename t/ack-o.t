@@ -79,8 +79,7 @@ WITH_OUTPUT: {
 
 OUTPUT_DOUBLE_QUOTES: {
     my @files = qw( t/text/ );
-    my $q = is_win32() ? '\\"' : '"'  ;
-    my @args  = ( "--output=$q\$1$q", 'question(\\S+)' );
+    my @args  = ( '--output="$1"', 'question(\\S+)' );
 
     my @target_file = (
         File::Next::reslash( 't/text/science-of-myth.txt' ),
