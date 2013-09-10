@@ -30,3 +30,7 @@ Build status: [![Build Status](https://travis-ci.org/petdance/ack2.png?branch=de
 # Development
 
 [Developer's Guide](DEVELOPERS.md)
+
+# Community
+
+TODO
