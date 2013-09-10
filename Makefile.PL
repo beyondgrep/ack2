@@ -118,7 +118,7 @@ critic:
 	perlcritic -1 -q -profile perlcriticrc $(ACK) $(ALL_PM) t/*.t
 
 ack-standalone : $(ACK) $(ALL_PM) squash Makefile
-	$(PERL) squash %s $(ACK) File::Next $(ALL_PM) > ack-standalone
+	$(PERL) squash %s File::Next $(ALL_PM) $(ACK) > ack-standalone
 	$(FIXIN) ack-standalone
 	-$(NOECHO) $(CHMOD) $(PERM_RWX) ack-standalone
 	$(PERL) -i -p -e "s/\\\$$GIT_REVISION\s*=\s*''/\\\$$GIT_REVISION = q{$$(git rev-parse --short HEAD)}/" ack-standalone
