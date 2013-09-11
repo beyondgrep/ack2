@@ -3,6 +3,7 @@ perl:
   - "5.10"
 notifications:
 install: "cpanm --installdeps --notest . && cpanm IO::Pty"
+script:  "perl Makefile.PL && make fulltest"
 email:
   recipients:
     - andy@petdance.com
