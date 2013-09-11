@@ -190,15 +190,15 @@ or `ack`.
 
 ### Resource.pm
 
-TODO
+An abstract superclass that represents a searchable "resource" (usually a file on a filesystem).
 
 ### Resources.pm
 
-TODO
+A factory object for creating a stream of `Resource` objects.
 
 ### Filter.pm
 
-TODO
+An abstract superclass that represents objects that can filter `Resource` objects.
 
 ### Basic.pm
 
@@ -206,43 +206,46 @@ Implements a basic (on-filesystem) `Resource` object.
 
 ### ConfigDefault.pm
 
-TODO
+A module that contains the default configuration for ack.
 
 ### ConfigFinder.pm
 
-TODO
+A module that contains the logic for locating the various configuration
+files.
 
 ### ConfigLoader.pm
 
-TODO
+A module that contains the logic for loading configuration files.
 
 ### Debug.pm
 
-TODO
+Contains a single routine for printing to the console while being run
+in the test suite.
 
 ### Default.pm
 
-TODO
+The class that implements the filter that ack uses by
+default if you don't specify any filters on the command line.
 
 ### Extension.pm
 
-TODO
+The class that implements filtering resources by file extension.
 
 ### FirstLineMatch.pm
 
-TODO
+The class that implements filtering resources by their first line.
 
 ### Inverse.pm
 
-TODO
+The class that inverts another filter.
 
 ### Is.pm
 
-TODO
+The class that implements filtering resources by their filename (exact match).
 
 ### Match.pm
 
-TODO
+The class that implements filtering resources by their filename (regular expression).
 
 ## How do I...?
 
