@@ -254,7 +254,3 @@ The class that implements filtering resources by their filename (regular express
 TODO
 
 ### MORE
-
-## Release process
-
-TODO
