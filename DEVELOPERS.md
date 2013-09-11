@@ -165,11 +165,15 @@ out to schedule on another milestone.
 
 ### ...I don't have any spare time.
 
-TODO
+I know how you feel!  But any contribution is welcome; you don't need to be a full-time contributor.
+Every test file, every issue solved, every bug fixed matters!
 
 ### ...I don't know Perl.
 
-TODO
+That's ok; it's easy to learn!  Perl may have a reputation for being unreadable, but ack is written
+in a very easy-to-read style.
+
+TODO Mention http://perl-begin.org/
 
 ### ...I don't know where to start.
 
