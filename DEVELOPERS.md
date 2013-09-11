@@ -251,3 +251,7 @@ TODO
 TODO
 
 ### MORE
+
+## Release process
+
+TODO
