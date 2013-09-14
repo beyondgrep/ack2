@@ -1,8 +1,8 @@
 History file for ack.  http://beyondgrep.com/
 
-NEXT
+2.09_01 Sat Sep 14 16:46:01 CDT 2013
 ====================================
-
+[FIXES]
 Fix the test suite for Win32.  Many thanks to Christian Walde for
 bringing the severity of this issue to our attention, as well as
 providing a Win32 development environment for us to work with.
