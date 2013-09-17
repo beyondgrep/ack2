@@ -2,7 +2,9 @@ History file for ack.  http://beyondgrep.com/
 
 NEXT
 ====================================
-
+[FIXES]
+Fixed Win32-detection in the Makefile.PL.  Thanks, Michael Beijen
+and Alexandr Ciornii.
 
 
 2.09_01 Sat Sep 14 16:46:01 CDT 2013
