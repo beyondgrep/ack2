@@ -163,7 +163,7 @@ sub run_cmd {
 
     if (is_win32) {
         require Win32::ShellQuote;
-# capture stderr & stdout output into these files (only on Win32)
+        # Capture stderr & stdout output into these files (only on Win32).
         my $catchout_file = 'stdout.log';
         my $catcherr_file = 'stderr.log';
 
@@ -187,7 +187,6 @@ sub run_cmd {
         @stderr = read_file($catcherr_file);
     }
     else {
-
         my ( $stdout_read, $stdout_write );
         my ( $stderr_read, $stderr_write );
 
