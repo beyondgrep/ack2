@@ -133,7 +133,7 @@ This is line 09
 This is line 10
 EOF
 
-    my $regex = "03|08";
+    my $regex = '03|08';
     my @files = qw( t/text/numbered-text.txt );
     my @args = ( '-C', $regex );
 
@@ -156,7 +156,7 @@ This is line 10
 This is line 11
 EOF
 
-    my $regex = "03|09";
+    my $regex = '03|09';
     my @files = qw( t/text/numbered-text.txt );
     my @args = ( '-C', $regex );
 
