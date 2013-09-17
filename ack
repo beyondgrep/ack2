@@ -38,19 +38,19 @@ MAIN: {
 
     # Do preliminary arg checking;
     my $env_is_usable = 1;
-    for ( @ARGV ) {
-        last if ( $_ eq '--' );
+    for my $arg ( @ARGV ) {
+        last if ( $arg eq '--' );
 
         # Get the --thpppt, --bar, --cathy checking out of the way.
-        /^--th[pt]+t+$/ && App::Ack::_thpppt($_);
-        /^--bar$/ && App::Ack::_bar();
-        /^--cathy$/ && App::Ack::_cathy();
+        $arg =~ /^--th[pt]+t+$/ and App::Ack::_thpppt($arg);
+        $arg eq '--bar'         and App::Ack::_bar();
+        $arg eq '--cathy'       and App::Ack::_cathy();
 
         # See if we want to ignore the environment. (Don't tell Al Gore.)
-        if ( /^--(no)?env$/ ) {
-            $env_is_usable = defined $1 ? 0 : 1;
-        }
+        $arg eq '--env'         and $env_is_usable = 1;
+        $arg eq '--noenv'       and $env_is_usable = 0;
     }
+
     if ( !$env_is_usable ) {
         my @keys = ( 'ACKRC', grep { /^ACK_/ } keys %ENV );
         delete @ENV{@keys};
