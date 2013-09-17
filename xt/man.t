@@ -74,11 +74,13 @@ sub strip_special_chars {
                 }
             }
         }
+
+        return;
     }
 
     sub get_man_options {
         unless ( $man_options ) {
-            _populate_man_options();
+            _populate_man_options() unless $man_options;
         }
         return @{ $man_options };
     }

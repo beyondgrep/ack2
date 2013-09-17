@@ -15,9 +15,9 @@ sub are_mutually_exclusive {
 
     my ( $stdout, $stderr ) = run_ack_with_stderr(@$args);
 
-    isnt get_rc(), 0, 'The ack command should fail';
-    is scalar(@$stdout), 0, 'No lines should be present on standard output';
-    is scalar(@$stderr), 1, 'A single line should be present on standard error';
+    isnt( get_rc(), 0, 'The ack command should fail' );
+    is( scalar(@$stdout), 0, 'No lines should be present on standard output' );
+    is( scalar(@$stderr), 1, 'A single line should be present on standard error' );
 
     my $opt1_re = quotemeta($opt1);
     my $opt2_re = quotemeta($opt2);
@@ -26,10 +26,10 @@ sub are_mutually_exclusive {
     if($error =~ /Options '$opt1_re' and '$opt2_re' are mutually exclusive/ ||
        $error =~ /Options '$opt2_re' and '$opt1_re' are mutually exclusive/) {
 
-        pass qq{Error message resembles "Options '$opt1' and '$opt2' are mutually exclusive"};
+        pass( qq{Error message resembles "Options '$opt1' and '$opt2' are mutually exclusive"} );
     }
     else {
-        fail qq{Error message does not resemble "Options '$opt1' and '$opt2' are mutually exclusive"};
+        fail( qq{Error message does not resemble "Options '$opt1' and '$opt2' are mutually exclusive"} );
         diag("Error message: '$error'");
     }
 }
