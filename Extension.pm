@@ -4,6 +4,8 @@ use strict;
 use warnings;
 use base 'App::Ack::Filter';
 
+use App::Ack::Filter::ExtensionGroup;
+
 sub new {
     my ( $class, @extensions ) = @_;
 
@@ -13,7 +15,12 @@ sub new {
     return bless {
         extensions => \@extensions,
         regex      => $re,
+        groupname  => 'ExtensionGroup',
     }, $class;
+}
+
+sub create_group {
+    return App::Ack::Filter::ExtensionGroup->new();
 }
 
 sub filter {

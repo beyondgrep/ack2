@@ -19,6 +19,7 @@ use App::Ack::Filter::FirstLineMatch;
 use App::Ack::Filter::Inverse;
 use App::Ack::Filter::Is;
 use App::Ack::Filter::Match;
+use App::Ack::Filter::Collection;
 
 use Getopt::Long 2.35 ();
 
@@ -113,22 +114,32 @@ sub _compile_file_filter {
     my $ifiles = $opt->{ifiles};
     $ifiles  ||= [];
 
-    my @ifiles_filters = map {
-        my $filter;
-
-        if ( /^(\w+):(.+)/ ) {
+    my $ifiles_filters = App::Ack::Filter::Collection->new();
+    
+    foreach my $filter_spec (@{$ifiles}) {
+        if ( $filter_spec =~ /^(\w+):(.+)/ ) {
             my ($how,$what) = ($1,$2);
-            $filter = App::Ack::Filter->create_filter($how, split(/,/, $what));
+            my $filter = App::Ack::Filter->create_filter($how, split(/,/, $what));
+            $ifiles_filters->add($filter);
         }
         else {
-            Carp::croak( qq{Invalid filter specification "$_"} );
+            Carp::croak( qq{Invalid filter specification "$filter_spec"} );
         }
-        $filter
-    } @{$ifiles};
+    }
 
     my $filters         = $opt->{'filters'} || [];
-    my $inverse_filters = [ grep {  $_->is_inverted() } @{$filters} ];
-    @{$filters}         =   grep { !$_->is_inverted() } @{$filters};
+    my $direct_filters = App::Ack::Filter::Collection->new();
+    my $inverse_filters = App::Ack::Filter::Collection->new();
+
+    foreach my $filter (@{$filters}) {
+        if ($filter->is_inverted()) {
+            # We want to check if files match the uninverted filters
+            $inverse_filters->add($filter->invert());
+        }
+        else {
+            $direct_filters->add($filter);
+        }
+    }
 
     my %is_member_of_starting_set = map { (get_file_id($_) => 1) } @{$start};
 
@@ -202,28 +213,15 @@ sub _compile_file_filter {
 
         my $resource = App::Ack::Resource::Basic->new($File::Next::name);
         return 0 if ! $resource;
-        foreach my $filter (@ifiles_filters) {
-            return 0 if $filter->filter($resource);
+        if ( $ifiles_filters->filter($resource) ) {
+            return 0;
         }
-        my $match_found = 1;
-        if ( @{$filters} ) {
-            $match_found = 0;
 
-            foreach my $filter (@{$filters}) {
-                if ($filter->filter($resource)) {
-                    $match_found = 1;
-                    last;
-                }
-            }
-        }
+        my $match_found = $direct_filters->filter($resource);
+
         # Don't bother invoking inverse filters unless we consider the current resource a match
-        if ( $match_found && @{$inverse_filters} ) {
-            foreach my $filter ( @{$inverse_filters} ) {
-                if ( not $filter->filter( $resource ) ) {
-                    $match_found = 0;
-                    last;
-                }
-            }
+        if ( $match_found && $inverse_filters->filter( $resource ) ) {
+            $match_found = 0;
         }
         return $match_found;
     };
