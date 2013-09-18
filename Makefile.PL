@@ -29,6 +29,9 @@ my %parms = (
         'Match.pm'          => '$(INST_LIBDIR)/App/Ack/Filter/Match.pm',
         'Default.pm'        => '$(INST_LIBDIR)/App/Ack/Filter/Default.pm',
         'Inverse.pm'        => '$(INST_LIBDIR)/App/Ack/Filter/Inverse.pm',
+        'Collection.pm'     => '$(INST_LIBDIR)/App/Ack/Filter/Collection.pm',
+        'IsGroup.pm'        => '$(INST_LIBDIR)/App/Ack/Filter/IsGroup.pm',
+        'ExtensionGroup.pm' => '$(INST_LIBDIR)/App/Ack/Filter/ExtensionGroup.pm',
     },
     EXE_FILES               => [ 'ack' ],
 
@@ -99,7 +102,10 @@ IS_FILTER_PM      = Is.pm
 MATCH_FILTER_PM   = Match.pm
 DEFAULT_FILTER_PM = Default.pm
 INVERSE_FILTER_PM = Inverse.pm
-ALL_PM            = $(ACK_PM) $(RESOURCE_PM) $(RESOURCES_PM) $(BASIC_PM) $(FILTER_PM) $(EXT_FILTER_PM) $(FIRST_FILTER_PM) $(IS_FILTER_PM) $(MATCH_FILTER_PM) $(DEFAULT_FILTER_PM) $(INVERSE_FILTER_PM) $(CONFIG_FINDER_PM) $(CONFIG_LOADER_PM) $(CONFIG_DEFAULT_PM)
+COLLECT_FILTER_PM = Collection.pm
+ISGRP_FILTER_PM   = IsGroup.pm
+EXTGRP_FILTER_PM  = ExtensionGroup.pm
+ALL_PM            = $(ACK_PM) $(RESOURCE_PM) $(RESOURCES_PM) $(BASIC_PM) $(FILTER_PM) $(EXT_FILTER_PM) $(FIRST_FILTER_PM) $(IS_FILTER_PM) $(MATCH_FILTER_PM) $(DEFAULT_FILTER_PM) $(INVERSE_FILTER_PM) $(COLLECT_FILTER_PM) $(ISGRP_FILTER_PM) $(EXTGRP_FILTER_PM) $(CONFIG_FINDER_PM) $(CONFIG_LOADER_PM) $(CONFIG_DEFAULT_PM)
 
 TEST_VERBOSE=0
 TEST_FILES=t/*.t t/lib/*.t
