@@ -46,7 +46,7 @@ sub to_string {
 
     my $data = $self->{'data'};
 
-    return join(' ', map { ".$_" } (keys $data));
+    return join(' ', map { ".$_" } (keys %$data));
 }
 
 1;
