@@ -24,14 +24,16 @@ prep_environment();
 my $program = $0;
 
 # change permissions of this file to unreadable
-my $old_mode;
-(undef, undef, $old_mode) = stat($program);
-my $nchanged = chmod 0000, $program;
+my (undef, undef, $old_mode) = stat($program);
+chmod 0000, $program;
+my (undef, undef, $new_mode) = stat($program);
+
+sub o ($) { sprintf '%o', @_ }
 
 SKIP: {
-    skip q{Unable to modify test program's permissions}, NTESTS unless $nchanged;
+    skip q{Unable to modify test program's permissions}, NTESTS if $old_mode eq $new_mode;
 
-    is( $nchanged, 1, sprintf( 'chmodded %s to 0000 from %o', $program, $old_mode ) );
+    isnt( o $new_mode, o $old_mode, "chmodded $program to be unreadable" );
 
     # execute a search on this file
     check_with( 'regex', $program );
@@ -48,7 +50,8 @@ SKIP: {
 
     # change permissions back
     chmod $old_mode, $program;
-    is( $nchanged, 1, sprintf( 'chmodded %s back to %o', $program, $old_mode ) );
+    my (undef, undef, $back_mode) = stat($program);
+    is( o $back_mode, o $old_mode, "chmodded $program back to original perms" );
 }
 
 sub check_with {
