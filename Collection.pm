@@ -51,7 +51,7 @@ sub add {
         $group->add($filter);
     }
     else {
-        push $self->{'ungrouped'}, $filter;
+        push @{$self->{'ungrouped'}}, $filter;
     }
 
     return;
