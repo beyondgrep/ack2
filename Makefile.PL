@@ -35,7 +35,6 @@ my %parms = (
     },
     EXE_FILES               => [ 'ack' ],
 
-    MIN_PERL_VERSION        => 5.008008,
     PREREQ_PM => {
         'Carp'              => '1.04',
         'Cwd'               => '3.00',
@@ -71,6 +70,10 @@ if ( $ExtUtils::MakeMaker::VERSION ge '6.46' ) {
             MailingList => 'http://groups.google.com/group/ack-users',
         }
     };
+}
+
+if ( $ExtUtils::MakeMaker::VERSION ge '6.48' ) {
+    $parms{MIN_PERL_VERSION} = 5.008008;
 }
 
 WriteMakefile( %parms );

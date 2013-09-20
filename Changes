@@ -6,6 +6,8 @@ NEXT
 Fixed Win32-detection in the Makefile.PL.  Thanks, Michael Beijen
 and Alexandr Ciornii.
 
+More compatibility fixes for Perl 5.8.8.
+
 
 2.09_01 Sat Sep 14 16:46:01 CDT 2013
 ====================================
