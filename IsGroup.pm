@@ -17,10 +17,7 @@ sub new {
 sub add {
     my ( $self, $filter ) = @_;
 
-    my $data = $self->{'data'};
-    my $filename = $filter->{'filename'};
-
-    $data->{$filename} = 1;
+    $self->{data}->{ $filter->{filename} } = 1;
 }
 
 sub filter {
@@ -41,9 +38,7 @@ sub inspect {
 sub to_string {
     my ( $self ) = @_;
 
-    my $data = $self->{'data'};
-
-    return join(' ', map { "$_" } (keys %$data));
+    return join(' ', keys %{$self->{data}});
 }
 
 1;
