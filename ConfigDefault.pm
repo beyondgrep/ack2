@@ -241,6 +241,9 @@ sub _options_block {
 # OCaml http://caml.inria.fr/
 --type-add=ocaml:ext:ml,mli
 
+# Matlab http://en.wikipedia.org/wiki/MATLAB
+--type-add=matlab:ext:m
+
 # Parrot http://www.parrot.org/
 --type-add=parrot:ext:pir,pasm,pmc,ops,pod,pg,tg
 
