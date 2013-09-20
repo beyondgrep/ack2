@@ -7,16 +7,19 @@ Makefile.PL
 ack
 Ack.pm
 Basic.pm
+Collection.pm
 ConfigDefault.pm
 ConfigFinder.pm
 ConfigLoader.pm
 # Debug.pm  This is a reminder for us to NOT put Debug.pm in MANIFEST
 Default.pm
 Extension.pm
+ExtensionGroup.pm
 Filter.pm
 FirstLineMatch.pm
 Inverse.pm
 Is.pm
+IsGroup.pm
 Match.pm
 Resource.pm
 Resources.pm
