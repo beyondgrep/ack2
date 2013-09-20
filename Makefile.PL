@@ -90,25 +90,12 @@ sub MY::postamble {
     # my $file_next_filename = qx(perldoc -l File::Next);
 
     my $postamble = sprintf(<<'MAKE_FRAG', $debug_mode);
-ACK               = ack
-ACK_PM            = Ack.pm
-RESOURCE_PM       = Resource.pm
-RESOURCES_PM      = Resources.pm
-BASIC_PM          = Basic.pm
-CONFIG_DEFAULT_PM = ConfigDefault.pm
-CONFIG_FINDER_PM  = ConfigFinder.pm
-CONFIG_LOADER_PM  = ConfigLoader.pm
-FILTER_PM         = Filter.pm
-EXT_FILTER_PM     = Extension.pm
-FIRST_FILTER_PM   = FirstLineMatch.pm
-IS_FILTER_PM      = Is.pm
-MATCH_FILTER_PM   = Match.pm
-DEFAULT_FILTER_PM = Default.pm
-INVERSE_FILTER_PM = Inverse.pm
-COLLECT_FILTER_PM = Collection.pm
-ISGRP_FILTER_PM   = IsGroup.pm
-EXTGRP_FILTER_PM  = ExtensionGroup.pm
-ALL_PM            = $(ACK_PM) $(RESOURCE_PM) $(RESOURCES_PM) $(BASIC_PM) $(FILTER_PM) $(EXT_FILTER_PM) $(FIRST_FILTER_PM) $(IS_FILTER_PM) $(MATCH_FILTER_PM) $(DEFAULT_FILTER_PM) $(INVERSE_FILTER_PM) $(COLLECT_FILTER_PM) $(ISGRP_FILTER_PM) $(EXTGRP_FILTER_PM) $(CONFIG_FINDER_PM) $(CONFIG_LOADER_PM) $(CONFIG_DEFAULT_PM)
+ACK    = ack
+ALL_PM = \
+    Ack.pm \
+    Resource.pm Resources.pm Basic.pm \
+    ConfigDefault.pm ConfigFinder.pm ConfigLoader.pm \
+    Filter.pm Extension.pm FirstLineMatch.pm Is.pm Match.pm Default.pm Inverse.pm Collection.pm IsGroup.pm ExtensionGroup.pm
 
 TEST_VERBOSE=0
 TEST_FILES=t/*.t t/lib/*.t
