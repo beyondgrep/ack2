@@ -40,7 +40,7 @@ use App::Ack::ConfigDefault;
 use Cwd 3.00 ();
 use File::Spec 3.00;
 
-use if ($^O =~ /MSWin32/ ? 1 : 0), "Win32";
+use if ($^O eq 'MSWin32'), 'Win32';
 
 =head1 METHODS
 
@@ -55,7 +55,7 @@ our $is_win = 0;
 sub new {
     my ( $class ) = @_;
 
-    $is_win = $^O =~ /MSWin32/,
+    $is_win = ($^O eq 'MSWin32');
 
     return bless {}, $class;
 }
@@ -64,8 +64,7 @@ sub _remove_redundancies {
     my ( @configs ) = @_;
 
     if ( $is_win ) {
-        # inode stat always returns 0 on windows,
-        # so just check filenames
+        # inode stat always returns 0 on windows, so just check filenames.
         my (%seen, @uniq);
 
         foreach my $path (@configs) {
@@ -114,8 +113,7 @@ sub _check_for_ackrc {
 
 =head2 $finder->find_config_files
 
-Locates config files, and returns
-a list of them.
+Locates config files, and returns a list of them.
 
 =cut
 
