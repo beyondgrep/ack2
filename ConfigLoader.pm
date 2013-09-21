@@ -78,13 +78,13 @@ sub uninvert_filter {
 
     return unless defined $opt->{filters} && @filters;
 
-    # loop through all the registered filters
-    # If we hit one that matches this extension and it's inverted, we need
-    # to delete it from the options
+    # Loop through all the registered filters.  If we hit one that
+    # matches this extension and it's inverted, we need to delete it from
+    # the options.
     for ( my $i = 0; $i < @{ $opt->{filters} }; $i++ ) {
         my $opt_filter = @{ $opt->{filters} }[$i];
 
-        # XXX do a real list comparison? This just checks string equivalence
+        # XXX Do a real list comparison? This just checks string equivalence.
         if ( $opt_filter->is_inverted() && "$opt_filter->{filter}" eq "@filters" ) {
             splice @{ $opt->{filters} }, $i, 1;
             $i--;
@@ -365,7 +365,7 @@ sub process_other {
         }
     }
 
-    if ( $argv_source ) { # this *should* always be true, but you never know...
+    if ( $argv_source ) { # This *should* always be true, but you never know...
         my @copy = @{$argv_source};
         local @ARGV = @copy;
 
@@ -541,7 +541,8 @@ sub remove_default_options_if_needed {
 
     my $should_remove = 0;
 
-    Getopt::Long::Configure('default', 'no_auto_help', 'no_auto_version'); # start with default options, minus some annoying ones
+    # Start with default options, minus some annoying ones.
+    Getopt::Long::Configure('default', 'no_auto_help', 'no_auto_version');
     Getopt::Long::Configure(
         'no_ignore_case',
         'no_auto_abbrev',
