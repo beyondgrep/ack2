@@ -49,7 +49,7 @@ BEGIN {
     $is_filter_mode = -p STDIN;
 
     $is_cygwin       = ($^O eq 'cygwin');
-    $is_windows      = ($^O =~ /MSWin32/);
+    $is_windows      = ($^O eq 'MSWin32');
     $dir_sep_chars   = $is_windows ? quotemeta( '\\/' ) : quotemeta( File::Spec->catfile( '', '' ) );
 }
 

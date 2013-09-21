@@ -36,6 +36,7 @@ Finally, ack takes settings from the command line.
 use strict;
 use warnings;
 
+use App::Ack ();
 use App::Ack::ConfigDefault;
 use Cwd 3.00 ();
 use File::Spec 3.00;
@@ -50,12 +51,8 @@ Creates a new config finder.
 
 =cut
 
-our $is_win = 0;
-
 sub new {
     my ( $class ) = @_;
-
-    $is_win = ($^O eq 'MSWin32');
 
     return bless {}, $class;
 }
@@ -63,7 +60,7 @@ sub new {
 sub _remove_redundancies {
     my ( @configs ) = @_;
 
-    if ( $is_win ) {
+    if ( $App::Ack::is_windows ) {
         # inode stat always returns 0 on windows, so just check filenames.
         my (%seen, @uniq);
 
@@ -120,7 +117,7 @@ Locates config files, and returns a list of them.
 sub find_config_files {
     my @config_files;
 
-    if( $is_win ) {
+    if ( $App::Ack::is_windows ) {
         push @config_files, map { File::Spec->catfile($_, 'ackrc') } (
             Win32::GetFolderPath(Win32::CSIDL_COMMON_APPDATA()),
             Win32::GetFolderPath(Win32::CSIDL_APPDATA()),
