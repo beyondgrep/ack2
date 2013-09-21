@@ -32,6 +32,7 @@ sub o { return sprintf '%o', shift }
 
 SKIP: {
     skip q{Unable to modify test program's permissions}, NTESTS if $old_mode eq $new_mode;
+    skip q{program readable despite permission changes}, NTESTS if -r $program;
 
     isnt( o($new_mode), o($old_mode), "chmodded $program to be unreadable" );
 
