@@ -117,7 +117,7 @@ TEST_TYPE_ACKRC_CMD_LINE_OVERRIDE: {
 --html
 END_ACKRC
 
-    my @expected = ();
+    my @expected;
 
     my @lines = run_ack('--nohtml', '<title>', 't/swamp', {
         ackrc => \$ackrc,
