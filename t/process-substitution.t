@@ -14,7 +14,7 @@ my @expected = (
 
 prep_environment();
 
-if ( is_win32() ) {
+if ( is_windows() ) {
     plan skip_all => 'Test unreliable on Windows.';
 }
 

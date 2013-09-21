@@ -104,7 +104,7 @@ if ( $ENV{'ACK_TEST_STANDALONE'} ) {
 
 my ($stdout, $stderr);
 
-if (is_win32()) {
+if ( is_windows() ) {
     ($stdout, $stderr) = run_cmd("@lhs_args | @rhs_args");
 }
 else {

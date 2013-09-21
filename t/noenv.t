@@ -22,7 +22,7 @@ sub is_global_file {
 
     my $wd = getcwd();
 
-    my $sep = is_win32() ? '\\' : '/';
+    my $sep = is_windows() ? '\\' : '/';
 
     chop $dir if $dir =~ m{$sep$};
     chop $wd  if $wd =~ m{$sep$};

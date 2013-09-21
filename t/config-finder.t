@@ -90,9 +90,8 @@ sub expect_ackrcs {
 }
 
 my @global_files;
-my $os_string = $^O;
 
-if ( $os_string eq 'MSWin32') {
+if ( is_windows() ) {
     require Win32;
 
     @global_files = map { File::Spec->catfile($_, 'ackrc') } (
@@ -106,7 +105,7 @@ else {
     );
 }
 
-if ( $os_string eq 'MSWin32' || $os_string eq 'cygwin' ) {
+if ( is_windows() || is_cygwin() ) {
     set_up_globals( @global_files );
 }
 

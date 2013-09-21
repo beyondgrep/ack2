@@ -68,7 +68,7 @@ like $output, qr/Usage: ack/;
         'Should have no output to stderr: ack --env --man' )
         or diag( join( "\n", 'STDERR:', @{$stderr} ) );
 
-    if (is_win32()) {
+    if ( is_windows() ) {
         like join("\n", @{$output}[0,1]), qr/^NAME\s+ack(?:-standalone)?\s/;
     }
     else {

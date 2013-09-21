@@ -15,8 +15,12 @@ sub prep_environment {
     $orig_wd = Cwd::getcwd();
 }
 
-sub is_win32 {
+sub is_windows {
     return $^O eq 'MSWin32';
+}
+
+sub is_cygwin {
+    return $^O eq 'cygwin';
 }
 
 sub build_ack_invocation {
@@ -161,7 +165,7 @@ sub run_cmd {
 
     my ( @stdout, @stderr );
 
-    if (is_win32) {
+    if ( is_windows() ) {
         require Win32::ShellQuote;
         # Capture stderr & stdout output into these files (only on Win32).
         my $catchout_file = 'stdout.log';

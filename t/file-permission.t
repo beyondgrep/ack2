@@ -14,7 +14,7 @@ use File::Spec;
 
 use constant NTESTS => 14;
 
-plan skip_all => q{Can't be checked under Win32} if is_win32;
+plan skip_all => q{Can't be checked under Win32} if is_windows();
 plan skip_all => q{Can't be run as root}         if $> == 0;
 
 plan tests => NTESTS;

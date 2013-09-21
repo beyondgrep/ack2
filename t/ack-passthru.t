@@ -46,8 +46,8 @@ DASH_C: {
 }
 
 SKIP: {
-    skip "input options have not been implemented for Win32 yet", 2 if is_win32;
-HIGHLIGHTING: {
+    skip 'Input options have not been implemented for Win32 yet', 2 if is_windows();
+
     my @ack_args = qw( July --passthru --color );
     my @results = pipe_into_ack( 't/text/4th-of-july.txt', @ack_args );
 
@@ -55,7 +55,6 @@ HIGHLIGHTING: {
 
     my @escaped_lines = grep { /\e/ } @results;
     is( scalar @escaped_lines, 2, 'Only two lines are highlighted' );
-}
 }
 
 __DATA__
