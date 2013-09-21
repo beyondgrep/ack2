@@ -16,7 +16,7 @@ sub prep_environment {
 }
 
 sub is_win32 {
-    return $^O =~ /Win32/;
+    return $^O eq 'MSWin32';
 }
 
 sub build_ack_invocation {

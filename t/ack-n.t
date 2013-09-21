@@ -24,7 +24,7 @@ END
 chomp $expected_norecurse;
 chomp $expected_recurse;
 
-if ( $^O =~ /MSWin32/ ) {
+if ( is_win32() ) {
     $expected_norecurse =~ s{/}{\\}g;
     $expected_recurse =~ s{/}{\\}g;
 }

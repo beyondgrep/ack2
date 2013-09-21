@@ -14,7 +14,7 @@ my @expected = (
 
 prep_environment();
 
-if ( $^O eq 'MSWin32' ) {
+if ( is_win32() ) {
     plan skip_all => 'Test unreliable on Windows.';
 }
 
