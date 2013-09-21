@@ -6,6 +6,9 @@ allow_leading_tabs = 0
 [-CodeLayout::RequireTidyCode]
 # Never works for me.
 
+[Compatibility::PodMinimumVersion]
+above_version = 5.008008
+
 [-ControlStructures::ProhibitPostfixControls]
 
 [-Documentation::PodSpelling]
@@ -36,6 +39,7 @@ functions = open opendir read readline readdir close closedir
 [-TestingAndDebugging::ProhibitNoStrict]
 [-TestingAndDebugging::ProhibitNoWarnings]
 # If I've turned off warnings or strict, I know why I'm doing it.
+[-TestingAndDebugging::RequireTestLabels]
 
 [-ValuesAndExpressions::ProhibitNoisyQuotes]
 [-ValuesAndExpressions::ProhibitEmptyQuotes]
