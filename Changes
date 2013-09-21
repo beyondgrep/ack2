@@ -1,5 +1,13 @@
 History file for ack.  http://beyondgrep.com/
 
+2.09_03 Sat Sep 21 15:03:45 CDT 2013
+====================================
+[FIXES]
+This release is in service of helping discover where our test failures
+are.  Many tests have now been wrapped in subtest() calls to help make
+their failure output more descriptive.
+
+
 2.09_02 Fri Sep 20 14:15:55 CDT 2013
 ====================================
 [FIXES]
