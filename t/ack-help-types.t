@@ -19,20 +19,18 @@ my @types = (
 
 my @options = ('--help-types', '--help=types');
 
-plan tests => @options * (sum(map { ref($_) ? scalar(@$_) : 1 } @types) + 1);
+plan tests => 12;
 
 foreach my $option ( @options ) {
     my @output = run_ack($option);
 
-    for(my $i = 0; $i < @types; $i += 2) {
-        my ( $type, $checks ) = @types[ $i , $i + 1 ];
-
+    while ( my ($type,$checks) = splice( @types, 0, 2 ) ) {
         my ( $matching_line ) = grep { /--\[no\]$type/ } @output;
 
-        ok $matching_line, "A match should be found for --$type in the output for $option";;
+        ok( $matching_line, "A match should be found for --$type in the output for $option" );
 
         foreach my $check (@{$checks}) {
-            like $matching_line, qr/\Q$check\E/, "Line for --$type in output for $option contains $check";
+            like( $matching_line, qr/\Q$check\E/, "Line for --$type in output for $option contains $check" );
         }
     }
 }
