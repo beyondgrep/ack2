@@ -32,7 +32,7 @@ my $lines;
 
 prep_environment();
 
-# we sort to ensure determinstic results
+# We sort to ensure determinstic results.
 @args  = ('-n', '--sort-files', 'apple', 't/swamp/groceries');
 $lines = run_ack(@args);
 is_deeply $lines, $expected_norecurse;
@@ -41,7 +41,7 @@ is_deeply $lines, $expected_norecurse;
 $lines = run_ack(@args);
 is_deeply $lines, $expected_norecurse;
 
-# make sure that re-enabling recursion works
+# Make sure that re-enabling recursion works.
 @args  = ('-n', '-r', '--sort-files', 'apple', 't/swamp/groceries');
 $lines = run_ack(@args);
 is_deeply $lines, $expected_recurse;
