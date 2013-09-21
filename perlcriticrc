@@ -8,6 +8,7 @@ allow_leading_tabs = 0
 
 [-ControlStructures::ProhibitPostfixControls]
 
+[-Documentation::PodSpelling]
 [-Documentation::RequirePodAtEnd]
 [-Documentation::RequirePodSections]
 [-Documentation::RequireEndBeforeLastPod]
