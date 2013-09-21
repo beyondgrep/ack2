@@ -46,19 +46,19 @@ Shorthand for `dev/timings.pl`.
 
 ## Running Tests
 
-### make test
+### `make test`
 
 Runs the `make test_classic` and `make test_standalone` rules.
 
-### make test_classic
+### `make test_classic`
 
 Runs the test suite using the module files in the repository.
 
-### make test_standalone
+### `make test_standalone`
 
 Runs the test suite using the `ack-standalone` script.
 
-### prove -b $TEST_FILE
+### `prove -b $TEST_FILE`
 
 Can be used to run individual test files.  This relies on the module files being
 placed under `blib/lib`, so be sure to run `make` before running `prove`!
