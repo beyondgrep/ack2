@@ -251,7 +251,6 @@ sub load_colors {
     return;
 }
 
-# inefficient, but functional
 sub filetypes {
     my ( $resource ) = @_;
 
@@ -270,12 +269,14 @@ sub filetypes {
         }
     }
 
-    return sort @matches;
+    # http://search.cpan.org/dist/Perl-Critic/lib/Perl/Critic/Policy/Subroutines/ProhibitReturnSort.pm
+    @matches = sort @matches;
+    return @matches;
 }
 
-# returns a (fairly) unique identifier for a file
-# use this function to compare two files to see if they're
-# equal (ie. the same file, but with a different path/links/etc)
+# Returns a (fairly) unique identifier for a file.
+# Use this function to compare two files to see if they're
+# equal (ie. the same file, but with a different path/links/etc).
 sub get_file_id {
     my ( $filename ) = @_;
 
