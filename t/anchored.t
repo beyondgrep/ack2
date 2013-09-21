@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!perl
 
 # Make sure beginning-of-line anchor works
 
