@@ -24,7 +24,7 @@ HERE
     my @expected = reslash_all( break_up_lines( $expected ) );
 
     my @args = qw( -f --show-types t/etc );
-    ack_sets_match( [ @args ], \@expected );
+    ack_sets_match( [ @args ], \@expected, 'No restrictions on type' );
 };
 
 subtest 'Only known types' => sub {
@@ -41,7 +41,7 @@ HERE
     my @expected = reslash_all( break_up_lines( $expected ) );
 
     my @args = qw( -f -k --show-types t/etc );
-    ack_sets_match( [ @args ], \@expected );
+    ack_sets_match( [ @args ], \@expected, 'Only known types' );
 };
 
 done_testing();

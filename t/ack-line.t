@@ -13,7 +13,7 @@ if ( not has_io_pty() ) {
     exit(0);
 }
 
-plan tests => 23;
+plan tests => 17;
 
 prep_environment();
 

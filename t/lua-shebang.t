@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 use lib 't';
-use Test::More tests => 2;
+use Test::More tests => 1;
 use Util;
 
 prep_environment();

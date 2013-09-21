@@ -177,5 +177,5 @@ else {
     }
 }
 
-sets_match( $stdout, \@expected );
+sets_match( $stdout, \@expected, __FILE__ );
 is_deeply $stderr, [];

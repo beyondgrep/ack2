@@ -3,17 +3,13 @@
 use warnings;
 use strict;
 
-use Test::More tests => 2;
+use Test::More tests => 1;
 use File::Next 0.22;
 
 use lib 't';
 use Util;
 
 prep_environment();
-
-BEGIN {
-    use_ok( 'App::Ack' );
-}
 
 sub slurp {
     my $iter = shift;

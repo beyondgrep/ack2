@@ -93,7 +93,7 @@ INTERACTIVE_GROUPING_COLOR: {
 
     my @lines = run_ack_interactive(@args, @files);
 
-    lists_match(\@lines, \@expected_lines);
+    lists_match( \@lines, \@expected_lines, 'INTERACTIVE_GROUPING_COLOR' );
 }
 
 INTERACTIVE_SINGLE_TARGET: {

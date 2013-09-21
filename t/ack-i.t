@@ -21,9 +21,9 @@ my @targets = map {
 my @args    = ( qw( --nocolor APPLE -i ), @targets );
 my @results = run_ack( @args );
 
-lists_match( \@results, \@expected );
+lists_match( \@results, \@expected, '-i flag' );
 
 @args    = ( qw( --nocolor APPLE --ignore-case ), @targets );
 @results = run_ack( @args );
 
-lists_match( \@results, \@expected );
+lists_match( \@results, \@expected, '--ignore-case flag' );

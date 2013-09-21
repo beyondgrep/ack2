@@ -33,7 +33,7 @@ END_TEXT
 
     my @got = run_ack_interactive(@args);
 
-    lists_match(\@got, \@expected);
+    lists_match( \@got, \@expected, 'NO_PAGER' );
 }
 
 PAGER: {
@@ -52,7 +52,7 @@ END_TEXT
 
     my @got = run_ack_interactive(@args);
 
-    lists_match(\@got, \@expected);
+    lists_match( \@got, \@expected, 'PAGER' );
 }
 
 PAGER_WITH_OPTS: {
@@ -67,7 +67,7 @@ END_TEXT
 
     my @got = run_ack_interactive(@args);
 
-    lists_match(\@got, \@expected);
+    lists_match( \@got, \@expected, 'PAGER_WITH_OPTS' );
 }
 
 FORCE_NO_PAGER: {
@@ -87,7 +87,7 @@ END_TEXT
 
     my @got = run_ack_interactive(@args);
 
-    lists_match(\@got, \@expected);
+    lists_match( \@got, \@expected, 'FORCE_NO_PAGER' );
 }
 
 PAGER_ENV: {
@@ -105,7 +105,7 @@ END_TEXT
 
     my @got = run_ack_interactive(@args);
 
-    lists_match(\@got, \@expected);
+    lists_match( \@got, \@expected, 'PAGER_ENV' );
 }
 
 PAGER_ENV_OVERRIDE: {
@@ -126,7 +126,7 @@ END_TEXT
 
     my @got = run_ack_interactive(@args);
 
-    lists_match(\@got, \@expected);
+    lists_match( \@got, \@expected, 'PAGER_ENV_OVERRIDE' );
 }
 
 PAGER_ACKRC: {
@@ -147,7 +147,7 @@ END_TEXT
         ackrc => \$ackrc,
     });
 
-    lists_match(\@got, \@expected);
+    lists_match( \@got, \@expected, 'PAGER_ACKRC' );
 }
 
 PAGER_ACKRC_OVERRIDE: {
@@ -172,7 +172,7 @@ END_TEXT
         ackrc => \$ackrc,
     });
 
-    lists_match(\@got, \@expected);
+    lists_match( \@got, \@expected, 'PAGER_ACKRC_OVERRIDE' );
 }
 
 PAGER_NOENV: {
@@ -193,5 +193,5 @@ END_TEXT
 
     my @got = run_ack_interactive(@args);
 
-    lists_match(\@got, \@expected);
+    lists_match( \@got, \@expected, 'PAGER_NOENV' );
 }

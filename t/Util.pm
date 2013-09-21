@@ -5,10 +5,21 @@ use App::Ack ();
 use Cwd ();
 use File::Spec ();
 use File::Temp ();
+use Test::More;
 
 my $orig_wd;
-my @temp_files; # we store temp files here to make sure they're properly
-                # reclaimed at interpreter shutdown
+my @temp_files; # We store temp files here to make sure they're properly reclaimed at interpreter shutdown.
+
+sub check_message {
+    my $msg = shift;
+
+    if ( !$msg ) {
+        my (undef,undef,undef,$sub) = caller(1);
+        Carp::croak( "You must pass a message to $sub" );
+    }
+
+    return $msg;
+}
 
 sub prep_environment {
     delete @ENV{qw( ACK_OPTIONS ACKRC ACK_PAGER HOME )};
@@ -117,9 +128,9 @@ sub reslash_all {
 }
 
 sub run_ack {
-    my @args = @_;
-
     local $Test::Builder::Level = $Test::Builder::Level + 1;
+
+    my @args = @_;
 
     my ($stdout, $stderr) = run_ack_with_stderr( @args );
     @args = grep { ref($_) ne 'HASH' } @args;
@@ -331,29 +342,32 @@ sub pipe_into_ack {
 sub lists_match {
     local $Test::Builder::Level = $Test::Builder::Level + 1; ## no critic
 
-    my @actual = @{+shift};
+    my @actual   = @{+shift};
     my @expected = @{+shift};
-    my $msg = shift;
+    my $msg      = check_message( shift );
 
     # Normalize all the paths
     for my $path ( @expected, @actual ) {
         $path = File::Next::reslash( $path ); ## no critic (Variables::ProhibitPackageVars)
     }
 
-    my $ok;
-    my $rc = eval 'use Test::Differences; 1;';
-    if ( $rc ) {
-        $ok = eq_or_diff( [@actual], [@expected], $msg );
-    }
-    else {
-        $ok = is_deeply( [@actual], [@expected], $msg );
-    }
+    return subtest "lists_match($msg)" => sub {
+        plan tests => 1;
 
-    if ( !$ok ) {
-        diag( explain( actual => [@actual], expected => [@expected] ) );
-    }
+        my $rc = eval 'use Test::Differences; 1;';
+        if ( $rc ) {
+            $ok = eq_or_diff( [@actual], [@expected], $msg );
+        }
+        else {
+            $ok = is_deeply( [@actual], [@expected], $msg );
+        }
 
-    return $ok;
+        if ( !$ok ) {
+            diag( explain( actual => [@actual], expected => [@expected] ) );
+        }
+
+        return $ok;
+    };
 }
 
 sub ack_lists_match {
@@ -361,25 +375,33 @@ sub ack_lists_match {
 
     my $args     = shift;
     my $expected = shift;
-    my $message  = shift;
+    my $message  = check_message( shift );
+
     my @args     = @{$args};
 
     my @results = run_ack( @args );
-    my $ok = lists_match( \@results, $expected, $message );
-    $ok or diag( join( ' ', '$ ack', @args ) );
 
-    return $ok;
+    return subtest "ack_lists_match($message)" => sub {
+        plan tests => 1;
+
+        my $ok = lists_match( \@results, $expected, $message );
+        $ok or diag( join( ' ', '$ ack', @args ) );
+    };
 }
 
 # Use this one if you don't care about order of the lines
 sub sets_match {
     local $Test::Builder::Level = $Test::Builder::Level + 1; ## no critic
 
-    my @actual = @{+shift};
+    my @actual   = @{+shift};
     my @expected = @{+shift};
-    my $msg = shift;
+    my $msg      = check_message( shift );
 
-    return lists_match( [sort @actual], [sort @expected], $msg );
+    return subtest "sets_match($msg)" => sub {
+        plan tests => 1;
+
+        return lists_match( [sort @actual], [sort @expected], $msg );
+    };
 }
 
 sub ack_sets_match {
@@ -387,14 +409,18 @@ sub ack_sets_match {
 
     my $args     = shift;
     my $expected = shift;
-    my $message  = shift;
+    my $message  = check_message( shift );
     my @args     = @{$args};
 
-    my @results = run_ack( @args );
-    my $ok = sets_match( \@results, $expected, $message );
-    $ok or diag( join( ' ', '$ ack', @args ) );
+    return subtest "ack_sets_match( $message )" => sub {
+        plan tests => 2;
 
-    return $ok;
+        my @results = run_ack( @args );
+        my $ok = sets_match( \@results, $expected, $message );
+        $ok or diag( join( ' ', '$ ack', @args ) );
+
+        return $ok;
+    };
 }
 
 
@@ -402,8 +428,7 @@ sub record_option_coverage {
     my ( @command_line ) = @_;
 
     return unless $ENV{ACK_OPTION_COVERAGE};
-    return if $ENV{ACK_STANDALONE}; # we don't need to record the second time
-                                    # around
+    return if $ENV{ACK_STANDALONE}; # We don't need to record the second time around.
 
     my $record_options = File::Spec->catfile($orig_wd, 'record-options');
 

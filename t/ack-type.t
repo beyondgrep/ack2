@@ -34,7 +34,7 @@ EOF
     my $target  = 'perl';
 
     my @results = run_ack( @args, $target, @files );
-    sets_match( \@results, \@expected );
+    sets_match( \@results, \@expected, 'TEST_TYPE' );
 }
 
 TEST_NOTYPE: {
@@ -52,7 +52,7 @@ EOF
     my $target  = 'perl';
 
     my @results = run_ack( @args, $target, @files );
-    sets_match( \@results, \@expected );
+    sets_match( \@results, \@expected, 'TEST_NOTYPE' );
 }
 
 TEST_UNKNOWN_TYPE: {
@@ -63,8 +63,8 @@ TEST_UNKNOWN_TYPE: {
 
     my ( $stdout, $stderr ) = run_ack_with_stderr( @args, $target, @files );
 
-    is scalar(@$stdout), 0;
-    ok scalar(@$stderr) > 0;
+    is_deeply( $stdout, [], 'Should have no lines back' );
+    ok( scalar(@$stderr) > 0 );
     like $stderr->[0], qr/Unknown type 'foo'/ or diag(explain($stderr));
 }
 
@@ -76,7 +76,7 @@ TEST_NOTYPES: {
 
     my ( $stdout, $stderr ) = run_ack_with_stderr( @args, $target, @files );
 
-    is scalar(@$stdout), 0;
+    is_deeply( $stdout, [], 'Should have no lines back' );
     ok scalar(@$stderr) > 0;
     like $stderr->[0], qr/Unknown type 'perl'/ or diag(explain($stderr));
 }

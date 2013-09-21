@@ -52,4 +52,4 @@ else {
     exec 'bash', '-c', "$args <(cat t/swamp/options.pl)";
 }
 
-lists_match( \@output, \@expected );
+lists_match( \@output, \@expected, __FILE__ );

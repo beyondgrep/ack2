@@ -26,7 +26,7 @@ DUMP: {
         $result =~ s/^\s*//;
     }
 
-    sets_match( \@results, \@expected );
+    sets_match( \@results, \@expected, __FILE__ );
 
     my @perl = grep { /perl/ } @results;
     is( scalar @perl, 2, 'Two specs for Perl' );

@@ -18,13 +18,13 @@ find(sub {
 }, 't/swamp');
 
 sub filter_test {
-    my ( $filter_args, $expected_matches, $msg ) = @_;
-
-    $msg ||= 'filter test for ' . $filter_args->[0];
-
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    subtest $msg => sub {
+    my $filter_args      = shift;
+    my $expected_matches = shift;
+    my $msg              = shift or die 'Must pass a message to filter_test()';
+
+    return subtest "filter_test($msg)" => sub {
         my $filter = eval {
             App::Ack::Filter->create_filter(@{$filter_args});
         };
@@ -39,7 +39,7 @@ sub filter_test {
             App::Ack::Resource::Basic->new($_)
         } @swamp_files;
 
-        sets_match(\@matches, $expected_matches);
+        sets_match(\@matches, $expected_matches, $msg);
     };
 }
 

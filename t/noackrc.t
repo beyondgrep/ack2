@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use lib 't';
 
-use Test::More tests => 2;
+use Test::More tests => 1;
 use Util;
 
 prep_environment();
@@ -19,6 +19,6 @@ my @expected = (
 my @args  = ( '--ignore-ack-defaults', '--type-add=perl:ext:pl', '--perl', '-f' );
 my @files = ( 't/swamp' );
 
-ack_sets_match( [ @args, @files ], \@expected );
+ack_sets_match( [ @args, @files ], \@expected, __FILE__ );
 
 done_testing();

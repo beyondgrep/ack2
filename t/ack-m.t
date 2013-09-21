@@ -23,7 +23,7 @@ $happy:12:Your neighborhood watch officer will be by to collect urine samples in
 $happy:13:Anyone gaught intefering with the collection of urine samples will be shot.
 EOF
 
-ack_lists_match( [ '-m', 3, '-w', 'the', @text ], \@expected );
+ack_lists_match( [ '-m', 3, '-w', 'the', @text ], \@expected, 'Should show only 3 lines per file' );
 
 @expected = split( /\n/, <<"EOF" );
 $myth:3:In the case of Christianity and Judaism there exists the belief
