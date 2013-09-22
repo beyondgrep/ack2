@@ -14,9 +14,8 @@ WITHOUT_S: {
     my @args  = qw( search-term );
     my (undef, $stderr) = run_ack_with_stderr( @args, @files );
 
-    is @$stderr, 1;
-    like $stderr->[0], qr/\Qnon-existent-file.txt: No such file or directory\E/,
-        q{Error if there's no file};
+    is( @$stderr, 1 );
+    like( $stderr->[0], qr/\Qnon-existent-file.txt: No such file or directory\E/, q{Error if there's no file} );
 }
 
 WITH_S: {
@@ -24,5 +23,5 @@ WITH_S: {
     my @args  = qw( search-term -s );
     my (undef, $stderr) = run_ack_with_stderr( @args, @files );
 
-    is @$stderr, 0 or diag(explain($stderr));
+    is_deeply( $stderr, [] );
 }

@@ -41,8 +41,7 @@ my $temp_config = File::Temp->new;
 print { $temp_config } $old_config;
 close $temp_config;
 
-my @args = ( '--ackrc=' . $temp_config->filename, '--md', 'One',
-    't/swamp/' );
+my @args = ( '--ackrc=' . $temp_config->filename, '--md', 'One', 't/swamp/' );
 
 my $file = File::Next::reslash('t/swamp/notes.md');
 my $line = 3;
@@ -50,4 +49,4 @@ my $line = 3;
 my ( $stdout, $stderr ) = run_ack_with_stderr( @args );
 is( scalar(@{$stdout}), 1, 'Got back exactly one line' );
 like $stdout->[0], qr/\Q$file:$line\E.*[*] One/;
-is( scalar(@{$stderr}), 0, 'No output to stderr' ) or diag(explain($stderr));
+is_deeply( $stderr, [], 'No output to stderr' );

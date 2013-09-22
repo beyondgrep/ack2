@@ -91,9 +91,9 @@ NOENV_IN_CONFIG: {
     local $ENV{'ACK_OPTIONS'} = '--perl';
 
     my ( $stdout, $stderr ) = run_ack_with_stderr('--env', 'perl');
-    is @{$stdout}, 0;
-    is @{$stderr}, 1;
-    like $stderr->[0], qr/--noenv found in (?:.*)[.]ackrc/ or diag(explain($stderr));
+    is_deeply( $stdout, [], 'Empty stdout' );
+    is( @{$stderr}, 1 );
+    like( $stderr->[0], qr/--noenv found in (?:.*)[.]ackrc/ ) or diag(explain($stderr));
 }
 
 chdir $wd or die; # Go back to the original directory to avoid warnings
