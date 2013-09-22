@@ -663,7 +663,7 @@ sub process_args {
     }
     my $filters = ($opt{filters} ||= []);
 
-    # throw the default filter in if no others are selected
+    # Throw the default filter in if no others are selected.
     if ( not grep { !$_->is_inverted() } @{$filters} ) {
         push @{$filters}, App::Ack::Filter::Default->new();
     }
@@ -695,8 +695,8 @@ sub retrieve_arg_sources {
         @files  = $finder->find_config_files;
     }
     if ( $ackrc ) {
-        # we explicitly use open so we get a nice error message
-        # XXX this is a potential race condition!
+        # We explicitly use open so we get a nice error message.
+        # XXX This is a potential race condition!.
         if(open my $fh, '<', $ackrc) {
             close $fh;
         }
