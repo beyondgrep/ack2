@@ -72,10 +72,8 @@ plan tests => scalar(@filetypes);
 foreach my $filetype ( @filetypes ) {
     my @args = ( '-f', "--$filetype" );
 
-    my ( undef, $stderr ) = run_ack_with_stderr( @args ); # throw away stdout;
-                                                          # we don't care
-    is( scalar @{$stderr}, 0, "--$filetype should print no errors" )
-        or diag(explain($stderr));
+    my ( undef, $stderr ) = run_ack_with_stderr( @args ); # Throw away stdout. We don't care.
+    is_deeply( $stderr, [], "--$filetype should print no errors" );
 }
 
 done_testing();

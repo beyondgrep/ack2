@@ -16,7 +16,7 @@ my @options = (qw{
 }, ['-G', 'sue']);
 
 
-plan tests => 2 + (2 * @options);
+plan tests => scalar @options;
 
 foreach my $option (@options) {
     my @args = ref($option) ? @$option : ( $option );
@@ -25,7 +25,11 @@ foreach my $option (@options) {
 
     my ( $stdout, $stderr ) = run_ack_with_stderr( @args );
 
-    is scalar(@$stdout), 0;
-    like $stderr->[0], qr/Option '$option' is not valid in ack 2/;
-    like $stderr->[1], qr/-k/ if '-a' eq $option or '--all' eq $option;
+    subtest "options = @args" => sub {
+        is_deeply( $stdout, [], 'Nothing in stdout' );
+        like( $stderr->[0], qr/Option '$option' is not valid in ack 2/, 'Found error message' );
+        if ( '-a' eq $option or '--all' eq $option ) {
+            like( $stderr->[1], qr/-k/, 'Error mentions -k' );
+        }
+    };
 }

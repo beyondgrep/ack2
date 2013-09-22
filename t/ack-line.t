@@ -161,13 +161,13 @@ LINE_NO_WARNINGS: {
 }
 
 LINE_WITH_REGEX: {
-    # specifying both --line and a regex should result in an error
+    # Specifying both --line and a regex should result in an error.
     my @files = qw( t/text/boy-named-sue.txt );
     my @args = qw( --lines=1 --match Sue );
 
     my ($stdout, $stderr) = run_ack_with_stderr( @args, @files );
     isnt( get_rc(), 0, 'Specifying both --line and --match must lead to an error RC' );
-    is( scalar @{$stdout}, 0, 'No normal output' );
+    is_deeply( $stdout, [], 'No normal output' );
     is( scalar @{$stderr}, 1, 'One line of stderr output' );
     like( $stderr->[0], qr/\Q(Sue)/, 'Error message must contain "(Sue)"' );
 }

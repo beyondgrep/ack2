@@ -3,36 +3,9 @@
 use strict;
 use warnings;
 
-use Test::More;
+use Test::More tests => 250;
 use lib 't';
 use Util;
-
-# do this without system()
-sub are_mutually_exclusive {
-    my ( $opt1, $opt2, $args ) = @_;
-
-    local $Test::Builder::Level = $Test::Builder::Level + 1;
-
-    my ( $stdout, $stderr ) = run_ack_with_stderr(@$args);
-
-    isnt( get_rc(), 0, 'The ack command should fail' );
-    is( scalar(@$stdout), 0, 'No lines should be present on standard output' );
-    is( scalar(@$stderr), 1, 'A single line should be present on standard error' );
-
-    my $opt1_re = quotemeta($opt1);
-    my $opt2_re = quotemeta($opt2);
-
-    my $error = $stderr->[0] || ''; # avoid undef warnings
-    if($error =~ /Options '$opt1_re' and '$opt2_re' are mutually exclusive/ ||
-       $error =~ /Options '$opt2_re' and '$opt1_re' are mutually exclusive/) {
-
-        pass( qq{Error message resembles "Options '$opt1' and '$opt2' are mutually exclusive"} );
-    }
-    else {
-        fail( qq{Error message does not resemble "Options '$opt1' and '$opt2' are mutually exclusive"} );
-        diag("Error message: '$error'");
-    }
-}
 
 prep_environment();
 
@@ -315,17 +288,15 @@ are_mutually_exclusive('-g', '--group', ['-g', '--group', 'science', 't/text/sci
 are_mutually_exclusive('-g', '--heading', ['-g', '--heading', 'science', 't/text/science-of-myth.txt']);
 are_mutually_exclusive('-g', '--break', ['-g', '--break', 'science', 't/text/science-of-myth.txt']);
 
-# verify that "options" that follow -- aren't factored into the mutual exclusivity
-{
+subtest q{Verify that "options" that follow -- aren't factored into the mutual exclusivity} => sub {
     my ( $stdout, $stderr ) = run_ack_with_stderr('-A', 5, 'science', 't/text/science-of-myth.txt', '--', '-l');
     ok(@$stdout > 0, 'Some lines should appear on standard output');
     is(scalar(@$stderr), 1, 'A single line should be present on standard error');
     like($stderr->[0], qr/No such file or directory/, 'The error message should indicate a missing file (-l)');
     is(get_rc(), 0, 'The ack command should not fail');
-}
+};
 
-# verify that mutually exclusive options in different sources don't cause a problem
-{
+subtest q{Verify that mutually exclusive options in different sources don't cause a problem} => sub {
     my $ackrc = <<'END_ACKRC';
 --group
 END_ACKRC
@@ -334,6 +305,39 @@ END_ACKRC
         ackrc => \$ackrc,
     });
     ok(@stdout > 0, 'Some lines should appear on standard output');
-}
+};
 
 done_testing();
+
+# Do this without system().
+sub are_mutually_exclusive {
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+
+    my ( $opt1, $opt2, $args ) = @_;
+
+    my @args = @{$args};
+
+    my ( $stdout, $stderr ) = run_ack_with_stderr(@args);
+
+    return subtest "are_mutually_exclusive( $opt1, $opt2, @args )" => sub {
+        plan tests => 4;
+
+        isnt( get_rc(), 0, 'The ack command should fail' );
+        is_deeply( $stdout, [], 'No lines should be present on standard output' );
+        is( scalar(@$stderr), 1, 'A single line should be present on standard error' );
+
+        my $opt1_re = quotemeta($opt1);
+        my $opt2_re = quotemeta($opt2);
+
+        my $error = $stderr->[0] || ''; # avoid undef warnings
+        if ( $error =~ /Options '$opt1_re' and '$opt2_re' are mutually exclusive/ ||
+            $error =~ /Options '$opt2_re' and '$opt1_re' are mutually exclusive/ ) {
+
+            pass( qq{Error message resembles "Options '$opt1' and '$opt2' are mutually exclusive"} );
+        }
+        else {
+            fail( qq{Error message does not resemble "Options '$opt1' and '$opt2' are mutually exclusive"} );
+            diag("Error message: '$error'");
+        }
+    };
+}
