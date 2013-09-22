@@ -2,6 +2,8 @@ History file for ack.  http://beyondgrep.com/
 
 NEXT
 ====================================
+[ENHANCEMENTS]
+Add --perltest for *.t files.
 
 
 2.09_03 Sat Sep 21 15:03:45 CDT 2013

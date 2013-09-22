@@ -123,6 +123,9 @@ sub _options_block {
 --type-add=perl:ext:pl,pm,pod,t,psgi
 --type-add=perl:firstlinematch:/^#!.*\bperl/
 
+# Perl tests
+--type-add=perltest:ext:t
+
 # Makefiles http://www.gnu.org/s/make/
 --type-add=make:ext:mk
 --type-add=make:ext:mak
