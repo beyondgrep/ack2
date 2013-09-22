@@ -38,6 +38,7 @@ sub remove_defaults_and_globals {
         shift @sources;
     }
     if(is_global_file($sources[0])) {
+        # XXX WHY IS THIS EMPTY?
     }
     return @sources;
 }
