@@ -44,8 +44,8 @@ if ( $pid ) {
 }
 else {
     close $read;
-    open STDOUT, '>&', $write;
-    open STDERR, '>&', $write;
+    open STDOUT, '>&', $write or die "Can't open: $!";
+    open STDERR, '>&', $write or die "Can't open: $!";
 
     my @args = build_ack_invocation( qw( --noenv --nocolor --smart-case this ) );
     my $args = join( ' ', @args );

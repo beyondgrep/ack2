@@ -157,8 +157,8 @@ else {
         close $stderr_write;
         close $lhs_rhs_write;
 
-        open STDIN, '<&', $lhs_rhs_read;
-        open STDOUT, '>&', $stdout_write;
+        open STDIN, '<&', $lhs_rhs_read or die "Can't open: $!";
+        open STDOUT, '>&', $stdout_write or die "Can't open: $!";
         close STDERR;
 
         exec @rhs_args;
@@ -169,8 +169,8 @@ else {
         close $lhs_rhs_read;
         close $stderr_read;
 
-        open STDOUT, '>&', $lhs_rhs_write;
-        open STDERR, '>&', $stderr_write;
+        open STDOUT, '>&', $lhs_rhs_write or die "Can't open: $!";
+        open STDERR, '>&', $stderr_write or die "Can't open: $!";
         close STDIN;
 
         exec @lhs_args;

@@ -260,11 +260,11 @@ sub run_cmd {
 
             if(my $input = $options->{'input'}) {
                 # XXX check error
-                open STDIN, '-|', @$input;
+                open STDIN, '-|', @$input or die "Can't open: $!";
             }
 
-            open STDOUT, '>&', $stdout_write;
-            open STDERR, '>&', $stderr_write;
+            open STDOUT, '>&', $stdout_write or die "Can't open: $!";
+            open STDERR, '>&', $stderr_write or die "Can't open: $!";
 
             exec @cmd;
         }
@@ -514,9 +514,9 @@ BEGIN {
                 }
                 $slave->set_raw();
 
-                open STDIN,  '<&', $slave->fileno();
-                open STDOUT, '>&', $slave->fileno();
-                open STDERR, '>&', $slave->fileno();
+                open STDIN,  '<&', $slave->fileno() or die "Can't open: $!";
+                open STDOUT, '>&', $slave->fileno() or die "Can't open: $!";
+                open STDERR, '>&', $slave->fileno() or die "Can't open: $!";
 
                 close $slave;
 
