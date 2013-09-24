@@ -28,7 +28,7 @@ DUMP: {
 
     sets_match( \@results, \@expected, __FILE__ );
 
-    my @perl = grep { /perl/ } @results;
+    my @perl = grep { /\bperl\b/ } @results;
     is( scalar @perl, 2, 'Two specs for Perl' );
 
     my @ignore_dir = grep { /ignore-dir/ } @results;
