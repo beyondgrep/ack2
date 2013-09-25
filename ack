@@ -25,7 +25,7 @@ use Getopt::Long 2.35 ();
 
 use Carp 1.04 ();
 
-our $VERSION = '2.10';
+our $VERSION = '2.11_01';
 # Check http://beyondgrep.com/ for updates
 
 # These are all our globals.
