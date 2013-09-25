@@ -3,7 +3,11 @@
 use strict;
 use warnings;
 
+our $VERSION = '2.11_01'; # Check http://beyondgrep.com/ for updates
+
 use 5.008008;
+use Getopt::Long 2.35 ();
+use Carp 1.04 ();
 
 use App::Ack ();
 use App::Ack::ConfigLoader ();
@@ -20,13 +24,6 @@ use App::Ack::Filter::Inverse;
 use App::Ack::Filter::Is;
 use App::Ack::Filter::Match;
 use App::Ack::Filter::Collection;
-
-use Getopt::Long 2.35 ();
-
-use Carp 1.04 ();
-
-our $VERSION = '2.11_01';
-# Check http://beyondgrep.com/ for updates
 
 # These are all our globals.
 
