@@ -86,10 +86,10 @@ sub MY::test {
 }
 
 sub MY::postamble {
-    # was this next line used for something???
-    # my $file_next_filename = qx(perldoc -l File::Next);
+    my $file_next_filename = qx(perldoc -l File::Next);
+    chomp $file_next_filename;
 
-    my $postamble = sprintf(<<'MAKE_FRAG', $debug_mode);
+    my $postamble = sprintf(<<'MAKE_FRAG', $file_next_filename, $debug_mode);
 ACK    = ack
 ALL_PM = \
     Ack.pm \
@@ -115,7 +115,7 @@ critic:
 	perlcritic -1 -q -profile perlcriticrc $(ACK) $(ALL_PM) t/*.t t/lib/*.t xt/*.t
 
 ack-standalone : $(ACK) $(ALL_PM) squash Makefile
-	$(PERL) squash %s File::Next $(ALL_PM) $(ACK) > ack-standalone
+	$(PERL) squash $(ACK) $(ALL_PM) %s %s > ack-standalone
 	$(FIXIN) ack-standalone
 	-$(NOECHO) $(CHMOD) $(PERM_RWX) ack-standalone
 	$(PERL) -i -p -e "s/\\\$$GIT_REVISION\s*=\s*''/\\\$$GIT_REVISION = q{$$(git rev-parse --short HEAD)}/" ack-standalone
