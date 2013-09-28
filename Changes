@@ -2,6 +2,9 @@ History file for ack.  http://beyondgrep.com/
 
 NEXT
 ====================================
+[FIXES]
+Fixed a race condition in t/file-permission.t that was causing
+failures if tests were run in parallel.
 
 
 2.10    Tue Sep 24 16:24:11 CDT 2013
