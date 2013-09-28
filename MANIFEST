@@ -109,20 +109,25 @@ t/etc/shebang.py.xxx
 t/etc/shebang.rb.xxx
 t/etc/shebang.sh.xxx
 
+t/lib/00-coverage.t
 t/lib/Ack.t
 t/lib/Basic.t
+t/lib/Collection.t
 t/lib/ConfigDefault.t
 t/lib/ConfigFinder.t
 t/lib/ConfigLoader.t
+t/lib/Debug.t
 t/lib/Default.t
 t/lib/Extension.t
+t/lib/ExtensionGroup.t
 t/lib/Filter.t
 t/lib/FirstLineMatch.t
 t/lib/Inverse.t
 t/lib/Is.t
+t/lib/IsGroup.t
 t/lib/Match.t
-t/lib/Resources.t
 t/lib/Resource.t
+t/lib/Resources.t
 
 t/home/.ackrc
 t/swamp/#emacs-workfile.pl#
