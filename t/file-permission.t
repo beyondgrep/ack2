@@ -77,7 +77,7 @@ sub check_with {
     is( scalar @{$stdout}, $expected_stdout, 'Search normal: no normal output' ) || diag(explain($stdout));
     is( scalar @{$stderr}, 1, 'Search normal: one line of stderr output' ) || diag(explain($stderr));
     # Don't check for exact text of warning, the message text depends on LC_MESSAGES
-    like( $stderr->[0], qr/file-permission[.]t:/, 'Search normal: warning message ok' );
+    like( $stderr->[0], qr/\Qfile-permission.t:/, 'Search normal: warning message OK' );
 
     return;
 }
