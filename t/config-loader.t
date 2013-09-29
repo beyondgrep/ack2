@@ -13,55 +13,6 @@ use File::Temp;
 use App::Ack::Filter::Default;
 use App::Ack::ConfigLoader;
 
-
-sub test_loader {
-    pop if @_ % 2;
-
-    my %opts = @_;
-
-    local $Test::Builder::Level = $Test::Builder::Level + 1;
-
-    my ( $env, $argv, $expected_opts, $expected_targets ) =
-        delete @opts{qw/env argv expected_opts expected_targets/};
-
-    $env  = '' unless defined $env;
-    $argv = [] unless defined $argv;
-
-    my @files = map {
-        $opts{$_}
-    } sort {
-        my ( $a_end ) = $a =~ /(\d+)/;
-        my ( $b_end ) = $b =~ /(\d+)/;
-
-        $a_end <=> $b_end;
-    } grep { /^file\d+/ } keys %opts;
-    foreach my $contents (@files) {
-        my $file = File::Temp->new;
-        print {$file} $contents;
-        close $file or die $!;
-    }
-
-    my ( $got_opts, $got_targets );
-
-    do {
-        local $ENV{'ACK_OPTIONS'} = $env;
-        local @ARGV;
-
-        my @arg_sources = (
-            ARGV => $argv,
-            map { $_ => scalar read_file($_) } @files,
-        );
-
-        $got_opts    = App::Ack::ConfigLoader::process_args( @arg_sources );
-        $got_targets = [ @ARGV ];
-    };
-
-    is_deeply( $got_opts, $expected_opts, 'Options match' )       or diag 'Options did not match';
-    is_deeply( $got_targets, $expected_targets, 'Targets match' ) or diag 'Targets did not match';
-
-    return;
-}
-
 my %defaults = (
     after_context             => undef,
     before_context            => undef,
@@ -234,3 +185,55 @@ do {
 };
 
 done_testing;
+
+
+sub test_loader {
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+
+    die 'Must pass key/value pairs, plus a message at the end' unless @_ % 2 == 1;
+
+    my $msg  = pop;
+    my %opts = @_;
+
+    return subtest "test_loader( $msg )" => sub {
+        plan tests => 2;
+
+        my ( $env, $argv, $expected_opts, $expected_targets ) =
+            delete @opts{qw/env argv expected_opts expected_targets/};
+
+        $env  = '' unless defined $env;
+        $argv = [] unless defined $argv;
+
+        my @files = map {
+            $opts{$_}
+        } sort {
+            my ( $a_end ) = $a =~ /(\d+)/;
+            my ( $b_end ) = $b =~ /(\d+)/;
+
+            $a_end <=> $b_end;
+        } grep { /^file\d+/ } keys %opts;
+        foreach my $contents (@files) {
+            my $file = File::Temp->new;
+            print {$file} $contents;
+            close $file or die $!;
+        }
+
+        my ( $got_opts, $got_targets );
+
+        do {
+            local $ENV{'ACK_OPTIONS'} = $env;
+            local @ARGV;
+
+            my @arg_sources = (
+                ARGV => $argv,
+                map { $_ => scalar read_file($_) } @files,
+            );
+
+            $got_opts    = App::Ack::ConfigLoader::process_args( @arg_sources );
+            $got_targets = [ @ARGV ];
+        };
+
+        is_deeply( $got_opts, $expected_opts, 'Options match' )       or diag 'Options did not match';
+        is_deeply( $got_targets, $expected_targets, 'Targets match' ) or diag 'Targets did not match';
+    };
+}
