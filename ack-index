@@ -1,0 +1,58 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use 5.008008;
+use Getopt::Long 2.35 ();
+use Carp 1.04 ();
+
+#use File::Next;
+
+use blib;
+use App::Ack;
+
+
+exit main();
+
+sub main {
+    my @files = @ARGV || '.';
+#my $iter = File::Next::files( @files );
+#
+#    while ( my $file = $iter->() ) {
+#    }
+
+    my $line = index_line( $0 );
+
+    print "$line\n";
+
+    return 0;
+};
+
+
+sub index_line {
+    my $file = shift;
+
+    open my $fh, '<', $file or die "Can't open $file: $!";
+    my @stat = stat $file or die "Can't stat $file: $!";
+    my $mtime = $stat[9];
+
+    my %ngfirst;
+    my %nglast;
+
+    my $lineno = 0;
+    while ( my $line = <$fh> ) {
+        ++$lineno;
+
+        for my $ng ( @{App::Ack::ngrams ( $line )} ) {
+            $ngfirst{$ng} = $lineno unless defined($ngfirst{$ng});
+            $nglast{$ng} = $lineno;
+        }
+    }
+    close $fh;
+
+    my @parts = ($file, "mtime=$mtime", map { "$_=$ngfirst{$_}-$nglast{$_}" } sort keys %ngfirst);
+
+    return join( ' ', @parts );
+
+}
