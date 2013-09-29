@@ -112,7 +112,7 @@ sub _compile_file_filter {
     $ifiles  ||= [];
 
     my $ifiles_filters = App::Ack::Filter::Collection->new();
-    
+
     foreach my $filter_spec (@{$ifiles}) {
         if ( $filter_spec =~ /^(\w+):(.+)/ ) {
             my ($how,$what) = ($1,$2);
