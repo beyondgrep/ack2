@@ -1,6 +1,6 @@
 History file for ack.  http://beyondgrep.com/
 
-NEXT
+2.11_01 Sun Sep 29 13:15:41 CDT 2013
 ====================================
 [FIXES]
 Fixed a race condition in t/file-permission.t that was causing
