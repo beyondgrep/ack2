@@ -7,7 +7,7 @@ use Test::More;
 
 use lib 't';
 
-use App::Ack;
+use App::Ack::Index;
 
 my @cases = (
     ''           => [],
@@ -26,7 +26,7 @@ plan tests => scalar @cases / 2;
 
 
 while ( my ($str,$expected) = splice( @cases, 0, 2 ) ) {
-    my $actual = App::Ack::ngrams( $str );
+    my $actual = App::Ack::Index::ngrams( $str );
 
     is_deeply( [sort @{$actual}], [sort @{$expected}], $str );
 }

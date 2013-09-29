@@ -17,6 +17,7 @@ Extension.pm
 ExtensionGroup.pm
 Filter.pm
 FirstLineMatch.pm
+Index.pm
 Inverse.pm
 Is.pm
 IsGroup.pm
@@ -122,6 +123,7 @@ t/lib/Extension.t
 t/lib/ExtensionGroup.t
 t/lib/Filter.t
 t/lib/FirstLineMatch.t
+t/lib/Index.t
 t/lib/Inverse.t
 t/lib/Is.t
 t/lib/IsGroup.t

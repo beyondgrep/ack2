@@ -51,6 +51,21 @@ sub name {
 }
 
 
+=head2 $res->mtime()
+
+Returns the mtime of the resource, the time it was last modified.
+
+=cut
+
+sub mtime {
+    my $filename = $_[0]->{filename};
+    my @stat = stat $filename or die "Can't stat $filename: $!";
+    my $mtime = $stat[9];
+
+    return $mtime;
+}
+
+
 =head2 $res->needs_line_scan( \%opts )
 
 API: Tells if the resource needs a line-by-line scan.  This is a big

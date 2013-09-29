@@ -32,6 +32,7 @@ my %parms = (
         'Collection.pm'     => '$(INST_LIBDIR)/App/Ack/Filter/Collection.pm',
         'IsGroup.pm'        => '$(INST_LIBDIR)/App/Ack/Filter/IsGroup.pm',
         'ExtensionGroup.pm' => '$(INST_LIBDIR)/App/Ack/Filter/ExtensionGroup.pm',
+        'Index.pm'          => '$(INST_LIBDIR)/App/Ack/Index.pm',
     },
     EXE_FILES               => [ 'ack' ],
 
@@ -95,7 +96,8 @@ ALL_PM = \
     Ack.pm \
     Resource.pm Resources.pm Basic.pm \
     ConfigDefault.pm ConfigFinder.pm ConfigLoader.pm \
-    Filter.pm Extension.pm FirstLineMatch.pm Is.pm Match.pm Default.pm Inverse.pm Collection.pm IsGroup.pm ExtensionGroup.pm
+    Filter.pm Extension.pm FirstLineMatch.pm Is.pm Match.pm Default.pm Inverse.pm Collection.pm IsGroup.pm ExtensionGroup.pm \
+    Index.pm
 
 TEST_VERBOSE=0
 TEST_FILES=t/*.t t/lib/*.t

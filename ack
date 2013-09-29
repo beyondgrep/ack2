@@ -1008,7 +1008,19 @@ RESOURCES:
             }
         }
         elsif ( $opt->{index} ) {
-            print 'Hey I am indexing '. $resource->name . "\n";
+            my %ngfirst;
+            my %nglast;
+
+            iterate( $resource, $opt, sub {
+                for my $ng ( @{App::Ack::Index::ngrams( $_ )} ) {
+                    $ngfirst{$ng} = $. unless defined($ngfirst{$ng});
+                    $nglast{$ng}  = $.;
+                }
+                return 1;
+            });
+            my $mtime = $resource->mtime;
+            my @parts = ($resource->name, "mtime=$mtime", map { "$_=$ngfirst{$_}-$nglast{$_}" } sort keys %ngfirst);
+            print join( ' ', @parts ), "\n";
         }
         else {
             $nmatches += print_matches_in_resource( $resource, $opt );

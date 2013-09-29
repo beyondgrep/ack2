@@ -31,6 +31,7 @@ my %defaults = (
     H                         => undef,
     heading                   => undef,
     i                         => undef,
+    index                     => undef,
     l                         => undef,
     L                         => undef,
     m                         => undef,
