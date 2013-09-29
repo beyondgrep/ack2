@@ -270,6 +270,7 @@ EOT
                                     my ( undef, $file ) = @_;
                                     push @{ $opt->{ifiles} }, $file;
                                },
+        'index'             => \$opt->{index},
         'lines=s'           => sub { shift; my $val = shift; push @{$opt->{lines}}, $val },
         'l|files-with-matches'
                             => \$opt->{l},

@@ -876,7 +876,7 @@ sub main {
                 App::Ack::exit_from_ack( 0 ); # XXX the 0 is misleading
             }
         }
-        else {
+        elsif ( !$opt->{index} ) {
             my $regex = $opt->{regex};
             $regex = shift @ARGV if not defined $regex;
             $opt->{regex} = build_regex( $regex, $opt );
@@ -1006,6 +1006,9 @@ RESOURCES:
                 last RESOURCES if $only_first;
                 last RESOURCES if defined($max_count) && $nmatches >= $max_count;
             }
+        }
+        elsif ( $opt->{index} ) {
+            print 'Hey I am indexing '. $resource->name . "\n";
         }
         else {
             $nmatches += print_matches_in_resource( $resource, $opt );
