@@ -116,7 +116,6 @@ t/lib/Collection.t
 t/lib/ConfigDefault.t
 t/lib/ConfigFinder.t
 t/lib/ConfigLoader.t
-t/lib/Debug.t
 t/lib/Default.t
 t/lib/Extension.t
 t/lib/ExtensionGroup.t
