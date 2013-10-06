@@ -1,5 +1,11 @@
 History file for ack.  http://beyondgrep.com/
 
+2.11_02 Sun Oct  6 12:39:21 CDT 2013
+====================================
+[FIXES]
+2.11_01 was mispackaged.  This fixes that.
+
+
 2.11_01 Sun Sep 29 13:15:41 CDT 2013
 ====================================
 [FIXES]
