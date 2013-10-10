@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 30;
+use Test::More tests => 32;
 use File::Next (); # for reslash function
 
 use lib 't';
@@ -306,4 +306,53 @@ EOF
     my @args = ( '--group', '-B1', '--sort-files', $regex );
 
     ack_lists_match( [ @args, @files ], \@expected, "Looking for $regex in multiple files with grouping" );
+}
+
+# see https://github.com/petdance/ack2/issues/326 and links there for details
+WITH_COLUMNS_AND_CONTEXT: {
+    my @files = qw( t/text/freedom-of-choice.txt );
+    my @expected = split( /\n/, <<"EOF" );
+$files[0]-2-Nobody ever said life was free
+$files[0]-3-Sink, swim, go down with the ship
+$files[0]:4:15:But use your freedom of choice
+$files[0]-5-
+$files[0]-6-I'll say it again in the land of the free
+$files[0]:7:11:Use your freedom of choice
+$files[0]:8:7:Your freedom of choice
+$files[0]-9-
+$files[0]-10-In ancient Rome
+--
+$files[0]-17-He dropped dead
+$files[0]-18-
+$files[0]:19:2:Freedom of choice
+$files[0]-20-Is what you got
+$files[0]:21:2:Freedom of choice!
+$files[0]-22-
+$files[0]-23-Then if you've got it, you don't want it
+--
+$files[0]-27-
+$files[0]-28-I'll say it again in the land of the free
+$files[0]:29:11:Use your freedom of choice
+$files[0]:30:2:Freedom of choice
+$files[0]-31-
+$files[0]:32:2:Freedom of choice
+$files[0]-33-Is what you got
+$files[0]:34:2:Freedom of choice!
+$files[0]-35-
+$files[0]-36-In ancient Rome
+--
+$files[0]-43-He dropped dead
+$files[0]-44-
+$files[0]:45:2:Freedom of choice
+$files[0]-46-Is what you got
+$files[0]:47:2:Freedom from choice
+$files[0]-48-Is what you want
+$files[0]-49-
+$files[0]:50:10:    -- "Freedom Of Choice", Devo
+EOF
+
+    my $regex = 'reedom';
+    my @args = ( '--column', '-C2', '-H', $regex );
+
+    ack_lists_match( [ @args, @files ], \@expected, "Looking for $regex in file $files[0] with columns and context" );
 }
