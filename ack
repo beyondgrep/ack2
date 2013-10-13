@@ -495,7 +495,7 @@ sub print_line_with_options {
             push @line_parts, $filename, $line_no;
         }
 
-        if( $print_column && $separator eq ':' ) {
+        if( $print_column ) {
             push @line_parts, get_match_column();
         }
     }
@@ -709,6 +709,8 @@ sub print_line_with_context {
                 }
 
                 chomp $line;
+                local $opt->{column};
+
                 print_line_with_options($opt, $filename, $line, $context_line_no, '-');
                 $previous_line_printed = $context_line_no;
                 $offset--;
@@ -734,8 +736,14 @@ sub print_line_with_context {
                 next;
             }
             chomp $line;
-            my $separator = ($opt->{regex} && does_match( $opt, $line )) ? ':' : '-';
-            print_line_with_options($opt, $filename, $line, $. + $offset, $separator);
+
+            if ( $opt->{regex} && does_match( $opt, $line ) ) {
+                print_line_with_options($opt, $filename, $line, $. + $offset, ':');
+            }
+            else {
+                local $opt->{column};
+                print_line_with_options($opt, $filename, $line, $. + $offset, '-');
+            }
             $previous_line_printed = $. + $offset;
             $offset++;
         }
