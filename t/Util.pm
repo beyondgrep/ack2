@@ -22,7 +22,7 @@ sub check_message {
 }
 
 sub prep_environment {
-    delete @ENV{qw( ACK_OPTIONS ACKRC ACK_PAGER HOME )};
+    delete @ENV{qw( ACK_OPTIONS ACKRC ACK_PAGER HOME ACK_COLOR_MATCH ACK_COLOR_FILENAME ACK_COLOR_LINE )};
     $orig_wd = Cwd::getcwd();
 }
 
@@ -453,6 +453,39 @@ sub record_option_coverage {
 
     return;
 }
+
+=head2 colorize( $big_long_string )
+
+Turns a multi-line input string into its corresponding array of lines, with colorized transformations.
+
+    <text> gets turned to filename color.
+    {text} gets turned to line number color.
+    (text) gets turned to highlight color.
+
+=cut
+
+sub colorize {
+    my $input = shift;
+
+    my @lines = split( /\n/, $input );
+
+    for my $line ( @lines ) {
+        # File name
+        $line =~ s/<(.+?)>/Term::ANSIColor::colored($1, 'bold green')/eg;
+
+        # Line number
+        $line =~ s/\{(.+?)\}/Term::ANSIColor::colored($1, 'bold yellow')/eg;
+
+        # Matches
+        my $n;
+        $n += $line =~ s/\((.+?)\)/Term::ANSIColor::colored($1, 'black on_yellow')/eg;
+
+        $line .= "\033[0m\033[K" if $n;
+    }
+
+    return @lines;
+}
+
 
 BEGIN {
     my $has_io_pty = eval {

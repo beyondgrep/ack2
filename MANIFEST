@@ -85,6 +85,7 @@ t/file-permission.t
 t/filetypes.t
 t/filter.t
 t/firstlinematch-filter.t
+t/highlighting.t
 t/illegal-regex.t
 t/incomplete-last-line.t
 t/inverted-file-filter.t
