@@ -849,7 +849,7 @@ sub main {
         $| = 1;
     }
 
-    if ( not defined $opt->{color} ) {
+    if ( !defined($opt->{color}) && !$opt->{g} ) {
         my $windows_color = 1;
         if ( $App::Ack::is_windows ) {
             $windows_color = eval { require Win32::Console::ANSI; }
@@ -950,7 +950,9 @@ RESOURCES:
                     show_types( $resource, $ors );
                 }
                 else {
-                    App::Ack::print( $resource->name, $ors );
+                    local $opt->{show_filename} = 0;
+
+                    print_line_with_options($opt, '', $resource->name, 0, $ors);
                 }
                 ++$nmatches;
                 last RESOURCES if defined($max_count) && $nmatches >= $max_count;
