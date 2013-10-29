@@ -1247,6 +1247,8 @@ This is off by default.
 =item B<-g I<PATTERN>>
 
 Print files where the relative path + filename matches I<PATTERN>.
+This option can be combined with B<--color> to make it easier to spot
+the match.
 
 =item B<--[no]group>
 
