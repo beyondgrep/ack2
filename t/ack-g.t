@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 16;
+use Test::More tests => 18;
 
 use lib 't';
 use Util;
@@ -246,6 +246,51 @@ subtest 'test -g on a path' => sub {
     my @args = ( '--sort-files', '-g', $file_regex );
 
     ack_sets_match( [ @args ], \@expected, 'Make sure -g matches the whole path' );
+};
+
+subtest 'test -g with --color' => sub {
+    my $file_regex = 'text';
+    my @expected   = colorize( <<'END_COLOR' );
+t/con(text).t
+t/(text)/4th-of-july.txt
+t/(text)/boy-named-sue.txt
+t/(text)/freedom-of-choice.txt
+t/(text)/me-and-bobbie-mcgee.txt
+t/(text)/numbered-(text).txt
+t/(text)/science-of-myth.txt
+t/(text)/shut-up-be-happy.txt
+END_COLOR
+
+    my @args = ( '--sort-files', '-g', $file_regex );
+
+    my @results = run_ack(@args, '--color');
+
+    is_deeply( \@results, \@expected, 'Colorizing -g output with --color should work');
+};
+
+subtest q{test -g without --color; make sure colors don't show} => sub {
+    unless(has_io_pty()) {
+        plan skip_all => 'IO::Pty is required for this test';
+        return;
+    }
+
+    my $file_regex = 'text';
+    my $expected   = <<'END_OUTPUT';
+t/context.t
+t/text/4th-of-july.txt
+t/text/boy-named-sue.txt
+t/text/freedom-of-choice.txt
+t/text/me-and-bobbie-mcgee.txt
+t/text/numbered-text.txt
+t/text/science-of-myth.txt
+t/text/shut-up-be-happy.txt
+END_OUTPUT
+
+    my @args = ( '--sort-files', '-g', $file_regex );
+
+    my $results = run_ack_interactive(@args);
+
+    is( $results, $expected, 'Colorizing -g output without --color should have no color' );
 };
 
 done_testing();
