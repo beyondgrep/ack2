@@ -5,6 +5,7 @@ use App::Ack ();
 use Cwd ();
 use File::Spec ();
 use File::Temp ();
+use Term::ANSIColor ();
 use Test::More;
 
 my $orig_wd;
