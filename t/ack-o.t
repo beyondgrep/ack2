@@ -4,7 +4,7 @@ use warnings;
 use strict;
 
 use Cwd ();
-use Test::More tests => 9;
+use Test::More tests => 13;
 use File::Next ();
 use File::Spec ();
 use File::Temp ();
@@ -97,12 +97,14 @@ OUTPUT_DOUBLE_QUOTES: {
     ack_sets_match( [ @args, @files ], \@expected, 'Find all the things with --output function' );
 }
 
+my $wd      = Cwd::getcwd();
+my $tempdir = File::Temp->newdir;
+mkdir File::Spec->catdir($tempdir->dirname, 'subdir');
+
 PROJECT_ACKRC_OUTPUT_FORBIDDEN: {
     my @files = ( File::Spec->rel2abs('t/text/') );
     my @args = qw/ --env question(\\S+) /;
 
-    my $wd = Cwd::getcwd();
-    my $tempdir = File::Temp->newdir;
     chdir $tempdir->dirname;
     write_file '.ackrc', "--output=foo\n";
 
@@ -111,6 +113,38 @@ PROJECT_ACKRC_OUTPUT_FORBIDDEN: {
     is scalar(@$stdout), 0, 'No lines should be printed on standard output' or diag(explain($stdout));
     ok scalar(@$stderr) > 0, 'At least one line should be printed on standard error' or diag(explain($stderr));
     like $stderr->[0], qr/--output is illegal in project ackrcs/ or diag(explain($stderr));
+
+    chdir $wd;
+}
+
+HOME_ACKRC_OUTPUT_PERMITTED: {
+    my @files = ( File::Spec->rel2abs('t/text/') );
+    my @args = qw/ --env question(\\S+) /;
+
+    write_file(File::Spec->catfile($tempdir->dirname, '.ackrc'), "--output=foo\n");
+    chdir File::Spec->catdir($tempdir->dirname, 'subdir');
+    local $ENV{'HOME'} = $tempdir->dirname;
+
+    my ( $stdout, $stderr ) = run_ack_with_stderr(@args, @files);
+
+    ok scalar(@$stdout) > 0, 'At least one line should be printed on standard output' or diag(explain($stdout));
+    is scalar(@$stderr), 0, 'No lines should be printed on standard error' or diag(explain($stderr));
+
+    chdir $wd;
+}
+
+ACKRC_ACKRC_OUTPUT_PERMITTED: {
+    my @files = ( File::Spec->rel2abs('t/text/') );
+    my @args = qw/ --env question(\\S+) /;
+
+    write_file(File::Spec->catfile($tempdir->dirname, '.ackrc'), "--output=foo\n");
+    chdir File::Spec->catdir($tempdir->dirname, 'subdir');
+    local $ENV{'ACKRC'} = File::Spec->catfile($tempdir->dirname, '.ackrc');
+
+    my ( $stdout, $stderr ) = run_ack_with_stderr(@args, @files);
+
+    ok scalar(@$stdout) > 0, 'At least one line should be printed on standard output' or diag(explain($stdout));
+    is scalar(@$stderr), 0, 'No lines should be printed on standard error' or diag(explain($stderr));
 
     chdir $wd;
 }
