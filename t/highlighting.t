@@ -12,7 +12,7 @@ use Term::ANSIColor;
 prep_environment();
 
 
-my @HIGHLIGHT = qw( --color --group );
+my @HIGHLIGHT = qw( --color --group --sort-files );
 
 BASIC: {
     my @args  = qw( beliefs t/text/ );
