@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 6;
+use Test::More tests => 9;
 use File::Next ();
 
 use lib 't';
@@ -92,6 +92,24 @@ OUTPUT_DOUBLE_QUOTES: {
     );
 
     ack_sets_match( [ @args, @files ], \@expected, 'Find all the things with --output function' );
+}
+
+PROJECT_ACKRC_OUTPUT_FORBIDDEN: {
+    my @files = qw( t/text/ );
+    my @args = qw/ --output=x$1x question(\\S+) /;
+
+    my @target_file = (
+        File::Next::reslash( 't/text/science-of-myth.txt' ),
+        File::Next::reslash( 't/text/shut-up-be-happy.txt' ),
+    );
+
+    my ( $stdout, $stderr ) = run_ack_with_stderr(@args, @files, {
+        ackrc => \'--output=foo',
+    });
+
+    is scalar(@$stdout), 0, 'No lines should be printed on standard output';
+    ok scalar(@$stderr) > 0, 'At least one line should be printed on standard output';
+    like $stderr->[0], qr/--output is illegal in project ackrcs/;
 }
 
 done_testing();
