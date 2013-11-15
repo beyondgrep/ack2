@@ -140,7 +140,7 @@ sub find_config_files {
     while(@dirs) {
         my $ackrc = _check_for_ackrc(@dirs);
         if(defined $ackrc) {
-            push @config_files, { path => $ackrc };
+            push @config_files, { project => 1, path => $ackrc };
             last;
         }
         pop @dirs;
