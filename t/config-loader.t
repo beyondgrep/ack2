@@ -231,8 +231,8 @@ sub test_loader {
             local @ARGV;
 
             my @arg_sources = (
-                ARGV => $argv,
-                map { $_ => scalar read_file($_) } @files,
+                { name => 'ARGV', contents => $argv },
+                map { +{ name => $_, contents => scalar read_file($_) } } @files,
             );
 
             $got_opts    = App::Ack::ConfigLoader::process_args( @arg_sources );

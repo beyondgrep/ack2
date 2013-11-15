@@ -157,8 +157,8 @@ sub process_filetypes {
         'type-del=s' => $delete_spec,
     );
 
-    for ( my $i = 0; $i < @{$arg_sources}; $i += 2) {
-        my ( $source_name, $args ) = @{$arg_sources}[ $i, $i + 1];
+    foreach my $source (@{$arg_sources}) {
+        my ( $source_name, $args ) = @{$source}{qw/name contents/};
 
         if ( ref($args) ) {
             # $args are modified in place, so no need to munge $arg_sources
@@ -167,7 +167,7 @@ sub process_filetypes {
             @{$args} = @ARGV;
         }
         else {
-            ( undef, $arg_sources->[$i + 1] ) =
+            ( undef, $source->{contents} ) =
                 Getopt::Long::GetOptionsFromString($args, %type_arg_specs);
         }
     }
@@ -357,8 +357,8 @@ sub process_other {
     my $argv_source;
     my $is_help_types_active;
 
-    for ( my $i = 0; $i < @{$arg_sources}; $i += 2 ) {
-        my ( $source_name, $args ) = @{$arg_sources}[ $i, $i + 1 ];
+    foreach my $source (@{$arg_sources}) {
+        my ( $source_name, $args ) = @{$source}{qw/name contents/};
 
         if ( $source_name eq 'ARGV' ) {
             $argv_source = $args;
@@ -381,8 +381,8 @@ sub process_other {
 
     my $arg_specs = get_arg_spec($opt, $extra_specs);
 
-    for ( my $i = 0; $i < @{$arg_sources}; $i += 2) {
-        my ($source_name, $args) = @{$arg_sources}[$i, $i + 1];
+    foreach my $source (@{$arg_sources}) {
+        my ( $source_name, $args ) = @{$source}{qw/name contents/};
 
         my $ret;
         if ( ref($args) ) {
@@ -391,7 +391,7 @@ sub process_other {
             @{$args} = @ARGV;
         }
         else {
-            ( $ret, $arg_sources->[$i + 1] ) =
+            ( $ret, $source->{contents} ) =
                 Getopt::Long::GetOptionsFromString( $args, %{$arg_specs} );
         }
         if ( !$ret ) {
@@ -413,8 +413,10 @@ sub process_other {
 sub should_dump_options {
     my ( $sources ) = @_;
 
-    for(my $i = 0; $i < @{$sources}; $i += 2) {
-        my ( $name, $options ) = @{$sources}[$i, $i + 1];
+
+    foreach my $source (@{$sources}) {
+        my ( $name, $options ) = @{$source}{qw/name contents/};
+
         if($name eq 'ARGV') {
             my $dump;
             local @ARGV = @{$options};
@@ -458,10 +460,10 @@ sub explode_sources {
         delete $arg_spec->{$arg};
     };
 
-    for(my $i = 0; $i < @{$sources}; $i += 2) {
-        my ( $name, $options ) = @{$sources}[$i, $i + 1];
+    foreach my $source (@{$sources}) {
+        my ( $name, $options ) = @{$source}{qw/name contents/};
         if ( ref($options) ne 'ARRAY' ) {
-            $sources->[$i + 1] = $options =
+            $source->{contents} = $options =
                 [ Text::ParseWords::shellwords($options) ];
         }
         for ( my $j = 0; $j < @{$options}; $j++ ) {
@@ -479,7 +481,10 @@ sub explode_sources {
             );
             Getopt::Long::GetOptions( %{$arg_spec} );
 
-            push @new_sources, $name, \@copy;
+            push @new_sources, {
+                name     => $name,
+                contents => \@copy,
+            };
         }
     }
 
@@ -506,8 +511,8 @@ sub dump_options {
     my %opts_by_source;
     my @source_names;
 
-    for(my $i = 0; $i < @{$sources}; $i += 2) {
-        my ( $name, $contents ) = @{$sources}[$i, $i + 1];
+    foreach my $source (@{$sources}) {
+        my ( $name, $contents ) = @{$source}{qw/name contents/};
         if ( not $opts_by_source{$name} ) {
             $opts_by_source{$name} = [];
             push @source_names, $name;
@@ -532,7 +537,7 @@ sub remove_default_options_if_needed {
     my $default_index;
 
     foreach my $index ( 0 .. $#$sources ) {
-        if ( $sources->[$index] eq 'Defaults' ) {
+        if ( $sources->[$index]{'name'} eq 'Defaults' ) {
             $default_index = $index;
             last;
         }
@@ -550,10 +555,8 @@ sub remove_default_options_if_needed {
         'pass_through',
     );
 
-    foreach my $index ( $default_index + 2 .. $#$sources ) {
-        next if $index % 2 != 0;
-
-        my ( $name, $args ) = @{$sources}[ $index, $index + 1 ];
+    foreach my $index ( $default_index + 1 .. $#$sources ) {
+        my ( $name, $args ) = @{$sources->[$index]}{qw/name contents/};
 
         if (ref($args)) {
             local @ARGV = @{$args};
@@ -563,7 +566,7 @@ sub remove_default_options_if_needed {
             @{$args} = @ARGV;
         }
         else {
-            ( undef, $sources->[$index + 1] ) = Getopt::Long::GetOptionsFromString($args,
+            ( undef, $sources->[$index]{contents} ) = Getopt::Long::GetOptionsFromString($args,
                 'ignore-ack-defaults' => \$should_remove,
             );
         }
@@ -575,7 +578,7 @@ sub remove_default_options_if_needed {
     return $sources unless $should_remove;
 
     my @copy = @{$sources};
-    splice @copy, $default_index, 2;
+    splice @copy, $default_index, 1;
     return \@copy;
 }
 
@@ -599,7 +602,8 @@ sub check_for_mutually_exclusive_options {
     while( @copy ) {
         my %set_opts;
 
-        my ( $source_name, $args ) = splice @copy, 0, 2;
+        my $source = shift @copy;
+        my ( $source_name, $args ) = @{$source}{qw/name contents/};
         $args = ref($args) ? [ @{$args} ] : [ Text::ParseWords::shellwords($args) ];
 
         foreach my $opt ( @{$args} ) {
@@ -647,7 +651,8 @@ sub process_args {
     my $type_specs = process_filetypes(\%opt, $arg_sources);
     process_other(\%opt, $type_specs, $arg_sources);
     while ( @{$arg_sources} ) {
-        my ( $source_name, $args ) = splice( @{$arg_sources}, 0, 2 );
+        my $source = shift @{$arg_sources};
+        my ( $source_name, $args ) = @{$source}{qw/name contents/};
 
         # All of our sources should be transformed into an array ref
         if ( ref($args) ) {
@@ -707,18 +712,33 @@ sub retrieve_arg_sources {
         push( @files, $ackrc );
     }
 
-    push @arg_sources, Defaults => [ App::Ack::ConfigDefault::options() ];
+    push @arg_sources, {
+        name     => 'Defaults',
+        contents => [ App::Ack::ConfigDefault::options() ],
+    };
 
     foreach my $file ( @files) {
         my @lines = App::Ack::ConfigFinder::read_rcfile($file);
-        push ( @arg_sources, $file, \@lines ) if @lines;
+
+        if(@lines) {
+            push @arg_sources, {
+                name     => $file,
+                contents => \@lines,
+            };
+        }
     }
 
     if ( $ENV{ACK_OPTIONS} && !$noenv ) {
-        push( @arg_sources, 'ACK_OPTIONS' => $ENV{ACK_OPTIONS} );
+        push @arg_sources, {
+            name     => 'ACK_OPTIONS',
+            contents => $ENV{ACK_OPTIONS},
+        };
     }
 
-    push( @arg_sources, 'ARGV' => [ @ARGV ] );
+    push @arg_sources, {
+        name     => 'ARGV',
+        contents => [ @ARGV ],
+    };
 
     return @arg_sources;
 }
