@@ -109,7 +109,7 @@ PROJECT_ACKRC_OUTPUT_FORBIDDEN: {
     my ( $stdout, $stderr ) = run_ack_with_stderr(@args, @files);
 
     is scalar(@$stdout), 0, 'No lines should be printed on standard output' or diag(explain($stdout));
-    ok scalar(@$stderr) > 0, 'At least one line should be printed on standard output' or diag(explain($stderr));
+    ok scalar(@$stderr) > 0, 'At least one line should be printed on standard error' or diag(explain($stderr));
     like $stderr->[0], qr/--output is illegal in project ackrcs/ or diag(explain($stderr));
 
     chdir $wd;
