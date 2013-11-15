@@ -383,15 +383,33 @@ sub process_other {
     foreach my $source (@{$arg_sources}) {
         my ( $source_name, $args ) = @{$source}{qw/name contents/};
 
+        my $args_for_source = $arg_specs;
+
+        if ( $source->{project} ) {
+            my $illegal = sub {
+                my ( $option ) = @_;
+
+                return sub {
+                    die "Option $option is illegal in project ackrcs";
+                };
+            };
+
+            $args_for_source = { %$args_for_source,
+                'output=s'=> $illegal->('--output'),
+                'pager:s' => $illegal->('--pager'),
+                'match=s' => $illegal->('--match'),
+            };
+        }
+
         my $ret;
         if ( ref($args) ) {
             local @ARGV = @{$args};
-            $ret = Getopt::Long::GetOptions( %{$arg_specs} );
+            $ret = Getopt::Long::GetOptions( %{$args_for_source} );
             @{$args} = @ARGV;
         }
         else {
             ( $ret, $source->{contents} ) =
-                Getopt::Long::GetOptionsFromString( $args, %{$arg_specs} );
+                Getopt::Long::GetOptionsFromString( $args, %{$args_for_source} );
         }
         if ( !$ret ) {
             if ( !$is_help_types_active ) {
