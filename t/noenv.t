@@ -59,8 +59,9 @@ subtest 'without --noenv' => sub {
 
     is_deeply( \@sources, [
         {
-            name      => realpath(File::Spec->catfile($tempdir->dirname, '.ackrc')),
+            name     => realpath(File::Spec->catfile($tempdir->dirname, '.ackrc')),
             contents => [ '--type-add=perl:ext:pl,t,pm' ],
+            project  => 1,
         },
         {
             name     => 'ACK_OPTIONS',
