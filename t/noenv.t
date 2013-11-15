@@ -33,14 +33,9 @@ sub is_global_file {
 sub remove_defaults_and_globals {
     my ( @sources ) = @_;
 
-    if($sources[0] eq 'Defaults') {
-        shift @sources;
-        shift @sources;
-    }
-    if(is_global_file($sources[0])) {
-        # XXX WHY IS THIS EMPTY?
-    }
-    return @sources;
+    return grep {
+        $_->{name} ne 'Defaults' && !is_global_file($_->{name})
+    } @sources;
 }
 
 prep_environment();
@@ -62,13 +57,19 @@ subtest 'without --noenv' => sub {
     my @sources = App::Ack::ConfigLoader::retrieve_arg_sources();
     @sources    = remove_defaults_and_globals(@sources);
 
-    is_deeply( [ realpath($sources[0]), @sources[1..5] ], [
-        realpath(File::Spec->catfile($tempdir->dirname, '.ackrc')),
-        [ '--type-add=perl:ext:pl,t,pm' ],
-        'ACK_OPTIONS',
-        '--perl',
-        'ARGV',
-        ['-f', 'lib/'],
+    is_deeply( \@sources, [
+        {
+            name      => realpath(File::Spec->catfile($tempdir->dirname, '.ackrc')),
+            contents => [ '--type-add=perl:ext:pl,t,pm' ],
+        },
+        {
+            name     => 'ACK_OPTIONS',
+            contents => '--perl',
+        },
+        {
+            name     => 'ARGV',
+            contents => ['-f', 'lib/'],
+        },
     ], 'Get back a long list of arguments' );
 };
 
@@ -80,8 +81,10 @@ subtest 'with --noenv' => sub {
     @sources    = remove_defaults_and_globals(@sources);
 
     is_deeply( \@sources, [
-        'ARGV',
-        ['-f', 'lib/'],
+        {
+            name     => 'ARGV',
+            contents => ['-f', 'lib/'],
+        },
     ], 'Short list comes back because of --noenv' );
 };
 
