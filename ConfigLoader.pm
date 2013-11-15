@@ -698,7 +698,7 @@ sub retrieve_arg_sources {
 
     if ( !$noenv ) {
         my $finder = App::Ack::ConfigFinder->new;
-        @files  = $finder->find_config_files;
+        @files  = map { $_->{'path'} } $finder->find_config_files;
     }
     if ( $ackrc ) {
         # We explicitly use open so we get a nice error message.

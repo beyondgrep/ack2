@@ -64,7 +64,7 @@ sub _remove_redundancies {
         # inode stat always returns 0 on windows, so just check filenames.
         my (%seen, @uniq);
 
-        foreach my $path (@configs) {
+        foreach my $path (map { $_->{path} } @configs) {
             push @uniq, $path unless $seen{$path};
             $seen{$path} = 1;
         }
@@ -76,12 +76,13 @@ sub _remove_redundancies {
 
         my %dev_and_inode_seen;
 
-        foreach my $path ( @configs ) {
+        foreach my $config ( @configs ) {
+            my $path = $config->{path};
             my ( $dev, $inode ) = (stat $path)[0, 1];
 
             if( defined($dev) ) {
                 if( $dev_and_inode_seen{"$dev:$inode"} ) {
-                    undef $path;
+                    undef $config;
                 }
                 else {
                     $dev_and_inode_seen{"$dev:$inode"} = 1;
@@ -118,28 +119,28 @@ sub find_config_files {
     my @config_files;
 
     if ( $App::Ack::is_windows ) {
-        push @config_files, map { File::Spec->catfile($_, 'ackrc') } (
+        push @config_files, map { +{ path => File::Spec->catfile($_, 'ackrc') } } (
             Win32::GetFolderPath(Win32::CSIDL_COMMON_APPDATA()),
             Win32::GetFolderPath(Win32::CSIDL_APPDATA()),
         );
     }
     else {
-        push @config_files, '/etc/ackrc';
+        push @config_files, { path => '/etc/ackrc' };
     }
 
 
     if ( $ENV{'ACKRC'} && -f $ENV{'ACKRC'} ) {
-        push @config_files, $ENV{'ACKRC'};
+        push @config_files, { path => $ENV{'ACKRC'} };
     }
     else {
-        push @config_files, _check_for_ackrc($ENV{'HOME'});
+        push @config_files, map { +{ path => $_ } } _check_for_ackrc($ENV{'HOME'});
     }
 
     my @dirs = File::Spec->splitdir(Cwd::getcwd());
     while(@dirs) {
         my $ackrc = _check_for_ackrc(@dirs);
         if(defined $ackrc) {
-            push @config_files, $ackrc;
+            push @config_files, { path => $ackrc };
             last;
         }
         pop @dirs;
