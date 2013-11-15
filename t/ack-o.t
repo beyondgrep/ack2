@@ -3,8 +3,11 @@
 use warnings;
 use strict;
 
+use Cwd ();
 use Test::More tests => 9;
 use File::Next ();
+use File::Spec ();
+use File::Temp ();
 
 use lib 't';
 use Util;
@@ -95,21 +98,21 @@ OUTPUT_DOUBLE_QUOTES: {
 }
 
 PROJECT_ACKRC_OUTPUT_FORBIDDEN: {
-    my @files = qw( t/text/ );
-    my @args = qw/ --output=x$1x question(\\S+) /;
+    my @files = ( File::Spec->rel2abs('t/text/') );
+    my @args = qw/ --env question(\\S+) /;
 
-    my @target_file = (
-        File::Next::reslash( 't/text/science-of-myth.txt' ),
-        File::Next::reslash( 't/text/shut-up-be-happy.txt' ),
-    );
+    my $wd = Cwd::getcwd();
+    my $tempdir = File::Temp->newdir;
+    chdir $tempdir->dirname;
+    write_file '.ackrc', "--output=foo\n";
 
-    my ( $stdout, $stderr ) = run_ack_with_stderr(@args, @files, {
-        ackrc => \'--output=foo',
-    });
+    my ( $stdout, $stderr ) = run_ack_with_stderr(@args, @files);
 
-    is scalar(@$stdout), 0, 'No lines should be printed on standard output';
-    ok scalar(@$stderr) > 0, 'At least one line should be printed on standard output';
-    like $stderr->[0], qr/--output is illegal in project ackrcs/;
+    is scalar(@$stdout), 0, 'No lines should be printed on standard output' or diag(explain($stdout));
+    ok scalar(@$stderr) > 0, 'At least one line should be printed on standard output' or diag(explain($stderr));
+    like $stderr->[0], qr/--output is illegal in project ackrcs/ or diag(explain($stderr));
+
+    chdir $wd;
 }
 
 done_testing();
