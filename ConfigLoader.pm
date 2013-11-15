@@ -697,7 +697,7 @@ sub retrieve_arg_sources {
 
     if ( !$noenv ) {
         my $finder = App::Ack::ConfigFinder->new;
-        @files  = map { $_->{'path'} } $finder->find_config_files;
+        @files  = $finder->find_config_files;
     }
     if ( $ackrc ) {
         # We explicitly use open so we get a nice error message.
@@ -708,7 +708,7 @@ sub retrieve_arg_sources {
         else {
             die "Unable to load ackrc '$ackrc': $!"
         }
-        push( @files, $ackrc );
+        push( @files, { path => $ackrc } );
     }
 
     push @arg_sources, {
@@ -717,12 +717,13 @@ sub retrieve_arg_sources {
     };
 
     foreach my $file ( @files) {
-        my @lines = App::Ack::ConfigFinder::read_rcfile($file);
+        my @lines = App::Ack::ConfigFinder::read_rcfile($file->{path});
 
         if(@lines) {
             push @arg_sources, {
-                name     => $file,
+                name     => $file->{path},
                 contents => \@lines,
+                project  => $file->{project},
             };
         }
     }
