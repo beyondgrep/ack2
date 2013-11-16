@@ -77,7 +77,7 @@ sub check_with {
                 $opts = $arg;
             }
         }
-        @args = grep { ref($_) ne 'HASH' } @args;
+        @args = grep { ref ne 'HASH' } @args;
 
         my $expected_stdout = $opts->{expected_stdout} || 0;
 

@@ -9,6 +9,8 @@ use Util;
 
 prep_environment();
 
+## no critic ( ValuesAndExpressions::RequireInterpolationOfMetachars ) Way too many metacharacters in this file
+
 # --line
 are_mutually_exclusive('--line', '-l', ['--line=1', '-l', 't/text/science-of-myth.txt']);
 are_mutually_exclusive('--line', '-l', ['--line', 1, '-l', 't/text/science-of-myth.txt']);
@@ -290,8 +292,8 @@ are_mutually_exclusive('-g', '--break', ['-g', '--break', 'science', 't/text/sci
 
 subtest q{Verify that "options" that follow -- aren't factored into the mutual exclusivity} => sub {
     my ( $stdout, $stderr ) = run_ack_with_stderr('-A', 5, 'science', 't/text/science-of-myth.txt', '--', '-l');
-    ok(@$stdout > 0, 'Some lines should appear on standard output');
-    is(scalar(@$stderr), 1, 'A single line should be present on standard error');
+    ok(@{$stdout} > 0, 'Some lines should appear on standard output');
+    is(scalar(@{$stderr}), 1, 'A single line should be present on standard error');
     like($stderr->[0], qr/No such file or directory/, 'The error message should indicate a missing file (-l)');
     is(get_rc(), 0, 'The ack command should not fail');
 };
@@ -324,7 +326,7 @@ sub are_mutually_exclusive {
 
         isnt( get_rc(), 0, 'The ack command should fail' );
         is_deeply( $stdout, [], 'No lines should be present on standard output' );
-        is( scalar(@$stderr), 1, 'A single line should be present on standard error' );
+        is( scalar(@{$stderr}), 1, 'A single line should be present on standard error' );
 
         my $opt1_re = quotemeta($opt1);
         my $opt2_re = quotemeta($opt2);

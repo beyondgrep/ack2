@@ -19,7 +19,7 @@ my @options = (qw{
 plan tests => scalar @options;
 
 foreach my $option (@options) {
-    my @args = ref($option) ? @$option : ( $option );
+    my @args = ref($option) ? @{$option} : ( $option );
     $option  = $option->[0] if ref($option);
     push @args, 'the', 't/text';
 
