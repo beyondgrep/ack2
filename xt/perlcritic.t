@@ -15,8 +15,8 @@ if ( !$ok ) {
 
 my @files = (
     File::Spec->catfile($FindBin::Bin, '..', 'ack'),
-    map { glob($_) }
-    map { File::Spec->catfile($FindBin::Bin, '..', @$_) }
+    map { glob }
+    map { File::Spec->catfile($FindBin::Bin, '..', @{$_}) }
     (['*.pm'], ['t', '*.t'])
 );
 

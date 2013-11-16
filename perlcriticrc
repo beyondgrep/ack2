@@ -17,6 +17,8 @@ above_version = 5.008008
 [-Documentation::RequireEndBeforeLastPod]
 # We could have __END__ at the end of ack if not for the squashing.
 
+[-Editor::RequireEmacsFileVariables]
+
 [-ErrorHandling::RequireCarping]
 
 [-InputOutput::ProhibitInteractiveTest]
@@ -26,25 +28,26 @@ functions = open opendir read readline readdir close closedir
 
 [-Miscellanea::RequireRcsKeywords]
 
+[-Modules::RequirePerlVersion]
 [-Modules::RequireVersionVar]
 
 [-RegularExpressions::RequireDotMatchAnything]
 [-RegularExpressions::RequireExtendedFormatting]
 [-RegularExpressions::RequireLineBoundaryMatching]
 
-[Subroutines::RequireArgUnpacking]
 [-Subroutines::ProhibitBuiltinHomonyms]
 # We have plenty of funcs that we know are homonyms, but that's OK
+[-Subroutines::RequireArgUnpacking]
 
 [-TestingAndDebugging::ProhibitNoStrict]
 [-TestingAndDebugging::ProhibitNoWarnings]
 # If I've turned off warnings or strict, I know why I'm doing it.
 [-TestingAndDebugging::RequireTestLabels]
 
-[-ValuesAndExpressions::ProhibitNoisyQuotes]
 [-ValuesAndExpressions::ProhibitEmptyQuotes]
 [-ValuesAndExpressions::ProhibitMagicNumbers]
-
+[-ValuesAndExpressions::ProhibitNoisyQuotes]
+[-ValuesAndExpressions::RequireConstantOnLeftSideOfEquality]
 
 [-Variables::ProhibitPackageVars]
 [-Variables::ProhibitPunctuationVars]
