@@ -87,6 +87,9 @@ sub _options_block {
 # CMake cache
 --ignore-directory=is:CMakeFiles
 
+# Eclipse workspace folder
+--ignore-directory=is:.metadata
+
 ### Files to ignore
 
 # Backup files
