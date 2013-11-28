@@ -23,14 +23,17 @@ cpp
 csharp
 css
 delphi
+ejs
 elisp
 erlang
 fortran
 go
 groovy
+handlebars
 haskell
 hh
 html
+jade
 java
 js
 json
@@ -39,6 +42,7 @@ less
 lisp
 lua
 make
+mustache
 objc
 objcpp
 ocaml
@@ -55,7 +59,9 @@ scala
 scheme
 shell
 smalltalk
+smarty
 sql
+stylus
 tcl
 tex
 tt
