@@ -95,7 +95,7 @@ NOENV_IN_CONFIG: {
     local $ENV{'ACK_OPTIONS'} = '--perl';
 
     my ( $stdout, $stderr ) = run_ack_with_stderr('--env', 'perl');
-    is_deeply( $stdout, [], 'Empty stdout' );
+    is_empty_array( $stdout );
     is( @{$stderr}, 1 );
     like( $stderr->[0], qr/--noenv found in (?:.*)[.]ackrc/ ) or diag(explain($stderr));
 }

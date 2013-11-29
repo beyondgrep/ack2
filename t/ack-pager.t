@@ -213,9 +213,9 @@ PROJECT_ACKRC_PAGER_FORBIDDEN: {
 
     my ( $stdout, $stderr ) = run_ack_with_stderr(@args, @files);
 
-    is scalar(@$stdout), 0, 'No lines should be printed on standard output' or diag(explain($stdout));
-    ok scalar(@$stderr) > 0, 'At least one line should be printed on standard error' or diag(explain($stderr));
-    like $stderr->[0], qr/--pager is illegal in project ackrcs/ or diag(explain($stderr));
+    is_empty_array( $stdout );
+    is_nonempty_array( $stderr );
+    like( $stderr->[0], qr/--pager is illegal in project ackrcs/ ) or diag(explain($stderr));
 
     chdir $wd;
 }
@@ -230,8 +230,8 @@ HOME_ACKRC_PAGER_PERMITTED: {
 
     my ( $stdout, $stderr ) = run_ack_with_stderr(@args, @files);
 
-    ok scalar(@$stdout) > 0, 'At least one line should be printed on standard output' or diag(explain($stdout));
-    is scalar(@$stderr), 0, 'No lines should be printed on standard error' or diag(explain($stderr));
+    is_nonempty_array( $stdout );
+    is_empty_array( $stderr );
 
     chdir $wd;
 }
@@ -246,8 +246,8 @@ ACKRC_ACKRC_PAGER_PERMITTED: {
 
     my ( $stdout, $stderr ) = run_ack_with_stderr(@args, @files);
 
-    ok scalar(@$stdout) > 0, 'At least one line should be printed on standard output' or diag(explain($stdout));
-    is scalar(@$stderr), 0, 'No lines should be printed on standard error' or diag(explain($stderr));
+    is_nonempty_array( $stdout );
+    is_empty_array( $stderr );
 
     chdir $wd;
 }

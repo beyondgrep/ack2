@@ -14,4 +14,4 @@ plan tests => 1;
 prep_environment();
 
 my ( $stdout, $stderr ) = run_ack_with_stderr('--color', '(foo)|(bar)', 't/swamp');
-is_deeply( $stderr, [], 'No output in stderr' );
+is_empty_array( $stderr );

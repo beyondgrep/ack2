@@ -73,7 +73,7 @@ foreach my $filetype ( @filetypes ) {
     my @args = ( '-f', "--$filetype" );
 
     my ( undef, $stderr ) = run_ack_with_stderr( @args ); # Throw away stdout. We don't care.
-    is_deeply( $stderr, [], "--$filetype should print no errors" );
+    is_empty_array( $stderr, "--$filetype should print no errors" );
 }
 
 done_testing();

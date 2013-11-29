@@ -178,4 +178,4 @@ else {
 }
 
 sets_match( $stdout, \@expected, __FILE__ );
-is_deeply $stderr, [];
+is_empty_array( $stderr );

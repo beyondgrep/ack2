@@ -68,8 +68,7 @@ ok(  is_filetype( 't/swamp/perl.handler.pod', 'perl' ), 'perl.handler.pod can be
 ok(  is_filetype( 't/swamp/Makefile', 'make' ), 'Makefile is a makefile' );
 ok(  is_filetype( 't/swamp/Rakefile', 'rake' ), 'Rakefile is a rakefile' );
 
-is_deeply([filetypes('t/swamp/#emacs-workfile.pl#')], [],
-    'correctly skip files starting and ending with hash mark');
+is_empty_array( [filetypes('t/swamp/#emacs-workfile.pl#')], 'correctly skip files starting and ending with hash mark' );
 
 MATCH_VIA_CONTENT: {
     my %lookups = (

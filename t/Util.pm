@@ -35,6 +35,34 @@ sub is_cygwin {
     return $^O eq 'cygwin';
 }
 
+sub is_empty_array {
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+
+    my $aref = shift;
+    my $msg  = shift;
+
+    my $ok = defined($aref) && (ref($aref) eq 'ARRAY') && (scalar(@{$aref}) == 0);
+
+    if ( !ok( $ok, $msg ) ) {
+        diag( explain( $aref ) );
+    }
+    return $ok;
+}
+
+sub is_nonempty_array {
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+
+    my $aref = shift;
+    my $msg  = shift;
+
+    my $ok = defined($aref) && (ref($aref) eq 'ARRAY') && (scalar(@{$aref}) > 0);
+
+    if ( !ok( $ok, $msg ) ) {
+        diag( explain( $aref ) );
+    }
+    return $ok;
+}
+
 sub build_ack_invocation {
     my @args = @_;
 
@@ -140,7 +168,7 @@ sub run_ack {
         fail( q{Automatically fail stderr check for TODO tests.} );
     }
     else {
-        is_deeply( $stderr, [], "Should have no output to stderr: ack @args" );
+        is_empty_array( $stderr, "Should have no output to stderr: ack @args" );
     }
 
     return wantarray ? @{$stdout} : join( "\n", @{$stdout} );
