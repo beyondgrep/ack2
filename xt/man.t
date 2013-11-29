@@ -11,6 +11,7 @@ sub strip_special_chars {
     my ( $s ) = @_;
 
     $s =~ s/.[\b]//g;
+    $s =~ s/\e\[?.*?[\@-~]//g;
 
     return $s;
 }
