@@ -2,6 +2,19 @@ History file for ack.  http://beyondgrep.com/
 
 NEXT
 ====================================
+[SECURITY FIXES]
+This verison of ack prevents the --pager, --regex and --output
+options from being used from project-level ackrc files.  It is
+possible to execute malicious code with these options, and we want
+to prevent the security risk of acking through a potentially malicious
+codebase, such as one downloaded from an Internet site or checked
+out from a code repository.
+
+The --pager, --regex and --output options may still be used from
+the global /etc/ackrc, your own private ~/.ackrc, the ACK_OPTIONS
+environment variable, and of course from the command line.
+
+
 [ENHANCEMENTS]
 Now ignores Eclipse .metadata directory.  Thanks, Steffen Jaeckel.
 
