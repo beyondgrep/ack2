@@ -17,7 +17,7 @@ subtest 'No starting directory specified' => sub {
     my @args = ( '-g', $regex );
     my ($stdout, $stderr) = run_ack_with_stderr( @args, @files );
 
-    is_deeply( $stdout, [], 'No STDOUT for non-existent file' );
+    is_empty_array( $stdout, 'No STDOUT for non-existent file' );
     is( scalar @{$stderr}, 1, 'One line of STDERR for non-existent file' );
     like( $stderr->[0], qr/non-existent: No such file or directory/,
         'Correct warning message for non-existent file' );
@@ -30,7 +30,7 @@ subtest 'regex comes before -g on the command line' => sub {
     my @args = ( $regex, '-g' );
     my ($stdout, $stderr) = run_ack_with_stderr( @args, @files );
 
-    is_deeply( $stdout, [], 'No STDOUT for non-existent file' );
+    is_empty_array( $stdout, 'No STDOUT for non-existent file' );
     is( scalar @{$stderr}, 1, 'One line of STDERR for non-existent file' );
     like( $stderr->[0], qr/non-existent: No such file or directory/,
         'Correct warning message for non-existent file' );

@@ -167,7 +167,7 @@ LINE_WITH_REGEX: {
 
     my ($stdout, $stderr) = run_ack_with_stderr( @args, @files );
     isnt( get_rc(), 0, 'Specifying both --line and --match must lead to an error RC' );
-    is_deeply( $stdout, [], 'No normal output' );
+    is_empty_array( $stdout, 'No normal output' );
     is( scalar @{$stderr}, 1, 'One line of stderr output' );
     like( $stderr->[0], qr/\Q(Sue)/, 'Error message must contain "(Sue)"' );
 }

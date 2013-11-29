@@ -31,7 +31,7 @@ run_ack( '--match', 'Sue' );
 # Not giving a regex when piping into ack should result in an error.
 my ($stdout, $stderr) = pipe_into_ack_with_stderr( 't/text/4th-of-july.txt', '--perl' );
 isnt( get_rc(), 0, 'ack should return an error when piped into without a regex' );
-is_deeply( $stdout, [], 'ack should return no STDOUT when piped into without a regex' );
+is_empty_array( $stdout, 'ack should return no STDOUT when piped into without a regex' );
 is( scalar @{$stderr}, 1, 'ack should return one line of error message when piped into without a regex' ) or diag(explain($stderr));
 
 my $wd      = Cwd::getcwd();
@@ -47,9 +47,9 @@ PROJECT_ACKRC_MATCH_FORBIDDEN: {
 
     my ( $stdout, $stderr ) = run_ack_with_stderr(@args, @files);
 
-    is scalar(@$stdout), 0, 'No lines should be printed on standard output' or diag(explain($stdout));
-    ok scalar(@$stderr) > 0, 'At least one line should be printed on standard error' or diag(explain($stderr));
-    like $stderr->[0], qr/--match is illegal in project ackrcs/ or diag(explain($stderr));
+    is_empty_array( $stdout );
+    is_nonempty_array( $stderr );
+    like( $stderr->[0], qr/--match is illegal in project ackrcs/ ) or diag(explain($stderr));
 
     chdir $wd;
 }
@@ -64,8 +64,8 @@ HOME_ACKRC_MATCH_PERMITTED: {
 
     my ( $stdout, $stderr ) = run_ack_with_stderr(@args, @files);
 
-    ok scalar(@$stdout) > 0, 'At least one line should be printed on standard output' or diag(explain($stdout));
-    is scalar(@$stderr), 0, 'No lines should be printed on standard error' or diag(explain($stderr));
+    is_nonempty_array( $stdout );
+    is_empty_array( $stderr );
 
     chdir $wd;
 }
@@ -80,8 +80,8 @@ ACKRC_ACKRC_MATCH_PERMITTED: {
 
     my ( $stdout, $stderr ) = run_ack_with_stderr(@args, @files);
 
-    ok scalar(@$stdout) > 0, 'At least one line should be printed on standard output' or diag(explain($stdout));
-    is scalar(@$stderr), 0, 'No lines should be printed on standard error' or diag(explain($stderr));
+    is_nonempty_array( $stdout );
+    is_empty_array( $stderr );
 
     chdir $wd;
 }
@@ -91,6 +91,8 @@ done_testing;
 #
 # Due to 2 calls to run_ack, this sub runs altogether 3 tests.
 sub test_match {
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+
     my $regex = shift;
     my @args  = @_;
 

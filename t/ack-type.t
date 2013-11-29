@@ -63,9 +63,9 @@ TEST_UNKNOWN_TYPE: {
 
     my ( $stdout, $stderr ) = run_ack_with_stderr( @args, $target, @files );
 
-    is_deeply( $stdout, [], 'Should have no lines back' );
-    ok( scalar(@$stderr) > 0 );
-    like $stderr->[0], qr/Unknown type 'foo'/ or diag(explain($stderr));
+    is_empty_array( $stdout, 'Should have no lines back' );
+    is_nonempty_array( $stderr, 'Should get some errors' );
+    like( $stderr->[0], qr/Unknown type 'foo'/ ) or diag(explain($stderr));
 }
 
 TEST_NOTYPES: {
@@ -76,9 +76,9 @@ TEST_NOTYPES: {
 
     my ( $stdout, $stderr ) = run_ack_with_stderr( @args, $target, @files );
 
-    is_deeply( $stdout, [], 'Should have no lines back' );
-    ok scalar(@$stderr) > 0;
-    like $stderr->[0], qr/Unknown type 'perl'/ or diag(explain($stderr));
+    is_empty_array( $stdout, 'Should have no lines back' );
+    is_nonempty_array( $stderr, 'Should get some errors' );
+    like( $stderr->[0], qr/Unknown type 'perl'/ ) or diag(explain($stderr));
 }
 
 TEST_NOTYPE_OVERRIDE: {
@@ -93,7 +93,7 @@ File::Next::reslash('t/swamp/html.html') . ':2:<html><head><title>Boring test fi
 
 TEST_TYPE_OVERRIDE: {
     my @lines = run_ack('--html', '--nohtml', '<title>', 't/swamp');
-    is_deeply \@lines, [];
+    is_empty_array( \@lines );
 }
 
 TEST_NOTYPE_ACKRC_CMD_LINE_OVERRIDE: {

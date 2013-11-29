@@ -23,5 +23,5 @@ WITH_S: {
     my @args  = qw( search-term -s );
     my (undef, $stderr) = run_ack_with_stderr( @args, @files );
 
-    is_deeply( $stderr, [] );
+    is_empty_array( $stderr );
 }

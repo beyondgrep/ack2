@@ -49,4 +49,4 @@ my $line = 3;
 my ( $stdout, $stderr ) = run_ack_with_stderr( @args );
 is( scalar(@{$stdout}), 1, 'Got back exactly one line' );
 like $stdout->[0], qr/\Q$file:$line\E.*[*] One/;
-is_deeply( $stderr, [], 'No output to stderr' );
+is_empty_array( $stderr, 'No output to stderr' );

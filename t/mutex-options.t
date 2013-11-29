@@ -325,7 +325,7 @@ sub are_mutually_exclusive {
         plan tests => 4;
 
         isnt( get_rc(), 0, 'The ack command should fail' );
-        is_deeply( $stdout, [], 'No lines should be present on standard output' );
+        is_empty_array( $stdout, 'No lines should be present on standard output' );
         is( scalar(@{$stderr}), 1, 'A single line should be present on standard error' );
 
         my $opt1_re = quotemeta($opt1);
