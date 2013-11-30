@@ -387,17 +387,13 @@ sub process_other {
 
         if ( $source->{project} ) {
             my $illegal = sub {
-                my ( $option ) = @_;
-
-                return sub {
-                    die "Option $option is illegal in project ackrcs";
-                };
+                die "Options --output, --pager and --match are forbidden in project .ackrc files\n";
             };
 
             $args_for_source = { %$args_for_source,
-                'output=s'=> $illegal->('--output'),
-                'pager:s' => $illegal->('--pager'),
-                'match=s' => $illegal->('--match'),
+                'output=s' => $illegal,
+                'pager:s'  => $illegal,
+                'match=s'  => $illegal,
             };
         }
 
