@@ -14,12 +14,10 @@ Version 2.11_02
 =cut
 
 our $VERSION;
-our $GIT_REVISION;
 our $COPYRIGHT;
 BEGIN {
     $VERSION = '2.11_02';
     $COPYRIGHT = 'Copyright 2005-2013 Andy Lester.';
-    $GIT_REVISION = '';
 }
 
 our $fh;
@@ -455,10 +453,8 @@ sub get_version_statement {
     }
     my $ver = sprintf( '%vd', $^V );
 
-    my $git_revision = $GIT_REVISION ? " (git commit $GIT_REVISION)" : '';
-
     return <<"END_OF_VERSION";
-ack ${VERSION}${git_revision}
+ack ${VERSION}
 Running under Perl $ver at $this_perl
 
 $copyright

@@ -18,6 +18,10 @@ environment variable, and of course from the command line.
 [ENHANCEMENTS]
 Now ignores Eclipse .metadata directory.  Thanks, Steffen Jaeckel.
 
+[INTERNALS]
+Removed the Git revision tracking in the --version.
+
+
 2.11_02 Sun Oct  6 12:39:21 CDT 2013
 ====================================
 [FIXES]
