@@ -387,7 +387,7 @@ sub process_other {
 
         if ( $source->{project} ) {
             my $illegal = sub {
-                die "Options --output, --pager and --match are forbidden in project .ackrc files\n";
+                die "Options --output, --pager and --match are forbidden in project .ackrc files.\n";
             };
 
             $args_for_source = { %$args_for_source,
