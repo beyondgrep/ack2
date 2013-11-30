@@ -215,7 +215,7 @@ PROJECT_ACKRC_PAGER_FORBIDDEN: {
 
     is_empty_array( $stdout );
     is_nonempty_array( $stderr );
-    like( $stderr->[0], qr/--pager is illegal in project ackrcs/ ) or diag(explain($stderr));
+    like( $stderr->[0], qr/Options --output, --pager and --match are forbidden in project .ackrc files/ ) or diag(explain($stderr));
 
     chdir $wd;
 }
