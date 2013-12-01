@@ -381,6 +381,9 @@ Miscellaneous:
 Exit status is 0 if match, 1 if no match.
 
 This is version $VERSION of ack.
+
+For more information consult the man page which can be invoked by running
+ack --man.
 END_OF_HELP
 
     return;
