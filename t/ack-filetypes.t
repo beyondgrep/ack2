@@ -48,6 +48,7 @@ php
 plone
 python
 rake
+rst
 ruby
 rust
 sass
