@@ -1,6 +1,6 @@
 History file for ack.  http://beyondgrep.com/
 
-NEXT
+2.12    Tue Dec  3 07:05:02 CST 2013
 ====================================
 [SECURITY FIXES]
 This verison of ack prevents the --pager, --regex and --output
@@ -13,7 +13,6 @@ out from a code repository.
 The --pager, --regex and --output options may still be used from
 the global /etc/ackrc, your own private ~/.ackrc, the ACK_OPTIONS
 environment variable, and of course from the command line.
-
 
 [ENHANCEMENTS]
 Now ignores Eclipse .metadata directory.  Thanks, Steffen Jaeckel.
