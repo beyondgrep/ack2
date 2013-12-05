@@ -95,7 +95,7 @@ LINE_1_AND_5_AND_NON_EXISTENT: {
 }
 
 LINE_AND_PASSTHRU: {
-    my @expected = split( /\n/, <<"EOF" );
+    my @expected = split( /\n/, <<'EOF' );
 =head1 Dummy document
 
 =head2 There's important stuff in here!
