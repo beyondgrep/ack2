@@ -22,7 +22,9 @@ above_version = 5.008008
 
 [-Editor::RequireEmacsFileVariables]
 
+# We're a utility.  We're OK with die.
 [-ErrorHandling::RequireCarping]
+[-ErrorHandling::RequireUseOfExceptions]
 
 [-InputOutput::ProhibitInteractiveTest]
 [-InputOutput::ProhibitBacktickOperators]
