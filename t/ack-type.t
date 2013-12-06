@@ -83,12 +83,12 @@ TEST_NOTYPES: {
 
 TEST_NOTYPE_OVERRIDE: {
     my @expected = (
-File::Next::reslash('t/swamp/html.htm') . ':2:<html><head><title>Boring test file </title></head>',
-File::Next::reslash('t/swamp/html.html') . ':2:<html><head><title>Boring test file </title></head>',
+        File::Next::reslash('t/swamp/html.htm') . ':2:<html><head><title>Boring test file </title></head>',
+        File::Next::reslash('t/swamp/html.html') . ':2:<html><head><title>Boring test file </title></head>',
     );
 
     my @lines = run_ack('--nohtml', '--html', '--sort-files', '<title>', 't/swamp');
-    is_deeply \@lines, \@expected;
+    is_deeply( \@lines, \@expected );
 }
 
 TEST_TYPE_OVERRIDE: {
@@ -102,14 +102,14 @@ TEST_NOTYPE_ACKRC_CMD_LINE_OVERRIDE: {
 END_ACKRC
 
     my @expected = (
-File::Next::reslash('t/swamp/html.htm') . ':2:<html><head><title>Boring test file </title></head>',
-File::Next::reslash('t/swamp/html.html') . ':2:<html><head><title>Boring test file </title></head>',
+        File::Next::reslash('t/swamp/html.htm') . ':2:<html><head><title>Boring test file </title></head>',
+        File::Next::reslash('t/swamp/html.html') . ':2:<html><head><title>Boring test file </title></head>',
     );
 
     my @lines = run_ack('--html', '--sort-files', '<title>', 't/swamp', {
         ackrc => \$ackrc,
     });
-    is_deeply \@lines, \@expected;
+    is_deeply( \@lines, \@expected );
 }
 
 TEST_TYPE_ACKRC_CMD_LINE_OVERRIDE: {
@@ -122,5 +122,5 @@ END_ACKRC
     my @lines = run_ack('--nohtml', '<title>', 't/swamp', {
         ackrc => \$ackrc,
     });
-    is_deeply \@lines, \@expected;
+    is_deeply( \@lines, \@expected );
 }
