@@ -44,9 +44,7 @@ sub inspect {
 sub to_string {
     my ( $self ) = @_;
 
-    my $data = $self->{'data'};
-
-    return join(' ', map { ".$_" } (keys %$data));
+    return join(' ', map { ".$_" } sort keys %{$self->{data}});
 }
 
 1;
