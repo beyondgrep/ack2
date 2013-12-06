@@ -14,8 +14,11 @@ above_version = 5.008008
 [-Documentation::PodSpelling]
 [-Documentation::RequirePodAtEnd]
 [-Documentation::RequirePodSections]
+[-Documentation::RequirePodLinksIncludeText]
+# I'm not worried about link text.
 [-Documentation::RequireEndBeforeLastPod]
 # We could have __END__ at the end of ack if not for the squashing.
+
 
 [-Editor::RequireEmacsFileVariables]
 
@@ -36,7 +39,8 @@ functions = open opendir read readline readdir close closedir
 [-RegularExpressions::RequireLineBoundaryMatching]
 
 [-Subroutines::ProhibitBuiltinHomonyms]
-# We have plenty of funcs that we know are homonyms, but that's OK
+# We have plenty of funcs that we know are homonyms in ack, like open and close, but that's OK
+[-Subroutines::ProhibitExplicitReturnUndef]
 [-Subroutines::RequireArgUnpacking]
 
 [-TestingAndDebugging::ProhibitNoStrict]
