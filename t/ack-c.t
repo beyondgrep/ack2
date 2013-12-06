@@ -65,7 +65,7 @@ DASH_LV: {
         my @files = qw( t/text );
         my @args  = ( 'religion', @{$switches} );
 
-        ack_sets_match( [ @args, @files ], \@expected, "-l -v will mostly likely match all input files" );
+        ack_sets_match( [ @args, @files ], \@expected, '-l -v will mostly likely match all input files' );
     }
 }
 
