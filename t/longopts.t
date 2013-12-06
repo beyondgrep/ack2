@@ -5,7 +5,7 @@ use warnings;
 
 =head1 DESCRIPTION
 
-This tests whether L<ack(1)>'s command line options work as expected.
+This tests whether ack's command line options work as expected.
 
 =cut
 
@@ -154,6 +154,6 @@ LINE: {
     my $opt   = '--line=1';
     my @lines = run_ack( $opt, @files );
 
-    is @lines, 1, 'only one line of output should be returned';
-    is $lines[0], '#!/usr/bin/env perl', 'The first line should match';
+    is( @lines, 1, 'only one line of output should be returned' );
+    is( $lines[0], '#!/usr/bin/env perl', 'The first line should match' );
 }
