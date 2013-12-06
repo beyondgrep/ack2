@@ -166,7 +166,7 @@ sub _bar {
 77I!+!7!?!7!I"71+!7,
 _BAR
 
-    App::Ack::__pic($x);
+    return App::Ack::__pic($x);
 }
 
 sub _cathy {
@@ -222,7 +222,7 @@ sub _cathy {
  0?!$! &N! )." .,! %."M! ":!M!.! 0
  0N!:! %?!O! #.! ..! &,! &.!D!,! "N!I! 0
 CATHY
-    App::Ack::__pic($x);
+    return App::Ack::__pic($x);
 }
 
 sub __pic {
