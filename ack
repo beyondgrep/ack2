@@ -950,7 +950,7 @@ RESOURCES:
                     show_types( $resource, $ors );
                 }
                 else {
-                    local $opt->{show_filename} = 0;
+                    local $opt->{show_filename} = 0; # XXX Why is this local?
 
                     print_line_with_options($opt, '', $resource->name, 0, $ors);
                 }
