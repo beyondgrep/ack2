@@ -12,6 +12,8 @@ use Util;
 
 prep_environment();
 
+my @SWAMP = qw( t/swamp );
+
 TEST_TYPE: {
     my @expected = split( /\n/, <<'EOF' );
 t/swamp/0:1:#!/usr/bin/perl -w
@@ -29,8 +31,8 @@ EOF
         $line =~ s/^(.*?)(?=:)/File::Next::reslash( $1 )/ge;
     }
 
-    my @args    = ( '--type=perl', '--nogroup', '--noheading', '--nocolor' );
-    my @files   = ( 't/swamp' );
+    my @args    = qw( --type=perl --nogroup --noheading --nocolor );
+    my @files   = @SWAMP;
     my $target  = 'perl';
 
     my @results = run_ack( @args, $target, @files );
@@ -47,8 +49,8 @@ EOF
         $line =~ s/^(.*?)(?=:)/File::Next::reslash( $1 )/ge;
     }
 
-    my @args    = ( '--type=noperl', '--nogroup', '--noheading', '--nocolor' );
-    my @files   = ( 't/swamp' );
+    my @args    = qw( --type=noperl --nogroup --noheading --nocolor );
+    my @files   = @SWAMP;
     my $target  = 'perl';
 
     my @results = run_ack( @args, $target, @files );
@@ -56,9 +58,8 @@ EOF
 }
 
 TEST_UNKNOWN_TYPE: {
-    my @args   = ( '--ignore-ack-defaults', '--type-add=perl:ext:pl',
-        '--type=foo', '--nogroup', '--noheading', '--nocolor' );
-    my @files  = ( 't/swamp' );
+    my @args   = qw( --ignore-ack-defaults --type-add=perl:ext:pl --type=foo --nogroup --noheading --nocolor );
+    my @files   = @SWAMP;
     my $target = 'perl';
 
     my ( $stdout, $stderr ) = run_ack_with_stderr( @args, $target, @files );
@@ -69,9 +70,8 @@ TEST_UNKNOWN_TYPE: {
 }
 
 TEST_NOTYPES: {
-    my @args   = ( '--ignore-ack-defaults', '--type=perl', '--nogroup',
-        '--noheading', '--nocolor' );
-    my @files  = ( 't/swamp' );
+    my @args   = qw( --ignore-ack-defaults --type=perl --nogroup --noheading --nocolor );
+    my @files  = @SWAMP;
     my $target = 'perl';
 
     my ( $stdout, $stderr ) = run_ack_with_stderr( @args, $target, @files );
@@ -87,12 +87,12 @@ TEST_NOTYPE_OVERRIDE: {
         File::Next::reslash('t/swamp/html.html') . ':2:<html><head><title>Boring test file </title></head>',
     );
 
-    my @lines = run_ack('--nohtml', '--html', '--sort-files', '<title>', 't/swamp');
+    my @lines = run_ack( '--nohtml', '--html', '--sort-files', '<title>', @SWAMP );
     is_deeply( \@lines, \@expected );
 }
 
 TEST_TYPE_OVERRIDE: {
-    my @lines = run_ack('--html', '--nohtml', '<title>', 't/swamp');
+    my @lines = run_ack( '--html', '--nohtml', '<title>', @SWAMP );
     is_empty_array( \@lines );
 }
 
@@ -106,7 +106,7 @@ END_ACKRC
         File::Next::reslash('t/swamp/html.html') . ':2:<html><head><title>Boring test file </title></head>',
     );
 
-    my @lines = run_ack('--html', '--sort-files', '<title>', 't/swamp', {
+    my @lines = run_ack('--html', '--sort-files', '<title>', @SWAMP, {
         ackrc => \$ackrc,
     });
     is_deeply( \@lines, \@expected );
@@ -119,7 +119,7 @@ END_ACKRC
 
     my @expected;
 
-    my @lines = run_ack('--nohtml', '<title>', 't/swamp', {
+    my @lines = run_ack('--nohtml', '<title>', @SWAMP, {
         ackrc => \$ackrc,
     });
     is_deeply( \@lines, \@expected );
