@@ -1,4 +1,4 @@
-#!perl -w
+#!perl
 
 use warnings;
 use strict;
@@ -8,40 +8,40 @@ use Test::More;
 use lib 't';
 use Util;
 
-{
-    my %types_for_file;
+my %types_for_file;
 
-    sub populate_filetypes {
-        my ( $type_lines, undef ) = run_ack_with_stderr('--help-types');
+sub populate_filetypes {
+    my ( $type_lines, undef ) = run_ack_with_stderr('--help-types');
 
-        my @types_to_try;
+    my @types_to_try;
 
-        foreach my $line (@$type_lines) {
-            if($line =~ /^\s+--\[no\](\w+)/) {
-                push @types_to_try, $1;
-            }
-        }
-
-        foreach my $type (@types_to_try) {
-            my ( $filenames, undef ) = run_ack_with_stderr('-f', "--$type",
-                't/swamp', 't/etc');
-
-            foreach my $filename (@$filenames) {
-                push @{ $types_for_file{$filename} }, $type;
-            }
+    foreach my $line (@$type_lines) {
+        if($line =~ /^\s+--\[no\](\w+)/) {
+            push @types_to_try, $1;
         }
     }
 
-    # XXX implement me with --show-types!
-    sub filetypes {
-        my $filename = File::Next::reslash(shift);
+    foreach my $type (@types_to_try) {
+        my ( $filenames, undef ) = run_ack_with_stderr('-f', "--$type",
+            't/swamp', 't/etc');
 
-        if ( !%types_for_file ) {
-            populate_filetypes();
+        foreach my $filename (@$filenames) {
+            push @{ $types_for_file{$filename} }, $type;
         }
-
-        return @{ $types_for_file{$filename} || [] };
     }
+
+    return;
+}
+
+# XXX implement me with --show-types!
+sub filetypes {
+    my $filename = File::Next::reslash(shift);
+
+    if ( !%types_for_file ) {
+        populate_filetypes();
+    }
+
+    return @{ $types_for_file{$filename} || [] };
 }
 
 sub is_filetype {
