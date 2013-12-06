@@ -238,7 +238,7 @@ sub test_loader {
             $got_targets = [ @ARGV ];
         };
 
-        is_deeply( $got_opts, $expected_opts, 'Options match' )       or diag 'Options did not match';
-        is_deeply( $got_targets, $expected_targets, 'Targets match' ) or diag 'Targets did not match';
+        is_deeply( $got_opts, $expected_opts, 'Options match' );
+        is_deeply( $got_targets, $expected_targets, 'Targets match' );
     };
 }
