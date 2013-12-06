@@ -63,6 +63,20 @@ sub is_nonempty_array {
     return $ok;
 }
 
+sub first_line_like {
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+
+    my $lines = shift;
+    my $re    = shift;
+    my $msg   = shift;
+
+    my $ok = like( $lines->[0], $re, $msg );
+    diag(explain($lines)) unless $ok;
+
+    return $ok;
+}
+
+
 sub build_ack_invocation {
     my @args = @_;
 

@@ -21,7 +21,7 @@ my @tests = (
     [ qw/gon -w/ ], # words            is handled correctly with --match
 );
 
-plan tests => @tests + 11;
+plan tests => @tests + 10;
 
 test_match( @{$_} ) for @tests;
 
@@ -48,8 +48,7 @@ PROJECT_ACKRC_MATCH_FORBIDDEN: {
     my ( $stdout, $stderr ) = run_ack_with_stderr(@args, @files);
 
     is_empty_array( $stdout );
-    is_nonempty_array( $stderr );
-    like( $stderr->[0], qr/Options --output, --pager and --match are forbidden in project .ackrc files/ ) or diag(explain($stderr));
+    first_line_like( $stderr, qr/\QOptions --output, --pager and --match are forbidden in project .ackrc files/ );
 
     chdir $wd;
 }

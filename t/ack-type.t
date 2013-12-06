@@ -5,7 +5,7 @@ use warnings;
 use lib 't';
 
 use Cwd ();
-use Test::More tests => 18;
+use Test::More tests => 16;
 use File::Next ();
 use File::Temp ();
 use Util;
@@ -65,8 +65,7 @@ TEST_UNKNOWN_TYPE: {
     my ( $stdout, $stderr ) = run_ack_with_stderr( @args, $target, @files );
 
     is_empty_array( $stdout, 'Should have no lines back' );
-    is_nonempty_array( $stderr, 'Should get some errors' );
-    like( $stderr->[0], qr/Unknown type 'foo'/ ) or diag(explain($stderr));
+    first_line_like( $stderr, qr/Unknown type 'foo'/ );
 }
 
 TEST_NOTYPES: {
@@ -77,8 +76,7 @@ TEST_NOTYPES: {
     my ( $stdout, $stderr ) = run_ack_with_stderr( @args, $target, @files );
 
     is_empty_array( $stdout, 'Should have no lines back' );
-    is_nonempty_array( $stderr, 'Should get some errors' );
-    like( $stderr->[0], qr/Unknown type 'perl'/ ) or diag(explain($stderr));
+    first_line_like( $stderr, qr/Unknown type 'perl'/ );
 }
 
 TEST_NOTYPE_OVERRIDE: {
