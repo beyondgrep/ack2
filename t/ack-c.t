@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 13;
+use Test::More tests => 12;
 
 use lib 't';
 use Util;
@@ -102,8 +102,7 @@ PIPE_INTO_C: {
     my @args = qw( religion -i -c );
     my @results = pipe_into_ack( $file, @args );
 
-    is( scalar @results, 1, 'Piping into ack --count should return one line of results' );
-    is( $results[0], '2', 'Piping into ack --count should return "<count>"' );
+    is_deeply( \@results, [2], 'Piping into ack --count should return one line of results' );
 }
 
 DASH_HC: {

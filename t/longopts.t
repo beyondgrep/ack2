@@ -14,7 +14,7 @@ use File::Next (); # For the reslash() function
 
 # --no-recurse is inconsistent w/--nogroup
 
-plan tests => 39;
+plan tests => 38;
 
 use lib 't';
 use Util;
@@ -154,6 +154,5 @@ LINE: {
     my $opt   = '--line=1';
     my @lines = run_ack( $opt, @files );
 
-    is( @lines, 1, 'only one line of output should be returned' );
-    is( $lines[0], '#!/usr/bin/env perl', 'The first line should match' );
+    is_deeply( \@lines, ['#!/usr/bin/env perl'], 'Only one matching line should be a shebang' );
 }
