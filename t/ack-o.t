@@ -1,9 +1,8 @@
-#!perl
+#!perl -T
 
 use warnings;
 use strict;
 
-use Cwd ();
 use Test::More tests => 12;
 use File::Next ();
 use File::Spec ();
@@ -97,12 +96,12 @@ OUTPUT_DOUBLE_QUOTES: {
     ack_sets_match( [ @args, @files ], \@expected, 'Find all the things with --output function' );
 }
 
-my $wd      = Cwd::getcwd();
+my $wd      = getcwd_clean();
 my $tempdir = File::Temp->newdir;
 mkdir File::Spec->catdir($tempdir->dirname, 'subdir');
 
 PROJECT_ACKRC_OUTPUT_FORBIDDEN: {
-    my @files = ( File::Spec->rel2abs('t/text/') );
+    my @files = untaint( File::Spec->rel2abs('t/text/') );
     my @args = qw/ --env question(\\S+) /;
 
     chdir $tempdir->dirname;
@@ -117,7 +116,7 @@ PROJECT_ACKRC_OUTPUT_FORBIDDEN: {
 }
 
 HOME_ACKRC_OUTPUT_PERMITTED: {
-    my @files = ( File::Spec->rel2abs('t/text/') );
+    my @files = untaint( File::Spec->rel2abs('t/text/') );
     my @args = qw/ --env question(\\S+) /;
 
     write_file(File::Spec->catfile($tempdir->dirname, '.ackrc'), "--output=foo\n");
@@ -133,7 +132,7 @@ HOME_ACKRC_OUTPUT_PERMITTED: {
 }
 
 ACKRC_ACKRC_OUTPUT_PERMITTED: {
-    my @files = ( File::Spec->rel2abs('t/text/') );
+    my @files = untaint( File::Spec->rel2abs('t/text/') );
     my @args = qw/ --env question(\\S+) /;
 
     write_file(File::Spec->catfile($tempdir->dirname, '.ackrc'), "--output=foo\n");

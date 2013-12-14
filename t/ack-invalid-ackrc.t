@@ -1,4 +1,4 @@
-#!perl
+#!perl -T
 
 use strict;
 use warnings;
@@ -22,7 +22,7 @@ plan tests => sum(map { ref($_) ? scalar(@$_) : 1 } @types) + 14;
 
 prep_environment();
 
-my $wd = getcwd();
+my $wd = cwd();
 
 my $tempdir = File::Temp->newdir;
 

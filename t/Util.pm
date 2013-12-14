@@ -22,9 +22,26 @@ sub check_message {
     return $msg;
 }
 
+sub getcwd_clean {
+    # XXX How is it that this guy is tainted?
+    my $wd = Cwd::getcwd();
+    $wd =~ /(.+)/;
+    return $1;
+}
+
+sub untaint {
+    my ( $s ) = @_;
+
+    $s =~ /\A(.*)\z/;
+    return $1;
+}
+
 sub prep_environment {
-    delete @ENV{qw( ACK_OPTIONS ACKRC ACK_PAGER HOME ACK_COLOR_MATCH ACK_COLOR_FILENAME ACK_COLOR_LINE )};
-    $orig_wd = Cwd::getcwd();
+    my @ack_args   = qw( ACK_OPTIONS ACKRC ACK_PAGER HOME ACK_COLOR_MATCH ACK_COLOR_FILENAME ACK_COLOR_LINE );
+    my @taint_args = qw( PATH CDPATH IFS );
+    delete @ENV{ @ack_args, @taint_args };
+
+    $orig_wd = getcwd_clean();
 }
 
 sub is_windows {
@@ -216,6 +233,8 @@ sub run_cmd {
 
     record_option_coverage(@cmd);
 
+    check_command_for_taintedness( @cmd );
+
     my ( @stdout, @stderr );
 
     if ( is_windows() ) {
@@ -301,13 +320,13 @@ sub run_cmd {
             close $stdout_read;
             close $stderr_read;
 
-            if(my $input = $options->{'input'}) {
-                # XXX check error
-                open STDIN, '-|', @$input or die "Can't open: $!";
+            if (my $input = $options->{input}) {
+                check_command_for_taintedness( @{$input} );
+                open STDIN, '-|', @{$input} or die "Can't open STDIN: $!";
             }
 
-            open STDOUT, '>&', $stdout_write or die "Can't open: $!";
-            open STDERR, '>&', $stderr_write or die "Can't open: $!";
+            open STDOUT, '>&', $stdout_write or die "Can't open STDOUT: $!";
+            open STDERR, '>&', $stderr_write or die "Can't open STDERR: $!";
 
             exec @cmd;
         }
@@ -336,12 +355,14 @@ sub run_ack_with_stderr {
     my @stdout;
     my @stderr;
 
+    my $perl = caret_X();
+
     @args = build_ack_invocation( @args );
     if ( $ENV{'ACK_TEST_STANDALONE'} ) {
-        unshift( @args, $^X );
+        unshift( @args, $perl );
     }
     else {
-        unshift( @args, $^X, "-Mblib=$orig_wd" );
+        unshift( @args, $perl, "-Mblib=$orig_wd" );
     }
 
     return run_cmd( @args );
@@ -369,7 +390,7 @@ sub pipe_into_ack_with_stderr {
         # to simply using 'cat'.  The answer is that we have no
         # idea what the user's environment is like; they may not
         # have cat.  We *do* know, however, that they have perl.
-        input => [$^X, '-pe1', $input],
+        input => [caret_X(), '-pe1', $input],
     });
 }
 
@@ -474,13 +495,14 @@ sub record_option_coverage {
 
     my $record_options = File::Spec->catfile($orig_wd, 'record-options');
 
+    my $perl = caret_X();
     if ( @command_line == 1 ) {
         my $command_line = $command_line[0];
 
         # strip the command line up until 'ack' is found
         $command_line =~ s/^.*ack\b//;
 
-        $command_line = "$^X $record_options $command_line";
+        $command_line = "$perl -T $record_options $command_line";
 
         system $command_line;
     }
@@ -489,7 +511,7 @@ sub record_option_coverage {
             shift @command_line;
         }
         shift @command_line; # get rid of 'ack' itself
-        unshift @command_line, $^X, $record_options;
+        unshift @command_line, $perl, '-T', $record_options;
 
         system @command_line;
     }
@@ -595,6 +617,15 @@ BEGIN {
                 open STDERR, '>&', $slave->fileno() or die "Can't open: $!";
 
                 close $slave;
+
+                my $perl = caret_X();
+
+                if ( $ENV{'ACK_TEST_STANDALONE'} ) {
+                    unshift( @cmd, $perl );
+                }
+                else {
+                    unshift( @cmd, $perl, "-Mblib=$orig_wd" );
+                }
 
                 exec @cmd;
             }
@@ -715,5 +746,54 @@ sub get_options {
         '-x',
     );
 }
+
+
+# This is just a handy diagnostic tool.
+sub check_command_for_taintedness {
+    my @args = @_;
+
+    my $bad = 0;
+
+    my @tainted;
+    for my $arg ( @args ) {
+        if ( is_tainted( $arg ) ) {
+            push( @tainted, $arg );
+        }
+    }
+
+    if ( @tainted ) {
+        die "Can't execute this command because of taintedness:\nAll args: @args\nTainted:  @tainted\n";
+    }
+
+    return;
+}
+
+
+sub is_tainted {
+    no warnings qw(void uninitialized);
+
+    return !eval { local $SIG{__DIE__} = 'DEFAULT'; join('', shift), kill 0; 1 };
+}
+
+
+sub caret_X {
+    # XXX How is it $^X can be tainted?  We should not have to untaint it.
+    $^X =~ /(.+)/;
+    my $perl = $1;
+
+    return $perl;
+}
+
+
+sub cwd {
+    my $wd = Cwd::getcwd();
+
+    $wd =~ /(.+)/;
+
+    $wd = $1;
+
+    return $wd;
+}
+
 
 1;

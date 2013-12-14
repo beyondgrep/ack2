@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!perl -T
 
 use strict;
 use warnings;
@@ -27,7 +27,9 @@ $bobbie:12:    Nothin' don't mean nothin' if it ain't free
 $bobbie:27:    Nothin' don't mean nothin' if it ain't free
 EOF
 
-    my @files = sort glob( 't/text/*.txt' );
+    my @files = sort map {
+        untaint($_)
+    } glob( 't/text/*.txt' );
 
     my @cases = (
         [qw( --nogroup --nocolor free )],
@@ -56,7 +58,9 @@ $bobbie
 27:    Nothin' don't mean nothin' if it ain't free
 EOF
 
-    my @files = sort glob( 't/text/*.txt' );
+    my @files = sort map {
+        untaint($_)
+    } glob( 't/text/*.txt' );
     my @cases = (
         [qw( --group --nocolor free )],
         [qw( --heading --break --nocolor free )],
@@ -82,7 +86,9 @@ $bobbie
 27:    Nothin' don't mean nothin' if it ain't free
 EOF
 
-    my @files = sort glob( 't/text/*.txt' );
+    my @files = sort map {
+        untaint($_)
+    } glob( 't/text/*.txt' );
     my @arg_sets = (
         [qw( --heading --nobreak --nocolor free )],
     );
@@ -106,7 +112,9 @@ $bobbie:12:    Nothin' don't mean nothin' if it ain't free
 $bobbie:27:    Nothin' don't mean nothin' if it ain't free
 EOF
 
-    my @files = sort glob( 't/text/*.txt' );
+    my @files = sort map {
+        untaint($_)
+    }glob( 't/text/*.txt' );
 
     my @arg_sets = (
         [qw( --break --noheading --nocolor free )],

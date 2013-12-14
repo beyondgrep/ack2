@@ -1,4 +1,4 @@
-#!perl
+#!perl -T
 
 # Make sure we have a .t file each *.pm.  This prevents a forgetful
 # developer from creating a .pm without making the test, too.

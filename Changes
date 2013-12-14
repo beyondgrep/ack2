@@ -2,6 +2,9 @@ History file for ack.  http://beyondgrep.com/
 
 NEXT
 ====================================
+[INTERNALS]
+ack's entire test suite now runs under Perl's -T taint flag.  We'll
+build more security tests on top of this.
 
 
 2.12    Tue Dec  3 07:05:02 CST 2013

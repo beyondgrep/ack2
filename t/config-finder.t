@@ -1,4 +1,4 @@
-#!perl
+#!perl -T
 
 use strict;
 use warnings;
@@ -6,7 +6,7 @@ use warnings;
 use lib 't';
 use Util;
 
-use Cwd qw(getcwd realpath);
+use Cwd qw(realpath);
 use File::Spec;
 use File::Temp;
 use Test::Builder;
@@ -113,7 +113,7 @@ if ( is_windows() || is_cygwin() ) {
 
 my @std_files = (@global_files, { path => File::Spec->catfile($ENV{'HOME'}, '.ackrc') });
 
-my $wd      = getcwd;
+my $wd      = getcwd_clean();
 my $tempdir = File::Temp->newdir;
 chdir $tempdir->dirname;
 

@@ -1,4 +1,4 @@
-#!perl
+#!perl -T
 
 # Make sure ack can handle files it can't read.
 

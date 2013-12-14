@@ -1,4 +1,4 @@
-#!/usr/bin/env perl
+#!perl -T
 
 # https://github.com/petdance/ack2/issues/276
 

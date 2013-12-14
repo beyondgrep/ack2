@@ -1,4 +1,4 @@
-#!perl
+#!perl -T
 
 use strict;
 use warnings;
@@ -9,7 +9,7 @@ use lib 't';
 use Util;
 
 use App::Ack::ConfigLoader;
-use Cwd qw( realpath getcwd );
+use Cwd qw( realpath );
 use File::Spec ();
 use File::Temp ();
 
@@ -20,7 +20,7 @@ sub is_global_file {
 
     my ( undef, $dir ) = File::Spec->splitpath($filename);
 
-    my $wd = getcwd();
+    my $wd = getcwd_clean();
 
     my $sep = is_windows() ? '\\' : '/';
 
@@ -40,7 +40,7 @@ sub remove_defaults_and_globals {
 
 prep_environment();
 
-my $wd = getcwd() or die;
+my $wd = getcwd_clean() or die;
 
 my $tempdir = File::Temp->newdir;
 

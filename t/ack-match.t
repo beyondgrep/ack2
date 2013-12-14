@@ -1,9 +1,8 @@
-#!perl
+#!perl -T
 
 use strict;
 use warnings;
 
-use Cwd ();
 use File::Spec ();
 use File::Temp ();
 use Test::More;
@@ -34,12 +33,12 @@ isnt( get_rc(), 0, 'ack should return an error when piped into without a regex' 
 is_empty_array( $stdout, 'ack should return no STDOUT when piped into without a regex' );
 is( scalar @{$stderr}, 1, 'ack should return one line of error message when piped into without a regex' ) or diag(explain($stderr));
 
-my $wd      = Cwd::getcwd();
+my $wd      = getcwd_clean();
 my $tempdir = File::Temp->newdir;
 mkdir File::Spec->catdir($tempdir->dirname, 'subdir');
 
 PROJECT_ACKRC_MATCH_FORBIDDEN: {
-    my @files = ( File::Spec->rel2abs('t/text/') );
+    my @files = untaint( File::Spec->rel2abs('t/text/') );
     my @args = qw/ --env /;
 
     chdir $tempdir->dirname;
@@ -54,7 +53,7 @@ PROJECT_ACKRC_MATCH_FORBIDDEN: {
 }
 
 HOME_ACKRC_MATCH_PERMITTED: {
-    my @files = ( File::Spec->rel2abs('t/text/') );
+    my @files = untaint( File::Spec->rel2abs('t/text/') );
     my @args = qw/ --env /;
 
     write_file(File::Spec->catfile($tempdir->dirname, '.ackrc'), "--match=question\n");
@@ -70,7 +69,7 @@ HOME_ACKRC_MATCH_PERMITTED: {
 }
 
 ACKRC_ACKRC_MATCH_PERMITTED: {
-    my @files = ( File::Spec->rel2abs('t/text/') );
+    my @files = untaint( File::Spec->rel2abs('t/text/') );
     my @args = qw/ --env /;
 
     write_file(File::Spec->catfile($tempdir->dirname, '.ackrc'), "--match=question\n");

@@ -136,7 +136,10 @@ sub find_config_files {
         push @config_files, map { +{ path => $_ } } _check_for_ackrc($ENV{'HOME'});
     }
 
-    my @dirs = File::Spec->splitdir(Cwd::getcwd());
+    my $cwd = Cwd::getcwd();
+    $cwd =~ /(.+)/;
+    $cwd = $1;
+    my @dirs = File::Spec->splitdir( $cwd );
     while(@dirs) {
         my $ackrc = _check_for_ackrc(@dirs);
         if(defined $ackrc) {
