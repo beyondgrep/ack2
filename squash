@@ -6,7 +6,7 @@ use strict;
 
 use File::Next;
 
-# make clear that ack is not supposed to be edited
+# Make clear that ack is not supposed to be edited.
 my $NO_EDIT_COMMENT = <<'EOCOMMENT';
 #
 # This file, ack, is generated code.

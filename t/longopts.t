@@ -80,7 +80,7 @@ SMART_CASE: {
 }
 
 # Invert match
-#   this test was changed from using unlike to using like because
+#   This test was changed from using unlike to using like because
 #   old versions of Test::More::unlike (before 0.48_2) cannot
 #   work with multiline output (which ack produces in this case).
 for my $arg ( qw( -v --invert-match ) ) {

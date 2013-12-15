@@ -61,7 +61,7 @@ EOF
 }
 
 
-# give a output function and find match in multiple files (so print filenames, just like grep -o)
+# Give an output function and find match in multiple files (so print filenames, just like grep -o).
 WITH_OUTPUT: {
     my @files = qw( t/text/ );
     my @args = qw/ --output=x$1x question(\\S+) /;

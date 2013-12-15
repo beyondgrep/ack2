@@ -12,8 +12,7 @@ use ExtUtils::Command::MM;
 $ENV{PERL_DL_NONLAZY} = 1;
 $ENV{ACK_TEST_STANDALONE} = shift;
 
-# make sure the tests' standard input is *never* a pipe (messes with
-# ack's filter detection)
+# Make sure the tests' standard input is *never* a pipe (messes with ack's filter detection).
 open STDIN, '<', '/dev/null';
 
 printf("Running tests on %s\n",

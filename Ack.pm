@@ -487,7 +487,7 @@ sub get_copyright {
 }
 
 
-# print subs added in order to make it easy for a third party
+# print*() subs added in order to make it easy for a third party
 # module (such as App::Wack) to redefine the display methods
 # and show the results in a different way.
 sub print                   { print {$fh} @_; return; }
