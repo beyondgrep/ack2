@@ -11,6 +11,8 @@ use Fcntl ();
 
 use base 'App::Ack::Resource';
 
+use App::Ack;
+
 =head1 METHODS
 
 =head2 new( $filename )

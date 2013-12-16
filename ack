@@ -9,6 +9,8 @@ use 5.008008;
 use Getopt::Long 2.35 ();
 use Carp 1.04 ();
 
+use File::Next ();
+
 use App::Ack ();
 use App::Ack::ConfigLoader ();
 use App::Ack::Resources;

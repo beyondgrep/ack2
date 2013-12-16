@@ -23,6 +23,8 @@ sub add {
     foreach my $ext (@{$extensions}) {
         $data->{lc $ext} = 1;
     }
+
+    return;
 }
 
 sub filter {

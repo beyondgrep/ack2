@@ -42,6 +42,8 @@ functions = open opendir read readline readdir close closedir
 
 [-Subroutines::ProhibitBuiltinHomonyms]
 # We have plenty of funcs that we know are homonyms in ack, like open and close, but that's OK
+[-Subroutines::ProhibitCallsToUndeclaredSubs]
+[-Subroutines::ProhibitCallsToUnexportedSubs]
 [-Subroutines::ProhibitExplicitReturnUndef]
 [-Subroutines::RequireArgUnpacking]
 
