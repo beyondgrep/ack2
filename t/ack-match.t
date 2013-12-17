@@ -11,8 +11,6 @@ use Util;
 
 prep_environment();
 
-my @files = qw( t/text );
-
 my @tests = (
     [ qw/Sue/ ],
     [ qw/boy -i/ ], # case-insensitive is handled correctly with --match
@@ -41,7 +39,7 @@ PROJECT_ACKRC_MATCH_FORBIDDEN: {
     my @files = untaint( File::Spec->rel2abs('t/text/') );
     my @args = qw/ --env /;
 
-    chdir $tempdir->dirname;
+    chdir $tempdir->dirname or die;
     write_file '.ackrc', "--match=question\n";
 
     my ( $stdout, $stderr ) = run_ack_with_stderr(@args, @files);
@@ -49,7 +47,7 @@ PROJECT_ACKRC_MATCH_FORBIDDEN: {
     is_empty_array( $stdout );
     first_line_like( $stderr, qr/\QOptions --output, --pager and --match are forbidden in project .ackrc files/ );
 
-    chdir $wd;
+    chdir $wd or die;
 }
 
 HOME_ACKRC_MATCH_PERMITTED: {
@@ -57,7 +55,7 @@ HOME_ACKRC_MATCH_PERMITTED: {
     my @args = qw/ --env /;
 
     write_file(File::Spec->catfile($tempdir->dirname, '.ackrc'), "--match=question\n");
-    chdir File::Spec->catdir($tempdir->dirname, 'subdir');
+    chdir File::Spec->catdir($tempdir->dirname, 'subdir') or die;
     local $ENV{'HOME'} = $tempdir->dirname;
 
     my ( $stdout, $stderr ) = run_ack_with_stderr(@args, @files);
@@ -65,7 +63,7 @@ HOME_ACKRC_MATCH_PERMITTED: {
     is_nonempty_array( $stdout );
     is_empty_array( $stderr );
 
-    chdir $wd;
+    chdir $wd or die;
 }
 
 ACKRC_ACKRC_MATCH_PERMITTED: {
@@ -73,7 +71,7 @@ ACKRC_ACKRC_MATCH_PERMITTED: {
     my @args = qw/ --env /;
 
     write_file(File::Spec->catfile($tempdir->dirname, '.ackrc'), "--match=question\n");
-    chdir File::Spec->catdir($tempdir->dirname, 'subdir');
+    chdir File::Spec->catdir($tempdir->dirname, 'subdir') or die;
     local $ENV{'ACKRC'} = File::Spec->catfile($tempdir->dirname, '.ackrc');
 
     my ( $stdout, $stderr ) = run_ack_with_stderr(@args, @files);
@@ -81,7 +79,7 @@ ACKRC_ACKRC_MATCH_PERMITTED: {
     is_nonempty_array( $stdout );
     is_empty_array( $stderr );
 
-    chdir $wd;
+    chdir $wd or die;
 }
 done_testing;
 
@@ -95,6 +93,7 @@ sub test_match {
     my @args  = @_;
 
     return subtest "test_match( @args )" => sub {
+        my @files = ( 't/text' );
         my @results_normal = run_ack( @args, $regex, @files );
         my @results_match  = run_ack( @args, @files, '--match', $regex );
 
