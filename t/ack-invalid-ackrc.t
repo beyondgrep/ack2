@@ -61,26 +61,26 @@ like $output, qr/Usage: ack/;
     ($output, my $stderr) = run_ack_with_stderr( '--env', '--man' );
     # Don't worry if man complains about long lines,
     # or if the terminal doesn't handle Unicode:
-    is( scalar(grep !/can't\ break\ line
+    is( scalar(grep !m{can't\ break\ line
                      |Wide\ character\ in\ print
-                     |Unknown\ escape\ E<0x[[:xdigit:]]+>/x, @{$stderr}),
+                     |Unknown\ escape\ E<0x[[:xdigit:]]+>}x, @{$stderr}),
         0,
         'Should have no output to stderr: ack --env --man' )
         or diag( join( "\n", 'STDERR:', @{$stderr} ) );
 
     if ( is_windows() ) {
-        like join("\n", @{$output}[0,1]), qr/^NAME\s+ack(?:-standalone)?\s/;
+        like( join("\n", @{$output}[0,1]), qr/^NAME\s+ack(?:-standalone)?\s/ );
     }
     else {
-        like $output->[0], qr/ACK(?:-STANDALONE)?\Q(1)\E/;
+        like( $output->[0], qr/ACK(?:-STANDALONE)?\Q(1)\E/ );
     }
 }
 
 $output = run_ack( '--env', '--thpppt' );
-like $output, qr/ack --thpppt/;
+like( $output, qr/ack --thpppt/ );
 
 $output = run_ack( '--env', '--bar' );
-like $output, qr/It's a grep/;
+like( $output, qr/It's a grep/ );
 
 $output = run_ack( '--env', '--cathy' );
 like $output, qr/CHOCOLATE/;

@@ -7,6 +7,7 @@ use Test::More;
 
 use lib 't';
 use Util;
+use File::Next;
 
 if ( not has_io_pty() ) {
     plan skip_all => q{You need to install IO::Pty to run this test};
@@ -53,7 +54,7 @@ LINE_1_COMMA_5: {
 }
 
 LINE_1_TO_5: {
-    my @expected = split( /\n/, <<"EOF" );
+    my @expected = split( /\n/, <<'EOF' );
 Well, my daddy left home when I was three
 And he didn't leave very much for my Ma and me
 'cept an old guitar and an empty bottle of booze.
@@ -68,7 +69,7 @@ EOF
 }
 
 LINE_1_TO_5_CONTEXT: {
-    my @expected = split( /\n/, <<"EOF" );
+    my @expected = split( /\n/, <<'EOF' );
 Well, my daddy left home when I was three
 And he didn't leave very much for my Ma and me
 'cept an old guitar and an empty bottle of booze.

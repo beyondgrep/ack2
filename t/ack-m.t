@@ -7,6 +7,7 @@ use Test::More tests => 6;
 
 use lib 't';
 use Util;
+use File::Next;
 
 prep_environment();
 

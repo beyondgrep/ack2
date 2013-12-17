@@ -5,6 +5,7 @@ use warnings;
 use lib 't';
 
 use File::Temp;
+use File::Next;
 use Test::More tests => 3;
 use Util;
 
