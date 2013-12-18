@@ -3,7 +3,6 @@
 use strict;
 use warnings;
 
-use Cwd qw(getcwd);
 use File::Temp;
 use List::Util qw(sum);
 use Test::More;
@@ -22,7 +21,7 @@ plan tests => sum(map { ref($_) ? scalar(@$_) : 1 } @types) + 14;
 
 prep_environment();
 
-my $wd = cwd();
+my $wd = getcwd_clean();
 
 my $tempdir = File::Temp->newdir;
 
