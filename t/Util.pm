@@ -22,20 +22,6 @@ sub check_message {
     return $msg;
 }
 
-sub getcwd_clean {
-    # XXX How is it that this guy is tainted?
-    my $wd = Cwd::getcwd();
-    $wd =~ /(.+)/;
-    return $1;
-}
-
-sub untaint {
-    my ( $s ) = @_;
-
-    $s =~ /\A(.*)\z/;
-    return $1;
-}
-
 sub prep_environment {
     my @ack_args   = qw( ACK_OPTIONS ACKRC ACK_PAGER HOME ACK_COLOR_MATCH ACK_COLOR_FILENAME ACK_COLOR_LINE );
     my @taint_args = qw( PATH CDPATH IFS );
@@ -776,6 +762,14 @@ sub is_tainted {
 }
 
 
+sub untaint {
+    my ( $s ) = @_;
+
+    $s =~ /\A(.*)\z/;
+    return $1;
+}
+
+
 sub caret_X {
     # XXX How is it $^X can be tainted?  We should not have to untaint it.
     $^X =~ /(.+)/;
@@ -785,15 +779,11 @@ sub caret_X {
 }
 
 
-sub cwd {
+sub getcwd_clean {
+    # XXX How is it that this guy is tainted?
     my $wd = Cwd::getcwd();
-
     $wd =~ /(.+)/;
-
-    $wd = $1;
-
-    return $wd;
+    return $1;
 }
-
 
 1;
