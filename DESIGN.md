@@ -11,6 +11,8 @@ that have already been made, so that we don't keep rehashing them.
 
 * ack must be able to be built as a single-file standalone file.
 
+* ack must be cross-platform.  Specifically, it must run on Windows.
+
 # Design questions that have been investigated
 
 ## Would ack be faster if we used the integer pragma?
