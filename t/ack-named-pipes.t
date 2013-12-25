@@ -28,7 +28,7 @@ sub touch {
 
 prep_environment();
 
-unless ( has_mkfifo() ) {
+if ( ! has_mkfifo() ) {
     plan skip_all => q{You need the 'mkfifo' command to be able to run this test};
 }
 

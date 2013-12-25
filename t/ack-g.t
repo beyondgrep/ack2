@@ -269,7 +269,7 @@ END_COLOR
 };
 
 subtest q{test -g without --color; make sure colors don't show} => sub {
-    unless(has_io_pty()) {
+    if ( !has_io_pty() ) {
         plan skip_all => 'IO::Pty is required for this test';
         return;
     }

@@ -992,7 +992,7 @@ RESOURCES:
         elsif ( $opt->{count} ) {
             my $matches_for_this_file = count_matches_in_resource( $resource, $opt );
 
-            unless ( $opt->{show_filename} ) {
+            if ( not $opt->{show_filename} ) {
                 $total_count += $matches_for_this_file;
                 next RESOURCES;
             }

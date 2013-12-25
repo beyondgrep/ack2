@@ -48,7 +48,7 @@ sub set_up_globals {
     my (@files) = @_;
 
     foreach my $path (@files) {
-        unless ( -e $path ) {
+        if ( not -e $path ) {
             touch_ackrc( $path );
             push @created_globals, $path;
         }
@@ -57,7 +57,7 @@ sub set_up_globals {
 
 sub clean_up_globals {
     foreach my $path (@created_globals) {
-        unlink $path;
+        unlink $path or warn "Couldn't unlink $path";
     }
 }
 
