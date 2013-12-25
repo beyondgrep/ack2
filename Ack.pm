@@ -380,7 +380,11 @@ Miscellaneous:
 
 Exit status is 0 if match, 1 if no match.
 
-This is version $VERSION of ack.
+ack's home page is at http://beyondgrep.com/
+
+The full ack manual is available by running "ack --man".
+
+This is version $VERSION of ack.  Run "ack --version" for full version info.
 END_OF_HELP
 
     return;
