@@ -588,8 +588,7 @@ sub iterate {
     my $fh = $resource->open();
     if ( !$fh ) {
         if ( $App::Ack::report_bad_filenames ) {
-            # XXX direct access to filename
-            App::Ack::warn( "$resource->{filename}: $!" );
+            App::Ack::warn( $resource->name . ': ' . $! );
         }
         return;
     }
@@ -799,8 +798,7 @@ sub resource_has_match {
     my $fh = $resource->open();
     if ( !$fh ) {
         if ( $App::Ack::report_bad_filenames ) {
-            # XXX direct access to filename
-            App::Ack::warn( "$resource->{filename}: $!" );
+            App::Ack::warn( $resource->name . ': ' . $! );
         }
     }
     else {
@@ -825,8 +823,7 @@ sub count_matches_in_resource {
     my $fh = $resource->open();
     if ( !$fh ) {
         if ( $App::Ack::report_bad_filenames ) {
-            # XXX direct access to filename
-            App::Ack::warn( "$resource->{filename}: $!" );
+            App::Ack::warn( $resource->name . ': ' . $! );
         }
     }
     else {
