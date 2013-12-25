@@ -63,7 +63,7 @@ for my $arg ( @ARGV ) {
 
         # Replace the shebang line and append 'no edit' comment
         if ( s{^#!.+}{package main;} ) {
-            # skip the shebang line and replace it with package statement
+            # Skip the shebang line and replace it with package statement.
         }
 
         # Remove Perl::Critic comments.
@@ -76,7 +76,7 @@ for my $arg ( @ARGV ) {
 
 # We only use two of the four constructors in File::Next, so delete the other two.
 for my $unused_func ( qw( dirs everything ) ) {
-    $code =~ s/^sub $unused_func\b.*?^}//sm; # It's OK if we can't find it
+    $code =~ s/^sub $unused_func\b.*?^}//sm or die qq{Unable to find the sub "$unused_func" to remove from ack-standalone};
 }
 print $code;
 
