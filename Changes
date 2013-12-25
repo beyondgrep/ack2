@@ -1,7 +1,13 @@
 History file for ack.  http://beyondgrep.com/
 
-NEXT
+2.13_01 Wed Dec 25 13:36:08 CST 2013
 ====================================
+So this is Christmas
+And what have you done
+I'm sitting here hacking
+On ack 2.13_01
+   -- via Pete Krawczyk
+
 [FIXES]
 Issue #313: ack would fail when trying to check files for readability
 on some networked filesystems, or on Mac OS X with ACLs.  Now it
@@ -11,6 +17,9 @@ uses the filetest pragma.  Thanks, Jonathan Perret.
 [INTERNALS]
 ack's entire test suite now runs under Perl's -T taint flag.  We'll
 build more security tests on top of this.
+
+Added some checks to the squash program that I hope will turn up
+errors in the Windows builds.
 
 
 2.12    Tue Dec  3 07:05:02 CST 2013
