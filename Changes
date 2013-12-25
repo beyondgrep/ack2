@@ -2,6 +2,12 @@ History file for ack.  http://beyondgrep.com/
 
 NEXT
 ====================================
+[FIXES]
+Issue #313: ack would fail when trying to check files for readability
+on some networked filesystems, or on Mac OS X with ACLs.  Now it
+uses the filetest pragma.  Thanks, Jonathan Perret.
+
+
 [INTERNALS]
 ack's entire test suite now runs under Perl's -T taint flag.  We'll
 build more security tests on top of this.

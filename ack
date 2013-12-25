@@ -202,19 +202,20 @@ sub _compile_file_filter {
         # command line" wins.
         return 0 if -p $File::Next::name;
 
-        # we can't handle unreadable filenames; report them
-        unless ( -r _ ) {
-            if ( $App::Ack::report_bad_filenames ) {
-                App::Ack::warn( "${File::Next::name}: cannot open file for reading" );
+        # We can't handle unreadable filenames; report them.
+        if ( not -r _ ) {
+            use filetest 'access';
+
+            if ( not -R $File::Next::name ) {
+                if ( $App::Ack::report_bad_filenames ) {
+                    App::Ack::warn( "${File::Next::name}: cannot open file for reading" );
+                }
+                return 0;
             }
-            return 0;
         }
 
         my $resource = App::Ack::Resource::Basic->new($File::Next::name);
-        return 0 if ! $resource;
-        if ( $ifiles_filters->filter($resource) ) {
-            return 0;
-        }
+        return 0 if !$resource || $ifiles_filters->filter($resource);
 
         my $match_found = $direct_filters->filter($resource);
 
@@ -2174,6 +2175,7 @@ L<https://github.com/petdance/ack2>
 How appropriate to have I<ack>nowledgements!
 
 Thanks to everyone who has contributed to ack in any way, including
+Jonathan Perret,
 Fraser Tweedale,
 RaE<aacute>l GundE<aacute>n,
 Steffen Jaeckel,
