@@ -26,7 +26,7 @@ sub populate_filetypes {
         my ( $filenames, undef ) = run_ack_with_stderr('-f', "--$type",
             't/swamp', 't/etc');
 
-        foreach my $filename (@$filenames) {
+        foreach my $filename ( @{$filenames} ) {
             push @{ $types_for_file{$filename} }, $type;
         }
     }
