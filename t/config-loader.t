@@ -13,10 +13,7 @@ use File::Temp;
 use App::Ack::Filter::Default;
 use App::Ack::ConfigLoader;
 
-local $ENV{PAGER};
-local $ENV{ACK_PAGER};
-local $ENV{ACK_PAGER_COLOR};
-local $ENV{ACK_OPTIONS};
+delete @ENV{qw( PAGER ACK_PAGER ACK_PAGER_COLOR ACK_OPTIONS )};
 
 my %defaults = (
     after_context             => undef,
