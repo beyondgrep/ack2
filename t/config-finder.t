@@ -192,10 +192,10 @@ ok( !$ok, '.ackrc + _ackrc is error' );
 like( $err, qr/contains both \.ackrc and _ackrc/, 'Got the expected error' );
 
 no_home {
-  $ok = eval { $finder->find_config_files };
-  $err = $@;
-  ok( !$ok, '.ackrc + _ackrc is error' );
-  like( $err, qr/contains both \.ackrc and _ackrc/, 'Got the expected error' );
+    $ok = eval { $finder->find_config_files };
+    $err = $@;
+    ok( !$ok, '.ackrc + _ackrc is error' );
+    like( $err, qr/contains both \.ackrc and _ackrc/, 'Got the expected error' );
 };
 
 unlink '.ackrc';
