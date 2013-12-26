@@ -17,13 +17,17 @@ sub mkfifo {
     my ( $filename ) = @_;
 
     system 'mkfifo', $filename;
+
+    return;
 }
 
 sub touch {
     my ( $filename ) = @_;
     my $fh;
-    open $fh, '>>', $filename;
+    open $fh, '>>', $filename or die "Unable to append to $filename: $!";
     close $fh;
+
+    return;
 }
 
 prep_environment();
@@ -39,12 +43,12 @@ local $SIG{'ALRM'} = sub {
     exit;
 };
 
-alarm 5; # should be plenty of time
+alarm 5; # Should be plenty of time.
 
 my $tempdir = File::Temp->newdir;
 mkdir "$tempdir/foo";
-mkfifo "$tempdir/foo/test.pipe";
-touch "$tempdir/foo/bar.txt";
+mkfifo( "$tempdir/foo/test.pipe" );
+touch( "$tempdir/foo/bar.txt" );
 
 my @results = run_ack( '-f', $tempdir );
 
