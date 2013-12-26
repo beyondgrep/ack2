@@ -4,6 +4,7 @@ use warnings;
 use strict;
 
 use Test::More;
+use File::Next;
 
 use lib 't';
 use Util;
@@ -15,7 +16,7 @@ sub populate_filetypes {
 
     my @types_to_try;
 
-    foreach my $line (@$type_lines) {
+    foreach my $line (@{$type_lines}) {
         if($line =~ /^\s+--\[no\](\w+)/) {
             push @types_to_try, $1;
         }
