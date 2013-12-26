@@ -196,7 +196,7 @@ sub removed_option {
 sub get_arg_spec {
     my ( $opt, $extra_specs ) = @_;
 
-    my $dash_a_explanation = <<EOT;
+    my $dash_a_explanation = <<'EOT';
 This is because we now have -k/--known-types which makes it only select files
 of known types, rather than any text file (which is the behavior of ack 1.x).
 You may have options in a .ackrc, or in the ACKRC_OPTIONS environment variable.
@@ -219,7 +219,9 @@ EOT
     * Go through the list of options already available, and consider
       whether your new option can be considered mutually exclusive
       with another option.
+
 =cut
+
     return {
         1                   => sub { $opt->{1} = $opt->{m} = 1 },
         'A|after-context=i' => \$opt->{after_context},
@@ -256,17 +258,16 @@ EOT
         'h|no-filename'     => \$opt->{h},
         'H|with-filename'   => \$opt->{H},
         'i|ignore-case'     => \$opt->{i},
-        'ignore-directory|ignore-dir=s' # XXX Combine this version with the negated version below
-                            => sub {
-                                my ( undef, $dir ) = @_;
+        'ignore-directory|ignore-dir=s' => sub {
+                                    my ( undef, $dir ) = @_;
 
-                                $dir = App::Ack::remove_dir_sep( $dir );
-                                if ( $dir !~ /^(?:is|match):/ ) {
-                                    $dir = 'is:' . $dir;
-                                }
-                                push @{ $opt->{idirs} }, $dir;
-                               },
-        'ignore-file=s'    => sub {
+                                    $dir = App::Ack::remove_dir_sep( $dir );
+                                    if ( $dir !~ /^(?:is|match):/ ) {
+                                        $dir = 'is:' . $dir;
+                                    }
+                                    push @{ $opt->{idirs} }, $dir;
+        },
+        'ignore-file=s'     => sub {
                                     my ( undef, $file ) = @_;
                                     push @{ $opt->{ifiles} }, $file;
                                },
@@ -303,7 +304,7 @@ EOT
                                 } @{ $opt->{idirs} };
 
                                 push @{ $opt->{no_ignore_dirs} }, $dir;
-                               },
+                            },
         'nopager'           => sub { $opt->{pager} = undef },
         'passthru'          => \$opt->{passthru},
         'print0'            => \$opt->{print0},
