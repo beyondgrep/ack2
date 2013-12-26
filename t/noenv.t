@@ -23,9 +23,7 @@ sub is_global_file {
     my $wd = getcwd_clean();
 
     my $sep = is_windows() ? '\\' : '/';
-
-    chop $dir if $dir =~ m{$sep$};
-    chop $wd  if $wd =~ m{$sep$};
+    s/$sep$// for ( $dir, $wd );
 
     return $wd !~ /^\Q$dir\E/;
 }
