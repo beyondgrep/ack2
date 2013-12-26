@@ -928,9 +928,6 @@ sub main {
     my $total_count = 0;
 RESOURCES:
     while ( my $resource = $resources->next ) {
-        # XXX this variable name combined with what we're trying
-        # to do makes no sense.
-
         # XXX Combine the -f and -g functions
         if ( $opt->{f} ) {
             # XXX printing should probably happen inside of App::Ack
