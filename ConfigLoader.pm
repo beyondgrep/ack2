@@ -479,7 +479,8 @@ sub explode_sources {
             $source->{contents} = $options =
                 [ Text::ParseWords::shellwords($options) ];
         }
-        for ( my $j = 0; $j < @{$options}; $j++ ) {
+
+        for my $j ( 0 .. @{$options}-1 ) {
             next unless $options->[$j] =~ /^-/;
             my @chunk = ( $options->[$j] );
             push @chunk, $options->[$j] while ++$j < @{$options} && $options->[$j] !~ /^-/;
