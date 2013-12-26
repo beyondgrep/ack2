@@ -853,7 +853,7 @@ sub main {
     if ( !defined($opt->{color}) && !$opt->{g} ) {
         my $windows_color = 1;
         if ( $App::Ack::is_windows ) {
-            $windows_color = eval { require Win32::Console::ANSI; }
+            $windows_color = eval { require Win32::Console::ANSI; };
         }
         $opt->{color} = !App::Ack::output_to_pipe() && $windows_color;
     }
