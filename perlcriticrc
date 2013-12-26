@@ -5,6 +5,8 @@ verbose = %f:%l:%c %m (%p)\n
 allow_leading_tabs = 0
 [-CodeLayout::RequireTidyCode]
 # Never works for me.
+[-CodeLayout::RequireTrailingCommaAtNewline]
+# I like this one but it gives too many false positives.
 
 [Compatibility::PodMinimumVersion]
 above_version = 5.008008
