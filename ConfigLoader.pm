@@ -551,7 +551,7 @@ sub remove_default_options_if_needed {
 
     my $default_index;
 
-    foreach my $index ( 0 .. $#$sources ) {
+    foreach my $index ( 0 .. $#{$sources} ) {
         if ( $sources->[$index]{'name'} eq 'Defaults' ) {
             $default_index = $index;
             last;
@@ -570,7 +570,7 @@ sub remove_default_options_if_needed {
         'pass_through',
     );
 
-    foreach my $index ( $default_index + 1 .. $#$sources ) {
+    foreach my $index ( $default_index + 1 .. $#{$sources} ) {
         my ( $name, $args ) = @{$sources->[$index]}{qw/name contents/};
 
         if (ref($args)) {
