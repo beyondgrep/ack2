@@ -4,8 +4,6 @@ use strict;
 use warnings;
 use base 'App::Ack::Filter';
 
-use File::Spec 3.00 ();
-
 sub new {
     my ( $class ) = @_;
 
@@ -37,17 +35,7 @@ sub add {
     my ( $self, $filter ) = @_;
 
     if (exists $filter->{'groupname'}) {
-        my $groups = $self->{'groups'};
-        my $group_name = $filter->{'groupname'};
-
-        my $group;
-        if (exists $groups->{$group_name}) {
-            $group = $groups->{$group_name};
-        }
-        else {
-            $group = $groups->{$group_name} = $filter->create_group();
-        }
-
+        my $group = ($self->{groups}->{$filter->{groupname}} ||= $filter->create_group());
         $group->add($filter);
     }
     else {
