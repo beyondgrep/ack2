@@ -9,6 +9,7 @@ use 5.008008;
 use Getopt::Long 2.35 ();
 use Carp 1.04 ();
 
+use File::Spec ();
 use File::Next ();
 
 use App::Ack ();
