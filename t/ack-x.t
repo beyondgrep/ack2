@@ -95,7 +95,6 @@ $science:22:And if it works, then it gets the job done
 $science:23:Somehow no matter what the world keeps turning
 EOF
 
-# XXX I don't care for doing all this low-level stuff outside of Util
 my $perl = caret_X();
 my @lhs_args = ( $perl, '-Mblib', build_ack_invocation( '-g', 'of', 't/text' ) );
 my @rhs_args = ( $perl, '-Mblib', build_ack_invocation( '-x', 'the' ) ); # for now
