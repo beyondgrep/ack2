@@ -1,6 +1,6 @@
 History file for ack.  http://beyondgrep.com/
 
-NEXT
+2.13_02 Fri Dec 27 12:54:27 CST 2013
 ====================================
 [FIXES]
 The building of ack-standalone relied on the output of `perldoc
