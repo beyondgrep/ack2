@@ -250,7 +250,7 @@ subtest 'test -g on a path' => sub {
 
 subtest 'test -g with --color' => sub {
     my $file_regex = 'text';
-    my @expected   = colorize( <<'END_COLOR' );
+    my $expected_original = <<'END_COLOR';
 t/con(text).t
 t/(text)/4th-of-july.txt
 t/(text)/boy-named-sue.txt
@@ -260,6 +260,10 @@ t/(text)/numbered-(text).txt
 t/(text)/science-of-myth.txt
 t/(text)/shut-up-be-happy.txt
 END_COLOR
+
+    $expected_original =~ s=\/=\\=g if is_windows;
+
+    my @expected   = colorize( $expected_original );
 
     my @args = ( '--sort-files', '-g', $file_regex );
 
