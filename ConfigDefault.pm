@@ -192,6 +192,9 @@ sub _options_block {
 # Delphi http://en.wikipedia.org/wiki/Embarcadero_Delphi
 --type-add=delphi:ext:pas,int,dfm,nfm,dof,dpk,dproj,groupproj,bdsgroup,bdsproj
 
+# EJS http://embeddedjs.com/
+--type-add=ejs:ext:ejs
+
 # Elixir http://elixir-lang.org/
 --type-add=elixir:ext:ex,exs
 
@@ -210,11 +213,17 @@ sub _options_block {
 # Groovy http://groovy.codehaus.org/
 --type-add=groovy:ext:groovy,gtmpl,gpp,grunit,gradle
 
+# Handlebars http://handlebarsjs.com/
+--type-add=handlebars:ext:hbs,handlebars
+
 # Haskell http://www.haskell.org/
 --type-add=haskell:ext:hs,lhs
 
 # HTML
 --type-add=html:ext:htm,html
+
+# Jade http://jade-lang.com/
+--type-add=jade:ext:jade
 
 # Java http://www.oracle.com/technetwork/java/index.html
 --type-add=java:ext:java,properties
@@ -237,6 +246,9 @@ sub _options_block {
 # Lua http://www.lua.org/
 --type-add=lua:ext:lua
 --type-add=lua:firstlinematch:/^#!.*\blua(jit)?/
+
+# Mustache http://mustache.github.io/
+--type-add=mustache:ext:mustache
 
 # Objective-C
 --type-add=objc:ext:m,h
@@ -291,8 +303,14 @@ sub _options_block {
 # Smalltalk http://www.smalltalk.org/
 --type-add=smalltalk:ext:st
 
+# Smarty http://www.smarty.net/
+--type-add=smarty:ext:tpl
+
 # SQL http://www.iso.org/iso/catalogue_detail.htm?csnumber=45498
 --type-add=sql:ext:sql,ctl
+
+# Stylus http://learnboost.github.io/stylus/
+--type-add=stylus:ext:styl
 
 # Tcl http://www.tcl.tk/
 --type-add=tcl:ext:tcl,itcl,itk
