@@ -786,4 +786,13 @@ sub getcwd_clean {
     return $1;
 }
 
+
+sub windows_slashify {
+    my $str = shift;
+
+    $str =~ s{/}{\\}g;
+
+    return $str;
+}
+
 1;

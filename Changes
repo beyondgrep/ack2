@@ -1,5 +1,11 @@
 History file for ack.  http://beyondgrep.com/
 
+NEXT
+====================================
+[FIXES]
+More build fixes for Windows.
+
+
 2.13_02 Fri Dec 27 12:54:27 CST 2013
 ====================================
 [FIXES]

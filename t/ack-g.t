@@ -261,7 +261,7 @@ t/(text)/science-of-myth.txt
 t/(text)/shut-up-be-happy.txt
 END_COLOR
 
-    $expected_original =~ s=\/=\\=g if is_windows;
+    $expected_original =~ windows_slashify( $expected_original ) if is_windows;
 
     my @expected   = colorize( $expected_original );
 

@@ -23,7 +23,7 @@ BASIC: {
 {19}:When she was raped and cut up, left for dead in her trunk, her (beliefs) held true
 END
 
-    $expected_original =~ s=\/=\\=g if is_windows;
+    $expected_original =~ windows_slashify( $expected_original ) if is_windows;
 
     my @expected = colorize( $expected_original );
 
@@ -47,7 +47,7 @@ METACHARACTERS: {
 {14}:In fact, for better (understanding) we take the facts of science and apply them
 END
 
-    $expected_original =~ s=\/=\\=g if is_windows;
+    $expected_original =~ windows_slashify( $expected_original ) if is_windows;
 
     my @expected = colorize( $expected_original );
 
@@ -72,7 +72,7 @@ CONTEXT: {
 {6}-Shut up.
 END
 
-    $expected_original =~ s=\/=\\=g if is_windows;
+    $expected_original =~ windows_slashify( $expected_original ) if is_windows;
 
     my @expected = colorize( $expected_original );
 
