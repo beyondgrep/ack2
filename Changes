@@ -3,7 +3,8 @@ History file for ack.  http://beyondgrep.com/
 NEXT
 ====================================
 [FIXES]
-More build fixes for Windows.
+More build fixes for Windows.  Windows config finder fixes from
+James McCoy.
 
 [ENHANCEMENTS]
 Now ignores Cabal (Haskell) sandboxes.  Thanks, Fraser Tweedale.
