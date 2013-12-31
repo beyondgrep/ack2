@@ -90,6 +90,9 @@ sub _options_block {
 # Eclipse workspace folder
 --ignore-directory=is:.metadata
 
+# Cabal (Haskell) sandboxes
+--ignore-directory=is:.cabal-sandbox
+
 ### Files to ignore
 
 # Backup files
