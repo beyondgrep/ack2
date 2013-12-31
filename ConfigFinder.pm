@@ -64,9 +64,9 @@ sub _remove_redundancies {
         # inode stat always returns 0 on windows, so just check filenames.
         my (%seen, @uniq);
 
-        foreach my $path (map { $_->{path} } @configs) {
-            push @uniq, $path unless $seen{$path};
-            $seen{$path} = 1;
+        foreach my $config (@configs) {
+            push @uniq, $config unless $seen{$config->{path}};
+            $seen{$config->{path}} = 1;
         }
 
         return @uniq;
