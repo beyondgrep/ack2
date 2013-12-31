@@ -5,6 +5,9 @@ NEXT
 [FIXES]
 More build fixes for Windows.
 
+[ENHANCEMENTS]
+Now ignores Cabal (Haskell) sandboxes.  Thanks, Fraser Tweedale.
+
 
 2.13_02 Fri Dec 27 12:54:27 CST 2013
 ====================================
