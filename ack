@@ -2184,6 +2184,7 @@ L<https://github.com/petdance/ack2>
 How appropriate to have I<ack>nowledgements!
 
 Thanks to everyone who has contributed to ack in any way, including
+RaE<uacute>l GundE<iacute>n,
 James McCoy,
 Daniel Perrett,
 Steven Lee,

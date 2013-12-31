@@ -256,6 +256,10 @@ sub _options_block {
 # HTML
 --type-add=html:ext:htm,html
 
+# Jade
+# http://jade-lang.com/
+--type-add=jade:ext:jade
+
 # Java
 # http://www.oracle.com/technetwork/java/index.html
 --type-add=java:ext:java,properties
@@ -350,9 +354,17 @@ sub _options_block {
 # http://www.smalltalk.org/
 --type-add=smalltalk:ext:st
 
+# Smarty
+# http://www.smarty.net/
+--type-add=smarty:ext:tpl
+
 # SQL
 # http://www.iso.org/iso/catalogue_detail.htm?csnumber=45498
 --type-add=sql:ext:sql,ctl
+
+# Stylus
+# http://learnboost.github.io/stylus/
+--type-add=stylus:ext:styl
 
 # Tcl
 # http://www.tcl.tk/
