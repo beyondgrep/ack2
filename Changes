@@ -6,6 +6,9 @@ NEXT
 More build fixes for Windows.  Windows config finder fixes from
 James McCoy.
 
+t/ack-named-pipes.t uses POSIX::mkfifo instead of the external
+command, which should be more portable.  Thanks, Pete Krawczyk.
+
 [ENHANCEMENTS]
 Now ignores Cabal (Haskell) sandboxes.  Thanks, Fraser Tweedale.
 
