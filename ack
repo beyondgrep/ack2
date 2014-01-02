@@ -595,8 +595,7 @@ sub iterate {
         return;
     }
 
-    # check for context before the main loop, so we don't
-    # pay for it if we don't need it
+    # Check for context before the main loop, so we don't pay for it if we don't need it.
     if ( $n_before_ctx_lines || $n_after_ctx_lines ) {
         my $current_line = <$fh>; # prime the first line of input
 
@@ -1045,7 +1044,7 @@ ack - grep-like text finder
 
 =head1 DESCRIPTION
 
-Ack is designed as a replacement for 99% of the uses of F<grep>.
+Ack is designed as a replacement for F<grep> for programmers.
 
 Ack searches the named input FILEs (or standard input if no files
 are named, or the file name - is given) for lines containing a match
