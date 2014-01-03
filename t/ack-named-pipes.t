@@ -18,7 +18,7 @@ prep_environment();
 
 my $tempdir = File::Temp->newdir;
 mkdir "$tempdir/foo";
-my $rc = POSIX::mkfifo( "$tempdir/foo/test.pipe", 0660 );
+my $rc = POSIX::mkfifo( "$tempdir/foo/test.pipe", oct(660) );
 if ( !$rc ) {
     dir_cleanup( $tempdir );
     plan skip_all => q{I can't run a mkfifo, so cannot run this test.};
