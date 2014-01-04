@@ -1,7 +1,10 @@
 History file for ack.  http://beyondgrep.com/
 
-NEXT
+2.13_04 Sat Jan  4 11:17:28 CST 2014
 ====================================
+[FIXES]
+Fixed incorrect deduping of config files under Windows.  Thanks,
+Denis Howe.
 
 
 2.13_03 Thu Jan  2 22:23:03 CST 2014

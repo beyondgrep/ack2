@@ -58,41 +58,19 @@ sub new {
 }
 
 sub _remove_redundancies {
-    my ( @configs ) = @_;
+    my @configs = @_;
 
-    if ( $App::Ack::is_windows ) {
-        # inode stat always returns 0 on windows, so just check filenames.
-        my (%seen, @uniq);
-
-        foreach my $config (@configs) {
-            push @uniq, $config unless $seen{$config->{path}};
-            $seen{$config->{path}} = 1;
+    my %seen;
+    foreach my $config (@configs) {
+        my $key = $config->{path};
+        if ( not $App::Ack::is_windows ) {
+            # On Unix, uniquify on inode.
+            my ($dev, $inode) = (stat $key)[0, 1];
+            $key = "$dev:$inode" if defined $dev;
         }
-
-        return @uniq;
+        undef $config if $seen{$key}++;
     }
-
-    else {
-
-        my %dev_and_inode_seen;
-
-        foreach my $config ( @configs ) {
-            my $path = $config->{path};
-            my ( $dev, $inode ) = (stat $path)[0, 1];
-
-            if( defined($dev) ) {
-                if( $dev_and_inode_seen{"$dev:$inode"} ) {
-                    undef $config;
-                }
-                else {
-                    $dev_and_inode_seen{"$dev:$inode"} = 1;
-                }
-            }
-        }
-
-        return grep { defined() } @configs;
-
-    }
+    return grep { defined } @configs;
 }
 
 sub _check_for_ackrc {

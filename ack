@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-our $VERSION = '2.13_03'; # Check http://beyondgrep.com/ for updates
+our $VERSION = '2.13_04'; # Check http://beyondgrep.com/ for updates
 
 use 5.008008;
 use Getopt::Long 2.35 ();
@@ -2183,6 +2183,7 @@ L<https://github.com/petdance/ack2>
 How appropriate to have I<ack>nowledgements!
 
 Thanks to everyone who has contributed to ack in any way, including
+Denis Howe,
 RaE<uacute>l GundE<iacute>n,
 James McCoy,
 Daniel Perrett,
@@ -2280,7 +2281,7 @@ Rob Hoelz.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2005-2013 Andy Lester.
+Copyright 2005-2014 Andy Lester.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the Artistic License v2.0.
