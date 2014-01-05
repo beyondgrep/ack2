@@ -156,11 +156,11 @@ sub read_rcfile {
         $line =~ s/\s+$//;
 
         next if $line eq '';
-        next if $line =~ /^#/;
+        next if $line =~ /^\s*#/;
 
         push( @lines, $line );
     }
-    close $fh;
+    close $fh or App::Ack::die( "Unable to close $file: $!" );
 
     return @lines;
 }
