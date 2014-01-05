@@ -11,10 +11,15 @@ use App::Ack::ConfigFinder;
 use App::Ack::ConfigLoader;
 use File::Next;
 use Test::Harness;
+use Getopt::Long;
 
 pass( 'All modules loaded' );
 
-diag( "Testing App::Ack $App::Ack::VERSION, File::Next $File::Next::VERSION, Perl $], $^X" );
-diag( "Using Test::More $Test::More::VERSION and Test::Harness $Test::Harness::VERSION" );
+diag( "Testing ack version $App::Ack::VERSION under Perl $], $^X" );
+for my $module ( qw( File::Next Getopt::Long Test::More Test::Harness ) ) {
+    no strict 'refs';
+    my $ver = ${$module . '::VERSION'};
+    diag( "Using $module $ver" );
+}
 
 done_testing();
