@@ -18,8 +18,6 @@ use Text::ParseWords 3.1 ();
 
 =head2 process_args( @sources )
 
-
-
 =cut
 
 my @INVALID_COMBINATIONS;
@@ -91,6 +89,7 @@ sub uninvert_filter {
         }
     }
 }
+
 
 sub process_filetypes {
     my ( $opt, $arg_sources ) = @_;
@@ -183,6 +182,7 @@ sub process_filetypes {
     return \%additional_specs;
 }
 
+
 sub removed_option {
     my ( $option, $explanation ) = @_;
 
@@ -192,6 +192,7 @@ sub removed_option {
         exit 1;
     };
 }
+
 
 sub get_arg_spec {
     my ( $opt, $extra_specs ) = @_;
@@ -345,10 +346,12 @@ EOT
     }; # arg_specs
 }
 
+
 sub process_other {
     my ( $opt, $extra_specs, $arg_sources ) = @_;
 
-    Getopt::Long::Configure('default', 'no_auto_help', 'no_auto_version'); # start with default options, minus some annoying ones
+    # Start with default options, minus some annoying ones.
+    Getopt::Long::Configure('default', 'no_auto_help', 'no_auto_version');
     Getopt::Long::Configure(
         'bundling',
         'no_ignore_case',
@@ -424,9 +427,9 @@ sub process_other {
     return;
 }
 
+
 sub should_dump_options {
     my ( $sources ) = @_;
-
 
     foreach my $source (@{$sources}) {
         my ( $name, $options ) = @{$source}{qw/name contents/};
@@ -444,6 +447,7 @@ sub should_dump_options {
     }
     return;
 }
+
 
 sub explode_sources {
     my ( $sources ) = @_;
@@ -506,6 +510,7 @@ sub explode_sources {
     return \@new_sources;
 }
 
+
 sub compare_opts {
     my ( $a, $b ) = @_;
 
@@ -517,6 +522,7 @@ sub compare_opts {
 
     return $first_a cmp $first_b;
 }
+
 
 sub dump_options {
     my ( $sources ) = @_;
@@ -545,6 +551,7 @@ sub dump_options {
 
     return;
 }
+
 
 sub remove_default_options_if_needed {
     my ( $sources ) = @_;
@@ -597,6 +604,7 @@ sub remove_default_options_if_needed {
     return \@copy;
 }
 
+
 sub check_for_mutually_exclusive_options {
     my ( $arg_sources ) = @_;
 
@@ -646,6 +654,7 @@ sub check_for_mutually_exclusive_options {
         }
     }
 }
+
 
 sub process_args {
     my $arg_sources = \@_;

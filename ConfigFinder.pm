@@ -17,17 +17,17 @@ order.
 =back
 
 Then, ack looks for a user-specific ackrc if the HOME environment
-variable is set.  This is either `$HOME/.ackrc` or `$HOME/_ackrc`.
+variable is set.  This is either F<$HOME/.ackrc> or F<$HOME/_ackrc>.
 
 Then, ack looks for a project-specific ackrc file.  ack searches
 up the directory hierarchy for the first `.ackrc` or `_ackrc` file.
 If this is one of the ackrc files found in the previous steps, it is
 not loaded again.
 
-It is a fatal error if a directory contains both `.ackrc` and `_ackrc`.
+It is a fatal error if a directory contains both F<.ackrc> and F<_ackrc>.
 
 After ack loads the options from the found ackrc files, ack looks
-at the ACKRC_OPTIONS environment variable.
+at the C<ACKRC_OPTIONS> environment variable.
 
 Finally, ack takes settings from the command line.
 
@@ -57,6 +57,7 @@ sub new {
     return bless {}, $class;
 }
 
+
 sub _remove_redundancies {
     my @configs = @_;
 
@@ -73,6 +74,7 @@ sub _remove_redundancies {
     return grep { defined } @configs;
 }
 
+
 sub _check_for_ackrc {
     return unless defined $_[0];
 
@@ -86,6 +88,7 @@ sub _check_for_ackrc {
 
     return wantarray ? @files : $files[0];
 } # end _check_for_ackrc
+
 
 =head2 $finder->find_config_files
 
@@ -131,6 +134,7 @@ sub find_config_files {
     # We only test for existence here, so if the file is deleted out from under us, this will fail later.
     return _remove_redundancies( @config_files );
 }
+
 
 =head2 read_rcfile
 
