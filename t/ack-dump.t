@@ -13,8 +13,7 @@ use App::Ack::ConfigDefault;
 prep_environment();
 
 DUMP: {
-    my @expected = split( /\n/, App::Ack::ConfigDefault::_options_block );
-    @expected = grep { /./ && !/^#/ } @expected;
+    my @expected = App::Ack::ConfigDefault::options_clean();
 
     my @args    = qw( --dump );
     my @results = run_ack( @args );
