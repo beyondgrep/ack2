@@ -2,6 +2,9 @@ History file for ack.  http://beyondgrep.com/
 
 NEXT
 ====================================
+[ENHANCEMENTS]
+--create-ackrc keeps the comments that describe each of the options,
+and it shows the ack version number.
 
 
 2.13_04 Sat Jan  4 11:17:28 CST 2014

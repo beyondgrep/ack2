@@ -12,8 +12,6 @@ use Carp 1.04 ();
 use Getopt::Long 2.35 ();
 use Text::ParseWords 3.1 ();
 
-=head1 App::Ack::ConfigLoader
-
 =head1 FUNCTIONS
 
 =head2 process_args( @sources )
@@ -47,6 +45,7 @@ BEGIN {
     );
 }
 
+
 sub process_filter_spec {
     my ( $spec ) = @_;
 
@@ -70,6 +69,7 @@ sub process_filter_spec {
         Carp::croak "invalid filter specification '$spec'";
     }
 }
+
 
 sub uninvert_filter {
     my ( $opt, @filters ) = @_;
@@ -738,7 +738,7 @@ sub retrieve_arg_sources {
 
     push @arg_sources, {
         name     => 'Defaults',
-        contents => [ App::Ack::ConfigDefault::options() ],
+        contents => [ App::Ack::ConfigDefault::options_clean() ],
     };
 
     foreach my $file ( @files) {

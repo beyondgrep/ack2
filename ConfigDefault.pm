@@ -3,16 +3,22 @@ package App::Ack::ConfigDefault;
 use warnings;
 use strict;
 
-sub options {
-    my @options = split( /\n/, _options_block() );
-    @options = grep { /./ && !/^#/ } @options;
+use App::Ack ();
 
-    return @options;
+
+sub options {
+    return split( /\n/, _options_block() );
 }
 
+
+sub options_clean {
+    return grep { /./ && !/^#/ } options();
+}
+
+
 sub _options_block {
-    return <<'HERE';
-# This is the default ackrc for ack 2.0
+    my $lines = <<'HERE';
+# This is the default ackrc for ack version ==VERSION==.
 
 # There are four different ways to match
 #
@@ -401,6 +407,9 @@ sub _options_block {
 # http://yaml.org/
 --type-add=yaml:ext:yaml,yml
 HERE
+    $lines =~ s/==VERSION==/$App::Ack::VERSION/sm;
+
+    return $lines;
 }
 
 1;
