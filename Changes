@@ -2,6 +2,9 @@ History file for ack.  http://beyondgrep.com/
 
 NEXT
 ====================================
+[FIXES]
+More whack-a-mole with Windows failures.
+
 [ENHANCEMENTS]
 --create-ackrc keeps the comments that describe each of the options,
 and it shows the ack version number.
