@@ -1,9 +1,11 @@
 History file for ack.  http://beyondgrep.com/
 
-NEXT
+2.13_05 Thu Jan  9 22:41:33 CST 2014
 ====================================
 [FIXES]
-More whack-a-mole with Windows failures.
+More whack-a-mole with Windows failures.  This time, it's POSIX::mkfifo
+dying on Windows instead of returning undef like the docs implied,
+or at least that I inferred.
 
 [ENHANCEMENTS]
 --create-ackrc keeps the comments that describe each of the options,
