@@ -238,7 +238,8 @@ sub run_cmd {
             my $input_command = Win32::ShellQuote::quote_system_string(@{$input});
             $cmd = "$input_command | $cmd";
         }
-        system $cmd;
+        system( $cmd ) == 0
+            or die "system( $cmd ) failed: $?";
         close STDOUT;
         close STDERR;
         open(STDOUT, ">&SAVEOUT") or die "Can't restore STDOUT: $!";
