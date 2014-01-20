@@ -32,7 +32,7 @@ above_version = 5.008008
 [-InputOutput::ProhibitInteractiveTest]
 [-InputOutput::ProhibitBacktickOperators]
 [-InputOutput::RequireCheckedClose]
-[-InputOutput::RequireCheckedSyscalls]
+[InputOutput::RequireCheckedSyscalls]
 functions = open opendir read readline readdir close closedir
 
 [-Miscellanea::RequireRcsKeywords]
