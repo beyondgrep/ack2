@@ -27,6 +27,15 @@ sub prep_environment {
     my @taint_args = qw( PATH CDPATH IFS );
     delete @ENV{ @ack_args, @taint_args };
 
+    if ( is_windows() ) {
+        # to pipe, perl must be able to find cmd.exe, so add
+        # %SystemRoot%\system32 to the path
+        # see http://kstruct.com/2006/09/13/perl-taint-mode-and-cmdexe/
+        $ENV{'SystemRoot'} =~ /([A-Z]:(\\[A-Z0-9_]+)+)/i;
+        my $system32_dir = File::Spec->catdir($1,'system32');
+        $ENV{'PATH'} = $system32_dir;
+    }
+
     $orig_wd = getcwd_clean();
 }
 
