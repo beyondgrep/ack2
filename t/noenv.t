@@ -19,11 +19,10 @@ sub is_global_file {
     return unless -f $filename;
 
     my ( undef, $dir ) = File::Spec->splitpath($filename);
+    $dir = File::Spec->canonpath($dir);
 
-    my $wd = getcwd_clean();
-
-    my $sep = is_windows() ? '\\' : '/';
-    s/$sep$// for ( $dir, $wd );
+    my (undef, $wd) = File::Spec->splitpath(getcwd_clean(), 1);
+    $wd = File::Spec->canonpath($wd);
 
     return $wd !~ /^\Q$dir\E/;
 }
@@ -57,7 +56,7 @@ subtest 'without --noenv' => sub {
 
     is_deeply( \@sources, [
         {
-            name     => realpath(File::Spec->catfile($tempdir->dirname, '.ackrc')),
+            name     => File::Spec->canonpath(realpath(File::Spec->catfile($tempdir->dirname, '.ackrc'))),
             contents => [ '--type-add=perl:ext:pl,t,pm' ],
             project  => 1,
         },
