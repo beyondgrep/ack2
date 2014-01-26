@@ -33,7 +33,7 @@ above_version = 5.008008
 [-InputOutput::ProhibitBacktickOperators]
 [-InputOutput::RequireCheckedClose]
 [InputOutput::RequireCheckedSyscalls]
-functions = open opendir read readline readdir close closedir
+functions = open opendir read readline readdir
 
 [-Miscellanea::RequireRcsKeywords]
 
