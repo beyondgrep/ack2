@@ -9,14 +9,14 @@ App::Ack - A container for functions for the ack program
 
 =head1 VERSION
 
-Version 2.13_05
+Version 2.13_06
 
 =cut
 
 our $VERSION;
 our $COPYRIGHT;
 BEGIN {
-    $VERSION = '2.13_05';
+    $VERSION = '2.13_06';
     $COPYRIGHT = 'Copyright 2005-2014 Andy Lester.';
 }
 

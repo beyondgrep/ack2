@@ -1,5 +1,11 @@
 History file for ack.  http://beyondgrep.com/
 
+2.13_06 Sat Jan 25 23:36:09 CST 2014
+====================================
+[FIXES]
+More fixes for Windows tests.  Thanks to GitHub user @ispedals.
+
+
 2.13_05 Thu Jan  9 22:41:33 CST 2014
 ====================================
 [FIXES]
