@@ -28,9 +28,8 @@ sub prep_environment {
     delete @ENV{ @ack_args, @taint_args };
 
     if ( is_windows() ) {
-        # to pipe, perl must be able to find cmd.exe, so add
-        # %SystemRoot%\system32 to the path
-        # see http://kstruct.com/2006/09/13/perl-taint-mode-and-cmdexe/
+        # To pipe, perl must be able to find cmd.exe, so add %SystemRoot%\system32 to the path.
+        # See http://kstruct.com/2006/09/13/perl-taint-mode-and-cmdexe/
         $ENV{'SystemRoot'} =~ /([A-Z]:(\\[A-Z0-9_]+)+)/i;
         my $system32_dir = File::Spec->catdir($1,'system32');
         $ENV{'PATH'} = $system32_dir;
@@ -202,15 +201,15 @@ sub run_ack {
 
 { # scope for $ack_return_code;
 
-# capture returncode
+# Capture return code.
 our $ack_return_code;
 
-# run the given command, assuming that the command was created with
+# Run the given command, assuming that the command was created with
 # build_ack_invocation (and thus writes its STDERR to $catcherr_file).
 #
-# sets $ack_return_code and unlinks the $catcherr_file
+# Sets $ack_return_code and unlinks the $catcherr_file.
 #
-# returns chomped STDOUT and STDERR as two array refs
+# Returns chomped STDOUT and STDERR as two array refs.
 sub run_cmd {
     my ( @cmd ) = @_;
 
@@ -363,7 +362,7 @@ sub run_ack_with_stderr {
     return run_cmd( @args );
 }
 
-# pipe into ack and return STDOUT and STDERR as array refs
+# Pipe into ack and return STDOUT and STDERR as array refs.
 sub pipe_into_ack_with_stderr {
     my $input = shift;
     my @args = @_;
@@ -371,9 +370,8 @@ sub pipe_into_ack_with_stderr {
     my $tempfile;
 
     if ( ref($input) eq 'SCALAR' ) {
-        # XXX we could easily do this without temp files,
-        #     but that would take slightly more time than
-        #     I'm willing to spend on this right now.
+        # We could easily do this without temp files, but that would take
+        # slightly more time than I'm willing to spend on this right now.
         $tempfile = File::Temp->new;
         print {$tempfile} $$input . "\n";
         close $tempfile;
@@ -381,22 +379,19 @@ sub pipe_into_ack_with_stderr {
     }
 
     return run_ack_with_stderr(@args, {
-        # you might be wondering why we use perl here as opposed
-        # to simply using 'cat'.  The answer is that we have no
-        # idea what the user's environment is like; they may not
-        # have cat.  We *do* know, however, that they have perl.
+        # Use Perl since we don't know that 'cat' will exist.
         input => [caret_X(), '-pe1', $input],
     });
 }
 
-# pipe into ack and return STDOUT as array, for arguments see pipe_into_ack_with_stderr
+# Pipe into ack and return STDOUT as array, for arguments see pipe_into_ack_with_stderr.
 sub pipe_into_ack {
     my ($stdout, $stderr) = pipe_into_ack_with_stderr( @_ );
     return @$stdout;
 }
 
 
-# Use this one if order is important
+# Use this one if order is important.
 sub lists_match {
     local $Test::Builder::Level = $Test::Builder::Level + 1; ## no critic
 
@@ -447,7 +442,7 @@ sub ack_lists_match {
     };
 }
 
-# Use this one if you don't care about order of the lines
+# Use this one if you don't care about order of the lines.
 sub sets_match {
     local $Test::Builder::Level = $Test::Builder::Level + 1; ## no critic
 
@@ -601,8 +596,7 @@ BEGIN {
                 $pty->make_slave_controlling_terminal();
                 my $slave = $pty->slave();
                 if(-t *STDIN) {
-                    # XXX is there something we can fall back on? Maybe
-                    #     re-opening /dev/console?
+                    # Is there something we can fall back on? Maybe re-opening /dev/console?
                     $slave->clone_winsize_from(\*STDIN);
                 }
                 $slave->set_raw();
