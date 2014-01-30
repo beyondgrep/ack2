@@ -1,5 +1,15 @@
 History file for ack.  http://beyondgrep.com/
 
+NEXT
+====================================
+[FIXES]
+Still trying to get Windows tests working.
+
+[ENHANCEMENTS]
+ack now ignores JavaScript and CSS source maps.  Thanks, Chris
+Rebert.
+
+
 2.13_06 Sat Jan 25 23:36:09 CST 2014
 ====================================
 [FIXES]
