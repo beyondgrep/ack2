@@ -139,6 +139,10 @@ sub _options_block {
 --ignore-file=match:/[.]min[.]css$/
 --ignore-file=match:/[.]css[.]min$/
 
+# JS and CSS source maps
+--ignore-file=match:/[.]js[.]map$/
+--ignore-file=match:/[.]css[.]map$/
+
 # PDFs, because they pass Perl's -T detection
 --ignore-file=ext:pdf
 
