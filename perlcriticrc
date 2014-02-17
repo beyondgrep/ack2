@@ -5,6 +5,8 @@ verbose = %f:%l:%c %m (%p)\n
 allow_leading_tabs = 0
 [-CodeLayout::RequireTidyCode]
 # Never works for me.
+[-CodeLayout::RequireTrailingCommaAtNewline]
+# I like this one but it gives too many false positives.
 
 [Compatibility::PodMinimumVersion]
 above_version = 5.008008
@@ -12,31 +14,44 @@ above_version = 5.008008
 [-ControlStructures::ProhibitPostfixControls]
 
 [-Documentation::PodSpelling]
-[-Documentation::RequirePodAtEnd]
-[-Documentation::RequirePodSections]
 [-Documentation::RequireEndBeforeLastPod]
 # We could have __END__ at the end of ack if not for the squashing.
+[-Documentation::RequireLinkedURLs]
+[-Documentation::RequirePodAtEnd]
+[-Documentation::RequirePodLinksIncludeText]
+# I'm not worried about link text.
+[-Documentation::RequirePodSections]
+
 
 [-Editor::RequireEmacsFileVariables]
 
+# We're a utility.  We're OK with die.
 [-ErrorHandling::RequireCarping]
+[-ErrorHandling::RequireUseOfExceptions]
 
 [-InputOutput::ProhibitInteractiveTest]
 [-InputOutput::ProhibitBacktickOperators]
-[-InputOutput::RequireCheckedSyscalls]
-functions = open opendir read readline readdir close closedir
+[-InputOutput::RequireCheckedClose]
+[InputOutput::RequireCheckedSyscalls]
+functions = open opendir read readline readdir
 
 [-Miscellanea::RequireRcsKeywords]
 
 [-Modules::RequirePerlVersion]
 [-Modules::RequireVersionVar]
 
+[-NamingConventions::ProhibitAmbiguousNames]
+
+[-RegularExpressions::ProhibitEscapedMetacharacters]
 [-RegularExpressions::RequireDotMatchAnything]
 [-RegularExpressions::RequireExtendedFormatting]
 [-RegularExpressions::RequireLineBoundaryMatching]
 
 [-Subroutines::ProhibitBuiltinHomonyms]
-# We have plenty of funcs that we know are homonyms, but that's OK
+# We have plenty of funcs that we know are homonyms in ack, like open and close, but that's OK
+[-Subroutines::ProhibitCallsToUndeclaredSubs]
+[-Subroutines::ProhibitCallsToUnexportedSubs]
+[-Subroutines::ProhibitExplicitReturnUndef]
 [-Subroutines::RequireArgUnpacking]
 
 [-TestingAndDebugging::ProhibitNoStrict]
@@ -44,10 +59,12 @@ functions = open opendir read readline readdir close closedir
 # If I've turned off warnings or strict, I know why I'm doing it.
 [-TestingAndDebugging::RequireTestLabels]
 
+[-ValuesAndExpressions::ProhibitConstantPragma]
 [-ValuesAndExpressions::ProhibitEmptyQuotes]
 [-ValuesAndExpressions::ProhibitMagicNumbers]
 [-ValuesAndExpressions::ProhibitNoisyQuotes]
 [-ValuesAndExpressions::RequireConstantOnLeftSideOfEquality]
+[-ValuesAndExpressions::RestrictLongStrings]
 
 [-Variables::ProhibitPackageVars]
 [-Variables::ProhibitPunctuationVars]

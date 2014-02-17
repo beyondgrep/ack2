@@ -17,17 +17,17 @@ order.
 =back
 
 Then, ack looks for a user-specific ackrc if the HOME environment
-variable is set.  This is either `$HOME/.ackrc` or `$HOME/_ackrc`.
+variable is set.  This is either F<$HOME/.ackrc> or F<$HOME/_ackrc>.
 
 Then, ack looks for a project-specific ackrc file.  ack searches
 up the directory hierarchy for the first `.ackrc` or `_ackrc` file.
 If this is one of the ackrc files found in the previous steps, it is
 not loaded again.
 
-It is a fatal error if a directory contains both `.ackrc` and `_ackrc`.
+It is a fatal error if a directory contains both F<.ackrc> and F<_ackrc>.
 
 After ack loads the options from the found ackrc files, ack looks
-at the ACKRC_OPTIONS environment variable.
+at the C<ACKRC_OPTIONS> environment variable.
 
 Finally, ack takes settings from the command line.
 
@@ -57,43 +57,23 @@ sub new {
     return bless {}, $class;
 }
 
+
 sub _remove_redundancies {
-    my ( @configs ) = @_;
+    my @configs = @_;
 
-    if ( $App::Ack::is_windows ) {
-        # inode stat always returns 0 on windows, so just check filenames.
-        my (%seen, @uniq);
-
-        foreach my $path (map { $_->{path} } @configs) {
-            push @uniq, $path unless $seen{$path};
-            $seen{$path} = 1;
+    my %seen;
+    foreach my $config (@configs) {
+        my $key = $config->{path};
+        if ( not $App::Ack::is_windows ) {
+            # On Unix, uniquify on inode.
+            my ($dev, $inode) = (stat $key)[0, 1];
+            $key = "$dev:$inode" if defined $dev;
         }
-
-        return @uniq;
+        undef $config if $seen{$key}++;
     }
-
-    else {
-
-        my %dev_and_inode_seen;
-
-        foreach my $config ( @configs ) {
-            my $path = $config->{path};
-            my ( $dev, $inode ) = (stat $path)[0, 1];
-
-            if( defined($dev) ) {
-                if( $dev_and_inode_seen{"$dev:$inode"} ) {
-                    undef $config;
-                }
-                else {
-                    $dev_and_inode_seen{"$dev:$inode"} = 1;
-                }
-            }
-        }
-
-        return grep { defined() } @configs;
-
-    }
+    return grep { defined } @configs;
 }
+
 
 sub _check_for_ackrc {
     return unless defined $_[0];
@@ -108,6 +88,7 @@ sub _check_for_ackrc {
 
     return wantarray ? @files : $files[0];
 } # end _check_for_ackrc
+
 
 =head2 $finder->find_config_files
 
@@ -136,7 +117,11 @@ sub find_config_files {
         push @config_files, map { +{ path => $_ } } _check_for_ackrc($ENV{'HOME'});
     }
 
-    my @dirs = File::Spec->splitdir(Cwd::getcwd());
+    # XXX This should go through some untainted cwd-fetching function, and not get untainted inline like this.
+    my $cwd = Cwd::getcwd();
+    $cwd =~ /(.+)/;
+    $cwd = $1;
+    my @dirs = File::Spec->splitdir( $cwd );
     while(@dirs) {
         my $ackrc = _check_for_ackrc(@dirs);
         if(defined $ackrc) {
@@ -146,10 +131,10 @@ sub find_config_files {
         pop @dirs;
     }
 
-    # XXX we only test for existence here, so if the file is
-    #     deleted out from under us, this will fail later. =(
+    # We only test for existence here, so if the file is deleted out from under us, this will fail later.
     return _remove_redundancies( @config_files );
 }
+
 
 =head2 read_rcfile
 
@@ -171,11 +156,11 @@ sub read_rcfile {
         $line =~ s/\s+$//;
 
         next if $line eq '';
-        next if $line =~ /^#/;
+        next if $line =~ /^\s*#/;
 
         push( @lines, $line );
     }
-    close $fh;
+    close $fh or App::Ack::die( "Unable to close $file: $!" );
 
     return @lines;
 }

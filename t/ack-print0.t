@@ -1,9 +1,9 @@
-#!perl
+#!perl -T
 
 use warnings;
 use strict;
 
-use Test::More tests => 16;
+use Test::More tests => 15;
 use File::Next (); # For the reslash() function
 
 use lib 't';
@@ -39,8 +39,7 @@ G_PRINT0: {
     my @args = ( '-g', $filename_regex, '--sort-files', '--print0' );
     my @results = run_ack( @args, @files );
 
-    is( scalar @results, 1, 'Only one line of output with --print0' );
-    is( $results[0], $expected, 'Files found with -g and with --print0' );
+    is_deeply( \@results, [$expected], 'Files found with -g and with --print0' );
 }
 
 F_PRINT0: {

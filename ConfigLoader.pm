@@ -12,13 +12,9 @@ use Carp 1.04 ();
 use Getopt::Long 2.35 ();
 use Text::ParseWords 3.1 ();
 
-=head1 App::Ack::ConfigLoader
-
 =head1 FUNCTIONS
 
 =head2 process_args( @sources )
-
-
 
 =cut
 
@@ -49,6 +45,7 @@ BEGIN {
     );
 }
 
+
 sub process_filter_spec {
     my ( $spec ) = @_;
 
@@ -73,6 +70,7 @@ sub process_filter_spec {
     }
 }
 
+
 sub uninvert_filter {
     my ( $opt, @filters ) = @_;
 
@@ -91,6 +89,7 @@ sub uninvert_filter {
         }
     }
 }
+
 
 sub process_filetypes {
     my ( $opt, $arg_sources ) = @_;
@@ -183,6 +182,7 @@ sub process_filetypes {
     return \%additional_specs;
 }
 
+
 sub removed_option {
     my ( $option, $explanation ) = @_;
 
@@ -193,10 +193,11 @@ sub removed_option {
     };
 }
 
+
 sub get_arg_spec {
     my ( $opt, $extra_specs ) = @_;
 
-    my $dash_a_explanation = <<EOT;
+    my $dash_a_explanation = <<'EOT';
 This is because we now have -k/--known-types which makes it only select files
 of known types, rather than any text file (which is the behavior of ack 1.x).
 You may have options in a .ackrc, or in the ACKRC_OPTIONS environment variable.
@@ -219,7 +220,9 @@ EOT
     * Go through the list of options already available, and consider
       whether your new option can be considered mutually exclusive
       with another option.
+
 =cut
+
     return {
         1                   => sub { $opt->{1} = $opt->{m} = 1 },
         'A|after-context=i' => \$opt->{after_context},
@@ -256,17 +259,16 @@ EOT
         'h|no-filename'     => \$opt->{h},
         'H|with-filename'   => \$opt->{H},
         'i|ignore-case'     => \$opt->{i},
-        'ignore-directory|ignore-dir=s' # XXX Combine this version with the negated version below
-                            => sub {
-                                my ( undef, $dir ) = @_;
+        'ignore-directory|ignore-dir=s' => sub {
+                                    my ( undef, $dir ) = @_;
 
-                                $dir = App::Ack::remove_dir_sep( $dir );
-                                if ( $dir !~ /^(?:is|match):/ ) {
-                                    $dir = 'is:' . $dir;
-                                }
-                                push @{ $opt->{idirs} }, $dir;
-                               },
-        'ignore-file=s'    => sub {
+                                    $dir = App::Ack::remove_dir_sep( $dir );
+                                    if ( $dir !~ /^(?:is|match):/ ) {
+                                        $dir = 'is:' . $dir;
+                                    }
+                                    push @{ $opt->{idirs} }, $dir;
+        },
+        'ignore-file=s'     => sub {
                                     my ( undef, $file ) = @_;
                                     push @{ $opt->{ifiles} }, $file;
                                },
@@ -303,7 +305,7 @@ EOT
                                 } @{ $opt->{idirs} };
 
                                 push @{ $opt->{no_ignore_dirs} }, $dir;
-                               },
+                            },
         'nopager'           => sub { $opt->{pager} = undef },
         'passthru'          => \$opt->{passthru},
         'print0'            => \$opt->{print0},
@@ -344,10 +346,12 @@ EOT
     }; # arg_specs
 }
 
+
 sub process_other {
     my ( $opt, $extra_specs, $arg_sources ) = @_;
 
-    Getopt::Long::Configure('default', 'no_auto_help', 'no_auto_version'); # start with default options, minus some annoying ones
+    # Start with default options, minus some annoying ones.
+    Getopt::Long::Configure('default', 'no_auto_help', 'no_auto_version');
     Getopt::Long::Configure(
         'bundling',
         'no_ignore_case',
@@ -387,17 +391,13 @@ sub process_other {
 
         if ( $source->{project} ) {
             my $illegal = sub {
-                my ( $option ) = @_;
-
-                return sub {
-                    die "Option $option is illegal in project ackrcs";
-                };
+                die "Options --output, --pager and --match are forbidden in project .ackrc files.\n";
             };
 
             $args_for_source = { %$args_for_source,
-                'output=s'=> $illegal->('--output'),
-                'pager:s' => $illegal->('--pager'),
-                'match=s' => $illegal->('--match'),
+                'output=s' => $illegal,
+                'pager:s'  => $illegal,
+                'match=s'  => $illegal,
             };
         }
 
@@ -427,9 +427,9 @@ sub process_other {
     return;
 }
 
+
 sub should_dump_options {
     my ( $sources ) = @_;
-
 
     foreach my $source (@{$sources}) {
         my ( $name, $options ) = @{$source}{qw/name contents/};
@@ -447,6 +447,7 @@ sub should_dump_options {
     }
     return;
 }
+
 
 sub explode_sources {
     my ( $sources ) = @_;
@@ -483,7 +484,8 @@ sub explode_sources {
             $source->{contents} = $options =
                 [ Text::ParseWords::shellwords($options) ];
         }
-        for ( my $j = 0; $j < @{$options}; $j++ ) {
+
+        for my $j ( 0 .. @{$options}-1 ) {
             next unless $options->[$j] =~ /^-/;
             my @chunk = ( $options->[$j] );
             push @chunk, $options->[$j] while ++$j < @{$options} && $options->[$j] !~ /^-/;
@@ -508,6 +510,7 @@ sub explode_sources {
     return \@new_sources;
 }
 
+
 sub compare_opts {
     my ( $a, $b ) = @_;
 
@@ -519,6 +522,7 @@ sub compare_opts {
 
     return $first_a cmp $first_b;
 }
+
 
 sub dump_options {
     my ( $sources ) = @_;
@@ -548,12 +552,13 @@ sub dump_options {
     return;
 }
 
+
 sub remove_default_options_if_needed {
     my ( $sources ) = @_;
 
     my $default_index;
 
-    foreach my $index ( 0 .. $#$sources ) {
+    foreach my $index ( 0 .. $#{$sources} ) {
         if ( $sources->[$index]{'name'} eq 'Defaults' ) {
             $default_index = $index;
             last;
@@ -572,7 +577,7 @@ sub remove_default_options_if_needed {
         'pass_through',
     );
 
-    foreach my $index ( $default_index + 1 .. $#$sources ) {
+    foreach my $index ( $default_index + 1 .. $#{$sources} ) {
         my ( $name, $args ) = @{$sources->[$index]}{qw/name contents/};
 
         if (ref($args)) {
@@ -598,6 +603,7 @@ sub remove_default_options_if_needed {
     splice @copy, $default_index, 1;
     return \@copy;
 }
+
 
 sub check_for_mutually_exclusive_options {
     my ( $arg_sources ) = @_;
@@ -648,6 +654,7 @@ sub check_for_mutually_exclusive_options {
         }
     }
 }
+
 
 sub process_args {
     my $arg_sources = \@_;
@@ -731,7 +738,7 @@ sub retrieve_arg_sources {
 
     push @arg_sources, {
         name     => 'Defaults',
-        contents => [ App::Ack::ConfigDefault::options() ],
+        contents => [ App::Ack::ConfigDefault::options_clean() ],
     };
 
     foreach my $file ( @files) {

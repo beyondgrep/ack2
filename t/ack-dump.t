@@ -1,4 +1,4 @@
-#!perl
+#!perl -T
 
 use strict;
 use warnings;
@@ -13,8 +13,7 @@ use App::Ack::ConfigDefault;
 prep_environment();
 
 DUMP: {
-    my @expected = split( /\n/, App::Ack::ConfigDefault::_options_block );
-    @expected = grep { /./ && !/^#/ } @expected;
+    my @expected = App::Ack::ConfigDefault::options_clean();
 
     my @args    = qw( --dump );
     my @results = run_ack( @args );
@@ -32,5 +31,5 @@ DUMP: {
     is( scalar @perl, 2, 'Two specs for Perl' );
 
     my @ignore_dir = grep { /ignore-dir/ } @results;
-    is( scalar @ignore_dir, 23, 'Twenty-three specs for ignoring directories' );
+    is( scalar @ignore_dir, 24, 'Twenty-four specs for ignoring directories' );
 }

@@ -3,11 +3,14 @@
 use strict;
 use warnings;
 
-our $VERSION = '2.11_02'; # Check http://beyondgrep.com/ for updates
+our $VERSION = '2.13_06'; # Check http://beyondgrep.com/ for updates
 
 use 5.008008;
 use Getopt::Long 2.35 ();
 use Carp 1.04 ();
+
+use File::Spec ();
+use File::Next ();
 
 use App::Ack ();
 use App::Ack::ConfigLoader ();
@@ -200,19 +203,20 @@ sub _compile_file_filter {
         # command line" wins.
         return 0 if -p $File::Next::name;
 
-        # we can't handle unreadable filenames; report them
-        unless ( -r _ ) {
-            if ( $App::Ack::report_bad_filenames ) {
-                App::Ack::warn( "${File::Next::name}: cannot open file for reading" );
+        # We can't handle unreadable filenames; report them.
+        if ( not -r _ ) {
+            use filetest 'access';
+
+            if ( not -R $File::Next::name ) {
+                if ( $App::Ack::report_bad_filenames ) {
+                    App::Ack::warn( "${File::Next::name}: cannot open file for reading" );
+                }
+                return 0;
             }
-            return 0;
         }
 
         my $resource = App::Ack::Resource::Basic->new($File::Next::name);
-        return 0 if ! $resource;
-        if ( $ifiles_filters->filter($resource) ) {
-            return 0;
-        }
+        return 0 if !$resource || $ifiles_filters->filter($resource);
 
         my $match_found = $direct_filters->filter($resource);
 
@@ -501,6 +505,7 @@ sub print_line_with_options {
     }
     if( $output_expr ) {
         while ( $line =~ /$opt->{regex}/og ) {
+            # XXX We need to stop using eval() for --output.  See https://github.com/petdance/ack2/issues/421
             my $output = eval $output_expr;
             App::Ack::print( join( $separator, @line_parts, $output ), $ors );
         }
@@ -585,14 +590,12 @@ sub iterate {
     my $fh = $resource->open();
     if ( !$fh ) {
         if ( $App::Ack::report_bad_filenames ) {
-            # XXX direct access to filename
-            App::Ack::warn( "$resource->{filename}: $!" );
+            App::Ack::warn( $resource->name . ': ' . $! );
         }
         return;
     }
 
-    # check for context before the main loop, so we don't
-    # pay for it if we don't need it
+    # Check for context before the main loop, so we don't pay for it if we don't need it.
     if ( $n_before_ctx_lines || $n_after_ctx_lines ) {
         my $current_line = <$fh>; # prime the first line of input
 
@@ -796,8 +799,7 @@ sub resource_has_match {
     my $fh = $resource->open();
     if ( !$fh ) {
         if ( $App::Ack::report_bad_filenames ) {
-            # XXX direct access to filename
-            App::Ack::warn( "$resource->{filename}: $!" );
+            App::Ack::warn( $resource->name . ': ' . $! );
         }
     }
     else {
@@ -822,8 +824,7 @@ sub count_matches_in_resource {
     my $fh = $resource->open();
     if ( !$fh ) {
         if ( $App::Ack::report_bad_filenames ) {
-            # XXX direct access to filename
-            App::Ack::warn( "$resource->{filename}: $!" );
+            App::Ack::warn( $resource->name . ': ' . $! );
         }
     }
     else {
@@ -852,7 +853,7 @@ sub main {
     if ( !defined($opt->{color}) && !$opt->{g} ) {
         my $windows_color = 1;
         if ( $App::Ack::is_windows ) {
-            $windows_color = eval { require Win32::Console::ANSI; }
+            $windows_color = eval { require Win32::Console::ANSI; };
         }
         $opt->{color} = !App::Ack::output_to_pipe() && $windows_color;
     }
@@ -928,9 +929,6 @@ sub main {
     my $total_count = 0;
 RESOURCES:
     while ( my $resource = $resources->next ) {
-        # XXX this variable name combined with what we're trying
-        # to do makes no sense.
-
         # XXX Combine the -f and -g functions
         if ( $opt->{f} ) {
             # XXX printing should probably happen inside of App::Ack
@@ -950,7 +948,7 @@ RESOURCES:
                     show_types( $resource, $ors );
                 }
                 else {
-                    local $opt->{show_filename} = 0;
+                    local $opt->{show_filename} = 0; # XXX Why is this local?
 
                     print_line_with_options($opt, '', $resource->name, 0, $ors);
                 }
@@ -992,7 +990,7 @@ RESOURCES:
         elsif ( $opt->{count} ) {
             my $matches_for_this_file = count_matches_in_resource( $resource, $opt );
 
-            unless ( $opt->{show_filename} ) {
+            if ( not $opt->{show_filename} ) {
                 $total_count += $matches_for_this_file;
                 next RESOURCES;
             }
@@ -1046,7 +1044,7 @@ ack - grep-like text finder
 
 =head1 DESCRIPTION
 
-Ack is designed as a replacement for 99% of the uses of F<grep>.
+Ack is designed as a replacement for F<grep> for programmers.
 
 Ack searches the named input FILEs (or standard input if no files
 are named, or the file name - is given) for lines containing a match
@@ -1935,18 +1933,31 @@ using C<--ignore-ack-defaults>.
 =item * Global ackrc
 
 Options are then loaded from the global ackrc.  This is located at
-C</etc/ackrc> on Unix-like systems, and
-C<C:\Documents and Settings\All Users\Application Data\ackrc> on Windows.
-This can be omitted using C<--noenv>.
+C</etc/ackrc> on Unix-like systems.
+
+Under Windows XP and earlier, the ackrc is at
+C<C:\Documents and Settings\All Users\Application Data\ackrc>.
+
+Under Windows Vista/7, the global ackrc is at
+C<C:\ProgramData>
+
+The C<--noenv> option prevents all ackrc files from being loaded.
 
 =item * User ackrc
 
 Options are then loaded from the user's ackrc.  This is located at
-C<$HOME/.ackrc> on Unix-like systems, and
-C<C:\Documents and Settings\$USER\Application Data\ackrc>.  If a different
-ackrc is desired, it may be overridden with the C<$ACKRC> environment
-variable.
-This can be omitted using C<--noenv>.
+C<$HOME/.ackrc> on Unix-like systems.
+
+Under Windows XP and earlier, the user's ackrc is at
+C<C:\Documents and Settings\$USER\Application Data\ackrc>.
+
+Under Windows Vista/7, the user's ackrc is at
+<C:\Users\$USER\AppData\Roaming>.
+
+If you want to load a different user-level ackrc, it may be specified
+with the C<$ACKRC> environment variable.
+
+The C<--noenv> option prevents all ackrc files from being loaded.
 
 =item * Project ackrc
 
@@ -2172,6 +2183,13 @@ L<https://github.com/petdance/ack2>
 How appropriate to have I<ack>nowledgements!
 
 Thanks to everyone who has contributed to ack in any way, including
+Chris Rebert,
+Denis Howe,
+RaE<uacute>l GundE<iacute>n,
+James McCoy,
+Daniel Perrett,
+Steven Lee,
+Jonathan Perret,
 Fraser Tweedale,
 RaE<aacute>l GundE<aacute>n,
 Steffen Jaeckel,
@@ -2264,7 +2282,7 @@ Rob Hoelz.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2005-2013 Andy Lester.
+Copyright 2005-2014 Andy Lester.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the Artistic License v2.0.

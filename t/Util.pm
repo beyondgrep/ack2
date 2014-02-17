@@ -23,8 +23,19 @@ sub check_message {
 }
 
 sub prep_environment {
-    delete @ENV{qw( ACK_OPTIONS ACKRC ACK_PAGER HOME ACK_COLOR_MATCH ACK_COLOR_FILENAME ACK_COLOR_LINE )};
-    $orig_wd = Cwd::getcwd();
+    my @ack_args   = qw( ACK_OPTIONS ACKRC ACK_PAGER HOME ACK_COLOR_MATCH ACK_COLOR_FILENAME ACK_COLOR_LINE );
+    my @taint_args = qw( PATH CDPATH IFS );
+    delete @ENV{ @ack_args, @taint_args };
+
+    if ( is_windows() ) {
+        # To pipe, perl must be able to find cmd.exe, so add %SystemRoot%\system32 to the path.
+        # See http://kstruct.com/2006/09/13/perl-taint-mode-and-cmdexe/
+        $ENV{'SystemRoot'} =~ /([A-Z]:(\\[A-Z0-9_]+)+)/i;
+        my $system32_dir = File::Spec->catdir($1,'system32');
+        $ENV{'PATH'} = $system32_dir;
+    }
+
+    $orig_wd = getcwd_clean();
 }
 
 sub is_windows {
@@ -62,6 +73,20 @@ sub is_nonempty_array {
     }
     return $ok;
 }
+
+sub first_line_like {
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+
+    my $lines = shift;
+    my $re    = shift;
+    my $msg   = shift;
+
+    my $ok = like( $lines->[0], $re, $msg );
+    diag(explain($lines)) unless $ok;
+
+    return $ok;
+}
+
 
 sub build_ack_invocation {
     my @args = @_;
@@ -176,15 +201,15 @@ sub run_ack {
 
 { # scope for $ack_return_code;
 
-# capture returncode
+# Capture return code.
 our $ack_return_code;
 
-# run the given command, assuming that the command was created with
+# Run the given command, assuming that the command was created with
 # build_ack_invocation (and thus writes its STDERR to $catcherr_file).
 #
-# sets $ack_return_code and unlinks the $catcherr_file
+# Sets $ack_return_code and unlinks the $catcherr_file.
 #
-# returns chomped STDOUT and STDERR as two array refs
+# Returns chomped STDOUT and STDERR as two array refs.
 sub run_cmd {
     my ( @cmd ) = @_;
 
@@ -201,6 +226,8 @@ sub run_cmd {
     @cmd = grep { ref($_) ne 'HASH' } @cmd;
 
     record_option_coverage(@cmd);
+
+    check_command_for_taintedness( @cmd );
 
     my ( @stdout, @stderr );
 
@@ -219,7 +246,7 @@ sub run_cmd {
             my $input_command = Win32::ShellQuote::quote_system_string(@{$input});
             $cmd = "$input_command | $cmd";
         }
-        system $cmd;
+        system( $cmd );
         close STDOUT;
         close STDERR;
         open(STDOUT, ">&SAVEOUT") or die "Can't restore STDOUT: $!";
@@ -287,13 +314,13 @@ sub run_cmd {
             close $stdout_read;
             close $stderr_read;
 
-            if(my $input = $options->{'input'}) {
-                # XXX check error
-                open STDIN, '-|', @$input or die "Can't open: $!";
+            if (my $input = $options->{input}) {
+                check_command_for_taintedness( @{$input} );
+                open STDIN, '-|', @{$input} or die "Can't open STDIN: $!";
             }
 
-            open STDOUT, '>&', $stdout_write or die "Can't open: $!";
-            open STDERR, '>&', $stderr_write or die "Can't open: $!";
+            open STDOUT, '>&', $stdout_write or die "Can't open STDOUT: $!";
+            open STDERR, '>&', $stderr_write or die "Can't open STDERR: $!";
 
             exec @cmd;
         }
@@ -322,18 +349,20 @@ sub run_ack_with_stderr {
     my @stdout;
     my @stderr;
 
+    my $perl = caret_X();
+
     @args = build_ack_invocation( @args );
     if ( $ENV{'ACK_TEST_STANDALONE'} ) {
-        unshift( @args, $^X );
+        unshift( @args, $perl );
     }
     else {
-        unshift( @args, $^X, "-Mblib=$orig_wd" );
+        unshift( @args, $perl, "-Mblib=$orig_wd" );
     }
 
     return run_cmd( @args );
 }
 
-# pipe into ack and return STDOUT and STDERR as array refs
+# Pipe into ack and return STDOUT and STDERR as array refs.
 sub pipe_into_ack_with_stderr {
     my $input = shift;
     my @args = @_;
@@ -341,9 +370,8 @@ sub pipe_into_ack_with_stderr {
     my $tempfile;
 
     if ( ref($input) eq 'SCALAR' ) {
-        # XXX we could easily do this without temp files,
-        #     but that would take slightly more time than
-        #     I'm willing to spend on this right now.
+        # We could easily do this without temp files, but that would take
+        # slightly more time than I'm willing to spend on this right now.
         $tempfile = File::Temp->new;
         print {$tempfile} $$input . "\n";
         close $tempfile;
@@ -351,22 +379,19 @@ sub pipe_into_ack_with_stderr {
     }
 
     return run_ack_with_stderr(@args, {
-        # you might be wondering why we use perl here as opposed
-        # to simply using 'cat'.  The answer is that we have no
-        # idea what the user's environment is like; they may not
-        # have cat.  We *do* know, however, that they have perl.
-        input => [$^X, '-pe1', $input],
+        # Use Perl since we don't know that 'cat' will exist.
+        input => [caret_X(), '-pe1', $input],
     });
 }
 
-# pipe into ack and return STDOUT as array, for arguments see pipe_into_ack_with_stderr
+# Pipe into ack and return STDOUT as array, for arguments see pipe_into_ack_with_stderr.
 sub pipe_into_ack {
     my ($stdout, $stderr) = pipe_into_ack_with_stderr( @_ );
     return @$stdout;
 }
 
 
-# Use this one if order is important
+# Use this one if order is important.
 sub lists_match {
     local $Test::Builder::Level = $Test::Builder::Level + 1; ## no critic
 
@@ -417,7 +442,7 @@ sub ack_lists_match {
     };
 }
 
-# Use this one if you don't care about order of the lines
+# Use this one if you don't care about order of the lines.
 sub sets_match {
     local $Test::Builder::Level = $Test::Builder::Level + 1; ## no critic
 
@@ -460,13 +485,14 @@ sub record_option_coverage {
 
     my $record_options = File::Spec->catfile($orig_wd, 'record-options');
 
+    my $perl = caret_X();
     if ( @command_line == 1 ) {
         my $command_line = $command_line[0];
 
         # strip the command line up until 'ack' is found
         $command_line =~ s/^.*ack\b//;
 
-        $command_line = "$^X $record_options $command_line";
+        $command_line = "$perl -T $record_options $command_line";
 
         system $command_line;
     }
@@ -475,7 +501,7 @@ sub record_option_coverage {
             shift @command_line;
         }
         shift @command_line; # get rid of 'ack' itself
-        unshift @command_line, $^X, $record_options;
+        unshift @command_line, $perl, '-T', $record_options;
 
         system @command_line;
     }
@@ -570,8 +596,7 @@ BEGIN {
                 $pty->make_slave_controlling_terminal();
                 my $slave = $pty->slave();
                 if(-t *STDIN) {
-                    # XXX is there something we can fall back on? Maybe
-                    #     re-opening /dev/console?
+                    # Is there something we can fall back on? Maybe re-opening /dev/console?
                     $slave->clone_winsize_from(\*STDIN);
                 }
                 $slave->set_raw();
@@ -581,6 +606,15 @@ BEGIN {
                 open STDERR, '>&', $slave->fileno() or die "Can't open: $!";
 
                 close $slave;
+
+                my $perl = caret_X();
+
+                if ( $ENV{'ACK_TEST_STANDALONE'} ) {
+                    unshift( @cmd, $perl );
+                }
+                else {
+                    unshift( @cmd, $perl, "-Mblib=$orig_wd" );
+                }
 
                 exec @cmd;
             }
@@ -700,6 +734,68 @@ sub get_options {
         '-w',
         '-x',
     );
+}
+
+
+# This is just a handy diagnostic tool.
+sub check_command_for_taintedness {
+    my @args = @_;
+
+    my $bad = 0;
+
+    my @tainted;
+    for my $arg ( @args ) {
+        if ( is_tainted( $arg ) ) {
+            push( @tainted, $arg );
+        }
+    }
+
+    if ( @tainted ) {
+        die "Can't execute this command because of taintedness:\nAll args: @args\nTainted:  @tainted\n";
+    }
+
+    return;
+}
+
+
+sub is_tainted {
+    no warnings qw(void uninitialized);
+
+    return !eval { local $SIG{__DIE__} = 'DEFAULT'; join('', shift), kill 0; 1 };
+}
+
+
+sub untaint {
+    my ( $s ) = @_;
+
+    $s =~ /\A(.*)\z/;
+    return $1;
+}
+
+
+sub caret_X {
+    # XXX How is it $^X can be tainted?  We should not have to untaint it.
+    $^X =~ /(.+)/;
+    my $perl = $1;
+
+    return $perl;
+}
+
+
+sub getcwd_clean {
+    # XXX How is it that this guy is tainted?
+    my $wd = Cwd::getcwd();
+    $wd =~ /(.+)/;
+    return $1;
+}
+
+
+sub windows_slashify {
+    my $str = shift;
+
+    $str =~ s{/}{\\}g;
+
+    return $str;
 }
 
 1;

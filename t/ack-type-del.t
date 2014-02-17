@@ -1,9 +1,9 @@
-#!perl
+#!perl -T
 
 use strict;
 use warnings;
 
-use Test::More tests => 13;
+use Test::More tests => 12;
 use lib 't';
 use Util;
 
@@ -19,8 +19,7 @@ is_empty_array( $stderr, 'Nothing in stderr' );
 
 ( $stdout, $stderr ) = run_ack_with_stderr('--type-del=perl', '--type-del=perltest', '--perl', '-f', 't/swamp');
 is_empty_array( $stdout, 'Nothing in stdout' );
-is_nonempty_array( $stderr, 'Got at least 1 error line' );
-like( $stderr->[0], qr/Unknown option: perl/ );
+first_line_like( $stderr, qr/Unknown option: perl/ );
 
 ( $stdout, $stderr ) = run_ack_with_stderr('--type-del=perl', '--type-del=perltest',  '--type-add=perl:ext:pm', '--perl', '-f', 't/swamp');
 is( scalar(@{$stdout}), 1, 'Got one output line' );

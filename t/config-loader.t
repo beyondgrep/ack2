@@ -1,4 +1,4 @@
-#!perl
+#!perl -T
 
 use strict;
 use warnings;
@@ -13,10 +13,7 @@ use File::Temp;
 use App::Ack::Filter::Default;
 use App::Ack::ConfigLoader;
 
-local $ENV{PAGER};
-local $ENV{ACK_PAGER};
-local $ENV{ACK_PAGER_COLOR};
-local $ENV{ACK_OPTIONS};
+delete @ENV{qw( PAGER ACK_PAGER ACK_PAGER_COLOR ACK_OPTIONS )};
 
 my %defaults = (
     after_context             => undef,
@@ -238,7 +235,7 @@ sub test_loader {
             $got_targets = [ @ARGV ];
         };
 
-        is_deeply( $got_opts, $expected_opts, 'Options match' )       or diag 'Options did not match';
-        is_deeply( $got_targets, $expected_targets, 'Targets match' ) or diag 'Targets did not match';
+        is_deeply( $got_opts, $expected_opts, 'Options match' );
+        is_deeply( $got_targets, $expected_targets, 'Targets match' );
     };
 }

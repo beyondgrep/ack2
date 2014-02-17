@@ -4,7 +4,8 @@ use strict;
 use warnings;
 use base 'App::Ack::Filter';
 
-use App::Ack::Filter::ExtensionGroup;
+use App::Ack::Filter ();
+use App::Ack::Filter::ExtensionGroup ();
 
 sub new {
     my ( $class, @extensions ) = @_;

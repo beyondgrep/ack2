@@ -1,4 +1,4 @@
-#!perl
+#!perl -T
 
 use strict;
 use warnings;
@@ -7,47 +7,56 @@ use lib 't';
 use File::Temp;
 use Test::More;
 use Util;
-
-sub has_mkfifo {
-    system 'which mkfifo >/dev/null 2>/dev/null';
-    return $? == 0;
-}
-
-sub mkfifo {
-    my ( $filename ) = @_;
-
-    system 'mkfifo', $filename;
-}
-
-sub touch {
-    my ( $filename ) = @_;
-    my $fh;
-    open $fh, '>>', $filename;
-    close $fh;
-}
-
-prep_environment();
-
-unless ( has_mkfifo() ) {
-    plan skip_all => q{You need the 'mkfifo' command to be able to run this test};
-}
-
-plan tests => 2;
+use POSIX ();
 
 local $SIG{'ALRM'} = sub {
     fail 'Timeout';
     exit;
 };
 
-alarm 5; # should be plenty of time
+prep_environment();
 
 my $tempdir = File::Temp->newdir;
 mkdir "$tempdir/foo";
-mkfifo "$tempdir/foo/test.pipe";
-touch "$tempdir/foo/bar.txt";
+my $rc = eval { POSIX::mkfifo( "$tempdir/foo/test.pipe", oct(660) ) };
+if ( !$rc ) {
+    dir_cleanup( $tempdir );
+    plan skip_all => $@ ? $@ : q{I can't run a mkfifo, so cannot run this test.};
+}
+
+plan tests => 2;
+
+touch( "$tempdir/foo/bar.txt" );
+
+alarm 5; # Should be plenty of time.
 
 my @results = run_ack( '-f', $tempdir );
 
-is_deeply \@results, [
+is_deeply( \@results, [
     "$tempdir/foo/bar.txt",
-];
+], 'Acking should not find the fifo' );
+
+dir_cleanup( $tempdir );
+
+done_testing();
+
+sub dir_cleanup {
+    my $tempdir = shift;
+
+    unlink "$tempdir/foo/bar.txt";
+    rmdir "$tempdir/foo";
+    rmdir $tempdir;
+
+    return;
+}
+
+
+sub touch {
+    my $filename = shift;
+
+    my $fh;
+    open $fh, '>>', $filename or die "Unable to append to $filename: $!";
+    close $fh;
+
+    return;
+}

@@ -1,4 +1,4 @@
-#!perl
+#!perl -T
 
 use warnings;
 use strict;
@@ -11,7 +11,7 @@ use Util;
 
 prep_environment();
 
-# checks also beginning of file
+# Checks also beginning of file.
 BEFORE: {
     my @expected = split( /\n/, <<'EOF' );
 Well, my daddy left home when I was three
@@ -49,7 +49,7 @@ EOF
     ack_lists_match( [ @args, @files ], \@expected, "Looking for $regex - before with line numbers" );
 }
 
-# checks also end of file
+# Checks also end of file.
 AFTER: {
     my @expected = split( /\n/, <<"EOF" );
 I tell ya, life ain't easy for a boy named Sue.
@@ -66,7 +66,7 @@ EOF
     ack_lists_match( [ @args, @files ], \@expected, "Looking for $regex - after" );
 }
 
-# context defaults to 2
+# Context defaults to 2.
 CONTEXT_DEFAULT: {
     my @expected = split( /\n/, <<"EOF" );
 And it got a lot of laughs from a' lots of folks,
@@ -83,7 +83,7 @@ EOF
     ack_lists_match( [ @args, @files ], \@expected, "Looking for $regex - context defaults to 2" );
 }
 
-# -1 must not stop the ending context from displaying
+# -1 must not stop the ending context from displaying.
 CONTEXT_DEFAULT: {
     my @expected = split( /\n/, <<"EOF" );
 And it got a lot of laughs from a' lots of folks,
@@ -118,7 +118,7 @@ EOF
     ack_lists_match( [ @args, @files ], \@expected, "Looking for $regex with overlapping contexts" );
 }
 
-# -C with contexts that touch
+# -C with contexts that touch.
 CONTEXT_ADJACENT: {
     my @expected = split( /\n/, <<"EOF" );
 This is line 01
@@ -140,7 +140,7 @@ EOF
     ack_lists_match( [ @args, @files ], \@expected, "Looking for $regex with contexts that touch" );
 }
 
-# -C with contexts that just don't touch
+# -C with contexts that just don't touch.
 CONTEXT_NONADJACENT: {
     my @expected = split( /\n/, <<"EOF" );
 This is line 01
@@ -248,7 +248,7 @@ EOF
     ack_lists_match( [ @args, @files ], \@expected, "Looking for $regex with -m3" );
 }
 
-# highlighting works with context
+# Highlighting works with context.
 HIGHLIGHTING: {
     my @ack_args = qw( July -C5 --color );
     my @results = pipe_into_ack( 't/text/4th-of-july.txt', @ack_args );
@@ -257,7 +257,7 @@ HIGHLIGHTING: {
     is( scalar @results, 18, 'Expecting altogether 18 lines back' );
 }
 
-# grouping works with context (single file)
+# Grouping works with context (single file).
 GROUPING_SINGLE_FILE: {
     my $target_file = File::Next::reslash( 't/etc/shebang.py.xxx' );
     my @expected = split( /\n/, <<"EOF" );
@@ -272,7 +272,7 @@ EOF
 }
 
 
-# grouping works with context and multiple files
+# Grouping works with context and multiple files.
 # i.e. a separator line between different matches in the same file and no separator between files
 GROUPING_MULTIPLE_FILES: {
     my @target_file = (
@@ -308,7 +308,7 @@ EOF
     ack_lists_match( [ @args, @files ], \@expected, "Looking for $regex in multiple files with grouping" );
 }
 
-# see https://github.com/petdance/ack2/issues/326 and links there for details
+# See https://github.com/petdance/ack2/issues/326 and links there for details.
 WITH_COLUMNS_AND_CONTEXT: {
     my @files = qw( t/text/freedom-of-choice.txt );
     my @expected = split( /\n/, <<"EOF" );

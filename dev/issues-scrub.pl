@@ -36,10 +36,6 @@ foreach my $issue (@issues) {
     my $url       = $issue->{'html_url'};
     my $number    = $issue->{'number'};
 
-    unless(@$labels) {
-        say "Issue #$number has no labels! ($url)";
-    }
-    unless($milestone) {
-        say "Issue #$number has no milestone! ($url)";
-    }
+    say "Issue #$number has no labels! ($url)" unless @{$labels};
+    say "Issue #$number has no milestone! ($url)" unless $milestone;
 }

@@ -18,6 +18,8 @@ sub add {
     my ( $self, $filter ) = @_;
 
     $self->{data}->{ $filter->{filename} } = 1;
+
+    return;
 }
 
 sub filter {

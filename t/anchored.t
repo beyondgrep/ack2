@@ -1,4 +1,4 @@
-#!perl
+#!perl -T
 
 # Make sure beginning-of-line anchor works
 

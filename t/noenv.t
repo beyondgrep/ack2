@@ -1,4 +1,4 @@
-#!perl
+#!perl -T
 
 use strict;
 use warnings;
@@ -9,7 +9,7 @@ use lib 't';
 use Util;
 
 use App::Ack::ConfigLoader;
-use Cwd qw( realpath getcwd );
+use Cwd qw( realpath );
 use File::Spec ();
 use File::Temp ();
 
@@ -19,13 +19,10 @@ sub is_global_file {
     return unless -f $filename;
 
     my ( undef, $dir ) = File::Spec->splitpath($filename);
+    $dir = File::Spec->canonpath($dir);
 
-    my $wd = getcwd();
-
-    my $sep = is_windows() ? '\\' : '/';
-
-    chop $dir if $dir =~ m{$sep$};
-    chop $wd  if $wd =~ m{$sep$};
+    my (undef, $wd) = File::Spec->splitpath(getcwd_clean(), 1);
+    $wd = File::Spec->canonpath($wd);
 
     return $wd !~ /^\Q$dir\E/;
 }
@@ -40,7 +37,7 @@ sub remove_defaults_and_globals {
 
 prep_environment();
 
-my $wd = getcwd() or die;
+my $wd = getcwd_clean() or die;
 
 my $tempdir = File::Temp->newdir;
 
@@ -59,7 +56,7 @@ subtest 'without --noenv' => sub {
 
     is_deeply( \@sources, [
         {
-            name     => realpath(File::Spec->catfile($tempdir->dirname, '.ackrc')),
+            name     => File::Spec->canonpath(realpath(File::Spec->catfile($tempdir->dirname, '.ackrc'))),
             contents => [ '--type-add=perl:ext:pl,t,pm' ],
             project  => 1,
         },

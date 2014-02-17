@@ -1,4 +1,4 @@
-#!perl
+#!perl -T
 
 use strict;
 use warnings;
@@ -7,10 +7,14 @@ use Test::More tests => 6;
 
 use lib 't';
 use Util;
+use File::Next;
 
 prep_environment();
 
-my @text  = glob( 't/text/s*.txt' );
+my @text  = map {
+    untaint($_)
+} glob( 't/text/s*.txt' );
+
 my $myth  = File::Next::reslash( 't/text/science-of-myth.txt' );
 my $happy = File::Next::reslash( 't/text/shut-up-be-happy.txt' );
 

@@ -1,10 +1,9 @@
-#!perl
+#!perl -T
 
 use strict;
 use warnings;
 
 use File::Next ();
-use File::Spec ();
 use Test::More tests => 2;
 
 use lib 't';
@@ -51,6 +50,8 @@ sub do_parent {
 
     chomp @{$stdout_lines};
     chomp @{$stderr_lines};
+
+    return;
 }
 
 prep_environment();
@@ -93,9 +94,9 @@ $science:22:And if it works, then it gets the job done
 $science:23:Somehow no matter what the world keeps turning
 EOF
 
-# XXX I don't care for doing all this low-level stuff outside of Util
-my @lhs_args = ( $^X, '-Mblib', build_ack_invocation( '-g', 'of', 't/text' ) );
-my @rhs_args = ( $^X, '-Mblib', build_ack_invocation( '-x', 'the' ) ); # for now
+my $perl = caret_X();
+my @lhs_args = ( $perl, '-Mblib', build_ack_invocation( '-g', 'of', 't/text' ) );
+my @rhs_args = ( $perl, '-Mblib', build_ack_invocation( '-x', 'the' ) ); # for now
 
 if ( $ENV{'ACK_TEST_STANDALONE'} ) {
     @lhs_args = grep { $_ ne '-Mblib' } @lhs_args;

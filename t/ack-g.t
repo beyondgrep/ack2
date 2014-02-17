@@ -1,4 +1,4 @@
-#!perl
+#!perl -T
 
 use warnings;
 use strict;
@@ -250,7 +250,7 @@ subtest 'test -g on a path' => sub {
 
 subtest 'test -g with --color' => sub {
     my $file_regex = 'text';
-    my @expected   = colorize( <<'END_COLOR' );
+    my $expected_original = <<'END_COLOR';
 t/con(text).t
 t/(text)/4th-of-july.txt
 t/(text)/boy-named-sue.txt
@@ -261,6 +261,10 @@ t/(text)/science-of-myth.txt
 t/(text)/shut-up-be-happy.txt
 END_COLOR
 
+    $expected_original = windows_slashify( $expected_original ) if is_windows;
+
+    my @expected   = colorize( $expected_original );
+
     my @args = ( '--sort-files', '-g', $file_regex );
 
     my @results = run_ack(@args, '--color');
@@ -269,7 +273,7 @@ END_COLOR
 };
 
 subtest q{test -g without --color; make sure colors don't show} => sub {
-    unless(has_io_pty()) {
+    if ( !has_io_pty() ) {
         plan skip_all => 'IO::Pty is required for this test';
         return;
     }

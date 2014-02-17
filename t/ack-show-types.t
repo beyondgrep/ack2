@@ -1,4 +1,4 @@
-#!perl
+#!perl -T
 
 use warnings;
 use strict;
@@ -29,6 +29,8 @@ sub do_test {
 
     is( scalar @results, 1, "Only one file should be returned from 'ack @args'" );
     sets_match( get_types( $results[0] ), \@exp_types , "'ack @args' must return all the expected types" );
+
+    return;
 }
 
 do_test( qw{ -f --show-types t/swamp/Rakefile } );

@@ -1,4 +1,4 @@
-#!perl
+#!perl -T
 
 # Make sure ack can handle files it can't read.
 
@@ -83,10 +83,10 @@ sub check_with {
 
         my ($stdout, $stderr) = run_ack_with_stderr( @args );
         is( get_rc(), 1, 'Exit code 1 for no output for grep compatibility' );
-                ## XXX Should be 2 for best grep compatibility since there was an error ...
-                ##      but we agreed that wasn't required
-        is( scalar @{$stdout}, $expected_stdout, 'No normal output' ) || diag(explain($stdout));
-        is( scalar @{$stderr}, 1, 'One line of stderr output' ) || diag(explain($stderr));
+        # Should be 2 for best grep compatibility since there was an error but we agreed that wasn't required.
+
+        is( scalar @{$stdout}, $expected_stdout, 'No normal output' ) or diag(explain($stdout));
+        is( scalar @{$stderr}, 1, 'One line of stderr output' ) or diag(explain($stderr));
         # Don't check for exact text of warning, the message text depends on LC_MESSAGES
         like( $stderr->[0], qr/\Q$target\E:/, 'Warning message OK' );
     };

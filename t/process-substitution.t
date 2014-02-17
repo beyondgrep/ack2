@@ -1,4 +1,4 @@
-#!perl
+#!perl -T
 
 use strict;
 use warnings;
@@ -48,6 +48,15 @@ else {
     open STDERR, '>&', $write or die "Can't open: $!";
 
     my @args = build_ack_invocation( qw( --noenv --nocolor --smart-case this ) );
+    # XXX doing this by hand here eq '=('
+    my $perl = caret_X();
+
+    if ( $ENV{'ACK_TEST_STANDALONE'} ) {
+        unshift( @args, $perl );
+    }
+    else {
+        unshift( @args, $perl, '-Mblib' );
+    }
     my $args = join( ' ', @args );
     exec 'bash', '-c', "$args <(cat t/swamp/options.pl)";
 }

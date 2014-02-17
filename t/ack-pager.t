@@ -1,9 +1,8 @@
-#!perl
+#!perl -T
 
 use strict;
 use warnings;
 
-use Cwd ();
 use File::Spec ();
 use File::Temp ();
 use Test::More;
@@ -16,7 +15,7 @@ if ( not has_io_pty() ) {
     exit(0);
 }
 
-plan tests => 16;
+plan tests => 15;
 
 prep_environment();
 
@@ -199,13 +198,13 @@ END_TEXT
     lists_match( \@got, \@expected, 'PAGER_NOENV' );
 }
 
-my $wd      = Cwd::getcwd();
+my $wd      = getcwd_clean();
 my $tempdir = File::Temp->newdir;
 my $pager   = File::Spec->rel2abs('test-pager');
 mkdir File::Spec->catdir($tempdir->dirname, 'subdir');
 
 PROJECT_ACKRC_PAGER_FORBIDDEN: {
-    my @files = ( File::Spec->rel2abs('t/text/') );
+    my @files = untaint( File::Spec->rel2abs('t/text/') );
     my @args = qw/ --env question(\\S+) /;
 
     chdir $tempdir->dirname;
@@ -214,14 +213,13 @@ PROJECT_ACKRC_PAGER_FORBIDDEN: {
     my ( $stdout, $stderr ) = run_ack_with_stderr(@args, @files);
 
     is_empty_array( $stdout );
-    is_nonempty_array( $stderr );
-    like( $stderr->[0], qr/--pager is illegal in project ackrcs/ ) or diag(explain($stderr));
+    first_line_like( $stderr, qr/\QOptions --output, --pager and --match are forbidden in project .ackrc files/ );
 
     chdir $wd;
 }
 
 HOME_ACKRC_PAGER_PERMITTED: {
-    my @files = ( File::Spec->rel2abs('t/text/') );
+    my @files = untaint( File::Spec->rel2abs('t/text/') );
     my @args = qw/ --env question(\\S+) /;
 
     write_file(File::Spec->catfile($tempdir->dirname, '.ackrc'), "--pager=$pager\n");
@@ -237,7 +235,7 @@ HOME_ACKRC_PAGER_PERMITTED: {
 }
 
 ACKRC_ACKRC_PAGER_PERMITTED: {
-    my @files = ( File::Spec->rel2abs('t/text/') );
+    my @files = untaint( File::Spec->rel2abs('t/text/') );
     my @args = qw/ --env question(\\S+) /;
 
     write_file(File::Spec->catfile($tempdir->dirname, '.ackrc'), "--pager=$pager\n");

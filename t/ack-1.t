@@ -1,12 +1,13 @@
-#!perl
+#!perl -T
 
 use warnings;
 use strict;
 
-use Test::More tests => 13;
+use Test::More tests => 12;
 
 use lib 't';
 use Util;
+use File::Next;
 
 prep_environment();
 
@@ -64,6 +65,5 @@ DASH_L: {
     my @results  = run_ack( @args, @files );
     my $expected = File::Next::reslash( 't/text/4th-of-july.txt' );
 
-    is( scalar(@results), 1, 'Should only get one matching file back' );
-    is( $results[0], $expected );
+    is_deeply( \@results, [$expected], 'Should only get one matching file back' );
 }

@@ -1,19 +1,29 @@
 #!perl
 
-# Squashes together the parts of ack into the single ack app.
+=pod
+
+Squashes together the parts of ack into the single ack-standalone
+file.
+
+The arguments to squash are either filenames from the ack distro
+like Ack.pm, or module names like File::Next.  For modules, squash
+loads them and then pushes them into ack-standalone.
+
+=cut
+
 use warnings;
 use strict;
 
 use File::Next;
 
-# make clear that ack is not supposed to be edited
+# Make clear that ack is not supposed to be edited.
 my $NO_EDIT_COMMENT = <<'EOCOMMENT';
 #
 # This file, ack, is generated code.
 # Please DO NOT EDIT or send patches for it.
 #
 # Please take a look at the source from
-# http://github.com/petdance/ack2
+# https://github.com/petdance/ack2
 # and submit patches against the individual files
 # that build ack.
 #
@@ -63,7 +73,7 @@ for my $arg ( @ARGV ) {
 
         # Replace the shebang line and append 'no edit' comment
         if ( s{^#!.+}{package main;} ) {
-            # skip the shebang line and replace it with package statement
+            # Skip the shebang line and replace it with package statement.
         }
 
         # Remove Perl::Critic comments.
@@ -76,7 +86,7 @@ for my $arg ( @ARGV ) {
 
 # We only use two of the four constructors in File::Next, so delete the other two.
 for my $unused_func ( qw( dirs everything ) ) {
-    $code =~ s/^sub $unused_func\b.*?^}//sm; # It's OK if we can't find it
+    $code =~ s/^sub $unused_func\b.*?^}//sm or die qq{Unable to find the sub "$unused_func" to remove from ack-standalone};
 }
 print $code;
 

@@ -4,8 +4,6 @@ use strict;
 use warnings;
 use base 'App::Ack::Filter';
 
-use File::Spec 3.00 ();
-
 sub new {
     my ( $class ) = @_;
 
@@ -17,12 +15,11 @@ sub new {
 sub add {
     my ( $self, $filter ) = @_;
 
-    my $data = $self->{'data'};
-    my $extensions = $filter->{'extensions'};
-
-    foreach my $ext (@{$extensions}) {
-        $data->{lc $ext} = 1;
+    foreach my $ext (@{$filter->{extensions}}) {
+        $self->{data}->{lc $ext} = 1;
     }
+
+    return;
 }
 
 sub filter {
@@ -44,9 +41,7 @@ sub inspect {
 sub to_string {
     my ( $self ) = @_;
 
-    my $data = $self->{'data'};
-
-    return join(' ', map { ".$_" } (keys %$data));
+    return join(' ', map { ".$_" } sort keys %{$self->{data}});
 }
 
 1;

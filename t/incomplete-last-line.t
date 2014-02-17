@@ -1,4 +1,4 @@
-#!perl
+#!perl -T
 
 use warnings;
 use strict;
@@ -10,8 +10,8 @@ use Util;
 
 prep_environment();
 
-# check that a match on the last line of a file without a proper
-# ending newline gets this newline append by ack
+# Check that a match on the last line of a file without a proper
+# ending newline gets this newline appended by ack.
 INCOMPLETE_LAST_LINE: {
     my @expected = split( /\n/, <<"EOF" );
 but no new line on the last line!

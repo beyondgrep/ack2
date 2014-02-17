@@ -2,6 +2,86 @@ History file for ack.  http://beyondgrep.com/
 
 NEXT
 ====================================
+[FIXES]
+Still trying to get Windows tests working.
+
+[ENHANCEMENTS]
+ack now ignores JavaScript and CSS source maps.  Thanks, Chris
+Rebert.
+
+
+2.13_06 Sat Jan 25 23:36:09 CST 2014
+====================================
+[FIXES]
+More fixes for Windows tests.  Thanks to GitHub user @ispedals.
+
+
+2.13_05 Thu Jan  9 22:41:33 CST 2014
+====================================
+[FIXES]
+More whack-a-mole with Windows failures.  This time, it's POSIX::mkfifo
+dying on Windows instead of returning undef like the docs implied,
+or at least that I inferred.
+
+[ENHANCEMENTS]
+--create-ackrc keeps the comments that describe each of the options,
+and it shows the ack version number.
+
+
+2.13_04 Sat Jan  4 11:17:28 CST 2014
+====================================
+[FIXES]
+Fixed incorrect deduping of config files under Windows.  Thanks,
+Denis Howe.
+
+
+2.13_03 Thu Jan  2 22:23:03 CST 2014
+====================================
+[FIXES]
+More build fixes for Windows.  Windows config finder fixes from
+James McCoy.
+
+t/ack-named-pipes.t uses POSIX::mkfifo instead of the external
+command, which should be more portable.  Thanks, Pete Krawczyk.
+
+[ENHANCEMENTS]
+Now ignores Cabal (Haskell) sandboxes.  Thanks, Fraser Tweedale.
+
+Added filetypes for Jade, Smarty and Stylus.  Thanks, Raúl Gundín.
+
+
+2.13_02 Fri Dec 27 12:54:27 CST 2013
+====================================
+[FIXES]
+The building of ack-standalone relied on the output of `perldoc
+-l`, which I apparently can't rely on having been installed.  I've
+changed the way that the squash program finds File::Next.
+
+
+2.13_01 Wed Dec 25 13:36:08 CST 2013
+====================================
+So this is Christmas
+And what have you done
+I'm sitting here hacking
+On ack 2.13_01
+   -- via Pete Krawczyk
+
+[FIXES]
+Issue #313: ack would fail when trying to check files for readability
+on some networked filesystems, or on Mac OS X with ACLs.  Now it
+uses the filetest pragma.  Thanks, Jonathan Perret.
+
+
+[INTERNALS]
+ack's entire test suite now runs under Perl's -T taint flag.  We'll
+build more security tests on top of this.
+
+Added some checks to the squash program that I hope will turn up
+errors in the Windows builds.
+
+
+2.12    Tue Dec  3 07:05:02 CST 2013
+====================================
 [SECURITY FIXES]
 This verison of ack prevents the --pager, --regex and --output
 options from being used from project-level ackrc files.  It is
@@ -13,7 +93,6 @@ out from a code repository.
 The --pager, --regex and --output options may still be used from
 the global /etc/ackrc, your own private ~/.ackrc, the ACK_OPTIONS
 environment variable, and of course from the command line.
-
 
 [ENHANCEMENTS]
 Now ignores Eclipse .metadata directory.  Thanks, Steffen Jaeckel.

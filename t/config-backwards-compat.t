@@ -1,4 +1,4 @@
-#!perl
+#!perl -T
 
 use strict;
 use warnings;
@@ -6,6 +6,7 @@ use warnings;
 use lib 't';
 use Util;
 use File::Temp;
+use File::Next ();
 use Test::More tests => 3;
 
 prep_environment();

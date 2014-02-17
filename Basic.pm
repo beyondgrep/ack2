@@ -11,6 +11,8 @@ use Fcntl ();
 
 use base 'App::Ack::Resource';
 
+use App::Ack;
+
 =head1 METHODS
 
 =head2 new( $filename )
@@ -154,7 +156,7 @@ sub firstliney {
 
     my $fh = $self->open();
 
-    unless(exists $self->{firstliney}) {
+    if ( !exists $self->{firstliney} ) {
         my $buffer = '';
         my $rc     = sysread( $fh, $buffer, 250 );
         unless($rc) { # XXX handle this better?
@@ -175,7 +177,7 @@ sub open {
 
     return $self->{fh} if $self->{opened};
 
-    unless ( open $self->{fh}, '<', $self->{filename} ) {
+    if ( ! open $self->{fh}, '<', $self->{filename} ) {
         return;
     }
 

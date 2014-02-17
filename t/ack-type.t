@@ -1,16 +1,18 @@
-#!perl
+#!perl -T
 
 use strict;
 use warnings;
 use lib 't';
 
 use Cwd ();
-use Test::More tests => 18;
+use Test::More tests => 16;
 use File::Next ();
 use File::Temp ();
 use Util;
 
 prep_environment();
+
+my @SWAMP = qw( t/swamp );
 
 TEST_TYPE: {
     my @expected = split( /\n/, <<'EOF' );
@@ -29,8 +31,8 @@ EOF
         $line =~ s/^(.*?)(?=:)/File::Next::reslash( $1 )/ge;
     }
 
-    my @args    = ( '--type=perl', '--nogroup', '--noheading', '--nocolor' );
-    my @files   = ( 't/swamp' );
+    my @args    = qw( --type=perl --nogroup --noheading --nocolor );
+    my @files   = @SWAMP;
     my $target  = 'perl';
 
     my @results = run_ack( @args, $target, @files );
@@ -47,8 +49,8 @@ EOF
         $line =~ s/^(.*?)(?=:)/File::Next::reslash( $1 )/ge;
     }
 
-    my @args    = ( '--type=noperl', '--nogroup', '--noheading', '--nocolor' );
-    my @files   = ( 't/swamp' );
+    my @args    = qw( --type=noperl --nogroup --noheading --nocolor );
+    my @files   = @SWAMP;
     my $target  = 'perl';
 
     my @results = run_ack( @args, $target, @files );
@@ -56,43 +58,39 @@ EOF
 }
 
 TEST_UNKNOWN_TYPE: {
-    my @args   = ( '--ignore-ack-defaults', '--type-add=perl:ext:pl',
-        '--type=foo', '--nogroup', '--noheading', '--nocolor' );
-    my @files  = ( 't/swamp' );
+    my @args   = qw( --ignore-ack-defaults --type-add=perl:ext:pl --type=foo --nogroup --noheading --nocolor );
+    my @files   = @SWAMP;
     my $target = 'perl';
 
     my ( $stdout, $stderr ) = run_ack_with_stderr( @args, $target, @files );
 
     is_empty_array( $stdout, 'Should have no lines back' );
-    is_nonempty_array( $stderr, 'Should get some errors' );
-    like( $stderr->[0], qr/Unknown type 'foo'/ ) or diag(explain($stderr));
+    first_line_like( $stderr, qr/Unknown type 'foo'/ );
 }
 
 TEST_NOTYPES: {
-    my @args   = ( '--ignore-ack-defaults', '--type=perl', '--nogroup',
-        '--noheading', '--nocolor' );
-    my @files  = ( 't/swamp' );
+    my @args   = qw( --ignore-ack-defaults --type=perl --nogroup --noheading --nocolor );
+    my @files  = @SWAMP;
     my $target = 'perl';
 
     my ( $stdout, $stderr ) = run_ack_with_stderr( @args, $target, @files );
 
     is_empty_array( $stdout, 'Should have no lines back' );
-    is_nonempty_array( $stderr, 'Should get some errors' );
-    like( $stderr->[0], qr/Unknown type 'perl'/ ) or diag(explain($stderr));
+    first_line_like( $stderr, qr/Unknown type 'perl'/ );
 }
 
 TEST_NOTYPE_OVERRIDE: {
     my @expected = (
-File::Next::reslash('t/swamp/html.htm') . ':2:<html><head><title>Boring test file </title></head>',
-File::Next::reslash('t/swamp/html.html') . ':2:<html><head><title>Boring test file </title></head>',
+        File::Next::reslash('t/swamp/html.htm') . ':2:<html><head><title>Boring test file </title></head>',
+        File::Next::reslash('t/swamp/html.html') . ':2:<html><head><title>Boring test file </title></head>',
     );
 
-    my @lines = run_ack('--nohtml', '--html', '--sort-files', '<title>', 't/swamp');
-    is_deeply \@lines, \@expected;
+    my @lines = run_ack( '--nohtml', '--html', '--sort-files', '<title>', @SWAMP );
+    is_deeply( \@lines, \@expected );
 }
 
 TEST_TYPE_OVERRIDE: {
-    my @lines = run_ack('--html', '--nohtml', '<title>', 't/swamp');
+    my @lines = run_ack( '--html', '--nohtml', '<title>', @SWAMP );
     is_empty_array( \@lines );
 }
 
@@ -102,14 +100,14 @@ TEST_NOTYPE_ACKRC_CMD_LINE_OVERRIDE: {
 END_ACKRC
 
     my @expected = (
-File::Next::reslash('t/swamp/html.htm') . ':2:<html><head><title>Boring test file </title></head>',
-File::Next::reslash('t/swamp/html.html') . ':2:<html><head><title>Boring test file </title></head>',
+        File::Next::reslash('t/swamp/html.htm') . ':2:<html><head><title>Boring test file </title></head>',
+        File::Next::reslash('t/swamp/html.html') . ':2:<html><head><title>Boring test file </title></head>',
     );
 
-    my @lines = run_ack('--html', '--sort-files', '<title>', 't/swamp', {
+    my @lines = run_ack('--html', '--sort-files', '<title>', @SWAMP, {
         ackrc => \$ackrc,
     });
-    is_deeply \@lines, \@expected;
+    is_deeply( \@lines, \@expected );
 }
 
 TEST_TYPE_ACKRC_CMD_LINE_OVERRIDE: {
@@ -119,8 +117,8 @@ END_ACKRC
 
     my @expected;
 
-    my @lines = run_ack('--nohtml', '<title>', 't/swamp', {
+    my @lines = run_ack('--nohtml', '<title>', @SWAMP, {
         ackrc => \$ackrc,
     });
-    is_deeply \@lines, \@expected;
+    is_deeply( \@lines, \@expected );
 }

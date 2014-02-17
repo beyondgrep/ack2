@@ -5,17 +5,22 @@ use warnings;
 use base 'Exporter';
 
 use App::Ack::Resource::Basic;
-use File::Find;
+use File::Next;
 use Util;
 use Test::More;
 
 our @EXPORT = qw(filter_test);
 
-my @swamp_files;
+sub swamp_files {
+    my @swamp_files;
 
-find(sub {
-    push @swamp_files, $File::Find::name if -f;
-}, 't/swamp');
+    my $files = File::Next::files( 't/swamp' );
+    while ( my $file = $files->() ) {
+        push( @swamp_files, $file );
+    }
+
+    return @swamp_files;
+}
 
 sub filter_test {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
@@ -37,7 +42,7 @@ sub filter_test {
             $filter->filter($_)
         } map {
             App::Ack::Resource::Basic->new($_)
-        } @swamp_files;
+        } swamp_files();
 
         sets_match(\@matches, $expected_matches, $msg);
     };

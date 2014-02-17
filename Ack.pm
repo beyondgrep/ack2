@@ -9,15 +9,15 @@ App::Ack - A container for functions for the ack program
 
 =head1 VERSION
 
-Version 2.11_02
+Version 2.13_06
 
 =cut
 
 our $VERSION;
 our $COPYRIGHT;
 BEGIN {
-    $VERSION = '2.11_02';
-    $COPYRIGHT = 'Copyright 2005-2013 Andy Lester.';
+    $VERSION = '2.13_06';
+    $COPYRIGHT = 'Copyright 2005-2014 Andy Lester.';
 }
 
 our $fh;
@@ -166,7 +166,7 @@ sub _bar {
 77I!+!7!?!7!I"71+!7,
 _BAR
 
-    App::Ack::__pic($x);
+    return App::Ack::__pic($x);
 }
 
 sub _cathy {
@@ -222,7 +222,7 @@ sub _cathy {
  0?!$! &N! )." .,! %."M! ":!M!.! 0
  0N!:! %?!O! #.! ..! &,! &.!D!,! "N!I! 0
 CATHY
-    App::Ack::__pic($x);
+    return App::Ack::__pic($x);
 }
 
 sub __pic {
@@ -380,7 +380,11 @@ Miscellaneous:
 
 Exit status is 0 if match, 1 if no match.
 
-This is version $VERSION of ack.
+ack's home page is at http://beyondgrep.com/
+
+The full ack manual is available by running "ack --man".
+
+This is version $VERSION of ack.  Run "ack --version" for full version info.
 END_OF_HELP
 
     return;
@@ -487,7 +491,7 @@ sub get_copyright {
 }
 
 
-# print subs added in order to make it easy for a third party
+# print*() subs added in order to make it easy for a third party
 # module (such as App::Wack) to redefine the display methods
 # and show the results in a different way.
 sub print                   { print {$fh} @_; return; }
@@ -574,7 +578,7 @@ sub exit_from_ack {
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2005-2013 Andy Lester.
+Copyright 2005-2014 Andy Lester.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the Artistic License v2.0.

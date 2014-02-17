@@ -1,4 +1,4 @@
-#!perl
+#!perl -T
 
 use strict;
 use warnings;
@@ -36,9 +36,7 @@ use Util;
     }
 
     sub get_help_options {
-        unless ( $help_options ) {
-            _populate_help_options();
-        }
+        _populate_help_options() unless $help_options;
 
         return @{ $help_options };
     }
