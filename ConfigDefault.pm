@@ -334,6 +334,10 @@ sub _options_block {
 # http://www.r-project.org/
 --type-add=rr:ext:R
 
+# reStructured Text
+# http://docutils.sourceforge.net/rst.html
+--type-add=rst:ext:rst
+
 # Ruby
 # http://www.ruby-lang.org/
 --type-add=ruby:ext:rb,rhtml,rjs,rxml,erb,rake,spec
