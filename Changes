@@ -3,7 +3,8 @@ History file for ack.  http://beyondgrep.com/
 NEXT
 ====================================
 [FIXES]
-Still trying to get Windows tests working.
+The -s flag would fail to suppress certain warnings.  Thanks, Kassio
+Borges. (GitHub ticket #439)
 
 [ENHANCEMENTS]
 ack now ignores JavaScript and CSS source maps.  Thanks, Chris
