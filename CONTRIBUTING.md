@@ -15,7 +15,7 @@ that probably means someone needs to make a release. =)
 
 Also appreciated with an issue are the following:
 
-  - Example invocations along with expected vs received output (see #439, great job!)
+  - Example invocations along with expected vs received output (see [#439](https://github.com/petdance/ack2/issues/439), great job!)
   - A `.t` test file that tests and verifies the behavior you expect
   - A patch that fixes your issue
 
