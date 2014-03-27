@@ -179,6 +179,10 @@ sub process_filetypes {
         push @{ $opt->{'filters'} }, @filters;
     };
 
+    $additional_specs{'K|no-known-types'} = sub {
+        @{ $opt->{'filters'} } = ();
+    };
+
     return \%additional_specs;
 }
 
