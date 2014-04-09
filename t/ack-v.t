@@ -26,6 +26,7 @@ DASH_L: {
         t/text/boy-named-sue.txt
         t/text/freedom-of-choice.txt
         t/text/me-and-bobbie-mcgee.txt
+        t/text/number.txt
         t/text/numbered-text.txt
         t/text/science-of-myth.txt
         t/text/shut-up-be-happy.txt
@@ -45,6 +46,7 @@ DASH_C: {
         t/text/boy-named-sue.txt:72
         t/text/freedom-of-choice.txt:50
         t/text/me-and-bobbie-mcgee.txt:32
+        t/text/number.txt:1
         t/text/numbered-text.txt:20
         t/text/science-of-myth.txt:24
         t/text/shut-up-be-happy.txt:26
