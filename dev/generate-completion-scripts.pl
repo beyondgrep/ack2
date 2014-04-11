@@ -215,5 +215,17 @@ my $vars = {
     is_alias     => \%IS_AN_ALIAS,
 };
 
-$tt->process(\$BASH_TEMPLATE, $vars, 'completion.bash') || die $tt->error;
-$tt->process(\$ZSH_TEMPLATE, $vars, 'completion.zsh')   || die $tt->error;
+my ( $filename ) = @ARGV;
+
+if ( !$filename ) {
+    die "usage: $0 (completion.bash|completion.zsh)\n";
+}
+elsif ( $filename eq 'completion.bash' ) {
+    $tt->process(\$BASH_TEMPLATE, $vars, 'completion.bash') || die $tt->error;
+}
+elsif ( $filename eq 'completion.zsh' ) {
+    $tt->process(\$ZSH_TEMPLATE, $vars, 'completion.zsh')   || die $tt->error;
+}
+else {
+    die "I don't know how to generate $filename\n";
+}
