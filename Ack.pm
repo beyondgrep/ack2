@@ -341,6 +341,7 @@ File inclusion/exclusion:
   -n, --no-recurse              No descending into subdirectories
   --[no]follow                  Follow symlinks.  Default is off.
   -k, --known-types             Include only files of types that ack recognizes.
+  -K, --no-known-types          Include all files types.
 
   --type=X                      Include only X files, where X is a recognized
                                 filetype.
