@@ -166,7 +166,8 @@ sub _options_block {
 --type-add=make:ext:mak
 --type-add=make:is:makefile
 --type-add=make:is:Makefile
---type-add=make:is:GNUmakefile
+--type-add=make:is:Makefile.Debug
+--type-add=make:is:Makefile.Release
 
 # Rakefiles
 # http://rake.rubyforge.org/
