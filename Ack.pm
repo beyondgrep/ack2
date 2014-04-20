@@ -46,7 +46,7 @@ BEGIN {
     $output_to_pipe  = not -t *STDOUT;
     $is_filter_mode = -p STDIN;
 
-    $is_cygwin       = ($^O eq 'cygwin');
+    $is_cygwin       = ($^O eq 'cygwin' || $^O eq 'msys');
     $is_windows      = ($^O eq 'MSWin32');
     $dir_sep_chars   = $is_windows ? quotemeta( '\\/' ) : quotemeta( File::Spec->catfile( '', '' ) );
 }
