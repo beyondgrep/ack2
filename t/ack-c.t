@@ -26,6 +26,7 @@ DASH_CAPITAL_L: {
         t/text/4th-of-july.txt
         t/text/boy-named-sue.txt
         t/text/me-and-bobbie-mcgee.txt
+        t/text/number.txt
         t/text/numbered-text.txt
         t/text/freedom-of-choice.txt
         t/text/shut-up-be-happy.txt
@@ -49,6 +50,7 @@ DASH_LV: {
         t/text/4th-of-july.txt
         t/text/boy-named-sue.txt
         t/text/me-and-bobbie-mcgee.txt
+        t/text/number.txt
         t/text/numbered-text.txt
         t/text/freedom-of-choice.txt
         t/text/science-of-myth.txt
@@ -75,6 +77,7 @@ DASH_C: {
         t/text/boy-named-sue.txt:2
         t/text/freedom-of-choice.txt:0
         t/text/me-and-bobbie-mcgee.txt:0
+        t/text/number.txt:0
         t/text/numbered-text.txt:0
         t/text/science-of-myth.txt:0
         t/text/shut-up-be-happy.txt:0

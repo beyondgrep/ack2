@@ -6,9 +6,14 @@ NEXT
 The -s flag would fail to suppress certain warnings.  Thanks, Kassio
 Borges. (GitHub ticket #439)
 
+The -w flag would fail to work properly with regex features such as
+alternation.  Thanks to Ed Avis for the report (GitHub ticket #443)
+
 [ENHANCEMENTS]
 ack now ignores JavaScript and CSS source maps.  Thanks, Chris
 Rebert.
+
+ack now ships with customized shell completion scripts for bash and zsh.
 
 
 2.13_06 Sat Jan 25 23:36:09 CST 2014

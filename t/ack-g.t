@@ -188,6 +188,7 @@ subtest '-v works on -g' => sub {
     my @expected = qw(
         t/text/boy-named-sue.txt
         t/text/me-and-bobbie-mcgee.txt
+        t/text/number.txt
         t/text/numbered-text.txt
         t/text/shut-up-be-happy.txt
     );
@@ -239,6 +240,7 @@ subtest 'test -g on a path' => sub {
         't/text/boy-named-sue.txt',
         't/text/freedom-of-choice.txt',
         't/text/me-and-bobbie-mcgee.txt',
+        't/text/number.txt',
         't/text/numbered-text.txt',
         't/text/science-of-myth.txt',
         't/text/shut-up-be-happy.txt',
@@ -256,6 +258,7 @@ t/(text)/4th-of-july.txt
 t/(text)/boy-named-sue.txt
 t/(text)/freedom-of-choice.txt
 t/(text)/me-and-bobbie-mcgee.txt
+t/(text)/number.txt
 t/(text)/numbered-(text).txt
 t/(text)/science-of-myth.txt
 t/(text)/shut-up-be-happy.txt
@@ -285,6 +288,7 @@ t/text/4th-of-july.txt
 t/text/boy-named-sue.txt
 t/text/freedom-of-choice.txt
 t/text/me-and-bobbie-mcgee.txt
+t/text/number.txt
 t/text/numbered-text.txt
 t/text/science-of-myth.txt
 t/text/shut-up-be-happy.txt

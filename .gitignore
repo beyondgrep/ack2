@@ -14,3 +14,5 @@ stderr.log
 stdout.log
 .timings.json
 xt/.perlcritic-history
+completion.bash
+completion.zsh
