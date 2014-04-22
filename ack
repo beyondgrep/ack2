@@ -2207,6 +2207,7 @@ L<https://github.com/petdance/ack2>
 How appropriate to have I<ack>nowledgements!
 
 Thanks to everyone who has contributed to ack in any way, including
+Jonah Bishop,
 Chris Rebert,
 Denis Howe,
 RaE<uacute>l GundE<iacute>n,
