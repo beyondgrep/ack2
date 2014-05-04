@@ -172,7 +172,19 @@ sub _compile_file_filter {
         }
     }
 
+    my $match_filenames = $opt->{g};
+    my $match_regex     = $opt->{regex};
+    my $is_inverted     = $opt->{v};
+
     return sub {
+        if ( $match_filenames ) {
+            if ( $File::Next::name =~ /$match_regex/ && $is_inverted ) {
+                return;
+            }
+            if ( $File::Next::name !~ /$match_regex/ && !$is_inverted ) {
+                return;
+            }
+        }
         # ack always selects files that are specified on the command
         # line, regardless of filetype.  If you want to ack a JPEG,
         # and say "ack foo whatever.jpg" it will do it for you.
@@ -945,19 +957,16 @@ RESOURCES:
             last RESOURCES if defined($max_count) && $nmatches >= $max_count;
         }
         elsif ( $opt->{g} ) {
-            my $is_match = ( $resource->name =~ /$opt->{regex}/o );
-            if ( $opt->{v} ? !$is_match : $is_match ) {
-                if ( $opt->{show_types} ) {
-                    show_types( $resource, $ors );
-                }
-                else {
-                    local $opt->{show_filename} = 0; # XXX Why is this local?
-
-                    print_line_with_options($opt, '', $resource->name, 0, $ors);
-                }
-                ++$nmatches;
-                last RESOURCES if defined($max_count) && $nmatches >= $max_count;
+            if ( $opt->{show_types} ) {
+                show_types( $resource, $ors );
             }
+            else {
+                local $opt->{show_filename} = 0; # XXX Why is this local?
+
+                print_line_with_options($opt, '', $resource->name, 0, $ors);
+            }
+            ++$nmatches;
+            last RESOURCES if defined($max_count) && $nmatches >= $max_count;
         }
         elsif ( $opt->{lines} ) {
             my $print_filename = $opt->{show_filename};
