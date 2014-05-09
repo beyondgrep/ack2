@@ -31,6 +31,9 @@ plan tests => 26;
 # Set HOME to a known value, so we get predictable results:
 $ENV{'HOME'} = realpath('t/home');
 
+# Clear the users ACKRC so it doesn't throw out expect_ackrcs().
+delete $ENV{'ACKRC'};
+
 sub touch_ackrc {
     my $filename = shift || '.ackrc';
     write_file( $filename, () );
