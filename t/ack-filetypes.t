@@ -46,6 +46,7 @@ parrot
 perl
 php
 plone
+proto
 python
 rake
 rst

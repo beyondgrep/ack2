@@ -325,6 +325,10 @@ sub _options_block {
 # http://plone.org/
 --type-add=plone:ext:pt,cpt,metadata,cpy,py
 
+# Protocol Buffers
+# https://code.google.com/p/protobuf/
+--type-add=proto:ext:proto
+
 # Python
 # http://www.python.org/
 --type-add=python:ext:py
