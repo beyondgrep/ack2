@@ -249,5 +249,5 @@ do {
     unlink $ackrc->filename;
 };
 
-clean_up_globals();
 chdir $wd;
+clean_up_globals();
