@@ -818,13 +818,23 @@ sub resource_has_match {
         }
     }
     else {
-        my $opt_v = $opt->{v};
-        my $re    = $opt->{regex};
-        while ( <$fh> ) {
-            if (/$re/o xor $opt_v) {
-                $has_match = 1;
-                last;
+        my $re = $opt->{regex};
+        if ( $opt->{v} ) {
+            while ( <$fh> ) {
+                if (!/$re/o) {
+                    $has_match = 1;
+                    last;
+                }
             }
+        }
+        else {
+            # XXX read in chunks
+            # XXX only do this for certain file sizes?
+            my $content = do {
+                local $/;
+                <$fh>;
+            };
+            $has_match = $content =~ /$re/og;
         }
         close $fh;
     }
@@ -843,10 +853,18 @@ sub count_matches_in_resource {
         }
     }
     else {
-        my $opt_v = $opt->{v};
-        my $re    = $opt->{regex};
-        while ( <$fh> ) {
-            ++$nmatches if (/$re/o xor $opt_v);
+        my $re = $opt->{regex};
+        if ( $opt->{v} ) {
+            while ( <$fh> ) {
+                ++$nmatches if (!/$re/o);
+            }
+        }
+        else {
+            my $content = do {
+                local $/;
+                <$fh>;
+            };
+            $nmatches =()= ($content =~ /$re/og);
         }
         close $fh;
     }
