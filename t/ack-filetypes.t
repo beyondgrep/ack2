@@ -28,6 +28,7 @@ erlang
 fortran
 go
 groovy
+gsp
 haskell
 hh
 html
