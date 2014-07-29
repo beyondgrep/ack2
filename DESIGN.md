@@ -21,3 +21,10 @@ It seems not.  Brian M. Carlson investigated this and reported his
 findings here: https://github.com/petdance/ack2/issues/398
 
 There seemed to be no effect.
+
+## Can we make --sort be the default?
+
+No.  Sorting the filenames requires reading in the entire directory
+of filenames before searching, and this can be a performance hit.
+In fact, it can kill ack entirely on directories with absurdly large
+numbers of files in them.
