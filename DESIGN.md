@@ -28,3 +28,7 @@ No.  Sorting the filenames requires reading in the entire directory
 of filenames before searching, and this can be a performance hit.
 In fact, it can kill ack entirely on directories with absurdly large
 numbers of files in them.
+
+## Why not make ack use /usr/bin/env in the shebang instead of /usr/bin/perl?
+
+The Perl toolchain takes care of the shebang at install time.
