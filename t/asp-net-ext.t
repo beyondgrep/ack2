@@ -1,4 +1,4 @@
-#!perl
+#!perl -T
 
 use strict;
 use warnings;
@@ -20,4 +20,4 @@ my @expected = qw(
 my @args    = qw( --aspx -f );
 my @results = run_ack(@args);
 
-sets_match( \@results, \@expected );
+sets_match( \@results, \@expected, __FILE__ );

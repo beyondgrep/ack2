@@ -1,9 +1,9 @@
-#!perl
+#!perl -T
 
 use warnings;
 use strict;
 
-use Test::More tests => 9;
+use Test::More tests => 6;
 
 use lib 't';
 use Util;
@@ -33,6 +33,7 @@ DEFAULT_DIR_EXCLUSIONS: {
         t/swamp/html.html
         t/swamp/incomplete-last-line.txt
         t/swamp/javascript.js
+        t/swamp/lua-shebang-test
         t/swamp/Makefile
         t/swamp/Makefile.PL
         t/swamp/MasterPage.master
@@ -65,7 +66,7 @@ DEFAULT_DIR_EXCLUSIONS: {
 
     my @args = qw( -f t/swamp );
 
-    ack_sets_match( [ @args ], \@expected );
+    ack_sets_match( [ @args ], \@expected, 'DEFAULT_DIR_EXCLUSIONS' );
     is( get_rc(), 0, '-f with matches exits with 0' );
 }
 
@@ -87,7 +88,7 @@ COMBINED_FILTERS: {
 
     my @args = qw( -f t/swamp --perl --rake );
 
-    ack_sets_match( [ @args ], \@expected );
+    ack_sets_match( [ @args ], \@expected, 'COMBINED_FILTERS' );
     is( get_rc(), 0, '-f with matches exits with 0' );
 }
 
@@ -96,7 +97,7 @@ EXIT_CODE: {
 
     my @args = qw( -f t/swamp --type-add=baz:ext:baz --baz );
 
-    ack_sets_match( \@args, \@expected );
+    ack_sets_match( \@args, \@expected, 'EXIT_CODE' );
     is( get_rc(), 1, '-f with no matches exits with 1' );
 }
 

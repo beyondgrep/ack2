@@ -1,4 +1,4 @@
-#!/usr/bin/env perl
+#!perl -T
 
 # https://github.com/petdance/ack2/issues/244
 
@@ -13,6 +13,5 @@ plan tests => 1;
 
 prep_environment();
 
-my ( $stdout, $stderr ) = run_ack_with_stderr('--color', '(foo)|(bar)',
-    't/swamp');
-is(scalar(@{$stderr}), 0);
+my ( $stdout, $stderr ) = run_ack_with_stderr('--color', '(foo)|(bar)', 't/swamp');
+is_empty_array( $stderr );

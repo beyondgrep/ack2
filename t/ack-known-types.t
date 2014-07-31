@@ -1,7 +1,9 @@
+#!perl -T
+
 use strict;
 use warnings;
 
-use Test::More tests => 8;
+use Test::More tests => 4;
 
 use lib 't';
 use Util;
@@ -41,6 +43,7 @@ t/swamp/service.svc
 t/swamp/stuff.cmake
 t/swamp/example.R
 t/swamp/fresh.css
+t/swamp/lua-shebang-test
 );
 
 my @files_no_perl = qw(
@@ -65,12 +68,11 @@ t/swamp/service.svc
 t/swamp/stuff.cmake
 t/swamp/example.R
 t/swamp/fresh.css
+t/swamp/lua-shebang-test
 );
 
-ack_sets_match( [ '--known-types', '-f', 't/swamp' ], \@files);
+ack_sets_match( [ '--known-types', '-f', 't/swamp' ], \@files, '--known-types test #1' );
+ack_sets_match( [ '--known-types', '--noperl', '-f', 't/swamp' ], \@files_no_perl, '--known-types test #2' );
 
-ack_sets_match( [ '-k', '-f', 't/swamp' ], \@files);
-
-ack_sets_match( [ '--known-types', '--noperl', '-f', 't/swamp' ], \@files_no_perl);
-
-ack_sets_match( [ '-k', '-f', '--noperl', 't/swamp' ], \@files_no_perl);
+ack_sets_match( [ '-k', '-f', 't/swamp' ], \@files, '-k test #1' );
+ack_sets_match( [ '-k', '-f', '--noperl', 't/swamp' ], \@files_no_perl, '-k test #2' );

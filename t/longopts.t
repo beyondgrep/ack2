@@ -1,11 +1,11 @@
-#!perl
+#!perl -T
 
 use strict;
 use warnings;
 
 =head1 DESCRIPTION
 
-This tests whether L<ack(1)>'s command line options work as expected.
+This tests whether ack's command line options work as expected.
 
 =cut
 
@@ -14,7 +14,7 @@ use File::Next (); # For the reslash() function
 
 # --no-recurse is inconsistent w/--nogroup
 
-plan tests => 39;
+plan tests => 38;
 
 use lib 't';
 use Util;
@@ -80,7 +80,7 @@ SMART_CASE: {
 }
 
 # Invert match
-#   this test was changed from using unlike to using like because
+#   This test was changed from using unlike to using like because
 #   old versions of Test::More::unlike (before 0.48_2) cannot
 #   work with multiline output (which ack produces in this case).
 for my $arg ( qw( -v --invert-match ) ) {
@@ -154,6 +154,5 @@ LINE: {
     my $opt   = '--line=1';
     my @lines = run_ack( $opt, @files );
 
-    is @lines, 1, 'only one line of output should be returned';
-    is $lines[0], '#!/usr/bin/env perl', 'The first line should match';
+    is_deeply( \@lines, ['#!/usr/bin/env perl'], 'Only one matching line should be a shebang' );
 }

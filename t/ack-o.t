@@ -1,10 +1,12 @@
-#!perl
+#!perl -T
 
 use warnings;
 use strict;
 
-use Test::More tests => 8;
+use Test::More tests => 12;
 use File::Next ();
+use File::Spec ();
+use File::Temp ();
 
 use lib 't';
 use Util;
@@ -59,7 +61,7 @@ EOF
 }
 
 
-# give a output function and find match in multiple files (so print filenames, just like grep -o)
+# Give an output function and find match in multiple files (so print filenames, just like grep -o).
 WITH_OUTPUT: {
     my @files = qw( t/text/ );
     my @args = qw/ --output=x$1x question(\\S+) /;
@@ -92,6 +94,57 @@ OUTPUT_DOUBLE_QUOTES: {
     );
 
     ack_sets_match( [ @args, @files ], \@expected, 'Find all the things with --output function' );
+}
+
+my $wd      = getcwd_clean();
+my $tempdir = File::Temp->newdir;
+mkdir File::Spec->catdir($tempdir->dirname, 'subdir');
+
+PROJECT_ACKRC_OUTPUT_FORBIDDEN: {
+    my @files = untaint( File::Spec->rel2abs('t/text/') );
+    my @args = qw/ --env question(\\S+) /;
+
+    chdir $tempdir->dirname;
+    write_file '.ackrc', "--output=foo\n";
+
+    my ( $stdout, $stderr ) = run_ack_with_stderr(@args, @files);
+
+    is_empty_array( $stdout );
+    first_line_like( $stderr, qr/\QOptions --output, --pager and --match are forbidden in project .ackrc files/ );
+
+    chdir $wd;
+}
+
+HOME_ACKRC_OUTPUT_PERMITTED: {
+    my @files = untaint( File::Spec->rel2abs('t/text/') );
+    my @args = qw/ --env question(\\S+) /;
+
+    write_file(File::Spec->catfile($tempdir->dirname, '.ackrc'), "--output=foo\n");
+    chdir File::Spec->catdir($tempdir->dirname, 'subdir');
+    local $ENV{'HOME'} = $tempdir->dirname;
+
+    my ( $stdout, $stderr ) = run_ack_with_stderr(@args, @files);
+
+    is_nonempty_array( $stdout );
+    is_empty_array( $stderr );
+
+    chdir $wd;
+}
+
+ACKRC_ACKRC_OUTPUT_PERMITTED: {
+    my @files = untaint( File::Spec->rel2abs('t/text/') );
+    my @args = qw/ --env question(\\S+) /;
+
+    write_file(File::Spec->catfile($tempdir->dirname, '.ackrc'), "--output=foo\n");
+    chdir File::Spec->catdir($tempdir->dirname, 'subdir');
+    local $ENV{'ACKRC'} = File::Spec->catfile($tempdir->dirname, '.ackrc');
+
+    my ( $stdout, $stderr ) = run_ack_with_stderr(@args, @files);
+
+    is_nonempty_array( $stdout );
+    is_empty_array( $stderr );
+
+    chdir $wd;
 }
 
 done_testing();

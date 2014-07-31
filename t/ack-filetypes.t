@@ -1,4 +1,4 @@
-#!perl
+#!perl -T
 
 use strict;
 use warnings;
@@ -18,6 +18,7 @@ batch
 cc
 cfmx
 clojure
+coffeescript
 cpp
 csharp
 css
@@ -32,7 +33,9 @@ hh
 html
 java
 js
+json
 jsp
+less
 lisp
 lua
 make
@@ -45,8 +48,10 @@ php
 plone
 python
 rake
+rst
 ruby
 rust
+sass
 scala
 scheme
 shell
@@ -68,10 +73,8 @@ plan tests => scalar(@filetypes);
 foreach my $filetype ( @filetypes ) {
     my @args = ( '-f', "--$filetype" );
 
-    my ( undef, $stderr ) = run_ack_with_stderr( @args ); # throw away stdout;
-                                                          # we don't care
-    is( scalar @{$stderr}, 0, "--$filetype should print no errors" )
-        or diag(explain($stderr));
+    my ( undef, $stderr ) = run_ack_with_stderr( @args ); # Throw away stdout. We don't care.
+    is_empty_array( $stderr, "--$filetype should print no errors" );
 }
 
 done_testing();

@@ -1,19 +1,15 @@
-#!perl -w
+#!perl -T
 
 use warnings;
 use strict;
 
-use Test::More tests => 2;
+use Test::More tests => 1;
 use File::Next 0.22;
 
 use lib 't';
 use Util;
 
 prep_environment();
-
-BEGIN {
-    use_ok( 'App::Ack' );
-}
 
 sub slurp {
     my $iter = shift;
@@ -74,6 +70,7 @@ UNFILTERED: {
             t/swamp/html.html
             t/swamp/incomplete-last-line.txt
             t/swamp/javascript.js
+            t/swamp/lua-shebang-test
             t/swamp/Makefile
             t/swamp/Makefile.PL
             t/swamp/MasterPage.master

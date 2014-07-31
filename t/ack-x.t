@@ -1,10 +1,9 @@
-#!perl
+#!perl -T
 
 use strict;
 use warnings;
 
 use File::Next ();
-use File::Spec ();
 use Test::More tests => 2;
 
 use lib 't';
@@ -51,6 +50,8 @@ sub do_parent {
 
     chomp @{$stdout_lines};
     chomp @{$stderr_lines};
+
+    return;
 }
 
 prep_environment();
@@ -93,9 +94,9 @@ $science:22:And if it works, then it gets the job done
 $science:23:Somehow no matter what the world keeps turning
 EOF
 
-# XXX I don't care for doing all this low-level stuff outside of Util
-my @lhs_args = ( $^X, '-Mblib', build_ack_invocation( '-g', 'of', 't/text' ) );
-my @rhs_args = ( $^X, '-Mblib', build_ack_invocation( '-x', 'the' ) ); # for now
+my $perl = caret_X();
+my @lhs_args = ( $perl, '-Mblib', build_ack_invocation( '-g', 'of', 't/text' ) );
+my @rhs_args = ( $perl, '-Mblib', build_ack_invocation( '-x', 'the' ) ); # for now
 
 if ( $ENV{'ACK_TEST_STANDALONE'} ) {
     @lhs_args = grep { $_ ne '-Mblib' } @lhs_args;
@@ -104,7 +105,7 @@ if ( $ENV{'ACK_TEST_STANDALONE'} ) {
 
 my ($stdout, $stderr);
 
-if (is_win32()) {
+if ( is_windows() ) {
     ($stdout, $stderr) = run_cmd("@lhs_args | @rhs_args");
 }
 else {
@@ -157,8 +158,8 @@ else {
         close $stderr_write;
         close $lhs_rhs_write;
 
-        open STDIN, '<&', $lhs_rhs_read;
-        open STDOUT, '>&', $stdout_write;
+        open STDIN, '<&', $lhs_rhs_read or die "Can't open: $!";
+        open STDOUT, '>&', $stdout_write or die "Can't open: $!";
         close STDERR;
 
         exec @rhs_args;
@@ -169,13 +170,13 @@ else {
         close $lhs_rhs_read;
         close $stderr_read;
 
-        open STDOUT, '>&', $lhs_rhs_write;
-        open STDERR, '>&', $stderr_write;
+        open STDOUT, '>&', $lhs_rhs_write or die "Can't open: $!";
+        open STDERR, '>&', $stderr_write or die "Can't open: $!";
         close STDIN;
 
         exec @lhs_args;
     }
 }
 
-sets_match( $stdout, \@expected );
-is_deeply $stderr, [];
+sets_match( $stdout, \@expected, __FILE__ );
+is_empty_array( $stderr );

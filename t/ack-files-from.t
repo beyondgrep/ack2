@@ -1,10 +1,11 @@
-#!perl
+#!perl -T
 
 use strict;
 use warnings;
 use lib 't';
 
 use File::Temp;
+use File::Next;
 use Test::More tests => 3;
 use Util;
 
@@ -33,7 +34,7 @@ subtest 'Non-existent file specified' => sub {
     my @args = qw( strict );
     my ( $stdout, $stderr ) = run_ack_with_stderr( '--files-from=non-existent-file', @args);
 
-    is( scalar @{$stdout}, 0, 'No STDOUT for non-existent file' );
+    is_empty_array( $stdout, 'No STDOUT for non-existent file' );
     is( scalar @{$stderr}, 1, 'One line of STDERR for non-existent file' );
     like( $stderr->[0], qr/Unable to open non-existent-file:/,
         'Correct warning message for non-existent file' );

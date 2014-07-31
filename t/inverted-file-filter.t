@@ -1,10 +1,10 @@
-#!perl
+#!perl -T
 
 use strict;
 use warnings;
 use lib 't';
 
-use Test::More tests => 4;
+use Test::More tests => 2;
 use Util;
 
 prep_environment();
@@ -31,6 +31,7 @@ EXCLUDE_ONLY: {
         t/swamp/html.html
         t/swamp/incomplete-last-line.txt
         t/swamp/javascript.js
+        t/swamp/lua-shebang-test
         t/swamp/Makefile
         t/swamp/MasterPage.master
         t/swamp/notaMakefile

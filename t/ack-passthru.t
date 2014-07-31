@@ -1,4 +1,4 @@
-#!perl
+#!perl -T
 
 use warnings;
 use strict;
@@ -45,7 +45,9 @@ DASH_C: {
     lists_match( \@results, \@expected, q{Still lookin' for you, in passthru mode} );
 }
 
-HIGHLIGHTING: {
+SKIP: {
+    skip 'Input options have not been implemented for Win32 yet', 2 if is_windows();
+
     my @ack_args = qw( July --passthru --color );
     my @results = pipe_into_ack( 't/text/4th-of-july.txt', @ack_args );
 

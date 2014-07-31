@@ -1,3 +1,5 @@
+#!perl
+
 use strict;
 use warnings;
 use lib 't';
@@ -9,6 +11,7 @@ sub strip_special_chars {
     my ( $s ) = @_;
 
     $s =~ s/.[\b]//g;
+    $s =~ s/\e\[?.*?[\@-~]//g;
 
     return $s;
 }
@@ -74,12 +77,12 @@ sub strip_special_chars {
                 }
             }
         }
+
+        return;
     }
 
     sub get_man_options {
-        unless ( $man_options ) {
-            _populate_man_options();
-        }
+        _populate_man_options() unless $man_options;
         return @{ $man_options };
     }
 }
@@ -100,7 +103,7 @@ sub check_for_option_in_man_output {
         }
     }
 
-    ok $found, "Option '$expected_option' found in --man output";
+    return ok( $found, "Option '$expected_option' found in --man output" );
 }
 
 my @options = get_options();

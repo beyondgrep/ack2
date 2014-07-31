@@ -1,3 +1,5 @@
+#!perl -T
+
 use strict;
 use warnings;
 
@@ -29,12 +31,12 @@ use Util;
                 }
             }
         }
+
+        return;
     }
 
     sub get_help_options {
-        unless ( $help_options ) {
-            _populate_help_options();
-        }
+        _populate_help_options() unless $help_options;
 
         return @{ $help_options };
     }
@@ -53,7 +55,9 @@ sub option_in_usage {
         }
     }
 
-    ok $found, "Option '$expected_option' found in --help output";
+    ok( $found, "Option '$expected_option' found in --help output" );
+
+    return;
 }
 
 my @options = get_options();

@@ -1,9 +1,9 @@
-#!perl
+#!perl -T
 
 use warnings;
 use strict;
 
-use Test::More tests => 16;
+use Test::More tests => 18;
 
 use lib 't';
 use Util;
@@ -17,7 +17,7 @@ subtest 'No starting directory specified' => sub {
     my @args = ( '-g', $regex );
     my ($stdout, $stderr) = run_ack_with_stderr( @args, @files );
 
-    is( scalar @{$stdout}, 0, 'No STDOUT for non-existent file' );
+    is_empty_array( $stdout, 'No STDOUT for non-existent file' );
     is( scalar @{$stderr}, 1, 'One line of STDERR for non-existent file' );
     like( $stderr->[0], qr/non-existent: No such file or directory/,
         'Correct warning message for non-existent file' );
@@ -30,7 +30,7 @@ subtest 'regex comes before -g on the command line' => sub {
     my @args = ( $regex, '-g' );
     my ($stdout, $stderr) = run_ack_with_stderr( @args, @files );
 
-    is( scalar @{$stdout}, 0, 'No STDOUT for non-existent file' );
+    is_empty_array( $stdout, 'No STDOUT for non-existent file' );
     is( scalar @{$stderr}, 1, 'One line of STDERR for non-existent file' );
     like( $stderr->[0], qr/non-existent: No such file or directory/,
         'Correct warning message for non-existent file' );
@@ -188,6 +188,7 @@ subtest '-v works on -g' => sub {
     my @expected = qw(
         t/text/boy-named-sue.txt
         t/text/me-and-bobbie-mcgee.txt
+        t/text/number.txt
         t/text/numbered-text.txt
         t/text/shut-up-be-happy.txt
     );
@@ -239,6 +240,7 @@ subtest 'test -g on a path' => sub {
         't/text/boy-named-sue.txt',
         't/text/freedom-of-choice.txt',
         't/text/me-and-bobbie-mcgee.txt',
+        't/text/number.txt',
         't/text/numbered-text.txt',
         't/text/science-of-myth.txt',
         't/text/shut-up-be-happy.txt',
@@ -246,6 +248,57 @@ subtest 'test -g on a path' => sub {
     my @args = ( '--sort-files', '-g', $file_regex );
 
     ack_sets_match( [ @args ], \@expected, 'Make sure -g matches the whole path' );
+};
+
+subtest 'test -g with --color' => sub {
+    my $file_regex = 'text';
+    my $expected_original = <<'END_COLOR';
+t/con(text).t
+t/(text)/4th-of-july.txt
+t/(text)/boy-named-sue.txt
+t/(text)/freedom-of-choice.txt
+t/(text)/me-and-bobbie-mcgee.txt
+t/(text)/number.txt
+t/(text)/numbered-(text).txt
+t/(text)/science-of-myth.txt
+t/(text)/shut-up-be-happy.txt
+END_COLOR
+
+    $expected_original = windows_slashify( $expected_original ) if is_windows;
+
+    my @expected   = colorize( $expected_original );
+
+    my @args = ( '--sort-files', '-g', $file_regex );
+
+    my @results = run_ack(@args, '--color');
+
+    is_deeply( \@results, \@expected, 'Colorizing -g output with --color should work');
+};
+
+subtest q{test -g without --color; make sure colors don't show} => sub {
+    if ( !has_io_pty() ) {
+        plan skip_all => 'IO::Pty is required for this test';
+        return;
+    }
+
+    my $file_regex = 'text';
+    my $expected   = <<'END_OUTPUT';
+t/context.t
+t/text/4th-of-july.txt
+t/text/boy-named-sue.txt
+t/text/freedom-of-choice.txt
+t/text/me-and-bobbie-mcgee.txt
+t/text/number.txt
+t/text/numbered-text.txt
+t/text/science-of-myth.txt
+t/text/shut-up-be-happy.txt
+END_OUTPUT
+
+    my @args = ( '--sort-files', '-g', $file_regex );
+
+    my $results = run_ack_interactive(@args);
+
+    is( $results, $expected, 'Colorizing -g output without --color should have no color' );
 };
 
 done_testing();

@@ -7,16 +7,19 @@ Makefile.PL
 ack
 Ack.pm
 Basic.pm
+Collection.pm
 ConfigDefault.pm
 ConfigFinder.pm
 ConfigLoader.pm
 # Debug.pm  This is a reminder for us to NOT put Debug.pm in MANIFEST
 Default.pm
 Extension.pm
+ExtensionGroup.pm
 Filter.pm
 FirstLineMatch.pm
 Inverse.pm
 Is.pm
+IsGroup.pm
 Match.pm
 Resource.pm
 Resources.pm
@@ -70,7 +73,6 @@ t/anchored.t
 t/asp-net-ext.t
 t/bad-ackrc-opt.t
 t/basic.t
-t/coding-standards.t
 t/command-line-files.t
 t/config-backwards-compat.t
 t/config-finder.t
@@ -83,6 +85,7 @@ t/file-permission.t
 t/filetypes.t
 t/filter.t
 t/firstlinematch-filter.t
+t/highlighting.t
 t/illegal-regex.t
 t/incomplete-last-line.t
 t/inverted-file-filter.t
@@ -107,20 +110,24 @@ t/etc/shebang.py.xxx
 t/etc/shebang.rb.xxx
 t/etc/shebang.sh.xxx
 
+t/lib/00-coverage.t
 t/lib/Ack.t
 t/lib/Basic.t
+t/lib/Collection.t
 t/lib/ConfigDefault.t
 t/lib/ConfigFinder.t
 t/lib/ConfigLoader.t
 t/lib/Default.t
 t/lib/Extension.t
+t/lib/ExtensionGroup.t
 t/lib/Filter.t
 t/lib/FirstLineMatch.t
 t/lib/Inverse.t
 t/lib/Is.t
+t/lib/IsGroup.t
 t/lib/Match.t
-t/lib/Resources.t
 t/lib/Resource.t
+t/lib/Resources.t
 
 t/home/.ackrc
 t/swamp/#emacs-workfile.pl#
@@ -169,6 +176,7 @@ t/swamp/html.htm
 t/swamp/html.html
 t/swamp/incomplete-last-line.txt
 t/swamp/javascript.js
+t/swamp/lua-shebang-test
 t/swamp/minified.js.min
 t/swamp/minified.min.js
 t/swamp/moose-andy.jpg

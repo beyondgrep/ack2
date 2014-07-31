@@ -1,47 +1,48 @@
-#!perl -w
+#!perl -T
 
 use warnings;
 use strict;
 
 use Test::More;
+use File::Next;
 
 use lib 't';
 use Util;
 
-{
-    my %types_for_file;
+my %types_for_file;
 
-    sub populate_filetypes {
-        my ( $type_lines, undef ) = run_ack_with_stderr('--help-types');
+sub populate_filetypes {
+    my ( $type_lines, undef ) = run_ack_with_stderr('--help-types');
 
-        my @types_to_try;
+    my @types_to_try;
 
-        foreach my $line (@$type_lines) {
-            if($line =~ /^\s+--\[no\](\w+)/) {
-                push @types_to_try, $1;
-            }
-        }
-
-        foreach my $type (@types_to_try) {
-            my ( $filenames, undef ) = run_ack_with_stderr('-f', "--$type",
-                't/swamp', 't/etc');
-
-            foreach my $filename (@$filenames) {
-                push @{ $types_for_file{$filename} }, $type;
-            }
+    foreach my $line (@{$type_lines}) {
+        if($line =~ /^\s+--\[no\](\w+)/) {
+            push @types_to_try, $1;
         }
     }
 
-    # XXX implement me with --show-types!
-    sub filetypes {
-        my $filename = File::Next::reslash(shift);
+    foreach my $type (@types_to_try) {
+        my ( $filenames, undef ) = run_ack_with_stderr('-f', "--$type",
+            't/swamp', 't/etc');
 
-        if ( !%types_for_file ) {
-            populate_filetypes();
+        foreach my $filename ( @{$filenames} ) {
+            push @{ $types_for_file{$filename} }, $type;
         }
-
-        return @{ $types_for_file{$filename} || [] };
     }
+
+    return;
+}
+
+# XXX implement me with --show-types!
+sub filetypes {
+    my $filename = File::Next::reslash(shift);
+
+    if ( !%types_for_file ) {
+        populate_filetypes();
+    }
+
+    return @{ $types_for_file{$filename} || [] };
 }
 
 sub is_filetype {
@@ -68,8 +69,7 @@ ok(  is_filetype( 't/swamp/perl.handler.pod', 'perl' ), 'perl.handler.pod can be
 ok(  is_filetype( 't/swamp/Makefile', 'make' ), 'Makefile is a makefile' );
 ok(  is_filetype( 't/swamp/Rakefile', 'rake' ), 'Rakefile is a rakefile' );
 
-is_deeply([filetypes('t/swamp/#emacs-workfile.pl#')], [],
-    'correctly skip files starting and ending with hash mark');
+is_empty_array( [filetypes('t/swamp/#emacs-workfile.pl#')], 'correctly skip files starting and ending with hash mark' );
 
 MATCH_VIA_CONTENT: {
     my %lookups = (

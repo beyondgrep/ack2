@@ -7,6 +7,28 @@ use File::Next 1.10;
 use warnings;
 use strict;
 
+sub _generate_error_handler {
+    my $opt = shift;
+
+    if ( $opt->{dont_report_bad_filenames} ) {
+        return sub {
+            my $msg = shift;
+            # XXX restricting to specific error messages for now; I would
+            #     prefer a different way of doing this
+            if ( $msg =~ /Permission denied/ ) {
+                return;
+            }
+            App::Ack::warn( $msg );
+        };
+    }
+    else {
+        return sub {
+            my $msg = shift;
+            App::Ack::warn( $msg );
+        };
+    }
+}
+
 =head1 SYNOPSIS
 
 This is the base class for App::Ack::Resources, an iterator factory
@@ -40,7 +62,8 @@ sub from_argv {
         File::Next::files( {
             file_filter     => $opt->{file_filter},
             descend_filter  => $descend_filter,
-            error_handler   => sub { my $msg = shift; App::Ack::warn( $msg ) },
+            error_handler   => _generate_error_handler($opt),
+            warning_handler => sub {},
             sort_files      => $opt->{sort_files},
             follow_symlinks => $opt->{follow},
         }, @{$start} );
@@ -62,8 +85,8 @@ sub from_file {
 
     my $iter =
         File::Next::from_file( {
-            error_handler   => sub { my $msg = shift; App::Ack::warn( $msg ) },
-            warning_handler => sub { my $msg = shift; App::Ack::warn( $msg ) },
+            error_handler   => _generate_error_handler($opt),
+            warning_handler => _generate_error_handler($opt),
             sort_files      => $opt->{sort_files},
         }, $file ) or return undef;
 

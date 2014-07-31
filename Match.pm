@@ -32,6 +32,8 @@ sub inspect {
     my $re = $self->{'regex'};
 
     print ref($self) . " - $re";
+
+    return;
 }
 
 sub to_string {

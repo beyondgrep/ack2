@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!perl -T
 
 use strict;
 use warnings;
@@ -27,14 +27,16 @@ $bobbie:12:    Nothin' don't mean nothin' if it ain't free
 $bobbie:27:    Nothin' don't mean nothin' if it ain't free
 EOF
 
-    my @files = sort glob( 't/text/*.txt' );
+    my @files = sort map {
+        untaint($_)
+    } glob( 't/text/*.txt' );
 
-    my @arg_sets = (
+    my @cases = (
         [qw( --nogroup --nocolor free )],
         [qw( --nobreak --noheading --nocolor free )],
     );
-    for my $set ( @arg_sets ) {
-        my @results = run_ack( @{$set}, @files );
+    for my $args ( @cases ) {
+        my @results = run_ack( @{$args}, @files );
         lists_match( \@results, \@expected, 'No grouping' );
     }
 }
@@ -56,13 +58,15 @@ $bobbie
 27:    Nothin' don't mean nothin' if it ain't free
 EOF
 
-    my @files = sort glob( 't/text/*.txt' );
-    my @arg_sets = (
+    my @files = sort map {
+        untaint($_)
+    } glob( 't/text/*.txt' );
+    my @cases = (
         [qw( --group --nocolor free )],
         [qw( --heading --break --nocolor free )],
     );
-    for my $set ( @arg_sets ) {
-        my @results = run_ack( @{$set}, @files );
+    for my $args ( @cases ) {
+        my @results = run_ack( @{$args}, @files );
         lists_match( \@results, \@expected, 'Standard grouping' );
     }
 }
@@ -82,7 +86,9 @@ $bobbie
 27:    Nothin' don't mean nothin' if it ain't free
 EOF
 
-    my @files = sort glob( 't/text/*.txt' );
+    my @files = sort map {
+        untaint($_)
+    } glob( 't/text/*.txt' );
     my @arg_sets = (
         [qw( --heading --nobreak --nocolor free )],
     );
@@ -106,7 +112,9 @@ $bobbie:12:    Nothin' don't mean nothin' if it ain't free
 $bobbie:27:    Nothin' don't mean nothin' if it ain't free
 EOF
 
-    my @files = sort glob( 't/text/*.txt' );
+    my @files = sort map {
+        untaint($_)
+    }glob( 't/text/*.txt' );
 
     my @arg_sets = (
         [qw( --break --noheading --nocolor free )],

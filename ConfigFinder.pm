@@ -17,17 +17,17 @@ order.
 =back
 
 Then, ack looks for a user-specific ackrc if the HOME environment
-variable is set.  This is either `$HOME/.ackrc` or `$HOME/_ackrc`.
+variable is set.  This is either F<$HOME/.ackrc> or F<$HOME/_ackrc>.
 
 Then, ack looks for a project-specific ackrc file.  ack searches
 up the directory hierarchy for the first `.ackrc` or `_ackrc` file.
 If this is one of the ackrc files found in the previous steps, it is
 not loaded again.
 
-It is a fatal error if a directory contains both `.ackrc` and `_ackrc`.
+It is a fatal error if a directory contains both F<.ackrc> and F<_ackrc>.
 
 After ack loads the options from the found ackrc files, ack looks
-at the ACKRC_OPTIONS environment variable.
+at the C<ACKRC_OPTIONS> environment variable.
 
 Finally, ack takes settings from the command line.
 
@@ -36,11 +36,12 @@ Finally, ack takes settings from the command line.
 use strict;
 use warnings;
 
+use App::Ack ();
 use App::Ack::ConfigDefault;
 use Cwd 3.00 ();
 use File::Spec 3.00;
 
-use if ($^O =~ /MSWin32/ ? 1 : 0), "Win32";
+use if ($^O eq 'MSWin32'), 'Win32';
 
 =head1 METHODS
 
@@ -50,53 +51,29 @@ Creates a new config finder.
 
 =cut
 
-our $is_win = 0;
-
 sub new {
     my ( $class ) = @_;
-
-    $is_win = $^O =~ /MSWin32/,
 
     return bless {}, $class;
 }
 
+
 sub _remove_redundancies {
-    my ( @configs ) = @_;
+    my @configs = @_;
 
-    if ( $is_win ) {
-        # inode stat always returns 0 on windows,
-        # so just check filenames
-        my (%seen, @uniq);
-
-        foreach my $path (@configs) {
-            push @uniq, $path unless $seen{$path};
-            $seen{$path} = 1;
+    my %seen;
+    foreach my $config (@configs) {
+        my $key = $config->{path};
+        if ( not $App::Ack::is_windows ) {
+            # On Unix, uniquify on inode.
+            my ($dev, $inode) = (stat $key)[0, 1];
+            $key = "$dev:$inode" if defined $dev;
         }
-
-        return @uniq;
+        undef $config if $seen{$key}++;
     }
-
-    else {
-
-        my %dev_and_inode_seen;
-
-        foreach my $path ( @configs ) {
-            my ( $dev, $inode ) = (stat $path)[0, 1];
-
-            if( defined($dev) ) {
-                if( $dev_and_inode_seen{"$dev:$inode"} ) {
-                    undef $path;
-                }
-                else {
-                    $dev_and_inode_seen{"$dev:$inode"} = 1;
-                }
-            }
-        }
-
-        return grep { defined() } @configs;
-
-    }
+    return grep { defined } @configs;
 }
+
 
 sub _check_for_ackrc {
     return unless defined $_[0];
@@ -112,50 +89,54 @@ sub _check_for_ackrc {
     return wantarray ? @files : $files[0];
 } # end _check_for_ackrc
 
+
 =head2 $finder->find_config_files
 
-Locates config files, and returns
-a list of them.
+Locates config files, and returns a list of them.
 
 =cut
 
 sub find_config_files {
     my @config_files;
 
-    if( $is_win ) {
-        push @config_files, map { File::Spec->catfile($_, 'ackrc') } (
+    if ( $App::Ack::is_windows ) {
+        push @config_files, map { +{ path => File::Spec->catfile($_, 'ackrc') } } (
             Win32::GetFolderPath(Win32::CSIDL_COMMON_APPDATA()),
             Win32::GetFolderPath(Win32::CSIDL_APPDATA()),
         );
     }
     else {
-        push @config_files, '/etc/ackrc';
+        push @config_files, { path => '/etc/ackrc' };
     }
 
 
     if ( $ENV{'ACKRC'} && -f $ENV{'ACKRC'} ) {
-        push @config_files, $ENV{'ACKRC'};
+        push @config_files, { path => $ENV{'ACKRC'} };
     }
     else {
-        push @config_files, _check_for_ackrc($ENV{'HOME'});
+        push @config_files, map { +{ path => $_ } } _check_for_ackrc($ENV{'HOME'});
     }
 
-    my @dirs = File::Spec->splitdir(Cwd::getcwd());
+    # XXX This should go through some untainted cwd-fetching function, and not get untainted inline like this.
+    my $cwd = Cwd::getcwd();
+    $cwd =~ /(.+)/;
+    $cwd = $1;
+    my @dirs = File::Spec->splitdir( $cwd );
     while(@dirs) {
         my $ackrc = _check_for_ackrc(@dirs);
         if(defined $ackrc) {
-            push @config_files, $ackrc;
+            push @config_files, { project => 1, path => $ackrc };
             last;
         }
         pop @dirs;
     }
 
-    # XXX we only test for existence here, so if the file is
-    #     deleted out from under us, this will fail later. =(
+    # We only test for existence here, so if the file is deleted out from under us, this will fail later.
     return _remove_redundancies( @config_files );
 }
 
-=head2 read_ackrc
+
+=head2 read_rcfile
 
 Reads the contents of the .ackrc file and returns the arguments.
 
@@ -175,11 +156,11 @@ sub read_rcfile {
         $line =~ s/\s+$//;
 
         next if $line eq '';
-        next if $line =~ /^#/;
+        next if $line =~ /^\s*#/;
 
         push( @lines, $line );
     }
-    close $fh;
+    close $fh or App::Ack::die( "Unable to close $file: $!" );
 
     return @lines;
 }

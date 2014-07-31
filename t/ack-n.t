@@ -1,3 +1,5 @@
+#!perl -T
+
 use strict;
 use warnings;
 
@@ -22,7 +24,7 @@ END
 chomp $expected_norecurse;
 chomp $expected_recurse;
 
-if ( $^O =~ /MSWin32/ ) {
+if ( is_windows() ) {
     $expected_norecurse =~ s{/}{\\}g;
     $expected_recurse =~ s{/}{\\}g;
 }
@@ -32,7 +34,7 @@ my $lines;
 
 prep_environment();
 
-# we sort to ensure determinstic results
+# We sort to ensure determinstic results.
 @args  = ('-n', '--sort-files', 'apple', 't/swamp/groceries');
 $lines = run_ack(@args);
 is_deeply $lines, $expected_norecurse;
@@ -41,7 +43,7 @@ is_deeply $lines, $expected_norecurse;
 $lines = run_ack(@args);
 is_deeply $lines, $expected_norecurse;
 
-# make sure that re-enabling recursion works
+# Make sure that re-enabling recursion works.
 @args  = ('-n', '-r', '--sort-files', 'apple', 't/swamp/groceries');
 $lines = run_ack(@args);
 is_deeply $lines, $expected_recurse;

@@ -1,9 +1,9 @@
-#!perl
+#!perl -T
 
 use warnings;
 use strict;
 
-use Test::More tests => 24;
+use Test::More tests => 12;
 
 use lib 't';
 use Util;
@@ -26,6 +26,7 @@ DASH_CAPITAL_L: {
         t/text/4th-of-july.txt
         t/text/boy-named-sue.txt
         t/text/me-and-bobbie-mcgee.txt
+        t/text/number.txt
         t/text/numbered-text.txt
         t/text/freedom-of-choice.txt
         t/text/shut-up-be-happy.txt
@@ -49,6 +50,7 @@ DASH_LV: {
         t/text/4th-of-july.txt
         t/text/boy-named-sue.txt
         t/text/me-and-bobbie-mcgee.txt
+        t/text/number.txt
         t/text/numbered-text.txt
         t/text/freedom-of-choice.txt
         t/text/science-of-myth.txt
@@ -65,7 +67,7 @@ DASH_LV: {
         my @files = qw( t/text );
         my @args  = ( 'religion', @{$switches} );
 
-        ack_sets_match( [ @args, @files ], \@expected, "-l -v will mostly likely match all input files" );
+        ack_sets_match( [ @args, @files ], \@expected, '-l -v will mostly likely match all input files' );
     }
 }
 
@@ -75,6 +77,7 @@ DASH_C: {
         t/text/boy-named-sue.txt:2
         t/text/freedom-of-choice.txt:0
         t/text/me-and-bobbie-mcgee.txt:0
+        t/text/number.txt:0
         t/text/numbered-text.txt:0
         t/text/science-of-myth.txt:0
         t/text/shut-up-be-happy.txt:0
@@ -102,8 +105,7 @@ PIPE_INTO_C: {
     my @args = qw( religion -i -c );
     my @results = pipe_into_ack( $file, @args );
 
-    is( scalar @results, 1, 'Piping into ack --count should return one line of results' );
-    is( $results[0], '2', 'Piping into ack --count should return "<count>"' );
+    is_deeply( \@results, [2], 'Piping into ack --count should return one line of results' );
 }
 
 DASH_HC: {

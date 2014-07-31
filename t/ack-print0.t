@@ -1,9 +1,9 @@
-#!perl
+#!perl -T
 
 use warnings;
 use strict;
 
-use Test::More tests => 16;
+use Test::More tests => 15;
 use File::Next (); # For the reslash() function
 
 use lib 't';
@@ -24,7 +24,7 @@ G_NO_PRINT0: {
     my @results = run_ack( @args, @files );
 
     sets_match( \@results, \@expected, 'Files found with -g and without --print0' );
-    is( scalar( grep { /\0/ } @results ), 0, ' ... no null byte in output' );
+    is_empty_array( [ grep { /\0/ } @results ], ' ... no null byte in output' );
 }
 
 G_PRINT0: {
@@ -39,8 +39,7 @@ G_PRINT0: {
     my @args = ( '-g', $filename_regex, '--sort-files', '--print0' );
     my @results = run_ack( @args, @files );
 
-    is( scalar @results, 1, 'Only one line of output with --print0' );
-    is( $results[0], $expected, 'Files found with -g and with --print0' );
+    is_deeply( \@results, [$expected], 'Files found with -g and with --print0' );
 }
 
 F_PRINT0: {
@@ -48,9 +47,9 @@ F_PRINT0: {
     my @args = qw( -f --print0 );
     my @results = run_ack( @args, @files );
 
-    # checking for exact files is fragile, so just see whether we have \0 in output
+    # Checking for exact files is fragile, so just see whether we have \0 in output.
     is( scalar @results, 1, 'Only one line of output with -f and --print0' );
-    ok( scalar( grep { /\0/ } @results ), ' ... and null bytes in output' );
+    is_nonempty_array( [ grep { /\0/ } @results ], ' ... and null bytes in output' );
 }
 
 L_PRINT0: {
@@ -59,9 +58,9 @@ L_PRINT0: {
     my @args = ( '-l', '--print0', $regex );
     my @results = run_ack( @args, @files );
 
-    # checking for exact files is fragile, so just see whether we have \0 in output
+    # Checking for exact files is fragile, so just see whether we have \0 in output.
     is( scalar @results, 1, 'Only one line of output with -l and --print0' );
-    ok( scalar( grep { /\0/ } @results ), ' ... and null bytes in output' );
+    is_nonempty_array( [ grep { /\0/ } @results ], ' ... and null bytes in output' );
 }
 
 COUNT_PRINT0: {
@@ -70,8 +69,8 @@ COUNT_PRINT0: {
     my @args = ( '--count', '--print0', $regex );
     my @results = run_ack( @args, @files );
 
-    # checking for exact files is fragile, so just see whether we have \0 in output
+    # Checking for exact files is fragile, so just see whether we have \0 in output.
     is( scalar @results, 1, 'Only one line of output with --count and --print0' );
-    ok( scalar( grep { /\0/ } @results ), ' ... and null bytes in output' );
-    ok( scalar( grep { /:\d+/ } @results ), ' ... and ":\d+" in output, so the counting also works' );
+    is_nonempty_array( [ grep { /\0/ } @results ], ' ... and null bytes in output' );
+    is_nonempty_array( [ grep { /:\d+/ } @results ], ' ... and ":\d+" in output, so the counting also works' );
 }

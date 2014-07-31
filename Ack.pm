@@ -9,17 +9,15 @@ App::Ack - A container for functions for the ack program
 
 =head1 VERSION
 
-Version 2.04
+Version 2.13_06
 
 =cut
 
 our $VERSION;
-our $GIT_REVISION;
 our $COPYRIGHT;
 BEGIN {
-    $VERSION = '2.04';
-    $COPYRIGHT = 'Copyright 2005-2013 Andy Lester.';
-    $GIT_REVISION = '';
+    $VERSION = '2.13_06';
+    $COPYRIGHT = 'Copyright 2005-2014 Andy Lester.';
 }
 
 our $fh;
@@ -49,7 +47,7 @@ BEGIN {
     $is_filter_mode = -p STDIN;
 
     $is_cygwin       = ($^O eq 'cygwin');
-    $is_windows      = ($^O =~ /MSWin32/);
+    $is_windows      = ($^O eq 'MSWin32');
     $dir_sep_chars   = $is_windows ? quotemeta( '\\/' ) : quotemeta( File::Spec->catfile( '', '' ) );
 }
 
@@ -168,8 +166,69 @@ sub _bar {
 77I!+!7!?!7!I"71+!7,
 _BAR
 
-    $x =~ s/(.)(.)/$1x(ord($2)-32)/eg;
-    App::Ack::print( $x );
+    return App::Ack::__pic($x);
+}
+
+sub _cathy {
+    my $x = <<'CATHY';
+ 0+!--+!
+ 0|! "C!H!O!C!O!L!A!T!E!!! !|!
+ 0|! "C!H!O!C!O!L!A!T!E!!! !|!
+ 0|! "C!H!O!C!O!L!A!T!E!!! !|!
+ 0|! $A"C!K!!! $|!
+ 0+!--+!
+ 6\! 1:!,!.! !
+ 7\! /.!M!~!Z!M!~!
+ 8\! /~!D! "M! !
+ 4.! $\! /M!~!.!8! +.!M# 4
+ 0,!.! (\! .~!M!N! ,+!I!.!M!.! 3
+ /?!O!.!M!:! '\! .O!.! +~!Z!=!N!.! 4
+ ..! !D!Z!.!Z!.! '\! 9=!M".! 6
+ /.! !.!~!M".! '\! 8~! 9
+ 4M!.! /.!7!N!M!.! F
+ 4.! &:!M! !N"M# !M"N!M! #D!M&=! =
+ :M!7!M#:! !~!M!7!,!$!M!:! #.! !O!N!.!M!:!M# ;
+ 8Z!M"~!N!$!D!.!N!?! !I!N!.! (?!M! !M!,!D!M".! 9
+ (?!Z!M!N!:! )=!M!O!8!.!M!+!M! !M!,! !O!M! +,!M!.!M!~!Z!N!M!:! &:!~! 0
+ &8!7!.!~!M"D!M!,! &M!?!=!8! !M!,!O! !M!+! !+!O!.!M! $M#~! !.!8!M!Z!.!M! !O!M"Z! %:!~!M!Z!M!Z!.! +
+ &:!M!7!,! *M!.!Z!M! !8"M!.!M!~! !.!M!.!=! #~!8!.!M! !7!M! "N!Z#I! !D!M!,!M!.! $."M!,! !M!.! *
+ 2$!O! "N! !.!M!I! !7" "M! "+!O! !~!M! !d!O!.!7!I!M!.! !.!O!=!M!.! !M",!M!.! %.!$!O!D! +
+ 1~!O! "M!+! !8!$! "M! "?!O! %Z!8!D!M!?!8!I!O!7!M! #M!.!M! "M",!M! 4
+ 07!~! ".!8! !.!M! "I!+! !.!M! &Z!D!.!7!=!M! !:!.!M! #:!8"+! !.!+!8! !8! 3
+ /~!M! #N! !~!M!$! !.!M! !.!M" &~!M! "~!M!O! "D! $M! !8! "M!,!M!+!D!.! 1
+ #.! #?!M!N!.! #~!O! $M!.!7!$! "?" !?!~!M! '7!8!?!M!.!+!M"O! $?"$!D! !.!O! !$!7!I!.! 0
+ $,!M!:!O!?! ".! !?!=! $=!:!O! !M! "M! !M! !+!$! (.! +.!M! !M!.! !8! !+"Z!~! $:!M!$! !.! '
+ #.!8!.!I!$! $7!I! %M" !=!M! !~!M!D! "7!I! .I!O! %?!=!,!D! !,!M! !D!~!8!~! %D!M! (
+ #.!M"?! $=!O! %=!N! "8!.! !Z!M! #M!~! (M!:! #.!M" &O! !M!.! !?!,! !8!.!N!~! $8!N!M!,!.! %
+ *$!O! &M!,! "O! !.!M!.! #M! (~!M( &O!.! !7! "M! !.!M!.!M!,! #.!M! !M! &
+ )=!8!.! $.!M!O!.! "$!.!I!N! !I!M# (7!M(I! %D"Z!M! "=!I! "M! !M!:! #~!D! '
+ )D! &8!N!:! ".!O! !M!="M! "M! (7!M) %." !M!D!."M!.! !$!=! !M!,! +
+ (M! &+!.!M! #Z!7!O!M!.!~!8! +,!M#D!?!M#D! #.!Z!M#,!Z!?! !~!N! "N!.! !M! +
+ 'D!:! %$!D! !?! #M!Z! !8!.! !M"?!7!?!7! '+!I!D! !?!O!:!M!:! ":!M!:! !M!7".!M! "8!+! !:!D! !.!M! *
+ %.!O!:! $.!O!+! !D!.! #M! "M!.!+!N!I!Z! "7!M!N!M!N!?!I!7!Z!=!M'D"~! #M!.!8!$! !:! !.!M! "N!?! !,!O! )
+ !.!?!M!:!M!I! %8!,! "M!.! #M! "N! !M!.! !M!.! !+!~! !.!M!.! ':!M! $M! $M!Z!$! !M!.! "D! "M! "?!M! (
+ !7!8! !+!I! ".! "$!=! ":!$! "+! !M!.! !O! !M!I!M".! !=!~! ",!O! '=!M! $$!,! #N!:! ":!8!.! !D!~! !,!M!.! !:!M!.! &
+ !:!,!.! &Z" #D! !.!8!."M!.! !8!?!Z!M!.!M! #Z!~! !?!M!Z!.! %~!O!.!8!$!N!8!O!I!:!~! !+! #M!.! !.!M!.! !+!M! ".!~!M!+! $
+ !.! 'D!I! #?!M!.!M!,! !.!Z! !.!8! #M&O!I!?! (~!I!M"." !M!Z!.! !M!N!.! "+!$!.! "M!.! !M!?!.! "8!M! $
+ (O!8! $M! !M!.! ".!:! !+!=! #M! #.!M! !+" *$!M":!.! !M!~! "M!7! #M! #7!Z! "M"$!M!.! !.! #
+ '$!Z! #.!7!+!M! $.!,! !+!:! #N! #.!M!.!+!M! +D!M! #=!N! ":!O! #=!M! #Z!D! $M!I! %
+ $,! ".! $.!M" %$!.! !?!~! "+!7!." !.!M!,! !M! *,!N!M!.$M!?! "D!,! #M!.! #N! +
+ ,M!Z! &M! "I!,! "M! %I!M! !?!=!.! (Z!8!M! $:!M!.! !,!M! $D! #.!M!.! )
+ +8!O! &.!8! "I!,! !~!M! &N!M! !M!D! '?!N!O!." $?!7! "?!~! #M!.! #I!D!.! (
+ 3M!,! "N!.! !D" &.!+!M!.! !M":!.":!M!7!M!D! 'M!.! "M!.! "M!,! $I! )
+ 3I! #M! "M!,! !:! &.!M" ".!,! !.!$!M!I! #.! !:! !.!M!?! "N!+! ".! /
+ 1M!,! #.!M!8!M!=!.! +~!N"O!Z"~! *+!M!.! "M! 2
+ 0.!M! &M!.! 8:! %.!M!Z! "M!=! *O!,! %
+ 0?!$! &N! )." .,! %."M! ":!M!.! 0
+ 0N!:! %?!O! #.! ..! &,! &.!D!,! "N!I! 0
+CATHY
+    return App::Ack::__pic($x);
+}
+
+sub __pic {
+    my($compressed) = @_;
+    $compressed =~ s/(.)(.)/$1x(ord($2)-32)/eg;
+    App::Ack::print( $compressed );
     exit 0;
 }
 
@@ -226,10 +285,10 @@ Search output:
   -c, --count                   Show number of lines matching per file
   --[no]column                  Show the column number of the first match
 
-  -A NUM, --after-context=NUM   Print NUM lines of trailing context after matching
-                                lines.
-  -B NUM, --before-context=NUM  Print NUM lines of leading context before matching
-                                lines.
+  -A NUM, --after-context=NUM   Print NUM lines of trailing context after
+                                matching lines.
+  -B NUM, --before-context=NUM  Print NUM lines of leading context before
+                                matching lines.
   -C [NUM], --context[=NUM]     Print NUM lines (default 2) of output context.
 
   --print0                      Print null byte as separator between filenames,
@@ -240,14 +299,16 @@ Search output:
 
 
 File presentation:
-  --pager=COMMAND               Pipes all ack output through COMMAND.  For example,
-                                --pager="less -R".  Ignored if output is redirected.
-  --nopager                     Do not send output through a pager.  Cancels any
-                                setting in ~/.ackrc, ACK_PAGER or ACK_PAGER_COLOR.
-  --[no]heading                 Print a filename heading above each file's results.
-                                (default: on when used interactively)
-  --[no]break                   Print a break between results from different files.
-                                (default: on when used interactively)
+  --pager=COMMAND               Pipes all ack output through COMMAND.  For
+                                example, --pager="less -R".  Ignored if output
+                                is redirected.
+  --nopager                     Do not send output through a pager.  Cancels
+                                any setting in ~/.ackrc, ACK_PAGER or
+                                ACK_PAGER_COLOR.
+  --[no]heading                 Print a filename heading above each file's
+                                results.  (default: on when used interactively)
+  --[no]break                   Print a break between results from different
+                                files.  (default: on when used interactively)
   --group                       Same as --heading --break
   --nogroup                     Same as --noheading --nobreak
   --[no]color                   Highlight the matching text (default: on unless
@@ -255,62 +316,75 @@ File presentation:
   --[no]colour                  Same as --[no]color
   --color-filename=COLOR
   --color-match=COLOR
-  --color-lineno=COLOR          Set the color for filenames, matches, and line numbers.
+  --color-lineno=COLOR          Set the color for filenames, matches, and line
+                                numbers.
   --flush                       Flush output immediately, even when ack is used
                                 non-interactively (when output goes to a pipe or
                                 file).
 
 
 File finding:
-  -f                            Only print the files selected, without searching.
-                                The PATTERN must not be specified.
-  -g                            Same as -f, but only select files matching PATTERN.
+  -f                            Only print the files selected, without
+                                searching.  The PATTERN must not be specified.
+  -g                            Same as -f, but only select files matching
+                                PATTERN.
   --sort-files                  Sort the found files lexically.
   --show-types                  Show which types each file has.
   --files-from=FILE             Read the list of files to search from FILE.
   -x                            Read the list of files to search from STDIN.
 
 File inclusion/exclusion:
-  --[no]ignore-dir=name         Add/Remove directory from the list of ignored dirs
+  --[no]ignore-dir=name         Add/remove directory from list of ignored dirs
   --[no]ignore-directory=name   Synonym for ignore-dir
   --ignore-file=filter          Add filter for ignoring files
-  -r, -R, --recurse             Recurse into subdirectories (ack's default behavior)
+  -r, -R, --recurse             Recurse into subdirectories (default: on)
   -n, --no-recurse              No descending into subdirectories
   --[no]follow                  Follow symlinks.  Default is off.
-  -k, --known-types             Include only files with types that ack recognizes.
+  -k, --known-types             Include only files of types that ack recognizes.
 
-  --type=X                      Include only X files, where X is a recognized filetype.
+  --type=X                      Include only X files, where X is a recognized
+                                filetype.
   --type=noX                    Exclude X files.
                                 See "ack --help-types" for supported filetypes.
 
 File type specification:
   --type-set TYPE:FILTER:FILTERARGS
-                                Files with the given FILTERARGS applied to the given
-                                FILTER are recognized as being of type TYPE. This
-                                replaces an existing definition for type TYPE.
+                                Files with the given FILTERARGS applied to the
+                                given FILTER are recognized as being of type
+                                TYPE. This replaces an existing definition for
+                                type TYPE.
   --type-add TYPE:FILTER:FILTERARGS
-                                Files with the given FILTERARGS applied to the given
-                                FILTER are recognized as being of type TYPE.
+                                Files with the given FILTERARGS applied to the
+                                given FILTER are recognized as being type TYPE.
   --type-del TYPE               Removes all filters associated with TYPE.
 
 
 Miscellaneous:
-  --[no]env                     Ignore environment variables and global ackrc files.  --env is legal but redundant.
+  --[no]env                     Ignore environment variables and global ackrc
+                                files.  --env is legal but redundant.
   --ackrc=filename              Specify an ackrc file to use
-  --ignore-ack-defaults         Ignore the default definitions that ack includes.
-  --create-ackrc                Outputs a default ackrc for your customization to standard output.
+  --ignore-ack-defaults         Ignore default definitions included with ack.
+  --create-ackrc                Outputs a default ackrc for your customization
+                                to standard output.
   --help, -?                    This help
   --help-types                  Display all known types
-  --dump                        Dump information on which options are loaded from which RC files
-  --[no]filter                  Force ack to treat standard input as a pipe (--filter) or tty (--nofilter)
+  --dump                        Dump information on which options are loaded
+                                from which RC files
+  --[no]filter                  Force ack to treat standard input as a pipe
+                                (--filter) or tty (--nofilter)
   --man                         Man page
   --version                     Display version & copyright
   --thpppt                      Bill the Cat
   --bar                         The warning admiral
+  --cathy                       Chocolate! Chocolate! Chocolate!
 
 Exit status is 0 if match, 1 if no match.
 
-This is version $VERSION of ack.
+ack's home page is at http://beyondgrep.com/
+
+The full ack manual is available by running "ack --man".
+
+This is version $VERSION of ack.  Run "ack --version" for full version info.
 END_OF_HELP
 
     return;
@@ -383,10 +457,8 @@ sub get_version_statement {
     }
     my $ver = sprintf( '%vd', $^V );
 
-    my $git_revision = $GIT_REVISION ? " (git commit $GIT_REVISION)" : '';
-
     return <<"END_OF_VERSION";
-ack ${VERSION}${git_revision}
+ack ${VERSION}
 Running under Perl $ver at $this_perl
 
 $copyright
@@ -419,7 +491,7 @@ sub get_copyright {
 }
 
 
-# print subs added in order to make it easy for a third party
+# print*() subs added in order to make it easy for a third party
 # module (such as App::Wack) to redefine the display methods
 # and show the results in a different way.
 sub print                   { print {$fh} @_; return; }
@@ -506,7 +578,7 @@ sub exit_from_ack {
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2005-2013 Andy Lester.
+Copyright 2005-2014 Andy Lester.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the Artistic License v2.0.

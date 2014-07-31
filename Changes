@@ -2,15 +2,209 @@ History file for ack.  http://beyondgrep.com/
 
 NEXT
 ====================================
+[FIXES]
+The -s flag would fail to suppress certain warnings.  Thanks, Kassio
+Borges. (GitHub ticket #439)
+
+The -w flag would fail to work properly with regex features such as
+alternation.  Thanks to Ed Avis for the report (GitHub ticket #443)
+
+The -g flag should now work faster on larger codebases.  Thanks to
+Manuel Meurer for the report (GitHub ticket #458)
+
+[ENHANCEMENTS]
+ack now ignores JavaScript and CSS source maps.  Thanks, Chris
+Rebert.
+
+ack now ships with customized shell completion scripts for bash and zsh.
+
+
+2.13_06 Sat Jan 25 23:36:09 CST 2014
+====================================
+[FIXES]
+More fixes for Windows tests.  Thanks to GitHub user @ispedals.
+
+[ENHANCEMENTS]
+
+Add docs for available colors in ack.
+
+2.13_05 Thu Jan  9 22:41:33 CST 2014
+====================================
+[FIXES]
+More whack-a-mole with Windows failures.  This time, it's POSIX::mkfifo
+dying on Windows instead of returning undef like the docs implied,
+or at least that I inferred.
+
+[ENHANCEMENTS]
+--create-ackrc keeps the comments that describe each of the options,
+and it shows the ack version number.
+
+
+2.13_04 Sat Jan  4 11:17:28 CST 2014
+====================================
+[FIXES]
+Fixed incorrect deduping of config files under Windows.  Thanks,
+Denis Howe.
+
+
+2.13_03 Thu Jan  2 22:23:03 CST 2014
+====================================
+[FIXES]
+More build fixes for Windows.  Windows config finder fixes from
+James McCoy.
+
+t/ack-named-pipes.t uses POSIX::mkfifo instead of the external
+command, which should be more portable.  Thanks, Pete Krawczyk.
+
+[ENHANCEMENTS]
+Now ignores Cabal (Haskell) sandboxes.  Thanks, Fraser Tweedale.
+
+Added filetypes for Jade, Smarty and Stylus.  Thanks, Raúl Gundín.
+
+
+2.13_02 Fri Dec 27 12:54:27 CST 2013
+====================================
+[FIXES]
+The building of ack-standalone relied on the output of `perldoc
+-l`, which I apparently can't rely on having been installed.  I've
+changed the way that the squash program finds File::Next.
+
+
+2.13_01 Wed Dec 25 13:36:08 CST 2013
+====================================
+So this is Christmas
+And what have you done
+I'm sitting here hacking
+On ack 2.13_01
+   -- via Pete Krawczyk
+
+[FIXES]
+Issue #313: ack would fail when trying to check files for readability
+on some networked filesystems, or on Mac OS X with ACLs.  Now it
+uses the filetest pragma.  Thanks, Jonathan Perret.
+
+
+[INTERNALS]
+ack's entire test suite now runs under Perl's -T taint flag.  We'll
+build more security tests on top of this.
+
+Added some checks to the squash program that I hope will turn up
+errors in the Windows builds.
+
+
+2.12    Tue Dec  3 07:05:02 CST 2013
+====================================
+[SECURITY FIXES]
+This verison of ack prevents the --pager, --regex and --output
+options from being used from project-level ackrc files.  It is
+possible to execute malicious code with these options, and we want
+to prevent the security risk of acking through a potentially malicious
+codebase, such as one downloaded from an Internet site or checked
+out from a code repository.
+
+The --pager, --regex and --output options may still be used from
+the global /etc/ackrc, your own private ~/.ackrc, the ACK_OPTIONS
+environment variable, and of course from the command line.
+
+[ENHANCEMENTS]
+Now ignores Eclipse .metadata directory.  Thanks, Steffen Jaeckel.
+
+[INTERNALS]
+Removed the Git revision tracking in the --version.
+
+
+2.11_02 Sun Oct  6 12:39:21 CDT 2013
+====================================
+[FIXES]
+2.11_01 was mispackaged.  This fixes that.
+
+
+2.11_01 Sun Sep 29 13:15:41 CDT 2013
+====================================
+[FIXES]
+Fixed a race condition in t/file-permission.t that was causing
+failures if tests were run in parallel.
+
+
+2.10    Tue Sep 24 16:24:11 CDT 2013
+====================================
+[ENHANCEMENTS]
+Add --perltest for *.t files.
+
+Added Matlab support.  Thanks, Zertrin.
+
+[FIXES]
+Fix the test suite for Win32.  Many thanks to Christian Walde for
+bringing the severity of this issue to our attention, as well as
+providing a Win32 development environment for us to work with.
+
+Fixed Win32-detection in the Makefile.PL.  Thanks, Michael Beijen
+and Alexandr Ciornii.
+
+More compatibility fixes for Perl 5.8.8.
+
+
+2.08    Thu Aug 22 23:11:45 CDT 2013
+====================================
+[ENHANCEMENTS]
+ack now ignores CMake's build/cache directories by default.  Thanks,
+Volodymyr Medvid.
+
+Add shebang matching for --lua files.
+
+Add documentation for --ackrc.
+
+Add Elixir filetype.
+
+Add --cathy option.  Thanks to Joe McMahon.
+
+Add some helpful debugging tips when an invalid option is found.
+Thanks to Charles Lee.
+
+Ignore PDF files by default, because Perl will detect them as text.
+
+Ignore .gif, .jpg, .jpeg and .png files.  They won't normally be
+selected, but this is an optimization so that ack doesn't have to
+open them to know.
+
+[FIXES]
+Ack's colorizing of output would get confused with multiple sets
+of parentheses.  This has been fixed.  (Issue #276)
+
+Ack would get confused when trying to colorize the output in
+DOS-format files.  This has been fixed.  (Issue #145)
+
+
+2.06
+====================================
+This mistake of an upload lived for only about 15 minutes.
+
+
+
+2.05_01 Tue May 28 10:12:04 CDT 2013
+====================================
 [ENHANCEMENTS]
 We now ignore the node_modules directories created by npm.  Thanks,
 Konrad Borowski.
 
+--pager without an argument implies --pager=$PAGER.
+
 --perl now recognizes Plack-style .psgi files.  Thanks, Ron Savage.
+
+Added filetypes for Coffescript, JSON, LESS, and Sass.
 
 [FIXES]
 Command-line options now override options set in ackrc files.
 
+ACK_PAGER and ACK_PAGER_COLOR now work as advertised.
+
+Fix a bug resulting in uninitialized variable warnings when more
+than one capture group was specified in the search pattern.
+
+Make sure ack is happy to build and test under cron and other
+console-less environments.
+
+Colored output is now supported and on by default on Windows.
 
 2.04    Fri Apr 26 22:47:55 CDT 2013
 ====================================

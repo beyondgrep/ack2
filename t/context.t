@@ -1,9 +1,9 @@
-#!perl
+#!perl -T
 
 use warnings;
 use strict;
 
-use Test::More tests => 30;
+use Test::More tests => 32;
 use File::Next (); # for reslash function
 
 use lib 't';
@@ -11,7 +11,7 @@ use Util;
 
 prep_environment();
 
-# checks also beginning of file
+# Checks also beginning of file.
 BEFORE: {
     my @expected = split( /\n/, <<'EOF' );
 Well, my daddy left home when I was three
@@ -49,7 +49,7 @@ EOF
     ack_lists_match( [ @args, @files ], \@expected, "Looking for $regex - before with line numbers" );
 }
 
-# checks also end of file
+# Checks also end of file.
 AFTER: {
     my @expected = split( /\n/, <<"EOF" );
 I tell ya, life ain't easy for a boy named Sue.
@@ -66,7 +66,7 @@ EOF
     ack_lists_match( [ @args, @files ], \@expected, "Looking for $regex - after" );
 }
 
-# context defaults to 2
+# Context defaults to 2.
 CONTEXT_DEFAULT: {
     my @expected = split( /\n/, <<"EOF" );
 And it got a lot of laughs from a' lots of folks,
@@ -83,7 +83,7 @@ EOF
     ack_lists_match( [ @args, @files ], \@expected, "Looking for $regex - context defaults to 2" );
 }
 
-# -1 must not stop the ending context from displaying
+# -1 must not stop the ending context from displaying.
 CONTEXT_DEFAULT: {
     my @expected = split( /\n/, <<"EOF" );
 And it got a lot of laughs from a' lots of folks,
@@ -118,7 +118,7 @@ EOF
     ack_lists_match( [ @args, @files ], \@expected, "Looking for $regex with overlapping contexts" );
 }
 
-# -C with contexts that touch
+# -C with contexts that touch.
 CONTEXT_ADJACENT: {
     my @expected = split( /\n/, <<"EOF" );
 This is line 01
@@ -133,14 +133,14 @@ This is line 09
 This is line 10
 EOF
 
-    my $regex = "03|08";
+    my $regex = '03|08';
     my @files = qw( t/text/numbered-text.txt );
     my @args = ( '-C', $regex );
 
     ack_lists_match( [ @args, @files ], \@expected, "Looking for $regex with contexts that touch" );
 }
 
-# -C with contexts that just don't touch
+# -C with contexts that just don't touch.
 CONTEXT_NONADJACENT: {
     my @expected = split( /\n/, <<"EOF" );
 This is line 01
@@ -156,7 +156,7 @@ This is line 10
 This is line 11
 EOF
 
-    my $regex = "03|09";
+    my $regex = '03|09';
     my @files = qw( t/text/numbered-text.txt );
     my @args = ( '-C', $regex );
 
@@ -248,7 +248,7 @@ EOF
     ack_lists_match( [ @args, @files ], \@expected, "Looking for $regex with -m3" );
 }
 
-# highlighting works with context
+# Highlighting works with context.
 HIGHLIGHTING: {
     my @ack_args = qw( July -C5 --color );
     my @results = pipe_into_ack( 't/text/4th-of-july.txt', @ack_args );
@@ -257,7 +257,7 @@ HIGHLIGHTING: {
     is( scalar @results, 18, 'Expecting altogether 18 lines back' );
 }
 
-# grouping works with context (single file)
+# Grouping works with context (single file).
 GROUPING_SINGLE_FILE: {
     my $target_file = File::Next::reslash( 't/etc/shebang.py.xxx' );
     my @expected = split( /\n/, <<"EOF" );
@@ -272,7 +272,7 @@ EOF
 }
 
 
-# grouping works with context and multiple files
+# Grouping works with context and multiple files.
 # i.e. a separator line between different matches in the same file and no separator between files
 GROUPING_MULTIPLE_FILES: {
     my @target_file = (
@@ -306,4 +306,53 @@ EOF
     my @args = ( '--group', '-B1', '--sort-files', $regex );
 
     ack_lists_match( [ @args, @files ], \@expected, "Looking for $regex in multiple files with grouping" );
+}
+
+# See https://github.com/petdance/ack2/issues/326 and links there for details.
+WITH_COLUMNS_AND_CONTEXT: {
+    my @files = qw( t/text/freedom-of-choice.txt );
+    my @expected = split( /\n/, <<"EOF" );
+$files[0]-2-Nobody ever said life was free
+$files[0]-3-Sink, swim, go down with the ship
+$files[0]:4:15:But use your freedom of choice
+$files[0]-5-
+$files[0]-6-I'll say it again in the land of the free
+$files[0]:7:11:Use your freedom of choice
+$files[0]:8:7:Your freedom of choice
+$files[0]-9-
+$files[0]-10-In ancient Rome
+--
+$files[0]-17-He dropped dead
+$files[0]-18-
+$files[0]:19:2:Freedom of choice
+$files[0]-20-Is what you got
+$files[0]:21:2:Freedom of choice!
+$files[0]-22-
+$files[0]-23-Then if you've got it, you don't want it
+--
+$files[0]-27-
+$files[0]-28-I'll say it again in the land of the free
+$files[0]:29:11:Use your freedom of choice
+$files[0]:30:2:Freedom of choice
+$files[0]-31-
+$files[0]:32:2:Freedom of choice
+$files[0]-33-Is what you got
+$files[0]:34:2:Freedom of choice!
+$files[0]-35-
+$files[0]-36-In ancient Rome
+--
+$files[0]-43-He dropped dead
+$files[0]-44-
+$files[0]:45:2:Freedom of choice
+$files[0]-46-Is what you got
+$files[0]:47:2:Freedom from choice
+$files[0]-48-Is what you want
+$files[0]-49-
+$files[0]:50:10:    -- "Freedom Of Choice", Devo
+EOF
+
+    my $regex = 'reedom';
+    my @args = ( '--column', '-C2', '-H', $regex );
+
+    ack_lists_match( [ @args, @files ], \@expected, "Looking for $regex in file $files[0] with columns and context" );
 }
