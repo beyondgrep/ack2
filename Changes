@@ -1,10 +1,32 @@
 History file for ack.  http://beyondgrep.com/
 
+NEXT
+====================================
+[FIXES]
+The -s flag would fail to suppress certain warnings.  Thanks, Kassio
+Borges. (GitHub ticket #439)
+
+The -w flag would fail to work properly with regex features such as
+alternation.  Thanks to Ed Avis for the report (GitHub ticket #443)
+
+The -g flag should now work faster on larger codebases.  Thanks to
+Manuel Meurer for the report (GitHub ticket #458)
+
+[ENHANCEMENTS]
+ack now ignores JavaScript and CSS source maps.  Thanks, Chris
+Rebert.
+
+ack now ships with customized shell completion scripts for bash and zsh.
+
+
 2.13_06 Sat Jan 25 23:36:09 CST 2014
 ====================================
 [FIXES]
 More fixes for Windows tests.  Thanks to GitHub user @ispedals.
 
+[ENHANCEMENTS]
+
+Add docs for available colors in ack.
 
 2.13_05 Thu Jan  9 22:41:33 CST 2014
 ====================================

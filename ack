@@ -172,7 +172,19 @@ sub _compile_file_filter {
         }
     }
 
+    my $match_filenames = $opt->{g};
+    my $match_regex     = $opt->{regex};
+    my $is_inverted     = $opt->{v};
+
     return sub {
+        if ( $match_filenames ) {
+            if ( $File::Next::name =~ /$match_regex/ && $is_inverted ) {
+                return;
+            }
+            if ( $File::Next::name !~ /$match_regex/ && !$is_inverted ) {
+                return;
+            }
+        }
         # ack always selects files that are specified on the command
         # line, regardless of filetype.  If you want to ack a JPEG,
         # and say "ack foo whatever.jpg" it will do it for you.
@@ -307,8 +319,11 @@ sub build_regex {
 
     $str = quotemeta( $str ) if $opt->{Q};
     if ( $opt->{w} ) {
-        $str = "\\b$str" if $str =~ /^\w/;
-        $str = "$str\\b" if $str =~ /\w$/;
+        my $pristine_str = $str;
+
+        $str = "(?:$str)";
+        $str = "\\b$str" if $pristine_str =~ /^\w/;
+        $str = "$str\\b" if $pristine_str =~ /\w$/;
     }
 
     my $regex_is_lc = $str eq lc $str;
@@ -803,13 +818,23 @@ sub resource_has_match {
         }
     }
     else {
-        my $opt_v = $opt->{v};
-        my $re    = $opt->{regex};
-        while ( <$fh> ) {
-            if (/$re/o xor $opt_v) {
-                $has_match = 1;
-                last;
+        my $re = $opt->{regex};
+        if ( $opt->{v} ) {
+            while ( <$fh> ) {
+                if (!/$re/o) {
+                    $has_match = 1;
+                    last;
+                }
             }
+        }
+        else {
+            # XXX read in chunks
+            # XXX only do this for certain file sizes?
+            my $content = do {
+                local $/;
+                <$fh>;
+            };
+            $has_match = $content =~ /$re/og;
         }
         close $fh;
     }
@@ -828,10 +853,18 @@ sub count_matches_in_resource {
         }
     }
     else {
-        my $opt_v = $opt->{v};
-        my $re    = $opt->{regex};
-        while ( <$fh> ) {
-            ++$nmatches if (/$re/o xor $opt_v);
+        my $re = $opt->{regex};
+        if ( $opt->{v} ) {
+            while ( <$fh> ) {
+                ++$nmatches if (!/$re/o);
+            }
+        }
+        else {
+            my $content = do {
+                local $/;
+                <$fh>;
+            };
+            $nmatches =()= ($content =~ /$re/og);
         }
         close $fh;
     }
@@ -942,19 +975,16 @@ RESOURCES:
             last RESOURCES if defined($max_count) && $nmatches >= $max_count;
         }
         elsif ( $opt->{g} ) {
-            my $is_match = ( $resource->name =~ /$opt->{regex}/o );
-            if ( $opt->{v} ? !$is_match : $is_match ) {
-                if ( $opt->{show_types} ) {
-                    show_types( $resource, $ors );
-                }
-                else {
-                    local $opt->{show_filename} = 0; # XXX Why is this local?
-
-                    print_line_with_options($opt, '', $resource->name, 0, $ors);
-                }
-                ++$nmatches;
-                last RESOURCES if defined($max_count) && $nmatches >= $max_count;
+            if ( $opt->{show_types} ) {
+                show_types( $resource, $ors );
             }
+            else {
+                local $opt->{show_filename} = 0; # XXX Why is this local?
+
+                print_line_with_options($opt, '', $resource->name, 0, $ors);
+            }
+            ++$nmatches;
+            last RESOURCES if defined($max_count) && $nmatches >= $max_count;
         }
         elsif ( $opt->{lines} ) {
             my $print_filename = $opt->{show_filename};
@@ -1670,6 +1700,27 @@ If you are not on Windows, you never need to use C<ACK_PAGER_COLOR>.
 
 =back
 
+=head1 AVAILABLE COLORS
+
+F<ack> uses the colors available in Perl's L<Term::ANSIColor> module, which
+provides the following listed values. Note that case does not matter when using
+these values.
+
+=head2 Foreground colors
+
+    black  red  green  yellow  blue  magenta  cyan  white
+
+    bright_black  bright_red      bright_green  bright_yellow
+    bright_blue   bright_magenta  bright_cyan   bright_white
+
+=head2 Background colors
+
+    on_black  on_red      on_green  on_yellow
+    on_blue   on_magenta  on_cyan   on_white
+
+    on_bright_black  on_bright_red      on_bright_green  on_bright_yellow
+    on_bright_blue   on_bright_magenta  on_bright_cyan   on_bright_white
+
 =head1 ACK & OTHER TOOLS
 
 =head2 Vim integration
@@ -2183,6 +2234,9 @@ L<https://github.com/petdance/ack2>
 How appropriate to have I<ack>nowledgements!
 
 Thanks to everyone who has contributed to ack in any way, including
+Stephen Thirlwall,
+Jonah Bishop,
+Chris Rebert,
 Denis Howe,
 RaE<uacute>l GundE<iacute>n,
 James McCoy,

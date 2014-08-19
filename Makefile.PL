@@ -53,7 +53,7 @@ my %parms = (
     },
     MAN3PODS            => {}, # no need for man pages for any of the .pm files
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
-    clean               => { FILES => 'ack-2* nytprof* stderr.log stdout.log' },
+    clean               => { FILES => 'ack-2* nytprof* stderr.log stdout.log completion.*' },
 );
 
 if ( $ExtUtils::MakeMaker::VERSION =~ /^\d\.\d\d$/ and $ExtUtils::MakeMaker::VERSION > 6.30 ) {
@@ -158,6 +158,12 @@ time-head: ack-standalone
 
 timings: ack-standalone
 	./dev/timings.pl
+
+completion.bash: pm_to_blib
+	./dev/generate-completion-scripts.pl completion.bash
+
+completion.zsh: pm_to_blib
+	./dev/generate-completion-scripts.pl completion.zsh
 
 MAKE_FRAG
 

@@ -139,6 +139,10 @@ sub _options_block {
 --ignore-file=match:/[.]min[.]css$/
 --ignore-file=match:/[.]css[.]min$/
 
+# JS and CSS source maps
+--ignore-file=match:/[.]js[.]map$/
+--ignore-file=match:/[.]css[.]map$/
+
 # PDFs, because they pass Perl's -T detection
 --ignore-file=ext:pdf
 
@@ -162,7 +166,8 @@ sub _options_block {
 --type-add=make:ext:mak
 --type-add=make:is:makefile
 --type-add=make:is:Makefile
---type-add=make:is:GNUmakefile
+--type-add=make:is:Makefile.Debug
+--type-add=make:is:Makefile.Release
 
 # Rakefiles
 # http://rake.rubyforge.org/
@@ -329,6 +334,10 @@ sub _options_block {
 # R
 # http://www.r-project.org/
 --type-add=rr:ext:R
+
+# reStructured Text
+# http://docutils.sourceforge.net/rst.html
+--type-add=rst:ext:rst
 
 # Ruby
 # http://www.ruby-lang.org/
