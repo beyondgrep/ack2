@@ -58,6 +58,10 @@ sub _options_block {
 # http://mercurial.selenic.com/
 --ignore-directory=is:.hg
 
+# openSUSE Commander
+# https://en.opensuse.org/openSUSE:OSC
+--ignore-directory=is:.osc
+
 # quilt
 # http://directory.fsf.org/wiki/Quilt
 --ignore-directory=is:.pc
