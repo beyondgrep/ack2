@@ -1,6 +1,6 @@
 History file for ack.  http://beyondgrep.com/
 
-NEXT
+2.14    Wed Sep  3 22:48:00 CDT 2014
 ====================================
 [FIXES]
 The -s flag would fail to suppress certain warnings.  Thanks, Kassio
