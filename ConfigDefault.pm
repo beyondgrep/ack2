@@ -341,7 +341,7 @@ sub _options_block {
 
 # RPM Package Manager
 # http://www.rpm.org/
---type-add=rpm:ext:rpm,spec
+--type-add=rpm:ext:spec
 
 # Ruby
 # http://www.ruby-lang.org/
