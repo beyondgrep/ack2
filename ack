@@ -331,7 +331,7 @@ sub build_regex {
         $str = "(?i)$str";
     }
 
-    my $re = eval { qr/$str/ };
+    my $re = eval { qr/$str/m };
     if ( !$re ) {
         die "Invalid regex '$str':\n  $@";
     }
