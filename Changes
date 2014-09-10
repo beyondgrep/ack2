@@ -1,5 +1,11 @@
 History file for ack.  http://beyondgrep.com/
 
+NEXT
+====================================
+[FIXES]
+The -l and -c flags would sometimes return inaccurate results due to
+a bug introduced in 2.14.  Thanks to Elliot Shank for the report! (GH #491)
+
 2.14    Wed Sep  3 22:48:00 CDT 2014
 ====================================
 [FIXES]
