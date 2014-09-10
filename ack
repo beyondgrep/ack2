@@ -834,7 +834,7 @@ sub resource_has_match {
                 local $/;
                 <$fh>;
             };
-            $has_match = $content =~ /$re/og;
+            $has_match = $content =~ /$re/o;
         }
         close $fh;
     }
