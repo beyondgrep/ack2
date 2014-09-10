@@ -110,11 +110,15 @@ sub _compile_descend_filter {
     return unless $idirs && @{$idirs};
 
     my %ignore_dirs;
+    my @ignore_dirs_re;
 
     foreach my $idir (@{$idirs}) {
         if ( $idir =~ /^(\w+):(.*)/ ) {
             if ( $1 eq 'is') {
                 $ignore_dirs{$2} = 1;
+            }
+            elsif ( $1 eq 'match') {
+                push @ignore_dirs_re, $2;
             }
             else {
                 Carp::croak( 'Non-is filters are not yet supported for --ignore-dir' );
@@ -126,7 +130,8 @@ sub _compile_descend_filter {
     }
 
     return sub {
-        return !exists $ignore_dirs{$_} && !exists $ignore_dirs{$File::Next::dir};
+        return !exists $ignore_dirs{$_} && !exists $ignore_dirs{$File::Next::dir}
+           && !grep { $File::Next::dir =~ $_ } @ignore_dirs_re;
     };
 }
 
@@ -169,12 +174,17 @@ sub _compile_file_filter {
     my $dont_ignore_dir_list = $opt->{no_ignore_dirs};
 
     my %ignore_dir_set;
+    my @ignore_dirs_re;
     my %dont_ignore_dir_set;
+    my @dont_ignore_dirs_re;
 
     foreach my $filter (@{ $ignore_dir_list }) {
         if ( $filter =~ /^(\w+):(.*)/ ) {
             if ( $1 eq 'is' ) {
                 $ignore_dir_set{ $2 } = 1;
+            }
+            elsif ( $1 eq 'match') {
+                push @ignore_dirs_re, $2;
             } else {
                 Carp::croak( 'Non-is filters are not yet supported for --ignore-dir' );
             }
@@ -186,6 +196,9 @@ sub _compile_file_filter {
         if ( $filter =~ /^(\w+):(.*)/ ) {
             if ( $1 eq 'is' ) {
                 $dont_ignore_dir_set{ $2 } = 1;
+            }
+            elsif ( $1 eq 'match') {
+                push @dont_ignore_dirs_re, $2;
             } else {
                 Carp::croak( 'Non-is filters are not yet supported for --ignore-dir' );
             }
@@ -214,6 +227,7 @@ sub _compile_file_filter {
 
             my $is_ignoring = 0;
 
+            $is_ignoring = grep { $dirname =~ $_ } @ignore_dirs_re;
             foreach my $dir ( @dirs ) {
                 if ( $ignore_dir_set{ $dir } ) {
                     $is_ignoring = 1;
@@ -222,7 +236,7 @@ sub _compile_file_filter {
                     $is_ignoring = 0;
                 }
             }
-            if ( $is_ignoring ) {
+            if ( $is_ignoring && !grep { $dirname =~ $_ } @dont_ignore_dirs_re) {
                 return 0;
             }
         }
