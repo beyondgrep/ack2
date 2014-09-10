@@ -12,6 +12,8 @@ Many optimizations and code cleanups.  Thanks, Stephan Hohe.
 Added --hpp option for C++ header files.  Thankis, Steffen Jaeckel.
 
 
+ack now supports --ignore-dir=match:....  Thanks, Ailin Nemui! (GitHub ticket #42)
+
 2.14    Wed Sep  3 22:48:00 CDT 2014
 ====================================
 [FIXES]
