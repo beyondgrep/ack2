@@ -177,6 +177,12 @@ sub _compile_file_filter {
     my $is_inverted     = $opt->{v};
 
     return sub {
+        if ( -f STDOUT ) {
+            my ( $target_dev, $target_inode ) = stat($File::Next::name);
+            my ( $output_dev, $output_inode ) = stat(STDOUT);
+
+            return if $target_dev == $output_dev && $target_inode == $output_inode;
+        }
         if ( $match_filenames ) {
             if ( $File::Next::name =~ /$match_regex/ && $is_inverted ) {
                 return;
