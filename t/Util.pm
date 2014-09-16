@@ -24,7 +24,7 @@ sub check_message {
 
 sub prep_environment {
     my @ack_args   = qw( ACK_OPTIONS ACKRC ACK_PAGER HOME ACK_COLOR_MATCH ACK_COLOR_FILENAME ACK_COLOR_LINE );
-    my @taint_args = qw( PATH CDPATH IFS );
+    my @taint_args = qw( PATH CDPATH IFS ENV );
     delete @ENV{ @ack_args, @taint_args };
 
     if ( is_windows() ) {
