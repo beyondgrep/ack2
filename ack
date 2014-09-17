@@ -340,6 +340,8 @@ sub build_regex {
 
 }
 
+my $match_column_number;
+
 {
 
 my @before_ctx_lines;
@@ -451,8 +453,15 @@ sub print_matches_in_resource {
     else {
         local $_;
 
+        my $regex   = $opt->{regex};
+        my $inverse = $opt->{v};
+
         while ( <$fh> ) {
-            if ( does_match($opt, $_) ) {
+            $match_column_number = undef;
+            if ( $inverse ? !/$regex/o : /$regex/o ) {
+                if ( !$inverse ) {
+                    $match_column_number = $-[0] + 1;
+                }
                 if ( !$has_printed_for_this_resource ) {
                     if ( $break && $has_printed_something ) {
                         App::Ack::print_blank_line();
@@ -774,10 +783,6 @@ sub print_line_with_context {
 
 }
 
-{
-
-my $match_column_number;
-
 # does_match() MUST have an $opt->{regex} set.
 
 sub does_match {
@@ -803,8 +808,6 @@ sub does_match {
 
 sub get_match_column {
     return $match_column_number;
-}
-
 }
 
 sub resource_has_match {
