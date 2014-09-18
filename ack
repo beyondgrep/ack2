@@ -354,6 +354,20 @@ BEGIN {
     $has_printed_something = 0;
 }
 
+=for Developers
+
+This subroutine jumps through a number of optimization hoops to
+try to be fast in the more common use cases of ack.  For one thing,
+in non-context tracking searches (not using -A, -B, or -C),
+conditions that normally would be checked inside the loop happen
+outside, resulting in three nearly identical loops for -v, --passthru,
+and normal searching.  Any changes that happen to one should propagate
+to the others if they make sense.  The non-context branches also inline
+does_match for performance reasons; any relevant changes that happen here
+must also happen there.
+
+=cut
+
 sub print_matches_in_resource {
     my ( $resource, $opt ) = @_;
 
@@ -866,6 +880,14 @@ sub print_line_with_context {
 }
 
 # does_match() MUST have an $opt->{regex} set.
+
+=for Developers
+
+This subroutine is inlined a few places in print_matches_in_resource
+for performance reasons, so any changes here must be copied there as
+well.
+
+=cut
 
 sub does_match {
     my ( $opt, $line ) = @_;
