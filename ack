@@ -569,7 +569,9 @@ sub print_matches_in_resource {
                         App::Ack::print_filename( $display_filename, $ors );
                     }
                 }
-                print_line_with_options($opt, $filename, substr($contents, $start_line, $end_line - $start_line + 1), $line_no, ':');
+                my $line = substr($contents, $start_line, $end_line - $start_line + 1);
+                $line =~ s/[\r\n]+$//g;
+                print_line_with_options($opt, $filename, $line, $line_no, ':');
 
                 pos($contents) = $end_line + 1;
 
