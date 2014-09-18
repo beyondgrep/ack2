@@ -26,7 +26,7 @@ sub filter {
     my ( $self, $resource ) = @_;
 
     my $data = $self->{'data'};
-    my $base = (File::Spec->splitpath($resource->name))[2];
+    my $base = $resource->basename;
 
     return exists $data->{$base};
 }
