@@ -20,10 +20,9 @@ sub new {
 sub filter {
     my ( $self, $resource ) = @_;
 
-    my $re   = $self->{'regex'};
-    my $base = (File::Spec->splitpath($resource->name))[2];
+    my $re = $self->{'regex'};
 
-    return $base =~ /$re/;
+    return $resource->basename =~ /$re/;
 }
 
 sub inspect {
