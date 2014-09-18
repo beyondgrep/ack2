@@ -520,7 +520,8 @@ sub print_matches_in_resource {
                             App::Ack::print_filename( $display_filename, $ors );
                         }
                     }
-                    print_line_with_context($opt, $filename, $_, $.);
+                    s/[\r\n]+$//g;
+                    print_line_with_options($opt, $filename, $_, $., ':');
                     $has_printed_for_this_resource = 1;
                     $nmatches++;
                     $max_count--;
