@@ -571,7 +571,7 @@ sub print_matches_in_resource {
                 }
                 print_line_with_options($opt, $filename, substr($contents, $start_line, $end_line - $start_line + 1), $line_no, ':');
 
-                pos($contents) = $match_end;
+                pos($contents) = $end_line + 1;
 
                 $has_printed_for_this_resource = 1;
                 $nmatches++;
