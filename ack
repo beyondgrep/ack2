@@ -456,35 +456,79 @@ sub print_matches_in_resource {
         my $regex   = $opt->{regex};
         my $inverse = $opt->{v};
 
-        while ( <$fh> ) {
-            $match_column_number = undef;
-            if ( $inverse ? !/$regex/o : /$regex/o ) {
-                if ( !$inverse ) {
-                    $match_column_number = $-[0] + 1;
+        if ( $passthru ) {
+            while ( <$fh> ) {
+                $match_column_number = undef;
+                if ( $inverse ? !/$regex/o : /$regex/o ) {
+                    if ( !$inverse ) {
+                        $match_column_number = $-[0] + 1;
+                    }
+                    if ( !$has_printed_for_this_resource ) {
+                        if ( $break && $has_printed_something ) {
+                            App::Ack::print_blank_line();
+                        }
+                        if ( $print_filename && $heading ) {
+                            App::Ack::print_filename( $display_filename, $ors );
+                        }
+                    }
+                    print_line_with_context($opt, $filename, $_, $.);
+                    $has_printed_for_this_resource = 1;
+                    $nmatches++;
+                    $max_count--;
                 }
-                if ( !$has_printed_for_this_resource ) {
-                    if ( $break && $has_printed_something ) {
+                else {
+                    chomp; # XXX proper newline handling?
+                    if ( $break && !$has_printed_for_this_resource && $has_printed_something ) {
                         App::Ack::print_blank_line();
                     }
-                    if ( $print_filename && $heading ) {
-                        App::Ack::print_filename( $display_filename, $ors );
-                    }
+                    print_line_with_options($opt, $filename, $_, $., ':');
+                    $has_printed_for_this_resource = 1;
                 }
-                print_line_with_context($opt, $filename, $_, $.);
-                $has_printed_for_this_resource = 1;
-                $nmatches++;
-                $max_count--;
+                last unless $max_count != 0;
             }
-            elsif ( $passthru ) {
-                chomp; # XXX proper newline handling?
-                if ( $break && !$has_printed_for_this_resource && $has_printed_something ) {
-                    App::Ack::print_blank_line();
-                }
-                print_line_with_options($opt, $filename, $_, $., ':');
-                $has_printed_for_this_resource = 1;
-            }
-            last unless $max_count != 0;
         }
+        elsif ( $inverse ) {
+            $match_column_number = undef;
+            while ( <$fh> ) {
+                if ( !/$regex/o ) {
+                    if ( !$has_printed_for_this_resource ) {
+                        if ( $break && $has_printed_something ) {
+                            App::Ack::print_blank_line();
+                        }
+                        if ( $print_filename && $heading ) {
+                            App::Ack::print_filename( $display_filename, $ors );
+                        }
+                    }
+                    print_line_with_context($opt, $filename, $_, $.);
+                    $has_printed_for_this_resource = 1;
+                    $nmatches++;
+                    $max_count--;
+                }
+                last unless $max_count != 0;
+            }
+        }
+        else {
+            while ( <$fh> ) {
+                $match_column_number = undef;
+                if ( /$regex/o ) {
+                    $match_column_number = $-[0] + 1;
+                    if ( !$has_printed_for_this_resource ) {
+                        if ( $break && $has_printed_something ) {
+                            App::Ack::print_blank_line();
+                        }
+                        if ( $print_filename && $heading ) {
+                            App::Ack::print_filename( $display_filename, $ors );
+                        }
+                    }
+                    print_line_with_context($opt, $filename, $_, $.);
+                    $has_printed_for_this_resource = 1;
+                    $nmatches++;
+                    $max_count--;
+                }
+                last unless $max_count != 0;
+            }
+        }
+
     }
 
     $is_iterating = 0; # XXX this won't happen on an exception
