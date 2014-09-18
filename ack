@@ -508,24 +508,61 @@ sub print_matches_in_resource {
             }
         }
         else {
-            while ( <$fh> ) {
-                $match_column_number = undef;
-                if ( /$regex/o ) {
-                    $match_column_number = $-[0] + 1;
-                    if ( !$has_printed_for_this_resource ) {
-                        if ( $break && $has_printed_something ) {
-                            App::Ack::print_blank_line();
-                        }
-                        if ( $print_filename && $heading ) {
-                            App::Ack::print_filename( $display_filename, $ors );
-                        }
-                    }
-                    s/[\r\n]+$//g;
-                    print_line_with_options($opt, $filename, $_, $., ':');
-                    $has_printed_for_this_resource = 1;
-                    $nmatches++;
-                    $max_count--;
+            # XXX unroll first match check ($has_printed_for_this_resource)
+            # XXX what if this is a *huge* file? (see also -l)
+            my $contents = do {
+                local $/;
+                <$fh>;
+            };
+
+            my $prev_match_end = 0;
+            my $line_no = 1;
+
+            $match_column_number = undef;
+            while ( $contents =~ /$regex/og ) {
+                my $match_start = $-[0];
+                my $match_end   = $+[0];
+
+                pos($contents)  = $prev_match_end;
+                $prev_match_end = $match_end;
+
+                while ( $contents =~ /\n/og && $-[0] < $match_start ) {
+                    $line_no++;
                 }
+
+                my $start_line = rindex($contents, "\n", $match_start);
+                my $end_line   = index($contents, "\n", $match_end);
+
+                if ( $start_line == -1 ) {
+                    $start_line = 0;
+                }
+                else {
+                    $start_line++;
+                }
+
+                if ( $end_line == -1 ) {
+                    $end_line = length($contents);
+                }
+                else {
+                    $end_line--;
+                }
+                $match_column_number = $match_start - $start_line + 1;
+                if ( !$has_printed_for_this_resource ) {
+                    if ( $break && $has_printed_something ) {
+                        App::Ack::print_blank_line();
+                    }
+                    if ( $print_filename && $heading ) {
+                        App::Ack::print_filename( $display_filename, $ors );
+                    }
+                }
+                print_line_with_options($opt, $filename, substr($contents, $start_line, $end_line - $start_line + 1), $line_no, ':');
+
+                pos($contents) = $match_end;
+
+                $has_printed_for_this_resource = 1;
+                $nmatches++;
+                $max_count--;
+
                 last unless $max_count != 0;
             }
         }
