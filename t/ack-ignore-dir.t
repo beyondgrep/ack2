@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 24;
+use Test::More tests => 26;
 use File::Spec;
 
 use lib 't';
@@ -138,3 +138,17 @@ NOIGNORE_SUBDIR_WINS: {
 
     sets_match( \@results, \@expected, $test_description );
 }
+
+IGNORE_DIR_MATCH: {
+    set_up_assertion_that_these_options_will_ignore_those_directories(
+        [ '--ignore-dir=match:/\w_subdir/' ],
+        [ @std_ignore, 'another_subdir', ],
+    );
+
+    sets_match( \@results, \@expected, $test_description );
+}
+
+# XXX test needed for ext:
+# XXX test needed for firstlinematch: (which doesn't apply to directories)
+
+# XXX tests needs for combinations of the above with --noignore-dir 
