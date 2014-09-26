@@ -5,6 +5,7 @@ use warnings;
 use base 'App::Ack::Filter';
 
 use File::Spec 3.00;
+use App::Ack::Filter::MatchGroup ();
 
 sub new {
     my ( $class, $re ) = @_;
@@ -14,16 +15,20 @@ sub new {
 
     return bless {
         regex => $re,
+        groupname => 'MatchGroup',
     }, $class;
+}
+
+sub create_group {
+    return App::Ack::Filter::MatchGroup->new;
 }
 
 sub filter {
     my ( $self, $resource ) = @_;
 
-    my $re   = $self->{'regex'};
-    my $base = (File::Spec->splitpath($resource->name))[2];
+    my $re = $self->{'regex'};
 
-    return $base =~ /$re/;
+    return $resource->basename =~ /$re/;
 }
 
 sub inspect {

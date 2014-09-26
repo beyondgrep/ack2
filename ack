@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-our $VERSION = '2.13_06'; # Check http://beyondgrep.com/ for updates
+our $VERSION = '2.14'; # Check http://beyondgrep.com/ for updates
 
 use 5.008008;
 use Getopt::Long 2.35 ();
@@ -27,6 +27,26 @@ use App::Ack::Filter::Inverse;
 use App::Ack::Filter::Is;
 use App::Ack::Filter::Match;
 use App::Ack::Filter::Collection;
+
+our $opt_after_context;
+our $opt_before_context;
+our $opt_output;
+our $opt_print0;
+our $opt_color;
+our $opt_heading;
+our $opt_show_filename;
+our $opt_regex;
+our $opt_break;
+our $opt_count;
+our $opt_v;
+our $opt_m;
+our $opt_g;
+our $opt_f;
+our $opt_lines;
+our $opt_L;
+our $opt_l;
+our $opt_passthru;
+our $opt_column;
 
 # These are all our globals.
 
@@ -173,6 +193,14 @@ sub _compile_file_filter {
     }
 
     return sub {
+        if ( $opt_g ) {
+            if ( $File::Next::name =~ /$opt_regex/ && $opt_v ) {
+                return;
+            }
+            if ( $File::Next::name !~ /$opt_regex/ && !$opt_v ) {
+                return;
+            }
+        }
         # ack always selects files that are specified on the command
         # line, regardless of filetype.  If you want to ack a JPEG,
         # and say "ack foo whatever.jpg" it will do it for you.
@@ -319,7 +347,7 @@ sub build_regex {
         $str = "(?i)$str";
     }
 
-    my $re = eval { qr/$str/ };
+    my $re = eval { qr/$str/m };
     if ( !$re ) {
         die "Invalid regex '$str':\n  $@";
     }
@@ -327,6 +355,8 @@ sub build_regex {
     return $re;
 
 }
+
+my $match_column_number;
 
 {
 
@@ -340,28 +370,37 @@ BEGIN {
     $has_printed_something = 0;
 }
 
+=for Developers
+
+This subroutine jumps through a number of optimization hoops to
+try to be fast in the more common use cases of ack.  For one thing,
+in non-context tracking searches (not using -A, -B, or -C),
+conditions that normally would be checked inside the loop happen
+outside, resulting in three nearly identical loops for -v, --passthru,
+and normal searching.  Any changes that happen to one should propagate
+to the others if they make sense.  The non-context branches also inline
+does_match for performance reasons; any relevant changes that happen here
+must also happen there.
+
+=cut
+
 sub print_matches_in_resource {
     my ( $resource, $opt ) = @_;
 
-    my $passthru       = $opt->{passthru};
-    my $max_count      = $opt->{m} || -1;
+    my $max_count      = $opt_m || -1;
     my $nmatches       = 0;
     my $filename       = $resource->name;
-    my $break          = $opt->{break};
-    my $heading        = $opt->{heading};
-    my $ors            = $opt->{print0} ? "\0" : "\n";
-    my $color          = $opt->{color};
-    my $print_filename = $opt->{show_filename};
+    my $ors            = $opt_print0 ? "\0" : "\n";
 
     my $has_printed_for_this_resource = 0;
 
     $is_iterating = 1;
 
-    local $opt->{before_context} = $opt->{output} ? 0 : $opt->{before_context};
-    local $opt->{after_context}  = $opt->{output} ? 0 : $opt->{after_context};
+    local $opt_before_context = $opt_output ? 0 : $opt_before_context;
+    local $opt_after_context  = $opt_output ? 0 : $opt_after_context;
 
-    my $n_before_ctx_lines = $opt->{before_context} || 0;
-    my $n_after_ctx_lines  = $opt->{after_context}  || 0;
+    my $n_before_ctx_lines = $opt_before_context || 0;
+    my $n_after_ctx_lines  = $opt_after_context  || 0;
 
     @after_ctx_lines = @before_ctx_lines = ();
 
@@ -374,7 +413,7 @@ sub print_matches_in_resource {
     }
 
     my $display_filename = $filename;
-    if ( $print_filename && $heading && $color ) {
+    if ( $opt_show_filename && $opt_heading && $opt_color ) {
         $display_filename = Term::ANSIColor::colored($display_filename, $ENV{ACK_COLOR_FILENAME});
     }
 
@@ -394,10 +433,10 @@ sub print_matches_in_resource {
 
             if ( does_match($opt, $_) ) {
                 if ( !$has_printed_for_this_resource ) {
-                    if ( $break && $has_printed_something ) {
+                    if ( $opt_break && $has_printed_something ) {
                         App::Ack::print_blank_line();
                     }
-                    if ( $print_filename && $heading ) {
+                    if ( $opt_show_filename && $opt_heading ) {
                         App::Ack::print_filename( $display_filename, $ors );
                     }
                 }
@@ -406,10 +445,10 @@ sub print_matches_in_resource {
                 $nmatches++;
                 $max_count--;
             }
-            elsif ( $passthru ) {
+            elsif ( $opt_passthru ) {
                 chomp; # XXX proper newline handling?
                 # XXX inline this call?
-                if ( $break && !$has_printed_for_this_resource && $has_printed_something ) {
+                if ( $opt_break && !$has_printed_for_this_resource && $has_printed_something ) {
                     App::Ack::print_blank_line();
                 }
                 print_line_with_options($opt, $filename, $_, $., ':');
@@ -439,31 +478,119 @@ sub print_matches_in_resource {
     else {
         local $_;
 
-        while ( <$fh> ) {
-            if ( does_match($opt, $_) ) {
-                if ( !$has_printed_for_this_resource ) {
-                    if ( $break && $has_printed_something ) {
+        if ( $opt_passthru ) {
+            while ( <$fh> ) {
+                $match_column_number = undef;
+                if ( $opt_v ? !/$opt_regex/o : /$opt_regex/o ) {
+                    if ( !$opt_v ) {
+                        $match_column_number = $-[0] + 1;
+                    }
+                    if ( !$has_printed_for_this_resource ) {
+                        if ( $opt_break && $has_printed_something ) {
+                            App::Ack::print_blank_line();
+                        }
+                        if ( $opt_show_filename && $opt_heading ) {
+                            App::Ack::print_filename( $display_filename, $ors );
+                        }
+                    }
+                    print_line_with_context($opt, $filename, $_, $.);
+                    $has_printed_for_this_resource = 1;
+                    $nmatches++;
+                    $max_count--;
+                }
+                else {
+                    chomp; # XXX proper newline handling?
+                    if ( $opt_break && !$has_printed_for_this_resource && $has_printed_something ) {
                         App::Ack::print_blank_line();
                     }
-                    if ( $print_filename && $heading ) {
+                    print_line_with_options($opt, $filename, $_, $., ':');
+                    $has_printed_for_this_resource = 1;
+                }
+                last unless $max_count != 0;
+            }
+        }
+        elsif ( $opt_v ) {
+            $match_column_number = undef;
+            while ( <$fh> ) {
+                if ( !/$opt_regex/o ) {
+                    if ( !$has_printed_for_this_resource ) {
+                        if ( $opt_break && $has_printed_something ) {
+                            App::Ack::print_blank_line();
+                        }
+                        if ( $opt_show_filename && $opt_heading ) {
+                            App::Ack::print_filename( $display_filename, $ors );
+                        }
+                    }
+                    print_line_with_context($opt, $filename, $_, $.);
+                    $has_printed_for_this_resource = 1;
+                    $nmatches++;
+                    $max_count--;
+                }
+                last unless $max_count != 0;
+            }
+        }
+        else {
+            # XXX unroll first match check ($has_printed_for_this_resource)
+            # XXX what if this is a *huge* file? (see also -l)
+            my $contents = do {
+                local $/;
+                <$fh>;
+            };
+
+            my $prev_match_end = 0;
+            my $line_no = 1;
+
+            $match_column_number = undef;
+            while ( $contents =~ /$opt_regex/og ) {
+                my $match_start = $-[0];
+                my $match_end   = $+[0];
+
+                pos($contents)  = $prev_match_end;
+                $prev_match_end = $match_end;
+
+                while ( $contents =~ /\n/og && $-[0] < $match_start ) {
+                    $line_no++;
+                }
+
+                my $start_line = rindex($contents, "\n", $match_start);
+                my $end_line   = index($contents, "\n", $match_end);
+
+                if ( $start_line == -1 ) {
+                    $start_line = 0;
+                }
+                else {
+                    $start_line++;
+                }
+
+                if ( $end_line == -1 ) {
+                    $end_line = length($contents);
+                }
+                else {
+                    $end_line--;
+                }
+                $match_column_number = $match_start - $start_line + 1;
+                if ( !$has_printed_for_this_resource ) {
+                    if ( $opt_break && $has_printed_something ) {
+                        App::Ack::print_blank_line();
+                    }
+                    if ( $opt_show_filename && $opt_heading ) {
                         App::Ack::print_filename( $display_filename, $ors );
                     }
                 }
-                print_line_with_context($opt, $filename, $_, $.);
+                my $line = substr($contents, $start_line, $end_line - $start_line + 1);
+                $line =~ s/[\r\n]+$//g;
+                print_line_with_options($opt, $filename, $line, $line_no, ':');
+
+                pos($contents) = $end_line + 1;
+
                 $has_printed_for_this_resource = 1;
                 $nmatches++;
                 $max_count--;
+
+                last unless $max_count != 0;
             }
-            elsif ( $passthru ) {
-                chomp; # XXX proper newline handling?
-                if ( $break && !$has_printed_for_this_resource && $has_printed_something ) {
-                    App::Ack::print_blank_line();
-                }
-                print_line_with_options($opt, $filename, $_, $., ':');
-                $has_printed_for_this_resource = 1;
-            }
-            last unless $max_count != 0;
         }
+
     }
 
     $is_iterating = 0; # XXX this won't happen on an exception
@@ -478,49 +605,44 @@ sub print_line_with_options {
 
     $has_printed_something = 1;
 
-    my $print_filename = $opt->{show_filename};
-    my $print_column   = $opt->{column};
-    my $ors            = $opt->{print0} ? "\0" : "\n";
-    my $heading        = $opt->{heading};
-    my $output_expr    = $opt->{output};
-    my $color          = $opt->{color};
+    my $ors = $opt_print0 ? "\0" : "\n";
 
     my @line_parts;
 
-    if( $color ) {
+    if( $opt_color ) {
         $filename = Term::ANSIColor::colored($filename,
             $ENV{ACK_COLOR_FILENAME});
         $line_no  = Term::ANSIColor::colored($line_no,
             $ENV{ACK_COLOR_LINENO});
     }
 
-    if($print_filename) {
-        if( $heading ) {
+    if($opt_show_filename) {
+        if( $opt_heading ) {
             push @line_parts, $line_no;
         }
         else {
             push @line_parts, $filename, $line_no;
         }
 
-        if( $print_column ) {
+        if( $opt_column ) {
             push @line_parts, get_match_column();
         }
     }
-    if( $output_expr ) {
-        while ( $line =~ /$opt->{regex}/og ) {
+    if( $opt_output ) {
+        while ( $line =~ /$opt_regex/og ) {
             # XXX We need to stop using eval() for --output.  See https://github.com/petdance/ack2/issues/421
-            my $output = eval $output_expr;
+            my $output = eval $opt_output;
             App::Ack::print( join( $separator, @line_parts, $output ), $ors );
         }
     }
     else {
-        if ( $color ) {
-            $line =~ /$opt->{regex}/o; # this match is redundant, but we need
+        if ( $opt_color ) {
+            $line =~ /$opt_regex/o; # this match is redundant, but we need
                                        # to perfom it in order to get if
                                        # capture groups are set
 
             if ( @+ > 1 ) { # if we have captures
-                while ( $line =~ /$opt->{regex}/og ) {
+                while ( $line =~ /$opt_regex/og ) {
                     my $offset = 0; # additional offset for when we add stuff
                     my $previous_match_end = 0;
 
@@ -548,7 +670,7 @@ sub print_line_with_options {
             else {
                 my $matched = 0; # flag; if matched, need to escape afterwards
 
-                while ( $line =~ /$opt->{regex}/og ) {
+                while ( $line =~ /$opt_regex/og ) {
 
                     $matched = 1;
                     my ( $match_start, $match_end ) = ($-[0], $+[0]);
@@ -582,11 +704,11 @@ sub iterate {
 
     $is_iterating = 1;
 
-    local $opt->{before_context} = $opt->{output} ? 0 : $opt->{before_context};
-    local $opt->{after_context}  = $opt->{output} ? 0 : $opt->{after_context};
+    local $opt_before_context = $opt_output ? 0 : $opt_before_context;
+    local $opt_after_context  = $opt_output ? 0 : $opt_after_context;
 
-    my $n_before_ctx_lines = $opt->{before_context} || 0;
-    my $n_after_ctx_lines  = $opt->{after_context}  || 0;
+    my $n_before_ctx_lines = $opt_before_context || 0;
+    my $n_after_ctx_lines  = $opt_after_context  || 0;
 
     @after_ctx_lines = @before_ctx_lines = ();
 
@@ -674,22 +796,19 @@ BEGIN {
 sub print_line_with_context {
     my ( $opt, $filename, $matching_line, $line_no ) = @_;
 
-    my $heading = $opt->{heading};
-
     if( !defined($previous_file_processed) ||
       $previous_file_processed ne $filename ) {
         $previous_file_processed = $filename;
         $previous_line_printed   = -1;
 
-        if( $heading ) {
+        if( $opt_heading ) {
             $is_first_match = 1;
         }
     }
 
-    my $ors                 = $opt->{print0} ? "\0" : "\n";
+    my $ors                 = $opt_print0 ? "\0" : "\n";
     my $match_word          = $opt->{w};
-    my $is_tracking_context = $opt->{after_context} || $opt->{before_context};
-    my $output_expr         = $opt->{output};
+    my $is_tracking_context = $opt_after_context || $opt_before_context;
 
     $matching_line =~ s/[\r\n]+$//g;
 
@@ -715,7 +834,7 @@ sub print_line_with_context {
                 }
 
                 chomp $line;
-                local $opt->{column};
+                local $opt_column;
 
                 print_line_with_options($opt, $filename, $line, $context_line_no, '-');
                 $previous_line_printed = $context_line_no;
@@ -743,11 +862,11 @@ sub print_line_with_context {
             }
             chomp $line;
 
-            if ( $opt->{regex} && does_match( $opt, $line ) ) {
+            if ( $opt_regex && does_match( $opt, $line ) ) {
                 print_line_with_options($opt, $filename, $line, $. + $offset, ':');
             }
             else {
-                local $opt->{column};
+                local $opt_column;
                 print_line_with_options($opt, $filename, $line, $. + $offset, '-');
             }
             $previous_line_printed = $. + $offset;
@@ -762,22 +881,26 @@ sub print_line_with_context {
 
 }
 
-{
+# does_match() MUST have an $opt_regex set.
 
-my $match_column_number;
+=for Developers
 
-# does_match() MUST have an $opt->{regex} set.
+This subroutine is inlined a few places in print_matches_in_resource
+for performance reasons, so any changes here must be copied there as
+well.
+
+=cut
 
 sub does_match {
     my ( $opt, $line ) = @_;
 
     $match_column_number = undef;
 
-    if ( $opt->{v} ) {
-        return ( $line !~ /$opt->{regex}/o );
+    if ( $opt_v ) {
+        return ( $line !~ /$opt_regex/o );
     }
     else {
-        if ( $line =~ /$opt->{regex}/o ) {
+        if ( $line =~ /$opt_regex/o ) {
             # @- = @LAST_MATCH_START
             # @+ = @LAST_MATCH_END
             $match_column_number = $-[0] + 1;
@@ -793,8 +916,6 @@ sub get_match_column {
     return $match_column_number;
 }
 
-}
-
 sub resource_has_match {
     my ( $resource, $opt ) = @_;
 
@@ -806,13 +927,23 @@ sub resource_has_match {
         }
     }
     else {
-        my $opt_v = $opt->{v};
-        my $re    = $opt->{regex};
-        while ( <$fh> ) {
-            if (/$re/o xor $opt_v) {
-                $has_match = 1;
-                last;
+        my $re = $opt_regex;
+        if ( $opt_v ) {
+            while ( <$fh> ) {
+                if (!/$re/o) {
+                    $has_match = 1;
+                    last;
+                }
             }
+        }
+        else {
+            # XXX read in chunks
+            # XXX only do this for certain file sizes?
+            my $content = do {
+                local $/;
+                <$fh>;
+            };
+            $has_match = $content =~ /$re/o;
         }
         close $fh;
     }
@@ -831,10 +962,18 @@ sub count_matches_in_resource {
         }
     }
     else {
-        my $opt_v = $opt->{v};
-        my $re    = $opt->{regex};
-        while ( <$fh> ) {
-            ++$nmatches if (/$re/o xor $opt_v);
+        my $re = $opt_regex;
+        if ( $opt_v ) {
+            while ( <$fh> ) {
+                ++$nmatches if (!/$re/o);
+            }
+        }
+        else {
+            my $content = do {
+                local $/;
+                <$fh>;
+            };
+            $nmatches =()= ($content =~ /$re/og);
         }
         close $fh;
     }
@@ -847,51 +986,69 @@ sub main {
 
     my $opt = App::Ack::ConfigLoader::process_args( @arg_sources );
 
+    $opt_after_context  = $opt->{after_context};
+    $opt_before_context = $opt->{before_context};
+    $opt_output         = $opt->{output};
+    $opt_print0         = $opt->{print0};
+    $opt_color          = $opt->{color};
+    $opt_heading        = $opt->{heading};
+    $opt_show_filename  = $opt->{show_filename};
+    $opt_regex          = $opt->{regex};
+    $opt_break          = $opt->{break};
+    $opt_count          = $opt->{count};
+    $opt_v              = $opt->{v};
+    $opt_m              = $opt->{m};
+    $opt_g              = $opt->{g};
+    $opt_f              = $opt->{f};
+    $opt_lines          = $opt->{lines};
+    $opt_L              = $opt->{L};
+    $opt_l              = $opt->{l};
+    $opt_passthru       = $opt->{passthru};
+    $opt_column         = $opt->{column};
+
     $App::Ack::report_bad_filenames = !$opt->{dont_report_bad_filenames};
 
     if ( $opt->{flush} ) {
         $| = 1;
     }
 
-    if ( !defined($opt->{color}) && !$opt->{g} ) {
+    if ( !defined($opt_color) && !$opt_g ) {
         my $windows_color = 1;
         if ( $App::Ack::is_windows ) {
             $windows_color = eval { require Win32::Console::ANSI; };
         }
-        $opt->{color} = !App::Ack::output_to_pipe() && $windows_color;
+        $opt_color = !App::Ack::output_to_pipe() && $windows_color;
     }
-    if ( not defined $opt->{heading} and not defined $opt->{break}  ) {
-        $opt->{heading} = $opt->{break} = !App::Ack::output_to_pipe();
+    if ( not defined $opt_heading and not defined $opt_break  ) {
+        $opt_heading = $opt_break = $opt->{break} = !App::Ack::output_to_pipe();
     }
 
     if ( defined($opt->{H}) || defined($opt->{h}) ) {
-        $opt->{show_filename}= $opt->{H} && !$opt->{h};
+        $opt_show_filename = $opt->{show_filename} = $opt->{H} && !$opt->{h};
     }
 
-    if ( my $output = $opt->{output} ) {
+    if ( my $output = $opt_output ) {
         $output        =~ s{\\}{\\\\}g;
         $output        =~ s{"}{\\"}g;
-        $opt->{output} = qq{"$output"};
+        $opt_output = qq{"$output"};
     }
 
     my $resources;
     if ( $App::Ack::is_filter_mode && !$opt->{files_from} ) { # probably -x
         $resources    = App::Ack::Resources->from_stdin( $opt );
-        my $regex = $opt->{regex};
-        $regex = shift @ARGV if not defined $regex;
-        $opt->{regex} = build_regex( $regex, $opt );
+        $opt_regex = shift @ARGV if not defined $opt_regex;
+        $opt_regex = $opt->{regex} = build_regex( $opt_regex, $opt );
     }
     else {
-        if ( $opt->{f} || $opt->{lines} ) {
-            if ( $opt->{regex} ) {
-                App::Ack::warn( "regex ($opt->{regex}) specified with -f or --lines" );
+        if ( $opt_f || $opt_lines ) {
+            if ( $opt_regex ) {
+                App::Ack::warn( "regex ($opt_regex) specified with -f or --lines" );
                 App::Ack::exit_from_ack( 0 ); # XXX the 0 is misleading
             }
         }
         else {
-            my $regex = $opt->{regex};
-            $regex = shift @ARGV if not defined $regex;
-            $opt->{regex} = build_regex( $regex, $opt );
+            $opt_regex = shift @ARGV if not defined $opt_regex;
+            $opt_regex = $opt->{regex} = build_regex( $opt_regex, $opt );
         }
         my @start;
         if ( not defined $opt->{files_from} ) {
@@ -899,7 +1056,7 @@ sub main {
         }
         if ( !exists($opt->{show_filename}) ) {
             unless(@start == 1 && !(-d $start[0])) {
-                $opt->{show_filename} = 1;
+                $opt_show_filename = $opt->{show_filename} = 1;
             }
         }
 
@@ -923,17 +1080,15 @@ sub main {
     }
     App::Ack::set_up_pager( $opt->{pager} ) if defined $opt->{pager};
 
-    my $print_filenames = $opt->{show_filename};
-    my $max_count       = $opt->{m};
-    my $ors             = $opt->{print0} ? "\0" : "\n";
-    my $only_first      = $opt->{1};
+    my $ors        = $opt_print0 ? "\0" : "\n";
+    my $only_first = $opt->{1};
 
     my $nmatches    = 0;
     my $total_count = 0;
 RESOURCES:
     while ( my $resource = $resources->next ) {
         # XXX Combine the -f and -g functions
-        if ( $opt->{f} ) {
+        if ( $opt_f ) {
             # XXX printing should probably happen inside of App::Ack
             if ( $opt->{show_types} ) {
                 show_types( $resource, $ors );
@@ -942,29 +1097,25 @@ RESOURCES:
                 App::Ack::print( $resource->name, $ors );
             }
             ++$nmatches;
-            last RESOURCES if defined($max_count) && $nmatches >= $max_count;
+            last RESOURCES if defined($opt_m) && $nmatches >= $opt_m;
         }
-        elsif ( $opt->{g} ) {
-            my $is_match = ( $resource->name =~ /$opt->{regex}/o );
-            if ( $opt->{v} ? !$is_match : $is_match ) {
-                if ( $opt->{show_types} ) {
-                    show_types( $resource, $ors );
-                }
-                else {
-                    local $opt->{show_filename} = 0; # XXX Why is this local?
-
-                    print_line_with_options($opt, '', $resource->name, 0, $ors);
-                }
-                ++$nmatches;
-                last RESOURCES if defined($max_count) && $nmatches >= $max_count;
+        elsif ( $opt_g ) {
+            if ( $opt->{show_types} ) {
+                show_types( $resource, $ors );
             }
+            else {
+                local $opt_show_filename = 0; # XXX Why is this local?
+
+                print_line_with_options($opt, '', $resource->name, 0, $ors);
+            }
+            ++$nmatches;
+            last RESOURCES if defined($opt_m) && $nmatches >= $opt_m;
         }
-        elsif ( $opt->{lines} ) {
-            my $print_filename = $opt->{show_filename};
-            my $passthru       = $opt->{passthru};
+        elsif ( $opt_lines ) {
+            my $opt_passthru       = $opt_passthru;
 
             my %line_numbers;
-            foreach my $line ( @{ $opt->{lines} } ) {
+            foreach my $line ( @{ $opt_lines } ) {
                 my @lines             = split /,/, $line;
                 @lines                = map {
                     /^(\d+)-(\d+)$/
@@ -976,7 +1127,7 @@ RESOURCES:
 
             my $filename = $resource->name;
 
-            local $opt->{color} = 0;
+            local $opt_color = 0;
 
             iterate($resource, $opt, sub {
                 chomp;
@@ -984,22 +1135,22 @@ RESOURCES:
                 if ( $line_numbers{$.} ) {
                     print_line_with_context($opt, $filename, $_, $.);
                 }
-                elsif ( $passthru ) {
+                elsif ( $opt_passthru ) {
                     print_line_with_options($opt, $filename, $_, $., ':');
                 }
                 return 1;
             });
         }
-        elsif ( $opt->{count} ) {
+        elsif ( $opt_count ) {
             my $matches_for_this_file = count_matches_in_resource( $resource, $opt );
 
-            if ( not $opt->{show_filename} ) {
+            if ( not $opt_show_filename ) {
                 $total_count += $matches_for_this_file;
                 next RESOURCES;
             }
 
-            if ( !$opt->{l} || $matches_for_this_file > 0) {
-                if ( $print_filenames ) {
+            if ( !$opt_l || $matches_for_this_file > 0) {
+                if ( $opt_show_filename ) {
                     App::Ack::print( $resource->name, ':', $matches_for_this_file, $ors );
                 }
                 else {
@@ -1007,15 +1158,15 @@ RESOURCES:
                 }
             }
         }
-        elsif ( $opt->{l} || $opt->{L} ) {
+        elsif ( $opt_l || $opt_L ) {
             my $is_match = resource_has_match( $resource, $opt );
 
-            if ( $opt->{L} ? !$is_match : $is_match ) {
+            if ( $opt_L ? !$is_match : $is_match ) {
                 App::Ack::print( $resource->name, $ors );
                 ++$nmatches;
 
                 last RESOURCES if $only_first;
-                last RESOURCES if defined($max_count) && $nmatches >= $max_count;
+                last RESOURCES if defined($opt_m) && $nmatches >= $opt_m;
             }
         }
         else {
@@ -1026,7 +1177,7 @@ RESOURCES:
         }
     }
 
-    if ( $opt->{count} && !$opt->{show_filename} ) {
+    if ( $opt_count && !$opt_show_filename ) {
         App::Ack::print( $total_count, "\n" );
     }
 
@@ -1047,7 +1198,7 @@ ack - grep-like text finder
 
 =head1 DESCRIPTION
 
-Ack is designed as a replacement for F<grep> for programmers.
+Ack is designed as an alternative to F<grep> for programmers.
 
 Ack searches the named input FILEs (or standard input if no files
 are named, or the file name - is given) for lines containing a match
@@ -1679,6 +1830,27 @@ If you are not on Windows, you never need to use C<ACK_PAGER_COLOR>.
 
 =back
 
+=head1 AVAILABLE COLORS
+
+F<ack> uses the colors available in Perl's L<Term::ANSIColor> module, which
+provides the following listed values. Note that case does not matter when using
+these values.
+
+=head2 Foreground colors
+
+    black  red  green  yellow  blue  magenta  cyan  white
+
+    bright_black  bright_red      bright_green  bright_yellow
+    bright_blue   bright_magenta  bright_cyan   bright_white
+
+=head2 Background colors
+
+    on_black  on_red      on_green  on_yellow
+    on_blue   on_magenta  on_cyan   on_white
+
+    on_bright_black  on_bright_red      on_bright_green  on_bright_yellow
+    on_bright_blue   on_bright_magenta  on_bright_cyan   on_bright_white
+
 =head1 ACK & OTHER TOOLS
 
 =head2 Vim integration
@@ -2192,6 +2364,8 @@ L<https://github.com/petdance/ack2>
 How appropriate to have I<ack>nowledgements!
 
 Thanks to everyone who has contributed to ack in any way, including
+Stephen Thirlwall,
+Jonah Bishop,
 Chris Rebert,
 Denis Howe,
 RaE<uacute>l GundE<iacute>n,
