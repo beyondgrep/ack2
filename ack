@@ -97,6 +97,27 @@ MAIN: {
     main();
 }
 
+sub _compile_filters {
+    my ( $filter_specs ) = @_;
+
+    return unless $filter_specs && @{$filter_specs};
+
+    my $filter_collection = App::Ack::Filter::Collection->new();
+
+    foreach my $filter_spec (@{$filter_specs}) {
+        if ( $filter_spec =~ /^(\w+):(.+)/ ) {
+            my ($how,$what) = ($1,$2);
+            my $filter = App::Ack::Filter->create_filter($how, split(/,/, $what));
+            $filter_collection->add($filter);
+        }
+        else {
+            Carp::croak( qq{Invalid filter specification "$filter_spec"} );
+        }
+    }
+
+    return $filter_collection;
+}
+
 sub _compile_descend_filter {
     my ( $opt ) = @_;
 
@@ -107,52 +128,18 @@ sub _compile_descend_filter {
     # entire subdirectory hierarchies, so we return an "accept all"
     # filter and scrutinize the files more in _compile_file_filter
     return if $dont_ignore_dirs;
-    return unless $idirs && @{$idirs};
-
-    my %ignore_dirs;
-    my @ignore_dirs_re;
-
-    foreach my $idir (@{$idirs}) {
-        if ( $idir =~ /^(\w+):(.*)/ ) {
-            if ( $1 eq 'is') {
-                $ignore_dirs{$2} = 1;
-            }
-            elsif ( $1 eq 'match') {
-                push @ignore_dirs_re, $2;
-            }
-            else {
-                Carp::croak( 'Non-is filters are not yet supported for --ignore-dir' );
-            }
-        }
-        else {
-            Carp::croak( qq{Invalid filter specification "$idir"} );
-        }
-    }
+    return unless $idirs;
 
     return sub {
-        return !exists $ignore_dirs{$_} && !exists $ignore_dirs{$File::Next::dir}
-           && !grep { $File::Next::dir =~ $_ } @ignore_dirs_re;
+        my $resource = App::Ack::Resource::Basic->new($File::Next::dir);
+        return !$idirs->filter($resource);
     };
 }
 
 sub _compile_file_filter {
     my ( $opt, $start ) = @_;
 
-    my $ifiles = $opt->{ifiles};
-    $ifiles  ||= [];
-
-    my $ifiles_filters = App::Ack::Filter::Collection->new();
-
-    foreach my $filter_spec (@{$ifiles}) {
-        if ( $filter_spec =~ /^(\w+):(.+)/ ) {
-            my ($how,$what) = ($1,$2);
-            my $filter = App::Ack::Filter->create_filter($how, split(/,/, $what));
-            $ifiles_filters->add($filter);
-        }
-        else {
-            Carp::croak( qq{Invalid filter specification "$filter_spec"} );
-        }
-    }
+    my $ifiles_filters = _compile_filters($opt->{ifiles} || []) || App::Ack::Filter::Collection->new();
 
     my $filters         = $opt->{'filters'} || [];
     my $direct_filters = App::Ack::Filter::Collection->new();
@@ -170,42 +157,9 @@ sub _compile_file_filter {
 
     my %is_member_of_starting_set = map { (get_file_id($_) => 1) } @{$start};
 
-    my $ignore_dir_list      = $opt->{idirs};
-    my $dont_ignore_dir_list = $opt->{no_ignore_dirs};
-
-    my %ignore_dir_set;
-    my @ignore_dirs_re;
-    my %dont_ignore_dir_set;
-    my @dont_ignore_dirs_re;
-
-    foreach my $filter (@{ $ignore_dir_list }) {
-        if ( $filter =~ /^(\w+):(.*)/ ) {
-            if ( $1 eq 'is' ) {
-                $ignore_dir_set{ $2 } = 1;
-            }
-            elsif ( $1 eq 'match') {
-                push @ignore_dirs_re, $2;
-            } else {
-                Carp::croak( 'Non-is filters are not yet supported for --ignore-dir' );
-            }
-        } else {
-            Carp::croak( qq{Invalid filter specification "$filter"} );
-        }
-    }
-    foreach my $filter (@{ $dont_ignore_dir_list }) {
-        if ( $filter =~ /^(\w+):(.*)/ ) {
-            if ( $1 eq 'is' ) {
-                $dont_ignore_dir_set{ $2 } = 1;
-            }
-            elsif ( $1 eq 'match') {
-                push @dont_ignore_dirs_re, $2;
-            } else {
-                Carp::croak( 'Non-is filters are not yet supported for --ignore-dir' );
-            }
-        } else {
-            Carp::croak( qq{Invalid filter specification "$filter"} );
-        }
-    }
+    # XXX we only care about this if $dont_ignore_dir_list is not empty
+    my $ignore_dir_filter      = $opt->{idirs};
+    my $dont_ignore_dir_filter = _compile_filters($opt->{no_ignore_dirs});
 
     return sub {
         if ( $opt_g ) {
@@ -221,22 +175,25 @@ sub _compile_file_filter {
         # and say "ack foo whatever.jpg" it will do it for you.
         return 1 if $is_member_of_starting_set{ get_file_id($File::Next::name) };
 
-        if ( $dont_ignore_dir_list ) {
-            my ( undef, $dirname ) = File::Spec->splitpath($File::Next::name);
-            my @dirs               = File::Spec->splitdir($dirname);
+        if ( $dont_ignore_dir_filter ) {
+            my @dirs = File::Spec->splitdir($File::Next::dir);
 
             my $is_ignoring = 0;
 
-            $is_ignoring = grep { $dirname =~ $_ } @ignore_dirs_re;
-            foreach my $dir ( @dirs ) {
-                if ( $ignore_dir_set{ $dir } ) {
+            my $i = 0;
+
+            for ( my $i = 0; $i < @dirs; $i++) {
+                my $dir_rsrc = App::Ack::Resource::Basic->new(File::Spec->catfile(@dirs[0 .. $i]));
+
+                if ( $ignore_dir_filter->filter($dir_rsrc) ) {
                     $is_ignoring = 1;
                 }
-                elsif ( $dont_ignore_dir_set{ $dir } ) {
+                elsif( $dont_ignore_dir_filter->filter($dir_rsrc) ) {
                     $is_ignoring = 0;
                 }
             }
-            if ( $is_ignoring && !grep { $dirname =~ $_ } @dont_ignore_dirs_re) {
+
+            if ( $is_ignoring ) {
                 return 0;
             }
         }
@@ -1016,6 +973,8 @@ sub main {
                     App::Ack::warn( "$target: No such file or directory" );
                 }
             }
+
+            $opt->{idirs} = _compile_filters($opt->{idirs});
 
             $opt->{file_filter}    = _compile_file_filter($opt, \@start);
             $opt->{descend_filter} = _compile_descend_filter($opt);
