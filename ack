@@ -217,7 +217,7 @@ sub _compile_file_filter {
         }
 
         my $resource = App::Ack::Resource::Basic->new($File::Next::name);
-        return 0 if !$resource || $ifiles_filters->filter($resource);
+        return 0 if $ifiles_filters->filter($resource);
 
         my $match_found = $direct_filters->filter($resource);
 
