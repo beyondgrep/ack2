@@ -7,6 +7,7 @@ Users have been disatisfied with `--ignore-dir` and `--ignore-file`.  Here are s
   - `--ignore-dir=foo foo -f` doesn't search `foo/` (GH #492)
   - No way to ignore a file in a folder (GH #479)
   - `--ignore-dir` doesn't implement all filters (GH #42)
+  - What's the right behavior for `--ignore-dir=foo`, `--noignore-dir=bar`, `--ignore-dir=baz`, wrt. `foo/bar/baz/file.txt`
 
 Also consider GH #330, and consider that you could be anywhere in a project but still source the `--ignore-dir=./foo` rule
 from an ackrc a few directories above.  Are we preparing to teach ack about the notion of a project root?  Also, consider

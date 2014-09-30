@@ -396,12 +396,14 @@ sub print_matches_in_resource {
 
     $is_iterating = 1;
 
+    # XXX can this be lifted out to the caller?
     local $opt_before_context = $opt_output ? 0 : $opt_before_context;
     local $opt_after_context  = $opt_output ? 0 : $opt_after_context;
 
     my $n_before_ctx_lines = $opt_before_context || 0;
     my $n_after_ctx_lines  = $opt_after_context  || 0;
 
+    # XXX avoid option-specific work like this
     @after_ctx_lines = @before_ctx_lines = ();
 
     my $fh = $resource->open();
