@@ -4,14 +4,14 @@ use strict;
 use warnings;
 use base 'App::Ack::Filter';
 
-use App::Ack::Filter::IsGroup;
+use App::Ack::Filter::IsPathGroup;
 
 sub new {
     my ( $class, $filename ) = @_;
 
     return bless {
         filename => $filename,
-        #groupname => 'IsPathGroup',
+        groupname => 'IsPathGroup',
     }, $class;
 }
 
