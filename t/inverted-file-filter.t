@@ -21,6 +21,9 @@ EXCLUDE_ONLY: {
         t/swamp/groceries/another_subdir/fruit
         t/swamp/groceries/another_subdir/junk
         t/swamp/groceries/another_subdir/meat
+        t/swamp/groceries/dir.d/fruit
+        t/swamp/groceries/dir.d/junk
+        t/swamp/groceries/dir.d/meat
         t/swamp/groceries/fruit
         t/swamp/groceries/junk
         t/swamp/groceries/meat

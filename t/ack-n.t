@@ -15,6 +15,8 @@ END
 my $expected_recurse = <<'END';
 t/swamp/groceries/another_subdir/fruit:1:apple
 t/swamp/groceries/another_subdir/junk:1:apple fritters
+t/swamp/groceries/dir.d/fruit:1:apple
+t/swamp/groceries/dir.d/junk:1:apple fritters
 t/swamp/groceries/fruit:1:apple
 t/swamp/groceries/junk:1:apple fritters
 t/swamp/groceries/subdir/fruit:1:apple

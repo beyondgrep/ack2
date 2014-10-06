@@ -20,6 +20,12 @@ my @files_mentioning_apples = qw(
     t/swamp/groceries/another_subdir/CVS/junk
     t/swamp/groceries/another_subdir/RCS/fruit
     t/swamp/groceries/another_subdir/RCS/junk
+    t/swamp/groceries/dir.d/fruit
+    t/swamp/groceries/dir.d/junk
+    t/swamp/groceries/dir.d/CVS/fruit
+    t/swamp/groceries/dir.d/CVS/junk
+    t/swamp/groceries/dir.d/RCS/fruit
+    t/swamp/groceries/dir.d/RCS/junk
     t/swamp/groceries/subdir/fruit
     t/swamp/groceries/subdir/junk
     t/swamp/groceries/CVS/fruit
@@ -33,6 +39,9 @@ my( @expected, @results, $test_description );
 
 sub set_up_assertion_that_these_options_will_ignore_those_directories {
     my( $options, $ignored_directories, $optional_test_description ) = @_;
+
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+
     $test_description = $optional_test_description || join( ' ', @{$options} );
 
     my $filter = join( '|', @{$ignored_directories} );
@@ -144,7 +153,6 @@ IGNORE_DIR_MATCH: {
         [ '--ignore-dir=match:/\w_subdir/' ],
         [ @std_ignore, 'another_subdir', ],
     );
-
     sets_match( \@results, \@expected, $test_description );
 }
 
