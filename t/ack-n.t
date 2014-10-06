@@ -39,21 +39,21 @@ prep_environment();
 # We sort to ensure determinstic results.
 @args  = ('-n', '--sort-files', 'apple', 't/swamp/groceries');
 $lines = run_ack(@args);
-lists_match $lines, $expected_norecurse;
+lists_match $lines, $expected_norecurse, '-n should disable recursion';
 
 @args  = ('--no-recurse', '--sort-files', 'apple', 't/swamp/groceries');
 $lines = run_ack(@args);
-lists_match $lines, $expected_norecurse;
+lists_match $lines, $expected_norecurse, '--no-recurse should disable recursion';
 
 # Make sure that re-enabling recursion works.
 @args  = ('-n', '-r', '--sort-files', 'apple', 't/swamp/groceries');
 $lines = run_ack(@args);
-lists_match $lines, $expected_recurse;
+lists_match $lines, $expected_recurse, '-r after -n should re-enable recursion';
 
 @args  = ('--no-recurse', '-R', '--sort-files', 'apple', 't/swamp/groceries');
 $lines = run_ack(@args);
-lists_match $lines, $expected_recurse;
+lists_match $lines, $expected_recurse, '-R after --no-recurse should re-enable recursion';
 
 @args  = ('--no-recurse', '--recurse', '--sort-files', 'apple', 't/swamp/groceries');
 $lines = run_ack(@args);
-lists_match $lines, $expected_recurse;
+lists_match $lines, $expected_recurse, '--recurse after --no-recurse should re-enable recursion';
