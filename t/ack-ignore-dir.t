@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 26;
+use Test::More tests => 28;
 use File::Spec;
 
 use lib 't';
@@ -156,7 +156,14 @@ IGNORE_DIR_MATCH: {
     sets_match( \@results, \@expected, $test_description );
 }
 
-# XXX test needed for ext:
+IGNORE_DIR_EXT: {
+    set_up_assertion_that_these_options_will_ignore_those_directories(
+        [ '--ignore-dir=ext:d' ],
+        [ @std_ignore, 'dir.d', ],
+    );
+    sets_match( \@results, \@expected, $test_description );
+}
+
 # XXX test needed for firstlinematch: (which doesn't apply to directories)
 
 # XXX tests needs for combinations of the above with --noignore-dir 
