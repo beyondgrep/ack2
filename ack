@@ -112,6 +112,17 @@ sub _compile_filters {
     foreach my $filter_spec (@{$filter_specs}) {
         if ( $filter_spec =~ /^(\w+):(.+)/ ) {
             my ($how,$what) = ($1,$2);
+            my $found = 0;
+            foreach my $type ( @{$allowed} ) {
+                if ( $how eq $type ) {
+                    $found = 1;
+                    last;
+                }
+            }
+            if ( !$found ) {
+                Carp::croak( qq{Invalid filter specification "$how" for option '$context'} );
+            }
+
             my $filter = App::Ack::Filter->create_filter($how, split(/,/, $what));
             $filter_collection->add($filter);
 
