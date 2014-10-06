@@ -265,8 +265,7 @@ EOT
                                     my ( undef, $dir ) = @_;
 
                                     $dir = App::Ack::remove_dir_sep( $dir );
-                                    # XXX remove me
-                                    if ( $dir !~ /^(?:is|match|ext):/ ) {
+                                    if ( $dir !~ /:/ ) {
                                         $dir = 'is:' . $dir;
                                     }
                                     push @{ $opt->{idirs} }, $dir;
@@ -296,11 +295,8 @@ EOT
 
                                 # XXX can you do --noignore-dir=match,...?
                                 $dir = App::Ack::remove_dir_sep( $dir );
-                                if ( $dir !~ /^(?:is|match|ext):/ ) {
+                                if ( $dir !~ /:/ ) {
                                     $dir = 'is:' . $dir;
-                                }
-                                if ( $dir !~ /^(?:is|match|ext):/ ) {
-                                    Carp::croak("invalid noignore-directory argument: '$dir'");
                                 }
 
                                 @{ $opt->{idirs} } = grep {
