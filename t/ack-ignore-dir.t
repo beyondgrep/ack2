@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 28;
+use Test::More tests => 31;
 use File::Spec;
 
 use lib 't';
@@ -164,6 +164,12 @@ IGNORE_DIR_EXT: {
     sets_match( \@results, \@expected, $test_description );
 }
 
-# XXX test needed for firstlinematch: (which doesn't apply to directories)
+IGNORE_DIR_FIRSTMATCH: {
+    my ( $stdout, $stderr ) = run_ack_with_stderr('--ignore-dir=firstlinematch:perl', '--noenv', '-l', 'apple', 't/swamp');
 
-# XXX tests needs for combinations of the above with --noignore-dir 
+    is(scalar(@{$stdout}), 0, '--ignore-dir=firstlinematch:perl is erroneous and should print nothing to standard output');
+    isnt(scalar(@{$stderr}), 0, '--ignore-dir=firstlinematch:perl is erroneous and should print something to standard error');
+    like($stderr->[0], qr/Invalid filter specification "firstlinematch" for option '--ignore-dir'/, '--ignore-dir=firstlinematch:perl should report an error message');
+}
+
+# XXX tests needs for combinations of the above with --noignore-dir
