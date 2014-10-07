@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 31;
+use Test::More tests => 37;
 use File::Spec;
 
 use lib 't';
@@ -172,4 +172,36 @@ IGNORE_DIR_FIRSTMATCH: {
     like($stderr->[0], qr/Invalid filter specification "firstlinematch" for option '--ignore-dir'/, '--ignore-dir=firstlinematch:perl should report an error message');
 }
 
-# XXX tests needs for combinations of the above with --noignore-dir
+IGNORE_DIR_MATCH_NOIGNORE_DIR: {
+    set_up_assertion_that_these_options_will_ignore_those_directories(
+        [ '--ignore-dir=match:/\w_subdir/', '--noignore-dir=CVS' ],
+        [ 'RCS', 'another_subdir(?!/CVS)', ],
+    );
+    sets_match( \@results, \@expected, $test_description );
+}
+
+IGNORE_DIR_MATCH_NOIGNORE_DIR_IS: {
+    set_up_assertion_that_these_options_will_ignore_those_directories(
+        [ '--ignore-dir=match:/\w_subdir/', '--noignore-dir=is:CVS' ],
+        [ 'RCS', 'another_subdir(?!/CVS)', ],
+    );
+    sets_match( \@results, \@expected, $test_description );
+}
+
+IGNORE_DIR_MATCH_NOIGNORE_DIR_MATCH: {
+    set_up_assertion_that_these_options_will_ignore_those_directories(
+        [ '--ignore-dir=match:/\w_subdir/', '--noignore-dir=match:/..S/' ],
+        [ 'another_subdir(?!/(?:CVS|RCS))', ],
+    );
+    sets_match( \@results, \@expected, $test_description );
+}
+
+# --noignore-dir=firstlinematch
+# --ignore-dir=... + --noignore-dir=ext
+# --ignore-dir=is + --noignore-dir=match
+# --ignore-dir=is + --noignore-dir=ext
+# --ignore-dir=match + --noignore-dir=match
+# --ignore-dir=match + --noignore-dir=ext
+# --ignore-dir=ext + --noignore-dir=match
+# --ignore-dir=ext + --noignore-dir=ext
+# re-ignore a directory
