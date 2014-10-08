@@ -209,7 +209,7 @@ sub _compile_file_filter {
                 if ( $ignore_dir_filter->filter($dir_rsrc) ) {
                     $is_ignoring = 1;
                 }
-                elsif( $dont_ignore_dir_filter->filter($dir_rsrc) ) {
+                if( $dont_ignore_dir_filter->filter($dir_rsrc) ) {
                     $is_ignoring = 0;
                 }
             }
