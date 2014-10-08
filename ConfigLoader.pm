@@ -293,7 +293,6 @@ EOT
                             => sub {
                                 my ( undef, $dir ) = @_;
 
-                                # XXX can you do --noignore-dir=match,...?
                                 $dir = App::Ack::remove_dir_sep( $dir );
                                 if ( $dir !~ /:/ ) {
                                     $dir = 'is:' . $dir;
