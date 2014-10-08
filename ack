@@ -196,6 +196,10 @@ sub _compile_file_filter {
         # and say "ack foo whatever.jpg" it will do it for you.
         return 1 if $is_member_of_starting_set{ get_file_id($File::Next::name) };
 
+        # XXX cache most recent path (because the ignore-dir result will be
+        #     the same)
+        # XXX cache the result of directories (individual path components)
+        # XXX don't check --noignore-dir if we have no --noignore-dir match:es
         if ( $dont_ignore_dir_filter ) {
             my @dirs = File::Spec->splitdir($File::Next::dir);
 
