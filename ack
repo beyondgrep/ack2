@@ -336,7 +336,9 @@ sub build_regex {
     my $opt = shift;
 
     defined $str or App::Ack::die( 'No regular expression found.' );
-    $str or App::Ack::die( 'Empty regular expression.' );
+    if ( $str eq '' ) {
+        App::Ack::die( 'Empty regular expression.' );
+    }
 
     $str = quotemeta( $str ) if $opt->{Q};
     if ( $opt->{w} ) {
