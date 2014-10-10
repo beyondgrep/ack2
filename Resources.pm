@@ -49,7 +49,6 @@ sub from_argv {
 
     my $self = bless {}, $class;
 
-    my $file_filter    = undef;
     my $descend_filter = $opt->{descend_filter};
 
     if( $opt->{n} ) {
