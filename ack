@@ -59,8 +59,10 @@ MAIN: {
 
     # Do preliminary arg checking;
     my $env_is_usable = 1;
-    for my $arg ( @ARGV ) {
-        last if ( $arg eq '--' );
+    my $arg;
+    for (my $i = 0; $i != @ARGV; ++$i) {
+        $arg = $ARGV[$i];
+        last if $arg eq '--';
 
         # Get the --thpppt, --bar, --cathy checking out of the way.
         $arg =~ /^--th[pt]+t+$/ and App::Ack::_thpppt($arg);
@@ -72,12 +74,16 @@ MAIN: {
         $arg eq '--noenv'       and $env_is_usable = 0;
 
         # XXX remove these at some point
-        $arg eq '--filter'      and App::Ack::die( "--filter has been removed, use - to read stdin instead" );
-        if ( $App::Ack::is_windows ) {
-            $arg eq '--nofilter' and App::Ack::die( "--nofilter has been removed, redirect stdin from 'nul' instead, e.g. '<nul'" );
+        if ( $arg eq '--filter' ) {
+            App::Ack::warn( '--filter has been removed, use - to read stdin instead' );
+            splice @ARGV, $i, 1, '-';
         }
-        else {
-            $arg eq '--nofilter' and App::Ack::die( "--nofilter has been removed, redirect stdin from /dev/null instead, e.g. '</dev/null'" );
+        elsif ( $arg eq '--nofilter' ) {
+            App::Ack::warn( '--nofilter has been removed, redirect stdin from "'.File::Spec->devnull().'" instead' );
+            $App::Ack::is_stdin_pipe = 0;
+            open STDIN, File::Spec->devnull();
+            splice @ARGV, $i, 1;
+            --$i;
         }
     }
 
@@ -1050,7 +1056,7 @@ sub main {
     }
 
     my $resources;
-    if ( $App::Ack::is_stdin_pipe && scalar @ARGV == 1 && !$opt->{files_from} && !$opt->{f} ) { # probably -x
+    if ( $App::Ack::is_stdin_pipe && @ARGV == 1 && !$opt->{files_from} && !$opt->{f} ) { # probably -x
         $resources    = App::Ack::Resources->from_stdin( $opt );
         $opt_regex = shift @ARGV if not defined $opt_regex;
         $opt_regex = $opt->{regex} = build_regex( $opt_regex, $opt );
@@ -1083,7 +1089,12 @@ sub main {
         else {
             @start = ('.') unless @start;
             foreach my $target (@start) {
-                if ( !-e $target && $target ne "-" && $App::Ack::report_bad_filenames) {
+                if ( $target eq "-" ) {
+                    if ( -e $target ) {
+                        App::Ack::warn('literal file "-" exists and will be ignored, stdin will be used instead!');
+                    }
+                }
+                elsif ( !-e $target && $App::Ack::report_bad_filenames) {
                     App::Ack::warn( "$target: No such file or directory" );
                 }
             }
