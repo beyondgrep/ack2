@@ -73,7 +73,12 @@ MAIN: {
 
         # XXX remove these at some point
         $arg eq '--filter'      and App::Ack::die( "--filter has been removed, use - to read stdin instead" );
-        $arg eq '--nofilter'    and App::Ack::die( "--nofilter has been removed, redirect stdin from /dev/null instead" );
+        if ( $App::Ack::is_windows ) {
+            $arg eq '--nofilter' and App::Ack::die( "--nofilter has been removed, redirect stdin from 'nul' instead, e.g. '<nul'" );
+        }
+        else {
+            $arg eq '--nofilter' and App::Ack::die( "--nofilter has been removed, redirect stdin from /dev/null instead, e.g. '</dev/null'" );
+        }
     }
 
     if ( !$env_is_usable ) {
