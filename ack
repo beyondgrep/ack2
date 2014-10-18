@@ -47,6 +47,8 @@ our $opt_L;
 our $opt_l;
 our $opt_passthru;
 our $opt_column;
+# flag if we need any context tracking
+our $is_tracking_context;
 
 # These are all our globals.
 
@@ -359,9 +361,6 @@ sub build_regex {
 my $match_column_number;
 
 {
-
-# flag if we need any context tracking
-my $is_tracking_context;
 
 # number of context lines
 my $n_before_ctx_lines;
@@ -1023,7 +1022,9 @@ sub main {
 
 RESOURCES:
     while ( my $resource = $resources->next ) {
-        setup_line_context_for_file($opt);
+        if ($is_tracking_context) {
+            setup_line_context_for_file($opt);
+        }
 
         # XXX Combine the -f and -g functions
         if ( $opt_f ) {
@@ -1076,7 +1077,7 @@ RESOURCES:
                 elsif ( $opt_passthru ) {
                     print_line_with_options($opt, $filename, $_, $., ':');
                 }
-                else {
+                elsif ( $is_tracking_context ) {
                     print_line_if_context($opt, $filename, $_, $., '-');
                 }
                 return 1;
