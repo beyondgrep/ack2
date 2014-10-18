@@ -107,9 +107,10 @@ sub _compile_filters {
 
     return unless $filter_specs && @{$filter_specs};
 
-    my $filter_collection = App::Ack::Filter::Collection->new();
+    my @filter_collection;
 
     foreach my $filter_spec (@{$filter_specs}) {
+
         if ( $filter_spec =~ /^(\w+):(.+)/ ) {
             my ($how,$what) = ($1,$2);
             my $found = 0;
@@ -124,11 +125,11 @@ sub _compile_filters {
             }
 
             my $filter = App::Ack::Filter->create_filter($how, split(/,/, $what));
-            $filter_collection->add($filter);
+            push @filter_collection, $filter;
 
             # XXX regex match? =(
             if ( $how eq 'is' && $context =~ /ignore-dir/ ) {
-                $filter_collection->add(App::Ack::Filter::IsPath->new($what));
+                push @filter_collection, App::Ack::Filter::IsPath->new($what);
             }
         }
         else {
@@ -136,14 +137,24 @@ sub _compile_filters {
         }
     }
 
-    return $filter_collection;
+    return \@filter_collection;
 }
 
 sub _compile_descend_filter {
     my ( $opt ) = @_;
 
-    my $idirs            = $opt->{idirs};
-    my $dont_ignore_dirs = $opt->{no_ignore_dirs};
+    my $idirs = 0;
+    my $dont_ignore_dirs = 0;
+
+    # XXX here we go
+    for my $filter (@{$opt->{idirs}}) {
+        if ($filter->is_inverted()) {
+            $dont_ignore_dirs++;
+        }
+        else {
+            $idirs++;
+        }
+    }
 
     # if we have one or more --noignore-dir directives, we can't ignore
     # entire subdirectory hierarchies, so we return an "accept all"
@@ -151,16 +162,21 @@ sub _compile_descend_filter {
     return if $dont_ignore_dirs;
     return unless $idirs;
 
+    $idirs = $opt->{idirs};
+
     return sub {
         my $resource = App::Ack::Resource::Basic->new($File::Next::dir);
-        return !$idirs->filter($resource);
+        my $result = grep { $_->filter($resource) } @{$idirs};
+        return !grep { $_->filter($resource) } @{$idirs};
     };
 }
 
 sub _compile_file_filter {
     my ( $opt, $start ) = @_;
 
-    my $ifiles_filters = _compile_filters($opt->{ifiles} || [], '--ignore-file', \@FILE_FILTERS) || App::Ack::Filter::Collection->new();
+    # XXX FIXME
+    my $ifiles_filters = App::Ack::Filter::Collection->new();
+    #my $ifiles_filters = _compile_filters($opt->{ifiles} || [], '--ignore-file', \@FILE_FILTERS) || App::Ack::Filter::Collection->new();
 
     my $filters         = $opt->{'filters'} || [];
     my $direct_filters = App::Ack::Filter::Collection->new();
@@ -179,8 +195,9 @@ sub _compile_file_filter {
     my %is_member_of_starting_set = map { (get_file_id($_) => 1) } @{$start};
 
     # XXX we only care about this if $dont_ignore_dir_list is not empty
+    # XXX you could probably coalesce similar groups by inverted/not inverted status into collections (ex --ignore, --ignore, --not-ignore could reduce to two filters)
     my $ignore_dir_filter      = $opt->{idirs};
-    my $dont_ignore_dir_filter = _compile_filters($opt->{no_ignore_dirs}, '--no-ignoredir', \@DIR_FILTERS);
+    my $dont_ignore_dir_filter = grep { $_->is_inverted() } @{$opt->{idirs}};
 
     return sub {
         if ( $opt_g ) {
@@ -210,11 +227,19 @@ sub _compile_file_filter {
             for ( my $i = 0; $i < @dirs; $i++) {
                 my $dir_rsrc = App::Ack::Resource::Basic->new(File::Spec->catfile(@dirs[0 .. $i]));
 
-                if ( $ignore_dir_filter->filter($dir_rsrc) ) {
-                    $is_ignoring = 1;
-                }
-                if( $dont_ignore_dir_filter->filter($dir_rsrc) ) {
-                    $is_ignoring = 0;
+                # XXX cache is_inverted calls, strip out the inverted filters to avoid extra internal method call
+                for my $filter ( @{$ignore_dir_filter} ) {
+                    # XXX this is called a *lot*
+                    if ( $filter->is_inverted() ) {
+                        if ( !$filter->filter($dir_rsrc) ) {
+                            $is_ignoring = 0;
+                        }
+                    }
+                    else {
+                        if ( $filter->filter($dir_rsrc) ) {
+                            $is_ignoring = 1;
+                        }
+                    }
                 }
             }
 
