@@ -178,9 +178,7 @@ sub _compile_descend_filter {
 sub _compile_file_filter {
     my ( $opt, $start ) = @_;
 
-    # XXX FIXME
-    my $ifiles_filters = App::Ack::Filter::Collection->new();
-    #my $ifiles_filters = _compile_filters($opt->{ifiles} || [], '--ignore-file', \@FILE_FILTERS) || App::Ack::Filter::Collection->new();
+    my $ifiles_filters = _compile_filters([ map { [ 1, $_ ] } @{$opt->{ifiles} || []} ], '--ignore-file', \@FILE_FILTERS) || [];
 
     my $filters         = $opt->{'filters'} || [];
     my $direct_filters = App::Ack::Filter::Collection->new();
@@ -271,7 +269,12 @@ sub _compile_file_filter {
         }
 
         my $resource = App::Ack::Resource::Basic->new($File::Next::name);
-        return 0 if $ifiles_filters->filter($resource);
+
+        foreach my $filter ( @{$ifiles_filters} ) {
+            if ( $filter->filter($resource) ) {
+                return 0;
+            }
+        }
 
         my $match_found = $direct_filters->filter($resource);
 
