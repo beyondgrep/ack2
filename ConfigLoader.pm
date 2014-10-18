@@ -268,7 +268,7 @@ EOT
                                     if ( $dir !~ /:/ ) {
                                         $dir = 'is:' . $dir;
                                     }
-                                    push @{ $opt->{idirs} }, $dir;
+                                    push @{ $opt->{idirs} }, [ 1, $dir ];
         },
         'ignore-file=s'     => sub {
                                     my ( undef, $file ) = @_;
@@ -298,11 +298,7 @@ EOT
                                     $dir = 'is:' . $dir;
                                 }
 
-                                @{ $opt->{idirs} } = grep {
-                                    $_ ne $dir
-                                } @{ $opt->{idirs} };
-
-                                push @{ $opt->{no_ignore_dirs} }, $dir;
+                                push @{ $opt->{idirs} }, [ 0, $dir ];
                             },
         'nopager'           => sub { $opt->{pager} = undef },
         'passthru'          => \$opt->{passthru},

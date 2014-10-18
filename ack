@@ -109,7 +109,8 @@ sub _compile_filters {
 
     my @filter_collection;
 
-    foreach my $filter_spec (@{$filter_specs}) {
+    foreach my $pair (@{$filter_specs}) {
+        my ( $positive, $filter_spec ) = @{$pair};
 
         if ( $filter_spec =~ /^(\w+):(.+)/ ) {
             my ($how,$what) = ($1,$2);
@@ -125,6 +126,9 @@ sub _compile_filters {
             }
 
             my $filter = App::Ack::Filter->create_filter($how, split(/,/, $what));
+            if ( !$positive ) {
+                $filter = $filter->invert();
+            }
             push @filter_collection, $filter;
 
             # XXX regex match? =(
