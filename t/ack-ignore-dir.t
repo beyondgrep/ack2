@@ -190,7 +190,7 @@ IGNORE_DIR_MATCH_NOIGNORE_DIR_IS: {
 
 IGNORE_DIR_MATCH_NOIGNORE_DIR_MATCH: {
     set_up_assertion_that_these_options_will_ignore_those_directories(
-        [ '--ignore-dir=match:/\w_subdir/', '--noignore-dir=match:/..S/' ],
+        [ '--ignore-dir=match:/\w_subdir/', '--noignore-dir=match:/^..S/' ],
         [ 'another_subdir(?!/(?:CVS|RCS))', ],
     );
     sets_match( \@results, \@expected, $test_description );
