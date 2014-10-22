@@ -1111,8 +1111,6 @@ RESOURCES:
             last RESOURCES if defined($opt_m) && $nmatches >= $opt_m;
         }
         elsif ( $opt_lines ) {
-            my $opt_passthru       = $opt_passthru;
-
             my %line_numbers;
             foreach my $line ( @{ $opt_lines } ) {
                 my @lines             = split /,/, $line;
