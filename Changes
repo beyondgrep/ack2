@@ -9,6 +9,8 @@ a bug introduced in 2.14.  Thanks to Elliot Shank for the report! (GH #491)
 [ENHANCEMENTS]
 Many optimizations.
 
+Cleaned up the code a bit. (Thanks, Stephan Hohe!)
+
 2.14    Wed Sep  3 22:48:00 CDT 2014
 ====================================
 [FIXES]
