@@ -809,7 +809,6 @@ sub print_line_with_context {
     }
 
     my $ors                 = $opt_print0 ? "\0" : "\n";
-    my $match_word          = $opt->{w};
     my $is_tracking_context = $opt_after_context || $opt_before_context;
 
     $matching_line =~ s/[\r\n]+$//g;
