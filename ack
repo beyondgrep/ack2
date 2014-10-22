@@ -809,7 +809,6 @@ sub print_line_with_context {
     }
 
     my $ors                 = $opt_print0 ? "\0" : "\n";
-    my $match_word          = $opt->{w};
     my $is_tracking_context = $opt_after_context || $opt_before_context;
 
     $matching_line =~ s/[\r\n]+$//g;
@@ -929,10 +928,9 @@ sub resource_has_match {
         }
     }
     else {
-        my $re = $opt_regex;
         if ( $opt_v ) {
             while ( <$fh> ) {
-                if (!/$re/o) {
+                if (!/$opt_regex/o) {
                     $has_match = 1;
                     last;
                 }
@@ -945,7 +943,7 @@ sub resource_has_match {
                 local $/;
                 <$fh>;
             };
-            $has_match = $content =~ /$re/o;
+            $has_match = $content =~ /$opt_regex/o;
         }
         close $fh;
     }
@@ -964,10 +962,9 @@ sub count_matches_in_resource {
         }
     }
     else {
-        my $re = $opt_regex;
         if ( $opt_v ) {
             while ( <$fh> ) {
-                ++$nmatches if (!/$re/o);
+                ++$nmatches if (!/$opt_regex/o);
             }
         }
         else {
@@ -975,7 +972,7 @@ sub count_matches_in_resource {
                 local $/;
                 <$fh>;
             };
-            $nmatches =()= ($content =~ /$re/og);
+            $nmatches =()= ($content =~ /$opt_regex/og);
         }
         close $fh;
     }
@@ -1114,8 +1111,6 @@ RESOURCES:
             last RESOURCES if defined($opt_m) && $nmatches >= $opt_m;
         }
         elsif ( $opt_lines ) {
-            my $opt_passthru       = $opt_passthru;
-
             my %line_numbers;
             foreach my $line ( @{ $opt_lines } ) {
                 my @lines             = split /,/, $line;
