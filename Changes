@@ -7,7 +7,7 @@ The -l and -c flags would sometimes return inaccurate results due to
 a bug introduced in 2.14.  Thanks to Elliot Shank for the report! (GH #491)
 
 [ENHANCEMENTS]
-Many optimizations.
+Many optimizations. (Thanks, Stephan Hohe!)
 
 Cleaned up the code a bit. (Thanks, Stephan Hohe!)
 
