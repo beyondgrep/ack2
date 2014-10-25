@@ -270,6 +270,10 @@ sub _options_block {
 # HTML
 --type-add=html:ext:htm,html
 
+# IDEA IntelliJ
+# http://www.jetbrains.com/idea/
+--type-add=idea:ext:iml
+
 # Jade
 # http://jade-lang.com/
 --type-add=jade:ext:jade

@@ -31,6 +31,7 @@ groovy
 haskell
 hh
 html
+idea
 java
 js
 json
