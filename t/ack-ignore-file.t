@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::More tests => 1;
+use Test::More skip_all => 'NYI';
 
 # XXX look at --ignore-dir, but apply to --ignore-file
 
