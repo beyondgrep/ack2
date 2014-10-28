@@ -1031,8 +1031,6 @@ sub main {
                 }
             }
 
-            $opt->{idirs} = _compile_filters($opt->{idirs}, '--ignore-dir', \@DIR_FILTERS);
-
             $opt->{file_filter}    = _compile_file_filter($opt, \@start);
             $opt->{descend_filter} = _compile_descend_filter($opt);
 

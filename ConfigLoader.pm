@@ -225,6 +225,8 @@ EOT
 
 =cut
 
+    my $is_previous_idir_inverted;
+
     return {
         1                   => sub { $opt->{1} = $opt->{m} = 1 },
         'A|after-context=i' => \$opt->{after_context},
@@ -261,6 +263,7 @@ EOT
         'h|no-filename'     => \$opt->{h},
         'H|with-filename'   => \$opt->{H},
         'i|ignore-case'     => \$opt->{i},
+        # XXX can we unify this and --noignore-dir?
         'ignore-directory|ignore-dir=s' => sub {
                                     my ( undef, $dir ) = @_;
 
@@ -268,7 +271,19 @@ EOT
                                     if ( $dir !~ /:/ ) {
                                         $dir = 'is:' . $dir;
                                     }
-                                    push @{ $opt->{idirs} }, [ 1, $dir ];
+
+                                    my ( $filter_type, $args ) = split /:/, $dir, 2;
+
+                                    if ( $filter_type eq 'firstlinematch' ) {
+                                        Carp::croak( qq{Invalid filter specification "$filter_type" for option '--ignore-dir'} );
+                                    }
+
+                                    my $filter = App::Ack::Filter->create_filter($filter_type, split(/,/, $args));
+
+                                    push @{ $opt->{idirs} }, $filter;
+                                    if ( $filter_type eq 'is' ) {
+                                        push @{ $opt->{idirs} }, App::Ack::Filter::IsPath->new($args);
+                                    }
         },
         'ignore-file=s'     => sub {
                                     my ( undef, $file ) = @_;
@@ -298,7 +313,16 @@ EOT
                                     $dir = 'is:' . $dir;
                                 }
 
-                                push @{ $opt->{idirs} }, [ 0, $dir ];
+                                my ( $filter_type, $args ) = split /:/, $dir, 2;
+
+                                if ( $filter_type eq 'firstlinematch' ) {
+                                    Carp::croak( qq{Invalid filter specification "$filter_type" for option '--noignore-dir'} );
+                                }
+
+                                my $filter = App::Ack::Filter->create_filter($filter_type, split(/,/, $args));
+
+                                push @{ $opt->{idirs} }, $filter->invert();
+
                             },
         'nopager'           => sub { $opt->{pager} = undef },
         'passthru'          => \$opt->{passthru},
