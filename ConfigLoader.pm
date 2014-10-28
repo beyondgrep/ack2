@@ -296,7 +296,15 @@ EOT
         },
         'ignore-file=s'     => sub {
                                     my ( undef, $file ) = @_;
-                                    push @{ $opt->{ifiles} }, $file;
+
+                                    my ( $filter_type, $args ) = split /:/, $file, 2;
+
+                                    my $filter = App::Ack::Filter->create_filter($filter_type, split(/,/, $args));
+
+                                    if ( !$opt->{ifiles} ) {
+                                        $opt->{ifiles} = App::Ack::Filter::Collection->new();
+                                    }
+                                    $opt->{ifiles}->add($filter);
                                },
         'lines=s'           => sub { shift; my $val = shift; push @{$opt->{lines}}, $val },
         'l|files-with-matches'
