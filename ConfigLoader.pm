@@ -225,8 +225,6 @@ EOT
 
 =cut
 
-    my $is_previous_idir_inverted;
-
     return {
         1                   => sub { $opt->{1} = $opt->{m} = 1 },
         'A|after-context=i' => \$opt->{after_context},
@@ -280,9 +278,20 @@ EOT
 
                                     my $filter = App::Ack::Filter->create_filter($filter_type, split(/,/, $args));
 
-                                    push @{ $opt->{idirs} }, $filter;
+                                    my $is_previous_uninverted = $opt->{idirs} && !$opt->{idirs}[-1]->is_inverted();
+
+                                    my $collection;
+                                    if ( $is_previous_uninverted ) {
+                                        $collection = $opt->{idirs}[-1];
+                                    }
+                                    else {
+                                        $collection = App::Ack::Filter::Collection->new();
+                                        push @{ $opt->{idirs} }, $collection;
+                                    }
+                                    $collection->add($filter);
+
                                     if ( $filter_type eq 'is' ) {
-                                        push @{ $opt->{idirs} }, App::Ack::Filter::IsPath->new($args);
+                                        $collection->add(App::Ack::Filter::IsPath->new($args));
                                     }
         },
         'ignore-file=s'     => sub {
@@ -321,8 +330,21 @@ EOT
 
                                 my $filter = App::Ack::Filter->create_filter($filter_type, split(/,/, $args));
 
-                                push @{ $opt->{idirs} }, $filter->invert();
+                                my $is_previous_inverted = $opt->{idirs} && $opt->{idirs}[-1]->is_inverted();
 
+                                my $collection;
+                                if ( $is_previous_inverted ) {
+                                    # XXX this relies on invert of an inverted filter
+                                    #     to return the original
+                                    $collection = $opt->{idirs}[-1]->invert();
+                                }
+                                else {
+                                    $collection = App::Ack::Filter::Collection->new();
+                                    push @{ $opt->{idirs} }, $collection->invert();
+                                }
+                                $collection->add($filter);
+
+                                # XXX shouldn't we push an IsPath?  I don't think we did this right before; test it
                             },
         'nopager'           => sub { $opt->{pager} = undef },
         'passthru'          => \$opt->{passthru},
