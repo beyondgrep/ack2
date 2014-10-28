@@ -51,9 +51,6 @@ our $opt_column;
 # flag if we need any context tracking
 our $is_tracking_context;
 
-my @FILE_FILTERS = qw(is match ext firstlinematch);
-my @DIR_FILTERS  = qw(is match ext);
-
 # These are all our globals.
 
 MAIN: {
@@ -99,49 +96,6 @@ MAIN: {
     }
 
     main();
-}
-
-# XXX this should probably work with process_filter_spec
-sub _compile_filters {
-    my ( $filter_specs, $context, $allowed ) = @_;
-
-    return unless $filter_specs && @{$filter_specs};
-
-    my @filter_collection;
-
-    foreach my $pair (@{$filter_specs}) {
-        my ( $positive, $filter_spec ) = @{$pair};
-
-        if ( $filter_spec =~ /^(\w+):(.+)/ ) {
-            my ($how,$what) = ($1,$2);
-            my $found = 0;
-            foreach my $type ( @{$allowed} ) {
-                if ( $how eq $type ) {
-                    $found = 1;
-                    last;
-                }
-            }
-            if ( !$found ) {
-                Carp::croak( qq{Invalid filter specification "$how" for option '$context'} );
-            }
-
-            my $filter = App::Ack::Filter->create_filter($how, split(/,/, $what));
-            if ( !$positive ) {
-                $filter = $filter->invert();
-            }
-            push @filter_collection, $filter;
-
-            # XXX regex match? =(
-            if ( $how eq 'is' && $context =~ /ignore-dir/ ) {
-                push @filter_collection, App::Ack::Filter::IsPath->new($what);
-            }
-        }
-        else {
-            Carp::croak( qq{Invalid filter specification "$filter_spec" for option '$context'} );
-        }
-    }
-
-    return \@filter_collection;
 }
 
 sub _compile_descend_filter {
