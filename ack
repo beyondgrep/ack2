@@ -105,7 +105,7 @@ sub _compile_descend_filter {
     my $dont_ignore_dirs = 0;
 
     # XXX here we go
-    for my $filter (@{$opt->{idirs}}) {
+    for my $filter (@{$opt->{idirs} || []}) {
         if ($filter->is_inverted()) {
             $dont_ignore_dirs++;
         }
@@ -150,11 +150,16 @@ sub _compile_file_filter {
 
     my %is_member_of_starting_set = map { (get_file_id($_) => 1) } @{$start};
 
-    # XXX we only care about this if $dont_ignore_dir_list is not empty
-    # XXX you could probably coalesce similar groups by inverted/not inverted status into collections (ex --ignore, --ignore, --not-ignore could reduce to two filters)
-    my $ignore_dir_filter      = $opt->{idirs};
-    my $dont_ignore_dir_filter = grep { $_->is_inverted() } @{$opt->{idirs}};
+    my @ignore_dir_filter = @{$opt->{idirs} || []};
+    my @is_inverted       = map { $_->is_inverted() } @ignore_dir_filter;
+    # XXX this depends on InverseFilter->invert returning the original
+    #     filter (for optimization)
+    @ignore_dir_filter         = map { $_->is_inverted() ? $_->invert() : $_ } @ignore_dir_filter;
+    my $dont_ignore_dir_filter = grep { $_ } @is_inverted;
+    my $previous_dir = '';
+    my $previous_dir_ignore_result;
 
+    # XXX this is redundant if the starting set is just file names
     return sub {
         if ( $opt_g ) {
             if ( $File::Next::name =~ /$opt_regex/ && $opt_v ) {
@@ -172,33 +177,25 @@ sub _compile_file_filter {
         # XXX cache most recent path (because the ignore-dir result will be
         #     the same)
         # XXX cache the result of directories (individual path components)
-        # XXX don't check --noignore-dir if we have no --noignore-dir match:es
+        # XXX don't cache --noignore-dir if we have no --noignore-dir match:es
         if ( $dont_ignore_dir_filter ) {
             my @dirs = File::Spec->splitdir($File::Next::dir);
 
             my $is_ignoring = 0;
 
-            my $i = 0;
-
             for ( my $i = 0; $i < @dirs; $i++) {
+                # XXX this is probably kind of expensive
                 my $dir_rsrc = App::Ack::Resource::Basic->new(File::Spec->catfile(@dirs[0 .. $i]));
 
-                # XXX cache is_inverted calls, strip out the inverted filters to avoid extra internal method call
-                for my $filter ( @{$ignore_dir_filter} ) {
-                    # XXX this is called a *lot*
-                    if ( $filter->is_inverted() ) {
-                        if ( !$filter->filter($dir_rsrc) ) {
-                            $is_ignoring = 0;
-                        }
+                my $j = 0;
+                for my $filter (@ignore_dir_filter) {
+                    # XXX this gets called a bunch
+                    if ( $filter->filter($dir_rsrc) ) {
+                        $is_ignoring = !$is_inverted[$j];
                     }
-                    else {
-                        if ( $filter->filter($dir_rsrc) ) {
-                            $is_ignoring = 1;
-                        }
-                    }
+                    $j++;
                 }
             }
-
             if ( $is_ignoring ) {
                 return 0;
             }
