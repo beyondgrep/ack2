@@ -123,7 +123,6 @@ sub _compile_descend_filter {
 
     return sub {
         my $resource = App::Ack::Resource::Basic->new($File::Next::dir);
-        my $result = grep { $_->filter($resource) } @{$idirs};
         return !grep { $_->filter($resource) } @{$idirs};
     };
 }
