@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 37;
+use Test::More tests => 39;
 use File::Spec;
 
 use lib 't';
@@ -192,6 +192,15 @@ IGNORE_DIR_MATCH_NOIGNORE_DIR_MATCH: {
     set_up_assertion_that_these_options_will_ignore_those_directories(
         [ '--ignore-dir=match:/\w_subdir/', '--noignore-dir=match:/^..S/' ],
         [ 'another_subdir(?!/(?:CVS|RCS))', ],
+    );
+    sets_match( \@results, \@expected, $test_description );
+}
+
+NOIGNORE_DIR_RELATIVE_PATHS: {
+    set_up_assertion_that_these_options_will_ignore_those_directories(
+        [ '--noignore-dir=' . File::Spec->catdir('t' ,'swamp', 'groceries' , 'another_subdir', 'CVS'), ],
+        [ 'RCS', '(?<!another_subdir/)CVS', ],
+        'no-ignore relative paths instead of just directory names',
     );
     sets_match( \@results, \@expected, $test_description );
 }
