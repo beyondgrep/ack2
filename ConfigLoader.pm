@@ -352,7 +352,9 @@ EOT
                                 }
                                 $collection->add($filter);
 
-                                # XXX shouldn't we push an IsPath?  I don't think we did this right before; test it
+                                if ( $filter_type eq 'is' ) {
+                                    $collection->add(App::Ack::Filter::IsPath->new($args));
+                                }
                             },
         'nopager'           => sub { $opt->{pager} = undef },
         'passthru'          => \$opt->{passthru},
