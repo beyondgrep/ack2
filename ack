@@ -104,7 +104,6 @@ sub _compile_descend_filter {
     my $idirs = 0;
     my $dont_ignore_dirs = 0;
 
-    # XXX here we go
     for my $filter (@{$opt->{idirs} || []}) {
         if ($filter->is_inverted()) {
             $dont_ignore_dirs++;
