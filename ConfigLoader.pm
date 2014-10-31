@@ -45,6 +45,57 @@ BEGIN {
     );
 }
 
+sub _generate_ignore_dir {
+    my ( $option_name, $opt ) = @_;
+
+    my $is_inverted = $option_name =~ /^--no/;
+
+    return sub {
+        my ( undef, $dir ) = @_;
+
+        $dir = App::Ack::remove_dir_sep( $dir );
+        if ( $dir !~ /:/ ) {
+            $dir = 'is:' . $dir;
+        }
+
+        my ( $filter_type, $args ) = split /:/, $dir, 2;
+
+        if ( $filter_type eq 'firstlinematch' ) {
+            Carp::croak( qq{Invalid filter specification "$filter_type" for option '$option_name'} );
+        }
+
+        my $filter = App::Ack::Filter->create_filter($filter_type, split(/,/, $args));
+        my $collection;
+
+        my $previous_inversion_matches = $opt->{idirs} && !($is_inverted xor $opt->{idirs}[-1]->is_inverted());
+
+        if ( $previous_inversion_matches ) {
+            $collection = $opt->{idirs}[-1];
+
+            if ( $is_inverted ) {
+                # XXX this relies on invert of an inverted filter
+                #     to return the original
+                $collection = $collection->invert()
+            }
+        }
+        else {
+            $collection = App::Ack::Filter::Collection->new();
+
+            if ( $is_inverted ) {
+                push @{ $opt->{idirs} }, $collection->invert();
+            }
+            else {
+                push @{ $opt->{idirs} }, $collection;
+            }
+        }
+
+        $collection->add($filter);
+
+        if ( $filter_type eq 'is' ) {
+            $collection->add(App::Ack::Filter::IsPath->new($args));
+        }
+    };
+}
 
 sub process_filter_spec {
     my ( $spec ) = @_;
@@ -261,39 +312,7 @@ EOT
         'h|no-filename'     => \$opt->{h},
         'H|with-filename'   => \$opt->{H},
         'i|ignore-case'     => \$opt->{i},
-        # XXX can we unify this and --noignore-dir?
-        'ignore-directory|ignore-dir=s' => sub {
-                                    my ( undef, $dir ) = @_;
-
-                                    $dir = App::Ack::remove_dir_sep( $dir );
-                                    if ( $dir !~ /:/ ) {
-                                        $dir = 'is:' . $dir;
-                                    }
-
-                                    my ( $filter_type, $args ) = split /:/, $dir, 2;
-
-                                    if ( $filter_type eq 'firstlinematch' ) {
-                                        Carp::croak( qq{Invalid filter specification "$filter_type" for option '--ignore-dir'} );
-                                    }
-
-                                    my $filter = App::Ack::Filter->create_filter($filter_type, split(/,/, $args));
-
-                                    my $is_previous_uninverted = $opt->{idirs} && !$opt->{idirs}[-1]->is_inverted();
-
-                                    my $collection;
-                                    if ( $is_previous_uninverted ) {
-                                        $collection = $opt->{idirs}[-1];
-                                    }
-                                    else {
-                                        $collection = App::Ack::Filter::Collection->new();
-                                        push @{ $opt->{idirs} }, $collection;
-                                    }
-                                    $collection->add($filter);
-
-                                    if ( $filter_type eq 'is' ) {
-                                        $collection->add(App::Ack::Filter::IsPath->new($args));
-                                    }
-        },
+        'ignore-directory|ignore-dir=s' => _generate_ignore_dir('--ignore-dir', $opt),
         'ignore-file=s'     => sub {
                                     my ( undef, $file ) = @_;
 
@@ -321,41 +340,7 @@ EOT
 
             $opt->{pager} = $value || $ENV{PAGER};
         },
-        'noignore-directory|noignore-dir=s'
-                            => sub {
-                                my ( undef, $dir ) = @_;
-
-                                $dir = App::Ack::remove_dir_sep( $dir );
-                                if ( $dir !~ /:/ ) {
-                                    $dir = 'is:' . $dir;
-                                }
-
-                                my ( $filter_type, $args ) = split /:/, $dir, 2;
-
-                                if ( $filter_type eq 'firstlinematch' ) {
-                                    Carp::croak( qq{Invalid filter specification "$filter_type" for option '--noignore-dir'} );
-                                }
-
-                                my $filter = App::Ack::Filter->create_filter($filter_type, split(/,/, $args));
-
-                                my $is_previous_inverted = $opt->{idirs} && $opt->{idirs}[-1]->is_inverted();
-
-                                my $collection;
-                                if ( $is_previous_inverted ) {
-                                    # XXX this relies on invert of an inverted filter
-                                    #     to return the original
-                                    $collection = $opt->{idirs}[-1]->invert();
-                                }
-                                else {
-                                    $collection = App::Ack::Filter::Collection->new();
-                                    push @{ $opt->{idirs} }, $collection->invert();
-                                }
-                                $collection->add($filter);
-
-                                if ( $filter_type eq 'is' ) {
-                                    $collection->add(App::Ack::Filter::IsPath->new($args));
-                                }
-                            },
+        'noignore-directory|noignore-dir=s' => _generate_ignore_dir('--noignore-dir', $opt),
         'nopager'           => sub { $opt->{pager} = undef },
         'passthru'          => \$opt->{passthru},
         'print0'            => \$opt->{print0},
