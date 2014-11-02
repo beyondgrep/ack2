@@ -150,8 +150,8 @@ sub _compile_file_filter {
 
     my @ignore_dir_filter = @{$opt->{idirs} || []};
     my @is_inverted       = map { $_->is_inverted() } @ignore_dir_filter;
-    # XXX this depends on InverseFilter->invert returning the original
-    #     filter (for optimization)
+    # this depends on InverseFilter->invert returning the original
+    # filter (for optimization)
     @ignore_dir_filter         = map { $_->is_inverted() ? $_->invert() : $_ } @ignore_dir_filter;
     my $dont_ignore_dir_filter = grep { $_ } @is_inverted;
     my $previous_dir = '';
@@ -172,7 +172,6 @@ sub _compile_file_filter {
         # and say "ack foo whatever.jpg" it will do it for you.
         return 1 if $is_member_of_starting_set{ get_file_id($File::Next::name) };
 
-        # XXX cache the result of directories (individual path components)
         # XXX don't check --noignore-dir if we have no --noignore-dir match:es
         if ( $dont_ignore_dir_filter ) {
             if ( $previous_dir eq $File::Next::dir ) {
