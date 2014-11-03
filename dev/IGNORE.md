@@ -22,3 +22,6 @@ from an ackrc a few directories above.  Are we preparing to teach ack about the 
 ## Scenario 2
 
 --ignore-dir only ignores directories, but warns if you try to ignore a path
+
+What's the distinction between --ignore-file and --type/--notype?  Does it make sense to allow an "anonymous" type (ex.
+--type=is:Something), and make --ignore-file a synonym for --notype?  Could --ignore-dir be implemented like this?
