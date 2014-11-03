@@ -157,7 +157,6 @@ sub _compile_file_filter {
     my $previous_dir = '';
     my $previous_dir_ignore_result;
 
-    # XXX this is redundant if the starting set is just file names
     return sub {
         if ( $opt_g ) {
             if ( $File::Next::name =~ /$opt_regex/ && $opt_v ) {
@@ -172,7 +171,6 @@ sub _compile_file_filter {
         # and say "ack foo whatever.jpg" it will do it for you.
         return 1 if $is_member_of_starting_set{ get_file_id($File::Next::name) };
 
-        # XXX don't check --noignore-dir if we have no --noignore-dir match:es
         if ( $dont_ignore_dir_filter ) {
             if ( $previous_dir eq $File::Next::dir ) {
                 if ( $previous_dir_ignore_result ) {
@@ -185,12 +183,10 @@ sub _compile_file_filter {
                 my $is_ignoring = 0;
 
                 for ( my $i = 0; $i < @dirs; $i++) {
-                    # XXX this is probably kind of expensive
                     my $dir_rsrc = App::Ack::Resource::Basic->new(File::Spec->catfile(@dirs[0 .. $i]));
 
                     my $j = 0;
                     for my $filter (@ignore_dir_filter) {
-                        # XXX this gets called a bunch
                         if ( $filter->filter($dir_rsrc) ) {
                             $is_ignoring = !$is_inverted[$j];
                         }
