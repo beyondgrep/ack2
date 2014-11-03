@@ -2,8 +2,6 @@ package App::Ack::Filter;
 
 use strict;
 use warnings;
-use overload
-    '""' => 'to_string';
 
 use App::Ack::Filter::Inverse ();
 use Carp 1.04 ();

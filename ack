@@ -25,6 +25,7 @@ use App::Ack::Filter::Extension;
 use App::Ack::Filter::FirstLineMatch;
 use App::Ack::Filter::Inverse;
 use App::Ack::Filter::Is;
+use App::Ack::Filter::IsPath;
 use App::Ack::Filter::Match;
 use App::Ack::Filter::Collection;
 
@@ -100,54 +101,36 @@ MAIN: {
 sub _compile_descend_filter {
     my ( $opt ) = @_;
 
-    my $idirs            = $opt->{idirs};
-    my $dont_ignore_dirs = $opt->{no_ignore_dirs};
+    my $idirs = 0;
+    my $dont_ignore_dirs = 0;
+
+    for my $filter (@{$opt->{idirs} || []}) {
+        if ($filter->is_inverted()) {
+            $dont_ignore_dirs++;
+        }
+        else {
+            $idirs++;
+        }
+    }
 
     # if we have one or more --noignore-dir directives, we can't ignore
     # entire subdirectory hierarchies, so we return an "accept all"
     # filter and scrutinize the files more in _compile_file_filter
     return if $dont_ignore_dirs;
-    return unless $idirs && @{$idirs};
+    return unless $idirs;
 
-    my %ignore_dirs;
-
-    foreach my $idir (@{$idirs}) {
-        if ( $idir =~ /^(\w+):(.*)/ ) {
-            if ( $1 eq 'is') {
-                $ignore_dirs{$2} = 1;
-            }
-            else {
-                Carp::croak( 'Non-is filters are not yet supported for --ignore-dir' );
-            }
-        }
-        else {
-            Carp::croak( qq{Invalid filter specification "$idir"} );
-        }
-    }
+    $idirs = $opt->{idirs};
 
     return sub {
-        return !exists $ignore_dirs{$_} && !exists $ignore_dirs{$File::Next::dir};
+        my $resource = App::Ack::Resource::Basic->new($File::Next::dir);
+        return !grep { $_->filter($resource) } @{$idirs};
     };
 }
 
 sub _compile_file_filter {
     my ( $opt, $start ) = @_;
 
-    my $ifiles = $opt->{ifiles};
-    $ifiles  ||= [];
-
-    my $ifiles_filters = App::Ack::Filter::Collection->new();
-
-    foreach my $filter_spec (@{$ifiles}) {
-        if ( $filter_spec =~ /^(\w+):(.+)/ ) {
-            my ($how,$what) = ($1,$2);
-            my $filter = App::Ack::Filter->create_filter($how, split(/,/, $what));
-            $ifiles_filters->add($filter);
-        }
-        else {
-            Carp::croak( qq{Invalid filter specification "$filter_spec"} );
-        }
-    }
+    my $ifiles_filters = $opt->{ifiles};
 
     my $filters         = $opt->{'filters'} || [];
     my $direct_filters = App::Ack::Filter::Collection->new();
@@ -165,34 +148,14 @@ sub _compile_file_filter {
 
     my %is_member_of_starting_set = map { (get_file_id($_) => 1) } @{$start};
 
-    my $ignore_dir_list      = $opt->{idirs};
-    my $dont_ignore_dir_list = $opt->{no_ignore_dirs};
-
-    my %ignore_dir_set;
-    my %dont_ignore_dir_set;
-
-    foreach my $filter (@{ $ignore_dir_list }) {
-        if ( $filter =~ /^(\w+):(.*)/ ) {
-            if ( $1 eq 'is' ) {
-                $ignore_dir_set{ $2 } = 1;
-            } else {
-                Carp::croak( 'Non-is filters are not yet supported for --ignore-dir' );
-            }
-        } else {
-            Carp::croak( qq{Invalid filter specification "$filter"} );
-        }
-    }
-    foreach my $filter (@{ $dont_ignore_dir_list }) {
-        if ( $filter =~ /^(\w+):(.*)/ ) {
-            if ( $1 eq 'is' ) {
-                $dont_ignore_dir_set{ $2 } = 1;
-            } else {
-                Carp::croak( 'Non-is filters are not yet supported for --ignore-dir' );
-            }
-        } else {
-            Carp::croak( qq{Invalid filter specification "$filter"} );
-        }
-    }
+    my @ignore_dir_filter = @{$opt->{idirs} || []};
+    my @is_inverted       = map { $_->is_inverted() } @ignore_dir_filter;
+    # this depends on InverseFilter->invert returning the original
+    # filter (for optimization)
+    @ignore_dir_filter         = map { $_->is_inverted() ? $_->invert() : $_ } @ignore_dir_filter;
+    my $dont_ignore_dir_filter = grep { $_ } @is_inverted;
+    my $previous_dir = '';
+    my $previous_dir_ignore_result;
 
     return sub {
         if ( $opt_g ) {
@@ -208,22 +171,35 @@ sub _compile_file_filter {
         # and say "ack foo whatever.jpg" it will do it for you.
         return 1 if $is_member_of_starting_set{ get_file_id($File::Next::name) };
 
-        if ( $dont_ignore_dir_list ) {
-            my ( undef, $dirname ) = File::Spec->splitpath($File::Next::name);
-            my @dirs               = File::Spec->splitdir($dirname);
-
-            my $is_ignoring = 0;
-
-            foreach my $dir ( @dirs ) {
-                if ( $ignore_dir_set{ $dir } ) {
-                    $is_ignoring = 1;
-                }
-                elsif ( $dont_ignore_dir_set{ $dir } ) {
-                    $is_ignoring = 0;
+        if ( $dont_ignore_dir_filter ) {
+            if ( $previous_dir eq $File::Next::dir ) {
+                if ( $previous_dir_ignore_result ) {
+                    return 0;
                 }
             }
-            if ( $is_ignoring ) {
-                return 0;
+            else {
+                my @dirs = File::Spec->splitdir($File::Next::dir);
+
+                my $is_ignoring = 0;
+
+                for ( my $i = 0; $i < @dirs; $i++) {
+                    my $dir_rsrc = App::Ack::Resource::Basic->new(File::Spec->catfile(@dirs[0 .. $i]));
+
+                    my $j = 0;
+                    for my $filter (@ignore_dir_filter) {
+                        if ( $filter->filter($dir_rsrc) ) {
+                            $is_ignoring = !$is_inverted[$j];
+                        }
+                        $j++;
+                    }
+                }
+
+                $previous_dir               = $File::Next::dir;
+                $previous_dir_ignore_result = $is_ignoring;
+
+                if ( $is_ignoring ) {
+                    return 0;
+                }
             }
         }
 
@@ -246,7 +222,10 @@ sub _compile_file_filter {
         }
 
         my $resource = App::Ack::Resource::Basic->new($File::Next::name);
-        return 0 if !$resource || $ifiles_filters->filter($resource);
+
+        if ( $ifiles_filters && $ifiles_filters->filter($resource) ) {
+            return 0;
+        }
 
         my $match_found = $direct_filters->filter($resource);
 
