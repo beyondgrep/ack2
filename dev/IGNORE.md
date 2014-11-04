@@ -25,3 +25,5 @@ from an ackrc a few directories above.  Are we preparing to teach ack about the 
 
 What's the distinction between --ignore-file and --type/--notype?  Does it make sense to allow an "anonymous" type (ex.
 --type=is:Something), and make --ignore-file a synonym for --notype?  Could --ignore-dir be implemented like this?
+
+If I have `--ignore-dir=test` in my .ackrc, and I do ack $term test, what happens?
