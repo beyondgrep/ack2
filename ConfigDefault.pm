@@ -310,7 +310,7 @@ sub _options_block {
 
 # OCaml
 # http://caml.inria.fr/
---type-add=ocaml:ext:ml,mli
+--type-add=ocaml:ext:ml,mli,mll,mly
 
 # Matlab
 # http://en.wikipedia.org/wiki/MATLAB
