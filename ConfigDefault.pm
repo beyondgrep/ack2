@@ -384,6 +384,11 @@ sub _options_block {
 # http://learnboost.github.io/stylus/
 --type-add=stylus:ext:styl
 
+# Swift
+# https://developer.apple.com/swift/
+--type-add=swift:ext:swift
+--type-add=swift:firstlinematch:/^#!.*\bswift/
+
 # Tcl
 # http://www.tcl.tk/
 --type-add=tcl:ext:tcl,itcl,itk

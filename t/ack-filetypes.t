@@ -57,6 +57,7 @@ scheme
 shell
 smalltalk
 sql
+swift
 tcl
 tex
 tt
