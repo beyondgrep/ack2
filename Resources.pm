@@ -2,7 +2,8 @@ package App::Ack::Resources;
 
 use App::Ack;
 
-use File::Next 1.10;
+use File::Next 1.16;
+use Errno qw(EACCES);
 
 use warnings;
 use strict;
@@ -13,9 +14,7 @@ sub _generate_error_handler {
     if ( $opt->{dont_report_bad_filenames} ) {
         return sub {
             my $msg = shift;
-            # XXX restricting to specific error messages for now; I would
-            #     prefer a different way of doing this
-            if ( $msg =~ /Permission denied/ ) {
+            if ( $! == EACCES ) {
                 return;
             }
             App::Ack::warn( $msg );
