@@ -2008,8 +2008,8 @@ can search for C<.{32767}> but not C<.{32768}>.
 
 =head1 ACKRC LOCATION SEMANTICS
 
-Ack can load its configuration from many sources.  This list
-specifies the sources Ack looks for configuration; each one
+Ack can load its configuration from many sources.  The following list
+specifies the sources Ack looks for configuration files; each one
 that is found is loaded in the order specified here, and
 each one overrides options set in any of the sources preceding
 it.  (For example, if I set --sort-files in my user ackrc, and
@@ -2028,11 +2028,11 @@ using C<--ignore-ack-defaults>.
 Options are then loaded from the global ackrc.  This is located at
 C</etc/ackrc> on Unix-like systems.
 
-Under Windows XP and earlier, the ackrc is at
-C<C:\Documents and Settings\All Users\Application Data\ackrc>.
+Under Windows XP and earlier, the global ackrc is at
+C<C:\Documents and Settings\All Users\Application Data\ackrc>
 
 Under Windows Vista/7, the global ackrc is at
-C<C:\ProgramData>
+C<C:\ProgramData\ackrc>
 
 The C<--noenv> option prevents all ackrc files from being loaded.
 
@@ -2045,7 +2045,7 @@ Under Windows XP and earlier, the user's ackrc is at
 C<C:\Documents and Settings\$USER\Application Data\ackrc>.
 
 Under Windows Vista/7, the user's ackrc is at
-<C:\Users\$USER\AppData\Roaming>.
+C<C:\Users\$USER\AppData\Roaming\ackrc>.
 
 If you want to load a different user-level ackrc, it may be specified
 with the C<$ACKRC> environment variable.
