@@ -960,6 +960,9 @@ sub main {
             $opt_regex = shift @ARGV if not defined $opt_regex;
             $opt_regex = $opt->{regex} = build_regex( $opt_regex, $opt );
         }
+        if ( $opt_regex && $opt_regex =~ /\n/ ) {
+            App::Ack::exit_from_ack( 0 );
+        }
         my @start;
         if ( not defined $opt->{files_from} ) {
             @start = @ARGV;
