@@ -1,4 +1,5 @@
 Changes
+CONTRIBUTING.md
 LICENSE.md
 MANIFEST
 README.md
@@ -20,7 +21,10 @@ FirstLineMatch.pm
 Inverse.pm
 Is.pm
 IsGroup.pm
+IsPath.pm
+IsPathGroup.pm
 Match.pm
+MatchGroup.pm
 Resource.pm
 Resources.pm
 
@@ -47,6 +51,7 @@ t/ack-help.t
 t/ack-help-types.t
 t/ack-h.t
 t/ack-ignore-dir.t
+t/ack-ignore-file.t
 t/ack-interactive.t
 t/ack-invalid-ackrc.t
 t/ack-i.t
@@ -90,7 +95,12 @@ t/illegal-regex.t
 t/incomplete-last-line.t
 t/inverted-file-filter.t
 t/is-filter.t
+t/issue244.t
+t/issue276.t
+t/issue491.t
+t/issue522.t
 t/longopts.t
+t/lua-shebang.t
 t/match-filter.t
 t/mutex-options.t
 t/noackrc.t
@@ -125,7 +135,10 @@ t/lib/FirstLineMatch.t
 t/lib/Inverse.t
 t/lib/Is.t
 t/lib/IsGroup.t
+t/lib/IsPath.t
+t/lib/IsPathGroup.t
 t/lib/Match.t
+t/lib/MatchGroup.t
 t/lib/Resource.t
 t/lib/Resources.t
 
@@ -166,6 +179,15 @@ t/swamp/groceries/another_subdir/RCS/meat
 t/swamp/groceries/another_subdir/fruit
 t/swamp/groceries/another_subdir/junk
 t/swamp/groceries/another_subdir/meat
+t/swamp/groceries/dir.d/CVS/fruit
+t/swamp/groceries/dir.d/CVS/junk
+t/swamp/groceries/dir.d/CVS/meat
+t/swamp/groceries/dir.d/fruit
+t/swamp/groceries/dir.d/junk
+t/swamp/groceries/dir.d/meat
+t/swamp/groceries/dir.d/RCS/fruit
+t/swamp/groceries/dir.d/RCS/junk
+t/swamp/groceries/dir.d/RCS/meat
 t/swamp/groceries/fruit
 t/swamp/groceries/junk
 t/swamp/groceries/meat
