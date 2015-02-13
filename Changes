@@ -1,6 +1,6 @@
 History file for ack.  http://beyondgrep.com/
 
-NEXT
+2.15_01 Fri Feb 13 16:23:54 CST 2015
 ====================================
 [FIXES]
 The -l and -c flags would sometimes return inaccurate results due to

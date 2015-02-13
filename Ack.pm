@@ -9,15 +9,15 @@ App::Ack - A container for functions for the ack program
 
 =head1 VERSION
 
-Version 2.14
+Version 2.15_01
 
 =cut
 
 our $VERSION;
 our $COPYRIGHT;
 BEGIN {
-    $VERSION = '2.14';
-    $COPYRIGHT = 'Copyright 2005-2014 Andy Lester.';
+    $VERSION = '2.15_01';
+    $COPYRIGHT = 'Copyright 2005-2015 Andy Lester.';
 }
 
 our $fh;
@@ -578,7 +578,7 @@ sub exit_from_ack {
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2005-2014 Andy Lester.
+Copyright 2005-2015 Andy Lester.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the Artistic License v2.0.
