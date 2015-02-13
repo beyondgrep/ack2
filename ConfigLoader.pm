@@ -45,6 +45,57 @@ BEGIN {
     );
 }
 
+sub _generate_ignore_dir {
+    my ( $option_name, $opt ) = @_;
+
+    my $is_inverted = $option_name =~ /^--no/;
+
+    return sub {
+        my ( undef, $dir ) = @_;
+
+        $dir = App::Ack::remove_dir_sep( $dir );
+        if ( $dir !~ /:/ ) {
+            $dir = 'is:' . $dir;
+        }
+
+        my ( $filter_type, $args ) = split /:/, $dir, 2;
+
+        if ( $filter_type eq 'firstlinematch' ) {
+            Carp::croak( qq{Invalid filter specification "$filter_type" for option '$option_name'} );
+        }
+
+        my $filter = App::Ack::Filter->create_filter($filter_type, split(/,/, $args));
+        my $collection;
+
+        my $previous_inversion_matches = $opt->{idirs} && !($is_inverted xor $opt->{idirs}[-1]->is_inverted());
+
+        if ( $previous_inversion_matches ) {
+            $collection = $opt->{idirs}[-1];
+
+            if ( $is_inverted ) {
+                # XXX this relies on invert of an inverted filter
+                #     to return the original
+                $collection = $collection->invert()
+            }
+        }
+        else {
+            $collection = App::Ack::Filter::Collection->new();
+
+            if ( $is_inverted ) {
+                push @{ $opt->{idirs} }, $collection->invert();
+            }
+            else {
+                push @{ $opt->{idirs} }, $collection;
+            }
+        }
+
+        $collection->add($filter);
+
+        if ( $filter_type eq 'is' ) {
+            $collection->add(App::Ack::Filter::IsPath->new($args));
+        }
+    };
+}
 
 sub process_filter_spec {
     my ( $spec ) = @_;
@@ -261,18 +312,18 @@ EOT
         'h|no-filename'     => \$opt->{h},
         'H|with-filename'   => \$opt->{H},
         'i|ignore-case'     => \$opt->{i},
-        'ignore-directory|ignore-dir=s' => sub {
-                                    my ( undef, $dir ) = @_;
-
-                                    $dir = App::Ack::remove_dir_sep( $dir );
-                                    if ( $dir !~ /^(?:is|match):/ ) {
-                                        $dir = 'is:' . $dir;
-                                    }
-                                    push @{ $opt->{idirs} }, $dir;
-        },
+        'ignore-directory|ignore-dir=s' => _generate_ignore_dir('--ignore-dir', $opt),
         'ignore-file=s'     => sub {
                                     my ( undef, $file ) = @_;
-                                    push @{ $opt->{ifiles} }, $file;
+
+                                    my ( $filter_type, $args ) = split /:/, $file, 2;
+
+                                    my $filter = App::Ack::Filter->create_filter($filter_type, split(/,/, $args));
+
+                                    if ( !$opt->{ifiles} ) {
+                                        $opt->{ifiles} = App::Ack::Filter::Collection->new();
+                                    }
+                                    $opt->{ifiles}->add($filter);
                                },
         'lines=s'           => sub { shift; my $val = shift; push @{$opt->{lines}}, $val },
         'l|files-with-matches'
@@ -289,25 +340,7 @@ EOT
 
             $opt->{pager} = $value || $ENV{PAGER};
         },
-        'noignore-directory|noignore-dir=s'
-                            => sub {
-                                my ( undef, $dir ) = @_;
-
-                                # XXX can you do --noignore-dir=match,...?
-                                $dir = App::Ack::remove_dir_sep( $dir );
-                                if ( $dir !~ /^(?:is|match):/ ) {
-                                    $dir = 'is:' . $dir;
-                                }
-                                if ( $dir !~ /^(?:is|match):/ ) {
-                                    Carp::croak("invalid noignore-directory argument: '$dir'");
-                                }
-
-                                @{ $opt->{idirs} } = grep {
-                                    $_ ne $dir
-                                } @{ $opt->{idirs} };
-
-                                push @{ $opt->{no_ignore_dirs} }, $dir;
-                            },
+        'noignore-directory|noignore-dir=s' => _generate_ignore_dir('--noignore-dir', $opt),
         'nopager'           => sub { $opt->{pager} = undef },
         'passthru'          => \$opt->{passthru},
         'print0'            => \$opt->{print0},

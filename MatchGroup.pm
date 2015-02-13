@@ -1,23 +1,25 @@
-package App::Ack::Filter::IsGroup;
+package App::Ack::Filter::MatchGroup;
 
 use strict;
 use warnings;
 use base 'App::Ack::Filter';
 
-use File::Spec 3.00 ();
-
 sub new {
     my ( $class ) = @_;
 
     return bless {
-        data => {},
+        matches => [],
+        big_re  => undef,
     }, $class;
 }
 
 sub add {
     my ( $self, $filter ) = @_;
 
-    $self->{data}->{ $filter->{filename} } = 1;
+    push @{ $self->{matches} }, $filter->{regex};
+
+    my $re = join('|', map { "(?:$_)" } @{ $self->{matches} });
+    $self->{big_re} = qr/$re/;
 
     return;
 }
@@ -25,22 +27,17 @@ sub add {
 sub filter {
     my ( $self, $resource ) = @_;
 
-    my $data = $self->{'data'};
-    my $base = $resource->basename;
+    my $re = $self->{big_re};
 
-    return exists $data->{$base};
+    return $resource->basename =~ /$re/;
 }
 
 sub inspect {
     my ( $self ) = @_;
-
-    return ref($self) . " - $self";
 }
 
 sub to_string {
     my ( $self ) = @_;
-
-    return join(' ', keys %{$self->{data}});
 }
 
 1;

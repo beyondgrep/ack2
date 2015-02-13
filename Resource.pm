@@ -42,6 +42,17 @@ sub name {
     return FAIL();
 }
 
+=head2 $res->basename()
+
+Returns the basename (the last component the path)
+of the resource.
+
+=cut
+
+sub basename {
+    return FAIL();
+}
+
 =head2 $res->is_binary()
 
 Tells whether the resource is binary.  If it is, and ack finds a

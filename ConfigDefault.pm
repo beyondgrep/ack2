@@ -221,6 +221,9 @@ sub _options_block {
 # C++
 --type-add=cpp:ext:cpp,cc,cxx,m,hpp,hh,h,hxx
 
+# C++ header files
+--type-add=hpp:ext:hpp,hh,h,hxx
+
 # C#
 --type-add=csharp:ext:cs
 

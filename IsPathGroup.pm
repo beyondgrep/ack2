@@ -1,10 +1,8 @@
-package App::Ack::Filter::IsGroup;
+package App::Ack::Filter::IsPathGroup;
 
 use strict;
 use warnings;
 use base 'App::Ack::Filter';
-
-use File::Spec 3.00 ();
 
 sub new {
     my ( $class ) = @_;
@@ -26,9 +24,8 @@ sub filter {
     my ( $self, $resource ) = @_;
 
     my $data = $self->{'data'};
-    my $base = $resource->basename;
 
-    return exists $data->{$base};
+    return exists $data->{$resource->name};
 }
 
 sub inspect {

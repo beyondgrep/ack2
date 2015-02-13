@@ -8,6 +8,7 @@ use warnings;
 use strict;
 
 use Fcntl ();
+use File::Spec ();
 
 use base 'App::Ack::Resource';
 
@@ -52,6 +53,16 @@ sub name {
     return $_[0]->{filename};
 }
 
+sub basename {
+    my ( $self ) = @_;
+
+    # XXX definedness? pre-populate the slot with an undef?
+    unless ( exists $self->{basename} ) {
+        $self->{basename} = (File::Spec->splitpath($self->name))[2];
+    }
+
+    return $self->{basename};
+}
 
 =head2 $res->needs_line_scan( \%opts )
 

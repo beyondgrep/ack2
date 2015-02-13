@@ -32,6 +32,9 @@ my %parms = (
         'Collection.pm'     => '$(INST_LIBDIR)/App/Ack/Filter/Collection.pm',
         'IsGroup.pm'        => '$(INST_LIBDIR)/App/Ack/Filter/IsGroup.pm',
         'ExtensionGroup.pm' => '$(INST_LIBDIR)/App/Ack/Filter/ExtensionGroup.pm',
+        'MatchGroup.pm'     => '$(INST_LIBDIR)/App/Ack/Filter/MatchGroup.pm',
+        'IsPath.pm'         => '$(INST_LIBDIR)/App/Ack/Filter/IsPath.pm',
+        'IsPathGroup.pm'    => '$(INST_LIBDIR)/App/Ack/Filter/IsPathGroup.pm',
     },
     EXE_FILES               => [ 'ack' ],
 
@@ -43,7 +46,7 @@ my %parms = (
         'File::Next'        => '1.10',
         'File::Spec'        => '3.00',
         'File::Temp'        => '0.19', # For newdir()
-        'Getopt::Long'      => '2.35',
+        'Getopt::Long'      => '2.38',
         'Pod::Usage'        => '1.26',
         'Term::ANSIColor'   => '1.10',
         'Test::Harness'     => '2.50', # Something reasonably newish
@@ -92,7 +95,7 @@ ALL_PM = \
     Ack.pm \
     Resource.pm Resources.pm Basic.pm \
     ConfigDefault.pm ConfigFinder.pm ConfigLoader.pm \
-    Filter.pm Extension.pm FirstLineMatch.pm Is.pm Match.pm Default.pm Inverse.pm Collection.pm IsGroup.pm ExtensionGroup.pm
+    Filter.pm Extension.pm FirstLineMatch.pm Is.pm Match.pm Default.pm Inverse.pm Collection.pm IsGroup.pm ExtensionGroup.pm MatchGroup.pm IsPath.pm IsPathGroup.pm
 
 TEST_VERBOSE=0
 TEST_FILES=t/*.t t/lib/*.t
