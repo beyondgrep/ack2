@@ -6,7 +6,7 @@ use warnings;
 our $VERSION = '2.14'; # Check http://beyondgrep.com/ for updates
 
 use 5.008008;
-use Getopt::Long 2.35 ();
+use Getopt::Long 2.38 ();
 use Carp 1.04 ();
 
 use File::Spec ();
