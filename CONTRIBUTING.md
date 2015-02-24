@@ -6,12 +6,12 @@ Before you report an issue, please consult the [FAQ](http://beyondgrep.com/docum
 
 From the man page:
 
-   All enhancement requests MUST first be posted to the ack-users mailing list at <http://groups.google.com/group/ack-users>.  I will not consider a request without it first getting seen by other ack users.  This includes
-   requests for new filetypes.
-
-   There is a list of enhancements I want to make to ack in the ack issues list at Github: <https://github.com/petdance/ack2/issues>
-
-   Patches are always welcome, but patches with tests get the most attention.
+> All enhancement requests MUST first be posted to the ack-users mailing list at <http://groups.google.com/group/ack-users>.  I will not consider a request without it first getting seen by other ack users.  This includes
+> requests for new filetypes.
+>
+> There is a list of enhancements I want to make to ack in the ack issues list at Github: <https://github.com/petdance/ack2/issues>
+>
+> Patches are always welcome, but patches with tests get the most attention.
 
 # Reporting an Issue
 
