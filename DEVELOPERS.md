@@ -1,5 +1,8 @@
 # Ack Developer's Guide
 
+This is a guide intended to help new developers work on ack.  You may also want to read
+[CONTRIBUTING.md](https://github.com/petdance/ack2/blob/dev/CONTRIBUTING.md).
+
 ## Helper Scripts
 
 ### tack
