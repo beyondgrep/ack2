@@ -30,6 +30,7 @@ go
 groovy
 haskell
 hh
+i18n
 html
 java
 js

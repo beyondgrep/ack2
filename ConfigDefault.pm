@@ -270,6 +270,11 @@ sub _options_block {
 # HTML
 --type-add=html:ext:htm,html
 
+# Internationalisation (i18n)
+#   GNU gettext https://www.gnu.org/software/gettext/
+#   Qt Linguist http://doc.qt.io/qt-5/qtlinguist-index.html
+--type-add=i18n:ext:po,ts
+
 # Jade
 # http://jade-lang.com/
 --type-add=jade:ext:jade
