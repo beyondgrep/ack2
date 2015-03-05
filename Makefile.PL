@@ -24,6 +24,7 @@ my %parms = (
         'ConfigLoader.pm'   => '$(INST_LIBDIR)/App/Ack/ConfigLoader.pm',
         'Filter.pm'         => '$(INST_LIBDIR)/App/Ack/Filter.pm',
         'Extension.pm'      => '$(INST_LIBDIR)/App/Ack/Filter/Extension.pm',
+        'Size.pm'           => '$(INST_LIBDIR)/App/Ack/Filter/Size.pm',
         'FirstLineMatch.pm' => '$(INST_LIBDIR)/App/Ack/Filter/FirstLineMatch.pm',
         'Is.pm'             => '$(INST_LIBDIR)/App/Ack/Filter/Is.pm',
         'Match.pm'          => '$(INST_LIBDIR)/App/Ack/Filter/Match.pm',
@@ -95,7 +96,7 @@ ALL_PM = \
     Ack.pm \
     Resource.pm Resources.pm Basic.pm \
     ConfigDefault.pm ConfigFinder.pm ConfigLoader.pm \
-    Filter.pm Extension.pm FirstLineMatch.pm Is.pm Match.pm Default.pm Inverse.pm Collection.pm IsGroup.pm ExtensionGroup.pm MatchGroup.pm IsPath.pm IsPathGroup.pm
+    Filter.pm Extension.pm FirstLineMatch.pm Is.pm Match.pm Default.pm Inverse.pm Collection.pm IsGroup.pm ExtensionGroup.pm MatchGroup.pm IsPath.pm IsPathGroup.pm Size.pm
 
 TEST_VERBOSE=0
 TEST_FILES=t/*.t t/lib/*.t

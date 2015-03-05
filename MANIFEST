@@ -27,6 +27,7 @@ Match.pm
 MatchGroup.pm
 Resource.pm
 Resources.pm
+Size.pm
 
 record-options
 squash
@@ -141,6 +142,7 @@ t/lib/Match.t
 t/lib/MatchGroup.t
 t/lib/Resource.t
 t/lib/Resources.t
+t/lib/Size.t
 
 t/home/.ackrc
 t/swamp/#emacs-workfile.pl#

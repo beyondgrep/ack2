@@ -22,6 +22,7 @@ use App::Ack::Resource::Basic ();
 use App::Ack::Filter ();
 use App::Ack::Filter::Default;
 use App::Ack::Filter::Extension;
+use App::Ack::Filter::Size;
 use App::Ack::Filter::FirstLineMatch;
 use App::Ack::Filter::Inverse;
 use App::Ack::Filter::Is;
@@ -226,6 +227,8 @@ sub _compile_file_filter {
         if ( $ifiles_filters && $ifiles_filters->filter($resource) ) {
             return 0;
         }
+
+        return 0 unless App::Ack::Filter::Size->new($opt->{min_file_size}, $opt->{max_file_size})->filter($resource);
 
         my $match_found = $direct_filters->filter($resource);
 
@@ -1409,6 +1412,21 @@ Print this manual page.
 =item B<-n>, B<--no-recurse>
 
 No descending into subdirectories.
+
+=item B<--max-file-size=I<NUM>>, B<--max-size=I<NUM>>
+
+The maximum size of files C<ack> is willing to search.
+
+This is useful for when you know you have a handful of extremely large files
+which you do not need to search, but whose distinguishing feature is their size.
+
+If not set, or set to 0, then there is no maximum.
+
+=item B<--min-file-size=I<NUM>>, B<--min-size=I<NUM>>
+
+The minimum size of files C<ack> is willing to search.
+
+If not set, or set to 0, then there is no maximum.
 
 =item B<-o>
 

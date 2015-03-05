@@ -346,6 +346,10 @@ File inclusion/exclusion:
                                 filetype.
   --type=noX                    Exclude X files.
                                 See "ack --help-types" for supported filetypes.
+  --max-file-size=NUM, --max-size=NUM
+                                Excludes files larger than this size (in bytes)
+  --min-file-size=NUM, --min-size=NUM
+                                Excludes files smaller than this size (in bytes)
 
 File type specification:
   --type-set TYPE:FILTER:FILTERARGS

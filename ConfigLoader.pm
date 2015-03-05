@@ -332,6 +332,10 @@ EOT
                             => \$opt->{L},
         'm|max-count=i'     => \$opt->{m},
         'match=s'           => \$opt->{regex},
+        'max-size|max-file-size=i'
+                            => \$opt->{max_file_size},
+        'min-size|min-file-size=i'
+                            => \$opt->{min_file_size},
         'n|no-recurse'      => \$opt->{n},
         o                   => sub { $opt->{output} = '$&' },
         'output=s'          => \$opt->{output},
