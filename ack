@@ -147,6 +147,14 @@ sub _compile_file_filter {
         }
     }
 
+    # For the usual case where the user has not set this, it is faster if we can
+    # we can reduce to a single boolean test before we even make the method call
+    # if both of min and max are 0, don't test, accept all files
+
+    my $size_filter = ( $opt->{min_file_size} || $opt->{max_file_size} )
+      ? App::Ack::Filter::Size->new($opt->{min_file_size}, $opt->{max_file_size})
+      : 0;
+
     my %is_member_of_starting_set = map { (get_file_id($_) => 1) } @{$start};
 
     my @ignore_dir_filter = @{$opt->{idirs} || []};
@@ -228,7 +236,7 @@ sub _compile_file_filter {
             return 0;
         }
 
-        return 0 unless App::Ack::Filter::Size->new($opt->{min_file_size}, $opt->{max_file_size})->filter($resource);
+        return 0 if $size_filter && ! $size_filter->filter($resource);
 
         my $match_found = $direct_filters->filter($resource);
 
