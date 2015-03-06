@@ -70,6 +70,7 @@ t/ack-print0.t
 t/ack-removed-options.t
 t/ack-show-types.t
 t/ack-s.t
+t/ack-size.pl
 t/ack-type-del.t
 t/ack-type.t
 t/ack-v.t
