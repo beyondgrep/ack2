@@ -40,9 +40,7 @@ sub filter {
 
     my $file = $resource->name;
 
-    return 1 if $file eq '-';
-
-    my $size = (-s $file) || 0; # paranoid?
+    my $size = (-s _) || 0; # paranoid?
 
     return 0 if $max and $size > $max;
     return $size >= $min;

@@ -236,6 +236,11 @@ sub _compile_file_filter {
             return 0;
         }
 
+        # Warning: the size filter uses -s _: don't stat any other files
+        # or else you will break it.
+        #
+        # Also, it assumes we have a file name as named pipes are filtered out
+        # earlier.
         return 0 if $size_filter && ! $size_filter->filter($resource);
 
         my $match_found = $direct_filters->filter($resource);
