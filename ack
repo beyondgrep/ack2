@@ -22,7 +22,6 @@ use App::Ack::Resource::Basic ();
 use App::Ack::Filter ();
 use App::Ack::Filter::Default;
 use App::Ack::Filter::Extension;
-use App::Ack::Filter::Size;
 use App::Ack::Filter::FirstLineMatch;
 use App::Ack::Filter::Inverse;
 use App::Ack::Filter::Is;
@@ -99,6 +98,23 @@ MAIN: {
     main();
 }
 
+sub _parse_size {
+    my $s = $_[0] || return 0;
+
+    if ( $s =~ m/^\s*(\d+(?:\.\d+)?)(?:\s*([KMGT]?)(?:(i?)B)?)?\s*$/i ) {
+        my $n = $1;
+        if ($2) {
+            my $u = lc $2;
+            my $i = $3 ? 1024 : 1000; # 1KiB = 1024B; 1KB = 1000B
+            $n *= $i while $u =~ tr/tgmk/gmk/d;
+        }
+        return int $n;
+    }
+    else {
+        Carp::croak('Invalid size');
+    }
+}
+
 sub _compile_descend_filter {
     my ( $opt ) = @_;
 
@@ -151,8 +167,13 @@ sub _compile_file_filter {
     # we can reduce to a single boolean test before we even make the method call
     # if both of min and max are 0, don't test, accept all files
 
-    my $size_filter = ( $opt->{min_file_size} || $opt->{max_file_size} )
-      ? App::Ack::Filter::Size->new($opt->{min_file_size}, $opt->{max_file_size})
+    my ( $min_file_size, $max_file_size ) = map { _parse_size( $opt->{"${_}_file_size"} ) } qw ( min max );
+    my $size_filter = ( $min_file_size || $max_file_size )
+      ? sub {
+          my $size = (-s _) || 0; # paranoid?
+          return 0 if $max_file_size and $size > $max_file_size;
+          return $size >= $min_file_size;
+      }
       : 0;
 
     my %is_member_of_starting_set = map { (get_file_id($_) => 1) } @{$start};
@@ -241,7 +262,7 @@ sub _compile_file_filter {
         #
         # Also, it assumes we have a file name as named pipes are filtered out
         # earlier.
-        return 0 if $size_filter && ! $size_filter->filter($resource);
+        return 0 if $size_filter && ! $size_filter->($resource);
 
         my $match_found = $direct_filters->filter($resource);
 

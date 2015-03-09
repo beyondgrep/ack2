@@ -7,7 +7,6 @@ use App::Ack ();
 use App::Ack::ConfigDefault ();
 use App::Ack::ConfigFinder ();
 use App::Ack::Filter;
-use App::Ack::Filter::Size;
 use App::Ack::Filter::Default;
 use Carp 1.04 ();
 use Getopt::Long 2.35 ();
@@ -334,9 +333,9 @@ EOT
         'm|max-count=i'     => \$opt->{m},
         'match=s'           => \$opt->{regex},
         'max-size|max-file-size=s'
-                            => sub { $opt->{max_file_size} = App::Ack::Filter::Size::_parse_size ($_[1]) },
+                            => \$opt->{max_file_size},
         'min-size|min-file-size=s'
-                            => sub { $opt->{min_file_size} = App::Ack::Filter::Size::_parse_size ($_[1]) },
+                            => \$opt->{min_file_size},
         'n|no-recurse'      => \$opt->{n},
         o                   => sub { $opt->{output} = '$&' },
         'output=s'          => \$opt->{output},
