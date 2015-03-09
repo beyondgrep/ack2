@@ -11,11 +11,12 @@ use App::Ack::Filter ();
 sub _parse_size {
     my $s = $_[0] || return 0;
 
-    if ( $s =~ m/^\s*(\d+(?:\.\d+)?)(?:\s*([KMGT]?)B?)?\s*$/i ) {
+    if ( $s =~ m/^\s*(\d+(?:\.\d+)?)(?:\s*([KMGT]?)(?:(i?)B)?)?\s*$/i ) {
         my $n = $1;
         if ($2) {
             my $u = lc $2;
-            $n *= 1024 while $u =~ tr/tgmk/gmk/d;
+            my $i = $3 ? 1024 : 1000; # 1KiB = 1024B; 1KB = 1000B
+            $n *= $i while $u =~ tr/tgmk/gmk/d;
         }
         return int $n;
     }
