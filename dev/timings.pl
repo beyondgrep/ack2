@@ -15,6 +15,8 @@ use Time::HiRes qw(gettimeofday tv_interval);
 
 my $SOURCE_DIR = File::Spec->catdir($ENV{HOME}, 'parrot');
 
+-d $SOURCE_DIR or die "Expecting to find parrot in $SOURCE_DIR - get it from github.com/parrot/parrot";
+
 sub grab_versions {
     my @acks = @_;
 
