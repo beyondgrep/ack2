@@ -102,7 +102,7 @@ sub time_ack {
             return if $has_error_lines;
         } else {
             close $read;
-            close STDOUT;
+            open STDOUT, '>', File::Spec->devnull;
             open STDERR, '>&', $write;
             exec @args;
             exit 255;
