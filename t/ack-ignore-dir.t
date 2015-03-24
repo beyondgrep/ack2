@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 39;
+use Test::More tests => 41;
 use File::Spec;
 
 use lib 't';
@@ -203,6 +203,12 @@ NOIGNORE_DIR_RELATIVE_PATHS: {
         'no-ignore relative paths instead of just directory names',
     );
     sets_match( \@results, \@expected, $test_description );
+}
+
+IGNORE_DIR_DONT_IGNORE_TARGET: {
+    my @stdout = run_ack('--ignore-dir=swamp', '-f', 't/swamp');
+
+    isnt(scalar(@stdout), 0, 'Specifying a directory on the command line should override ignoring it');
 }
 
 # --noignore-dir=firstlinematch
