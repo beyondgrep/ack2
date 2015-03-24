@@ -2009,6 +2009,12 @@ expression metacharacter!)
 The Perl language limits the repetition quanitifier to 32K.  You
 can search for C<.{32767}> but not C<.{32768}>.
 
+=head2 Ack does "X" and shouldn't, should it?
+
+We try to remain as close to grep's behavior as possible, so when in doubt,
+see what grep does!  If there's a mismatch in functionality there, please
+bring it up on the ack-users mailing list.
+
 =head1 ACKRC LOCATION SEMANTICS
 
 Ack can load its configuration from many sources.  The following list
