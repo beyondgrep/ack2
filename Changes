@@ -11,6 +11,8 @@ for the report! (GH #522)
 
 Add minimal requirement of Getopt::Long 2.38, not 2.35, for GetOptionsFromString.
 
+Don't ignore directories that are specified as command line targets (GH #524)
+
 [ENHANCEMENTS]
 Many optimizations and code cleanups.  Thanks, Stephan Hohe.
 
