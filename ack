@@ -537,6 +537,7 @@ sub print_matches_in_resource {
             while ( $contents =~ /$opt_regex/og ) {
                 my $match_start = $-[0];
                 my $match_end   = $+[0];
+                next if $match_start == $match_end;
 
                 pos($contents)  = $prev_match_end;
                 $prev_match_end = $match_end;
@@ -640,6 +641,8 @@ sub print_line_with_options {
                     my $offset = 0; # additional offset for when we add stuff
                     my $previous_match_end = 0;
 
+                    last if $-[0] == $+[0];
+
                     for ( my $i = 1; $i < @+; $i++ ) {
                         my ( $match_start, $match_end ) = ( $-[$i], $+[$i] );
 
@@ -669,6 +672,7 @@ sub print_line_with_options {
                     $matched = 1;
                     my ( $match_start, $match_end ) = ($-[0], $+[0]);
                     next unless defined($match_start);
+                    last if $match_start == $match_end;
 
                     my $substring = substr( $line, $match_start,
                         $match_end - $match_start );
