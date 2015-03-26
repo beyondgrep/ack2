@@ -13,6 +13,9 @@ Add minimal requirement of Getopt::Long 2.38, not 2.35, for GetOptionsFromString
 
 Don't ignore directories that are specified as command line targets (GH #524)
 
+Fix a bug where a regular expression that matches the empty string could cause ack
+to go into an infinite loop (GH #542)
+
 [ENHANCEMENTS]
 Many optimizations and code cleanups.  Thanks, Stephan Hohe.
 
