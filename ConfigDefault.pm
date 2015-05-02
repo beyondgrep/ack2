@@ -116,6 +116,10 @@ sub _options_block {
 # http://www.haskell.org/cabal/users-guide/installing-packages.html
 --ignore-directory=is:.cabal-sandbox
 
+# Rope python refactoring library
+# http://rope.sourceforge.net/
+--ignore-directory=is:.ropeproject
+
 ### Files to ignore
 
 # Backup files
