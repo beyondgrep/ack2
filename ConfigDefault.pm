@@ -132,7 +132,7 @@ sub _options_block {
 --ignore-file=match:/core\.\d+$/
 
 # CVS merge backups
---ignore-file=match:/^.#.+/
+--ignore-file=match:/^\.#.+/
 
 # minified Javascript
 --ignore-file=match:/[.-]min[.]js$/
