@@ -131,6 +131,9 @@ sub _options_block {
 # core dumps
 --ignore-file=match:/core\.\d+$/
 
+# CVS merge backups
+--ignore-file=match:/^.#.+/
+
 # minified Javascript
 --ignore-file=match:/[.-]min[.]js$/
 --ignore-file=match:/[.]js[.]min$/
