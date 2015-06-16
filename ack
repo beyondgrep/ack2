@@ -316,11 +316,9 @@ sub build_regex {
 
     $str = quotemeta( $str ) if $opt->{Q};
     if ( $opt->{w} ) {
-        my $pristine_str = $str;
-
         $str = "(?:$str)";
-        $str = "\\b$str" if $pristine_str =~ /^\w/;
-        $str = "$str\\b" if $pristine_str =~ /\w$/;
+        $str = "(?:\\b|(?!\\w))$str";
+        $str = "$str(?:\\b|(?<!\\w))";
     }
 
     my $regex_is_lc = $str eq lc $str;
@@ -1539,8 +1537,10 @@ Display version and copyright information.
 
 =item B<-w>, B<--word-regexp>
 
-Force PATTERN to match only whole words.  The PATTERN is wrapped with
-C<\b> metacharacters.
+Match a whole word only.  In more detail: if the match begins with a
+word character, then there must not be a word character immediately
+before the match.  If the match ends with a word character, there must
+not be a word character immediately after the match.
 
 =item B<-x>
 
