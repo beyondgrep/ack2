@@ -1,5 +1,11 @@
 History file for ack.  http://beyondgrep.com/
 
+NEXT
+====================================
+[INTERNALS]
+Added test to make sure subdirs of target subdirs are ignored if --ignore-dir applies
+to them.  Thanks to Pete Houston! (GH #570)
+
 2.15_01 Fri Feb 13 16:23:54 CST 2015
 ====================================
 [FIXES]
