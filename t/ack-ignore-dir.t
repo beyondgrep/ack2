@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 41;
+use Test::More tests => 45;
 use File::Spec;
 
 use lib 't';
@@ -209,6 +209,14 @@ IGNORE_DIR_DONT_IGNORE_TARGET: {
     my @stdout = run_ack('--ignore-dir=swamp', '-f', 't/swamp');
 
     isnt(scalar(@stdout), 0, 'Specifying a directory on the command line should override ignoring it');
+}
+
+IGNORE_SUBDIR_OF_TARGET: {
+    my @stdout = run_ack('--ignore-dir=swamp', '-l', 'quux', 't/swamp');
+    is(scalar(@stdout), 0, 'Specifying a directory on the command line should still ignore matching subdirs');
+
+    @stdout = run_ack('-l', 'quux', 't/swamp');
+    is(scalar(@stdout), 1, 'Double-check it is found without ignore-dir');
 }
 
 # --noignore-dir=firstlinematch
