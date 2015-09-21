@@ -51,6 +51,7 @@ EXCLUDE_ONLY: {
         t/swamp/service.svc
         t/swamp/stuff.cmake
         t/swamp/CMakeLists.txt
+        t/swamp/swamp/ignoreme.txt
         ),
         't/swamp/not-an-#emacs-workfile#',
     );

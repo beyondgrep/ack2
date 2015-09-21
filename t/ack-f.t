@@ -63,6 +63,7 @@ DEFAULT_DIR_EXCLUSIONS: {
         t/swamp/service.svc
         t/swamp/stuff.cmake
         t/swamp/CMakeLists.txt
+        t/swamp/swamp/ignoreme.txt
         ),
         't/swamp/not-an-#emacs-workfile#',
     );
