@@ -408,7 +408,7 @@ must also happen there.
 =cut
 
 sub print_matches_in_resource {
-    my ( $resource, $opt ) = @_;
+    my ( $resource ) = @_;
 
     my $max_count      = $opt_m || -1;
     my $nmatches       = 0;
@@ -437,7 +437,7 @@ sub print_matches_in_resource {
     if ( $is_tracking_context ) {
         $after_context_pending = 0;
         while ( <$fh> ) {
-            if ( does_match($opt, $_) && $max_count ) {
+            if ( does_match($_) && $max_count ) {
                 if ( !$has_printed_for_this_resource ) {
                     if ( $opt_break && $has_printed_something ) {
                         App::Ack::print_blank_line();
@@ -446,7 +446,7 @@ sub print_matches_in_resource {
                         App::Ack::print_filename( $display_filename, $ors );
                     }
                 }
-                print_line_with_context($opt, $filename, $_, $.);
+                print_line_with_context( $filename, $_, $. );
                 $has_printed_for_this_resource = 1;
                 $nmatches++;
                 $max_count--;
@@ -457,12 +457,12 @@ sub print_matches_in_resource {
                 if ( $opt_break && !$has_printed_for_this_resource && $has_printed_something ) {
                     App::Ack::print_blank_line();
                 }
-                print_line_with_options($opt, $filename, $_, $., ':');
+                print_line_with_options( $filename, $_, $., ':' );
                 $has_printed_for_this_resource = 1;
             }
             else {
                 chomp; # XXX proper newline handling?
-                print_line_if_context($opt, $filename, $_, $., '-');
+                print_line_if_context( $filename, $_, $., '-' );
             }
 
             last if ($max_count == 0) && ($after_context_pending == 0);
@@ -486,7 +486,7 @@ sub print_matches_in_resource {
                             App::Ack::print_filename( $display_filename, $ors );
                         }
                     }
-                    print_line_with_context($opt, $filename, $_, $.);
+                    print_line_with_context( $filename, $_, $. );
                     $has_printed_for_this_resource = 1;
                     $nmatches++;
                     $max_count--;
@@ -496,7 +496,7 @@ sub print_matches_in_resource {
                     if ( $opt_break && !$has_printed_for_this_resource && $has_printed_something ) {
                         App::Ack::print_blank_line();
                     }
-                    print_line_with_options($opt, $filename, $_, $., ':');
+                    print_line_with_options( $filename, $_, $., ':' );
                     $has_printed_for_this_resource = 1;
                 }
                 last unless $max_count != 0;
@@ -514,7 +514,7 @@ sub print_matches_in_resource {
                             App::Ack::print_filename( $display_filename, $ors );
                         }
                     }
-                    print_line_with_context($opt, $filename, $_, $.);
+                    print_line_with_context( $filename, $_, $. );
                     $has_printed_for_this_resource = 1;
                     $nmatches++;
                     $max_count--;
@@ -577,7 +577,7 @@ sub print_matches_in_resource {
                 }
                 my $line = substr($contents, $start_line, $end_line - $start_line + 1);
                 $line =~ s/[\r\n]+$//g;
-                print_line_with_options($opt, $filename, $line, $line_no, ':');
+                print_line_with_options( $filename, $line, $line_no, ':' );
 
                 pos($contents) = $end_line + 1;
 
@@ -599,7 +599,7 @@ sub print_matches_in_resource {
 }
 
 sub print_line_with_options {
-    my ( $opt, $filename, $line, $line_no, $separator ) = @_;
+    my ( $filename, $line, $line_no, $separator ) = @_;
 
     $has_printed_something = 1;
     $printed_line_no = $line_no;
@@ -706,7 +706,7 @@ sub print_line_with_options {
 }
 
 sub iterate {
-    my ( $resource, $opt, $cb ) = @_;
+    my ( $resource, $cb ) = @_;
 
     $is_iterating = 1;
 
@@ -742,7 +742,7 @@ sub iterate {
 }
 
 sub print_line_with_context {
-    my ( $opt, $filename, $matching_line, $line_no ) = @_;
+    my ( $filename, $matching_line, $line_no ) = @_;
 
     my $ors                 = $opt_print0 ? "\0" : "\n";
     my $is_tracking_context = $opt_after_context || $opt_before_context;
@@ -769,12 +769,12 @@ sub print_line_with_context {
             # Disable $opt->{column} since there are no matches in the context lines
             local $opt_column = 0;
 
-            print_line_with_options($opt, $filename, $line, $line_no-$before_unprinted, '-');
+            print_line_with_options( $filename, $line, $line_no-$before_unprinted, '-' );
             $before_unprinted--;
         }
     }
 
-    print_line_with_options($opt, $filename, $matching_line, $line_no, ':');
+    print_line_with_options( $filename, $matching_line, $line_no, ':' );
 
     # We want to get the next $n_after_ctx_lines printed
     $after_context_pending = $n_after_ctx_lines;
@@ -786,12 +786,12 @@ sub print_line_with_context {
 
 # print the line only if it's part of a context we need to display
 sub print_line_if_context {
-    my ( $opt, $filename, $line, $line_no, $separator ) = @_;
+    my ( $filename, $line, $line_no, $separator ) = @_;
 
     if ( $after_context_pending ) {
         # Disable $opt->{column} since there are no matches in the context lines
         local $opt_column = 0;
-        print_line_with_options( $opt, $filename, $line, $line_no, $separator );
+        print_line_with_options( $filename, $line, $line_no, $separator );
         --$after_context_pending;
     }
     elsif ( $n_before_ctx_lines ) {
@@ -816,7 +816,7 @@ well.
 =cut
 
 sub does_match {
-    my ( $opt, $line ) = @_;
+    my ( $line ) = @_;
 
     $match_column_number = undef;
 
@@ -841,7 +841,7 @@ sub get_match_column {
 }
 
 sub resource_has_match {
-    my ( $resource, $opt ) = @_;
+    my ( $resource ) = @_;
 
     my $has_match = 0;
     my $fh = $resource->open();
@@ -875,7 +875,7 @@ sub resource_has_match {
 }
 
 sub count_matches_in_resource {
-    my ( $resource, $opt ) = @_;
+    my ( $resource ) = @_;
 
     my $nmatches = 0;
     my $fh = $resource->open();
@@ -1011,12 +1011,12 @@ sub main {
     my $nmatches    = 0;
     my $total_count = 0;
 
-    setup_line_context( $opt );
+    setup_line_context();
 
 RESOURCES:
     while ( my $resource = $resources->next ) {
         if ($is_tracking_context) {
-            setup_line_context_for_file($opt);
+            setup_line_context_for_file();
         }
 
         # XXX Combine the -f and -g functions
@@ -1038,7 +1038,7 @@ RESOURCES:
             else {
                 local $opt_show_filename = 0; # XXX Why is this local?
 
-                print_line_with_options($opt, '', $resource->name, 0, $ors);
+                print_line_with_options( '', $resource->name, 0, $ors );
             }
             ++$nmatches;
             last RESOURCES if defined($opt_m) && $nmatches >= $opt_m;
@@ -1059,23 +1059,23 @@ RESOURCES:
 
             local $opt_color = 0;
 
-            iterate($resource, $opt, sub {
+            iterate($resource, sub {
                 chomp;
 
                 if ( $line_numbers{$.} ) {
-                    print_line_with_context($opt, $filename, $_, $.);
+                    print_line_with_context( $filename, $_, $. );
                 }
                 elsif ( $opt_passthru ) {
-                    print_line_with_options($opt, $filename, $_, $., ':');
+                    print_line_with_options( $filename, $_, $., ':' );
                 }
                 elsif ( $is_tracking_context ) {
-                    print_line_if_context($opt, $filename, $_, $., '-');
+                    print_line_if_context( $filename, $_, $., '-' );
                 }
                 return 1;
             });
         }
         elsif ( $opt_count ) {
-            my $matches_for_this_file = count_matches_in_resource( $resource, $opt );
+            my $matches_for_this_file = count_matches_in_resource( $resource );
 
             if ( not $opt_show_filename ) {
                 $total_count += $matches_for_this_file;
@@ -1092,7 +1092,7 @@ RESOURCES:
             }
         }
         elsif ( $opt_l || $opt_L ) {
-            my $is_match = resource_has_match( $resource, $opt );
+            my $is_match = resource_has_match( $resource );
 
             if ( $opt_L ? !$is_match : $is_match ) {
                 App::Ack::print( $resource->name, $ors );
@@ -1103,7 +1103,7 @@ RESOURCES:
             }
         }
         else {
-            $nmatches += print_matches_in_resource( $resource, $opt );
+            $nmatches += print_matches_in_resource( $resource );
             if ( $nmatches && $only_first ) {
                 last RESOURCES;
             }
