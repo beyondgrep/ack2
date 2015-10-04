@@ -891,11 +891,9 @@ sub count_matches_in_resource {
             }
         }
         else {
-            my $content = do {
-                local $/;
-                <$fh>;
-            };
-            $nmatches =()= ($content =~ /$opt_regex/og);
+            while ( <$fh> ) {
+                ++$nmatches if (/$opt_regex/o);
+            }
         }
         close $fh;
     }
