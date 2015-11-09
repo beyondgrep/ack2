@@ -99,6 +99,8 @@ t/issue244.t
 t/issue276.t
 t/issue491.t
 t/issue522.t
+t/issue562.t
+t/issue571.t
 t/longopts.t
 t/lua-shebang.t
 t/match-filter.t
