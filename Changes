@@ -2,6 +2,9 @@ History file for ack.  http://beyondgrep.com/
 
 NEXT
 ====================================
+[FIXES]
+Reverted an optimization to make \s work properly again. (GH #572, GH #571, GH #562, GH #491, GH #498)
+
 [INTERNALS]
 Added test to make sure subdirs of target subdirs are ignored if --ignore-dir applies
 to them.  Thanks to Pete Houston! (GH #570)
