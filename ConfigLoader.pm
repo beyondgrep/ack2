@@ -9,7 +9,7 @@ use App::Ack::ConfigFinder ();
 use App::Ack::Filter;
 use App::Ack::Filter::Default;
 use Carp 1.04 ();
-use Getopt::Long 2.35 ();
+use Getopt::Long 2.38 ();
 use Text::ParseWords 3.1 ();
 
 =head1 FUNCTIONS
