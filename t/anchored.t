@@ -14,7 +14,7 @@ prep_environment();
 my @files = qw( t/text );
 
 FRONT_ANCHORED: {
-    my @args  = qw( -h -i ^science );
+    my @args  = qw( --sort-files -h -i ^science );
 
     my @expected = split( /\n/, <<'EOF' );
 Science and religion are not mutually exclusive
@@ -24,7 +24,7 @@ EOF
 }
 
 BACK_ANCHORED: {
-    my @args  = qw( -h -i done$ );
+    my @args  = qw( --sort-files -h -i done$ );
 
     my @expected = split( /\n/, <<'EOF' );
 Through all kinds of weather and everything we done
@@ -35,7 +35,7 @@ EOF
 }
 
 UNANCHORED: {
-    my @args  = qw( -h -i science );
+    my @args  = qw( --sort-files -h -i science );
 
     my @expected = split( /\n/, <<'EOF' );
 Science and religion are not mutually exclusive

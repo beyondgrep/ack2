@@ -44,7 +44,7 @@ EOF
 
     my $regex = 'laugh';
     my @files = qw( t/text );
-    my @args = ( '-B2', $regex );
+    my @args = ( '--sort-files', '-B2', $regex );
 
     ack_lists_match( [ @args, @files ], \@expected, "Looking for $regex - before with line numbers" );
 }

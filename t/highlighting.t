@@ -15,7 +15,7 @@ prep_environment();
 my @HIGHLIGHT = qw( --color --group --sort-files );
 
 BASIC: {
-    my @args  = qw( beliefs t/text/ );
+    my @args  = qw( --sort-files beliefs t/text/ );
 
     my $expected_original = <<'END';
 <t/text/science-of-myth.txt>
@@ -34,7 +34,7 @@ END
 
 
 METACHARACTERS: {
-    my @args  = qw( \w*din\w* t/text/ );
+    my @args  = qw( --sort-files \w*din\w* t/text/ );
     my $expected_original = <<'END';
 <t/text/4th-of-july.txt>
 {24}:(Riding) shotgun from town to town
@@ -58,7 +58,7 @@ END
 
 
 CONTEXT: {
-    my @args  = qw( love -C1 t/text/ );
+    my @args  = qw( --sort-files love -C1 t/text/ );
 
     my $expected_original = <<'END';
 <t/text/4th-of-july.txt>

@@ -64,7 +64,7 @@ EOF
 # Give an output function and find match in multiple files (so print filenames, just like grep -o).
 WITH_OUTPUT: {
     my @files = qw( t/text/ );
-    my @args = qw/ --output=x$1x question(\\S+) /;
+    my @args = qw/ --output=x$1x question(\\S+) --sort-files /;
 
     my @target_file = (
         File::Next::reslash( 't/text/science-of-myth.txt' ),
@@ -81,7 +81,7 @@ WITH_OUTPUT: {
 
 OUTPUT_DOUBLE_QUOTES: {
     my @files = qw( t/text/ );
-    my @args  = ( '--output="$1"', 'question(\\S+)' );
+    my @args  = ( '--output="$1"', 'question(\\S+)', '--sort-files' );
 
     my @target_file = (
         File::Next::reslash( 't/text/science-of-myth.txt' ),
@@ -117,7 +117,7 @@ PROJECT_ACKRC_OUTPUT_FORBIDDEN: {
 
 HOME_ACKRC_OUTPUT_PERMITTED: {
     my @files = untaint( File::Spec->rel2abs('t/text/') );
-    my @args = qw/ --env question(\\S+) /;
+    my @args = qw/ --env question(\\S+) --sort-files /;
 
     write_file(File::Spec->catfile($tempdir->dirname, '.ackrc'), "--output=foo\n");
     chdir File::Spec->catdir($tempdir->dirname, 'subdir');
@@ -133,7 +133,7 @@ HOME_ACKRC_OUTPUT_PERMITTED: {
 
 ACKRC_ACKRC_OUTPUT_PERMITTED: {
     my @files = untaint( File::Spec->rel2abs('t/text/') );
-    my @args = qw/ --env question(\\S+) /;
+    my @args = qw/ --env question(\\S+) --sort-files /;
 
     write_file(File::Spec->catfile($tempdir->dirname, '.ackrc'), "--output=foo\n");
     chdir File::Spec->catdir($tempdir->dirname, 'subdir');
