@@ -157,7 +157,7 @@ subtest '-Q works on -g' => sub {
     $regex = 'of';
 
     @files = qw( t/text );
-    @args  = ( '-Q', '-g', $regex );
+    @args  = ( '-Q', '-g', $regex, '--sort-files' );
 
     ack_sets_match( [ @args, @files ], \@expected, "Looking for $regex with quotemeta." );
 };
@@ -166,7 +166,7 @@ subtest '-w works on -g' => sub {
     my @expected = qw();
     my $regex = 'free';
 
-    my @args  = ( '-w', '-g', $regex ); # The -w means "free" won't match "freedom"
+    my @args  = ( '-w', '-g', $regex, '--sort-files' ); # The -w means "free" won't match "freedom"
     my @files = qw( t/text/ );
 
     ack_sets_match( [ @args, @files ], \@expected, "Looking for $regex with '-w'." );
@@ -179,7 +179,7 @@ subtest '-w works on -g' => sub {
     $regex = 'of';
 
     @files = qw( t/text );
-    @args  = ( '-w', '-g', $regex );
+    @args  = ( '-w', '-g', $regex, '--sort-files' );
 
     ack_sets_match( [ @args, @files ], \@expected, "Looking for $regex with '-w'." );
 };
@@ -194,7 +194,7 @@ subtest '-v works on -g' => sub {
     );
     my $file_regex = 'of';
 
-    my @args  = ( '-v', '-g', $file_regex );
+    my @args  = ( '-v', '-g', $file_regex, '--sort-files' );
     my @files = qw( t/text/ );
 
     ack_sets_match( [ @args, @files ], \@expected, "Looking for file names that do not match $file_regex" );

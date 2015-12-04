@@ -19,7 +19,7 @@ plan tests => 6;
 prep_environment();
 
 INTERACTIVE_GROUPING_NOCOLOR: {
-    my @args  = qw( Sue --nocolor );
+    my @args  = qw( Sue --nocolor --sort-files );
     my @files = qw( t/text );
 
     my $output = run_ack_interactive(@args, @files);
@@ -37,7 +37,7 @@ END_OUTPUT
 }
 
 INTERACTIVE_NOHEADING_NOCOLOR: {
-    my @args  = qw( Sue --nocolor --noheading);
+    my @args  = qw( Sue --nocolor --noheading --sort-files );
     my @files = qw( t/text );
 
     my $output = run_ack_interactive(@args, @files);
@@ -54,7 +54,7 @@ END_OUTPUT
 }
 
 INTERACTIVE_NOGROUP_NOCOLOR: {
-    my @args  = qw( Sue --nocolor --nogroup);
+    my @args  = qw( Sue --nocolor --nogroup --sort-files );
     my @files = qw( t/text );
 
     my $output = run_ack_interactive(@args, @files);
@@ -71,7 +71,7 @@ END_OUTPUT
 }
 
 INTERACTIVE_GROUPING_COLOR: {
-    my @args  = qw( Sue ); # --color is on by default
+    my @args  = qw( Sue --sort-files ); # --color is on by default
     my @files = qw( t/text );
 
     my $CFN      = color 'bold green';

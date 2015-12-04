@@ -17,7 +17,7 @@ SINGLE_TEXT_MATCH: {
     );
 
     my @files = qw( t/text );
-    my @args = qw( Sue -1 -h );
+    my @args = qw( Sue -1 -h --sort-files );
     my @results = run_ack( @args, @files );
 
     lists_match( \@results, \@expected, 'Looking for first instance of Sue!' );

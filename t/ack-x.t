@@ -95,7 +95,7 @@ $science:23:Somehow no matter what the world keeps turning
 EOF
 
 my $perl = caret_X();
-my @lhs_args = ( $perl, '-Mblib', build_ack_invocation( '-g', 'of', 't/text' ) );
+my @lhs_args = ( $perl, '-Mblib', build_ack_invocation( '--sort-files', '-g', 'of', 't/text' ) );
 my @rhs_args = ( $perl, '-Mblib', build_ack_invocation( '-x', 'the' ) ); # for now
 
 if ( $ENV{'ACK_TEST_STANDALONE'} ) {

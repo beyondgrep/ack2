@@ -91,6 +91,7 @@ sub test_match {
 
     my $regex = shift;
     my @args  = @_;
+    push @args, '--sort-files';
 
     return subtest "test_match( @args )" => sub {
         my @files = ( 't/text' );

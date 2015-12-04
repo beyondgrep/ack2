@@ -32,7 +32,7 @@ DASH_L: {
         t/text/shut-up-be-happy.txt
     );
 
-    my @args  = qw( religion -i -v -l );
+    my @args  = qw( religion -i -v -l --sort-files );
     my @files = qw( t/text );
 
     ack_sets_match( [ @args, @files ], \@expected, 'No religion please' );
@@ -52,7 +52,7 @@ DASH_C: {
         t/text/shut-up-be-happy.txt:26
     );
 
-    my @args  = qw( religion -i -v -c );
+    my @args  = qw( religion -i -v -c --sort-files );
     my @files = qw( t/text );
 
     ack_sets_match( [ @args, @files ], \@expected, 'Non-religion counts' );

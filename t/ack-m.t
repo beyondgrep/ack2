@@ -11,7 +11,7 @@ use File::Next;
 
 prep_environment();
 
-my @text  = map {
+my @text  = sort map {
     untaint($_)
 } glob( 't/text/s*.txt' );
 
