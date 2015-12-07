@@ -130,7 +130,7 @@ errors in the Windows builds.
 2.12    Tue Dec  3 07:05:02 CST 2013
 ====================================
 [SECURITY FIXES]
-This verison of ack prevents the --pager, --regex and --output
+This version of ack prevents the --pager, --regex and --output
 options from being used from project-level ackrc files.  It is
 possible to execute malicious code with these options, and we want
 to prevent the security risk of acking through a potentially malicious

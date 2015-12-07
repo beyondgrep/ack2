@@ -83,7 +83,7 @@ WriteMakefile( %parms );
 
 package MY;
 
-# supress EU::MM test rule
+# suppress EU::MM test rule
 sub MY::test {
     return '';
 }

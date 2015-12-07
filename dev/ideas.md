@@ -32,6 +32,6 @@
 - A debugging switch to indicate which option/pattern came from where
   - Multiple ack configuration files
   - ACK\_OPTS
-  - commmand line
+  - command line
 - Command line option to remove a rule from a file type:
   - Ex. I don't want to treat .t files as Perl in a given project: --type-remove=perl,ext,t

@@ -36,7 +36,7 @@ my $lines;
 
 prep_environment();
 
-# We sort to ensure determinstic results.
+# We sort to ensure deterministic results.
 @args  = ('-n', '--sort-files', 'apple', 't/swamp/groceries');
 $lines = run_ack(@args);
 lists_match $lines, $expected_norecurse, '-n should disable recursion';

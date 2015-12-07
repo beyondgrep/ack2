@@ -1,6 +1,6 @@
 # --ignore-dir and --ignore-file revamp
 
-Users have been disatisfied with `--ignore-dir` and `--ignore-file`.  Here are some common "bug reports"
+Users have been dissatisfied with `--ignore-dir` and `--ignore-file`.  Here are some common "bug reports"
 
   - `--ignore-dir=foo/bar` doesn't ignore `foo/bar` at all (GH #291)
   - `--ignore-dir=foo` ignores all directories named `foo`, not just the one at the root of the search (GH #216)
