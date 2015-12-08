@@ -61,7 +61,7 @@ BEGINS_AND_ENDS_WITH_WORD_CHAR: {
     );
 
     my @files = qw( t/text );
-    my @args = ( 'do', qw( -w -h ) );
+    my @args = ( 'do', qw( -w -h --sort-files ) );
 
     ack_lists_match( [ @args, @files ], \@expected, 'Looking for do as whole word' );
 }
@@ -75,7 +75,7 @@ BEGINS_BUT_NOT_ENDS_WITH_WORD_CHAR: {
     );
 
     my @files = qw( t/text );
-    my @args = ( 'us()', qw( -w -h ) );
+    my @args = ( 'us()', qw( -w -h --sort-files ) );
 
     ack_lists_match( [ @args, @files ], \@expected, 'Looking for us with word flag, but regexp does not end with word char' );
 }
@@ -100,7 +100,7 @@ ENDS_BUT_NOT_BEGINS_WITH_WORD_CHAR: {
     );
 
     my @files = qw( t/text );
-    my @args = ( '()one', qw( -w -h ) );
+    my @args = ( '()one', qw( -w -h --sort-files ) );
 
     ack_lists_match( [ @args, @files ], \@expected, 'Looking for one with word flag, but regexp does not begin with word char' );
 }
@@ -116,7 +116,7 @@ NEITHER_BEGINS_NOR_ENDS_WITH_WORD_CHAR: {
     );
 
     my @files = qw( t/text/science-of-myth.txt );
-    my @args = ( '(her)', qw( -w -h ) );
+    my @args = ( '(her)', qw( -w -h --sort-files ) );
 
     ack_lists_match( [ @args, @files ], \@expected, 'Looking for her with word flag, but regexp does not begin or end with word char' );
 }
