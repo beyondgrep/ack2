@@ -1876,13 +1876,19 @@ them here.
 
 =head2 Why isn't ack finding a match in (some file)?
 
-Probably because it's of a type that ack doesn't recognize.  ack's
-searching behavior is driven by filetype.  B<If ack doesn't know
-what kind of file it is, ack ignores the file.>
+First, take a look and see if ack is even looking at the file.  ack is
+intelligent in what files it will search and which ones it won't, but
+sometimes that can be surprising.
 
-Use the C<-f> switch to see a list of files that ack will search
-for you.  You can use the C<--show-types> switch to show which type
-ack thinks each file is.
+Use the C<-f> switch, with no regex, to see a list of files that ack
+will search for you.  If your file doesn't show up in the list of files
+that C<ack -f> shows, then ack never looks in it.
+
+NOTE: If you're using an old ack before 2.0, it's probably because it's of
+a type that ack doesn't recognize.  In ack 1.x, the searching behavior is
+driven by filetype.  B<If ack 1.x doesn't know what kind of file it is,
+ack ignores the file.>  You can use the C<--show-types> switch to show
+which type ack thinks each file is.
 
 =head2 Wouldn't it be great if F<ack> did search & replace?
 
@@ -2229,6 +2235,8 @@ L<https://github.com/petdance/ack2>
 How appropriate to have I<ack>nowledgements!
 
 Thanks to everyone who has contributed to ack in any way, including
+SE<eacute>bastien FeugE<egrave>re,
+Jakub Wilk,
 Pete Houston,
 Stephen Thirlwall,
 Jonah Bishop,

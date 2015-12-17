@@ -3,15 +3,18 @@ History file for ack.  http://beyondgrep.com/
 NEXT
 ====================================
 [FIXES]
-Reverted an optimization to make \s work properly again. (GH #572, GH #571, GH #562, GH #491, GH #498)
+Reverted an optimization to make \s work properly again. (GH #572,
+GH #571, GH #562, GH #491, GH #498)
+
+Fixed an out-of-date FAQ entry.  Thanks, Jakub Wilk.  (GH #580)
 
 [ENHANCEMENTS]
-The JSP filetype (--jsp) now recognizes .jspf files.  Thanks, Sébastien
-Feugère.  (GH #586)
+The JSP filetype (--jsp) now recognizes .jspf files.  Thanks, Sebastien
+Feugere.  (GH #586)
 
 [INTERNALS]
-Added test to make sure subdirs of target subdirs are ignored if --ignore-dir applies
-to them.  Thanks to Pete Houston! (GH #570)
+Added test to make sure subdirs of target subdirs are ignored if
+--ignore-dir applies to them.  Thanks, Pete Houston. (GH #570)
 
 2.15_01 Fri Feb 13 16:23:54 CST 2015
 ====================================
