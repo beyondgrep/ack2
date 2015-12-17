@@ -1,7 +1,12 @@
 History file for ack.  http://beyondgrep.com/
 
-NEXT
+2.15_02 Thu Dec 17 15:51:15 CST 2015
 ====================================
+This is the first dev version in nine months.  Many changes have gone
+into this, probably more than have been listed here.  We need to update
+this list, but for now these are fixes we know are in here.  My apologies
+for not having this changelog accurate.
+
 [FIXES]
 Reverted an optimization to make \s work properly again. (GH #572,
 GH #571, GH #562, GH #491, GH #498)
@@ -15,6 +20,7 @@ Feugere.  (GH #586)
 [INTERNALS]
 Added test to make sure subdirs of target subdirs are ignored if
 --ignore-dir applies to them.  Thanks, Pete Houston. (GH #570)
+
 
 2.15_01 Fri Feb 13 16:23:54 CST 2015
 ====================================
