@@ -228,6 +228,7 @@ t/swamp/sample.rake
 t/swamp/service.svc
 t/swamp/solution8.tar
 t/swamp/stuff.cmake
+t/swamp/swamp/ignoreme.txt
 t/text/4th-of-july.txt
 t/text/boy-named-sue.txt
 t/text/freedom-of-choice.txt
