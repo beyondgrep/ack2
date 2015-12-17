@@ -283,7 +283,7 @@ sub _options_block {
 
 # JSP
 # http://www.oracle.com/technetwork/java/javaee/jsp/index.html
---type-add=jsp:ext:jsp,jspx,jhtm,jhtml
+--type-add=jsp:ext:jsp,jspx,jspf,jhtm,jhtml
 
 # JSON
 # http://www.json.org/
