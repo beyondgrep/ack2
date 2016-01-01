@@ -2235,6 +2235,7 @@ L<https://github.com/petdance/ack2>
 How appropriate to have I<ack>nowledgements!
 
 Thanks to everyone who has contributed to ack in any way, including
+Varadinsky,
 SE<eacute>bastien FeugE<egrave>re,
 Jakub Wilk,
 Pete Houston,
