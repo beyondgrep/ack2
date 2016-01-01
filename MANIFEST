@@ -63,6 +63,7 @@ t/ack-m.t
 t/ack-named-pipes.t
 t/ack-n.t
 t/ack-o.t
+t/ack-output.t
 t/ack-pager.t
 t/ack-passthru.t
 t/ack-print0.t
