@@ -1,5 +1,12 @@
 History file for ack.  http://beyondgrep.com/
 
+NEXT
+====
+
+[INTERNALS]
+Added test to test --output. Thanks, Varadinsky! (GH #587)
+
+
 2.15_02 Thu Dec 17 15:51:15 CST 2015
 ====================================
 This is the first dev version in nine months.  Many changes have gone
