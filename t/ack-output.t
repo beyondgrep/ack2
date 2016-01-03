@@ -32,7 +32,7 @@ In the case of Christianity and Judaism there exists the belief
 HERE
 
     my @files = qw( t/text );
-    my @args = qw( there -h --output=$_ );
+    my @args = qw( there --sort-files -h --output=$_ );
     my @results = run_ack( @args, @files );
 
     lists_match( \@results, \@expected, 'Matching line' );
@@ -59,7 +59,7 @@ t/text/science-of-myth.txt:3:there
 HERE
 
     my @files = qw ( t/text );
-    my @args = qw( there --output=$& );
+    my @args = qw( there --sort-files --output=$& );
     my @results = run_ack( @args, @files );
 
     lists_match( \@results, \@expected, 'Part of a line matching pattern' );
@@ -87,7 +87,7 @@ PREMATCH_MULTIPLE_FILES: {
     "In the case of Christianity and Judaism " );
 
     my @files = qw( t/text/);
-    my @args = qw( there -h --output=$` );
+    my @args = qw( there -h --sort-files --output=$` );
     my @results = run_ack( @args, @files );
 
     lists_match( \@results, \@expected, 'Part of a line preceding match' );
@@ -114,7 +114,7 @@ POSTMATCH_MULTIPLE_FILES: {
 HERE
 
     my @files = qw( t/text/ );
-    my @args = qw( there -h --output=$' );
+    my @args = qw( there -h --sort-files --output=$' );
     my @results = run_ack( @args, @files );
 
     lists_match( \@results, \@expected, 'Part of a line that follows match' );
@@ -141,7 +141,7 @@ Judaism-there-exists
 HERE
 
     my @files = qw( t/text/ );
-    my @args = qw( (\w+)\s(there)\s(\w+) -h --output=$1-$2-$3 );
+    my @args = qw( (\w+)\s(there)\s(\w+) -h --sort-files --output=$1-$2-$3 );
     my @results = run_ack( @args, @files );
 
     lists_match( \@results, \@expected, 'Capturing parentheses match' );
@@ -168,7 +168,7 @@ t/text/science-of-myth.txt:3:line:3
 HERE
 
     my @files = qw( t/text/ );
-    my @args = qw( there --output=line:$. );
+    my @args = qw( there --sort-files --output=line:$. );
     my @results = run_ack( @args, @files );
 
     lists_match( \@results, \@expected, 'Line number' );
