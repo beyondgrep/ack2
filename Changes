@@ -4,7 +4,7 @@ NEXT
 ====
 
 [INTERNALS]
-Added test to test --output. Thanks, Varadinsky! (GH #587)
+Added test to test --output. Thanks, Varadinsky! (GH #587, GH #590)
 
 
 2.15_02 Thu Dec 17 15:51:15 CST 2015
