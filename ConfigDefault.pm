@@ -205,7 +205,7 @@ sub _options_block {
 
 # Clojure
 # http://clojure.org/
---type-add=clojure:ext:clj
+--type-add=clojure:ext:clj,cljs,edn,cljc
 
 # C
 # .xs are Perl C files
