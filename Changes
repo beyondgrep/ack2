@@ -7,7 +7,9 @@ NEXT
 Added test to test --output. Thanks, Varadinsky! (GH #587, GH #590)
 
 [ENHANCEMENTS]
-Include cljs, cljc, and edn files with the --clojure flag.
+Include .cljs, .cljc and .edn files with the --clojure flag.  Thanks,
+Austin Chamberlin.
+
 
 2.15_02 Thu Dec 17 15:51:15 CST 2015
 ====================================
