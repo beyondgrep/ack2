@@ -393,7 +393,7 @@ sub setup_line_context_for_file {
     return;
 }
 
-=for Developers
+=begin Developers
 
 This subroutine jumps through a number of optimization hoops to
 try to be fast in the more common use cases of ack.  For one thing,
@@ -404,6 +404,8 @@ and normal searching.  Any changes that happen to one should propagate
 to the others if they make sense.  The non-context branches also inline
 does_match for performance reasons; any relevant changes that happen here
 must also happen there.
+
+=end Developers
 
 =cut
 
@@ -759,11 +761,13 @@ sub print_line_if_context {
 
 # does_match() MUST have an $opt_regex set.
 
-=for Developers
+=begin Developers
 
 This subroutine is inlined a few places in print_matches_in_resource
 for performance reasons, so any changes here must be copied there as
 well.
+
+=end Developers
 
 =cut
 

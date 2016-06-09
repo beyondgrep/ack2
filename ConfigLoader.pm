@@ -255,7 +255,7 @@ You may have options in a .ackrc, or in the ACKRC_OPTIONS environment variable.
 Try using the --dump flag.
 EOT
 
-=for Adding-Options
+=begin Adding-Options
 
     *** IF YOU ARE MODIFYING ACK PLEASE READ THIS ***
 
@@ -273,6 +273,8 @@ EOT
     * Go through the list of options already available, and consider
       whether your new option can be considered mutually exclusive
       with another option.
+
+=end Adding-Options
 
 =cut
 
