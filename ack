@@ -1960,7 +1960,7 @@ expression metacharacter!)
 
 =head2 Why does C<"ack '.{40000,}'"> fail?  Isn't that a valid regex?
 
-The Perl language limits the repetition quanitifier to 32K.  You
+The Perl language limits the repetition quantifier to 32K.  You
 can search for C<.{32767}> but not C<.{32768}>.
 
 =head2 Ack does "X" and shouldn't, should it?
