@@ -1054,8 +1054,6 @@ RESOURCES:
     App::Ack::exit_from_ack( $nmatches );
 }
 
-__END__
-
 =pod
 
 =encoding UTF-8
