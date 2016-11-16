@@ -163,6 +163,7 @@ sub _options_block {
 # Makefiles
 # http://www.gnu.org/s/make/
 --type-add=make:ext:mk
+--type-add=make:ext:gmk
 --type-add=make:ext:mak
 --type-add=make:is:makefile
 --type-add=make:is:Makefile
