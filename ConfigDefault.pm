@@ -410,6 +410,15 @@ sub _options_block {
 # http://www.vim.org/
 --type-add=vim:ext:vim
 
+# Wolfram
+# http://www.wolfram.com/technologies/nb/
+--type-add=Wolfram_notebook:ext:nb
+--type-add=Wolfram_CDF_Player_file:ext:cdf
+# https://reference.wolfram.com/language/ref/format/Package.html
+--type-add=Wolfram_Language_package:ext:m
+# http://reference.wolfram.com/language/tutorial/WolframLanguageScripts.html
+--type-add=Wolfram_Language_script:ext:wl
+
 # XML
 # http://www.w3.org/TR/REC-xml/
 --type-add=xml:ext:xml,dtd,xsd,xsl,xslt,ent
