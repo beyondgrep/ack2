@@ -416,8 +416,10 @@ sub _options_block {
 --type-add=Wolfram_CDF_Player_file:ext:cdf
 # https://reference.wolfram.com/language/ref/format/Package.html
 --type-add=Wolfram_Language_package:ext:m
+--type-add=Mathematica_test_file:ext:mt
 # http://reference.wolfram.com/language/tutorial/WolframLanguageScripts.html
 --type-add=Wolfram_Language_script:ext:wl
+--type-add=Wolfram_Language_test_file:ext:wlt
 
 # XML
 # http://www.w3.org/TR/REC-xml/
