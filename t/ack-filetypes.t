@@ -27,6 +27,7 @@ elisp
 erlang
 fortran
 go
+graphviz
 groovy
 haskell
 hh
