@@ -606,7 +606,8 @@ sub print_line_with_options {
                     last if $-[0] == $+[0];
 
                     for ( my $i = 1; $i < @+; $i++ ) {
-                        my ( $match_start, $match_end ) = ( $-[$i], $+[$i] );
+                        # Fix issue 615 apparently
+                        my ( $match_start, $match_end ) = ( $-[$i] - 1, $+[$i] );
 
                         next unless defined($match_start);
                         next if $match_start < $previous_match_end;
