@@ -43,7 +43,7 @@ sub is_windows {
 }
 
 sub is_cygwin {
-    return $^O eq 'cygwin' or $^O eq 'msys';
+    return ($^O eq 'cygwin' || $^O eq 'msys');
 }
 
 sub is_empty_array {
