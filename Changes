@@ -13,6 +13,8 @@ Added support for Swift language.  Thanks, Nikolaj Schumacher. (GH #512)
 
 The MSYS2 project is now seen as Windows.  Thanks, Ray Donnelly. (GH #450)
 
+Expand the definition of OCaml files.  Thanks, Marek Kubica. (GH #511)
+
 [INTERNALS]
 Added test to test --output. Thanks, Varadinsky! (GH #587, GH #590)
 
