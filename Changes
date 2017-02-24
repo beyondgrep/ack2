@@ -9,7 +9,9 @@ Austin Chamberlin.
 
 Added .xsd to the --xml filetype.  Thanks, Nick Morrott.
 
-Added support for Swift language.  Thanks, Nikolaj Schumacher.
+Added support for Swift language.  Thanks, Nikolaj Schumacher. (GH #512)
+
+The MSYS2 project is now seen as Windows.  Thanks, Olivier Mengué. (GH #450)
 
 [INTERNALS]
 Added test to test --output. Thanks, Varadinsky! (GH #587, GH #590)
