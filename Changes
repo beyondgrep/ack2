@@ -7,7 +7,9 @@ NEXT
 Include .cljs, .cljc and .edn files with the --clojure filetype.  Thanks,
 Austin Chamberlin.
 
-Added .xsd to the --xml filetype.  Thaniks, Nick Morrott.
+Added .xsd to the --xml filetype.  Thanks, Nick Morrott.
+
+Added support for Swift language.  Thanks, Nikolaj Schumacher.
 
 [INTERNALS]
 Added test to test --output. Thanks, Varadinsky! (GH #587, GH #590)
