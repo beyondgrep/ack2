@@ -263,6 +263,10 @@ sub _options_block {
 # http://groovy.codehaus.org/
 --type-add=groovy:ext:groovy,gtmpl,gpp,grunit,gradle
 
+# GSP
+# http://groovy.codehaus.org/GSP
+--type-add=gsp:ext:gsp
+
 # Haskell
 # http://www.haskell.org/
 --type-add=haskell:ext:hs,lhs
