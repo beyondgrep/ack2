@@ -316,11 +316,9 @@ sub build_regex {
 
     $str = quotemeta( $str ) if $opt->{Q};
     if ( $opt->{w} ) {
-        my $pristine_str = $str;
-
         $str = "(?:$str)";
-        $str = "\\b$str" if $pristine_str =~ /^\w/;
-        $str = "$str\\b" if $pristine_str =~ /\w$/;
+        $str = "(?:\\b|(?!\\w))$str";
+        $str = "$str(?:\\b|(?<!\\w))";
     }
 
     my $regex_is_lc = $str eq lc $str;
@@ -1471,23 +1469,11 @@ Display version and copyright information.
 
 =item B<-w>, B<--word-regexp>
 
-=item B<-w>, B<--word-regexp>
-
-Turn on "words mode".  This sometimes matches a whole word, but the
-semantics is quite subtle.  If the passed regexp begins with a word
-character, then a word boundary is required before the match.  If the
-passed regexp ends with a word character, or with a word character
-followed by newline, then a word boundary is required after the match.
-
-Thus, for example, B<-w> with the regular expression C<ox> will not
-match the strings C<box> or C<oxen>.  However, if the regular
-expression is C<(ox|ass)> then it will match those strings.  Because
-the regular expression's first character is C<(>, the B<-w> flag has
-no effect at the start, and because the last character is C<)>, it has
-no effect at the end.
-
-Force PATTERN to match only whole words.  The PATTERN is wrapped with
-C<\b> metacharacters.
+Force PATTERN to match only whole words; that is, the start point of
+the match must be a word boundary (C<\b> anchor) unless the match does
+not start with a word character (C<\w>), and similarly the end of the
+match must be a word boundary unless the match does not end with a
+word character.
 
 =item B<-x>
 
