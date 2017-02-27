@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-our $VERSION = '2.15_02'; # Check http://beyondgrep.com/ for updates
+our $VERSION = '2.15_03'; # Check http://beyondgrep.com/ for updates
 
 use 5.008008;
 use Getopt::Long 2.38 ();
@@ -2368,7 +2368,7 @@ Rob Hoelz.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2005-2015 Andy Lester.
+Copyright 2005-2017 Andy Lester.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the Artistic License v2.0.
