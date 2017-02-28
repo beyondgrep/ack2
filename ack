@@ -1533,7 +1533,7 @@ might look like this:
     # Always sort the files
     --sort-files
 
-    # Always color, even if piping to a another program
+    # Always color, even if piping to another program
     --color
 
     # Use "less -r" as my pager
