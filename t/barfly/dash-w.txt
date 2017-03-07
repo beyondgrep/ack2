@@ -1,7 +1,7 @@
 # BEGIN comment here
 #
-# ACK
-# arguments to ack
+# RUN
+# ack command line(s)
 #
 # YESLINES
 # Lines that should match with underlines shown
@@ -20,8 +20,8 @@
 
 BEGIN Straight -w
 
-ACK
--w foo
+RUN
+ack -w foo
 
 YESLINES
 foo
@@ -42,8 +42,8 @@ END
 
 
 BEGIN -w and optional character
-ACK
--w 'foot?'
+RUN
+ack -w 'foot?'
 
 YES
 foo
@@ -69,8 +69,8 @@ END
 
 
 BEGIN -w and optional group
-ACK
--w 'foo(bar)?'
+RUN
+ack -w 'foo(bar)?'
 
 YES
 foo
@@ -99,7 +99,7 @@ END
 
 
 BEGIN -w and alternation
-ACK
+RUN
 -w 'foo|bar'
 -w '(foo|bar)'
 
@@ -119,12 +119,12 @@ END
 
 
 BEGIN -w and a function definition
-ACK
+RUN
 ack -w '(set|get)_user_(name|perm)'
 
 YES
 set_user_name
-et_user_perm
+get_user_perm
 
 YESLINES
 my $foo = set_user_name( $bar );
