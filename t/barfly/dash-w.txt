@@ -2,6 +2,8 @@
 #
 # RUN
 # ack command line(s)
+# They should NOT be shell-escaped.  Args are split on whitespace before
+# being passed in to ack.
 #
 # YESLINES
 # Lines that should match with underlines shown
@@ -41,9 +43,24 @@ underfoot
 END
 
 
+BEGIN optional character
+RUN
+ack foot?
+
+YES
+foo
+foot
+Trampled underfoot
+foobarf
+foo-bar
+foo-bart
+
+END
+
+
 BEGIN -w and optional character
 RUN
-ack -w 'foot?'
+ack -w foot?
 
 YES
 foo
@@ -70,7 +87,7 @@ END
 
 BEGIN -w and optional group
 RUN
-ack -w 'foo(bar)?'
+ack -w foo(bar)?
 
 YES
 foo
@@ -100,8 +117,8 @@ END
 
 BEGIN -w and alternation
 RUN
-ack -w 'foo|bar'
-ack -w '(foo|bar)'
+ack -w foo|bar
+ack -w (foo|bar)
 
 YES
 foo
@@ -120,7 +137,7 @@ END
 
 BEGIN -w and a function definition
 RUN
-ack -w '(set|get)_user_(name|perm)'
+ack -w (set|get)_user_(name|perm)
 
 YES
 set_user_name
@@ -133,5 +150,17 @@ my $foo = set_user_name( $bar );
 NO
 reset_user_name
 get_user_permission
+
+END
+
+BEGIN trivial
+RUN
+ack -w foo
+
+YES
+foo
+
+NO
+bar
 
 END

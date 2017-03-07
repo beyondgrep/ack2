@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 1;
+use Test::More tests => 6;
 
 use lib 't';
 use Util;
@@ -73,14 +73,11 @@ sub run {
     my $self = shift;
     my $msg  = shift // die 'Must pass a message to Barfly->run';
 
-    return subtest $msg => sub {
-        my @blocks = @{$self->{blocks}} or return fail( 'No blocks found!' );
+    my @blocks = @{$self->{blocks}} or return fail( 'No blocks found!' );
 
-        plan tests => scalar @blocks;
-        for my $block ( @blocks ) {
-            $block->run;
-        }
-    };
+    for my $block ( @blocks ) {
+        $block->run;
+    }
 }
 
 
