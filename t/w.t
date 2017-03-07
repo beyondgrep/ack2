@@ -13,7 +13,7 @@ prep_environment();
 
 my $barfly = Barfly->new;
 $barfly->read( 't/barfly/dash-w.txt' );
-$barfly->run;
+$barfly->run( 'Dash W tests' );
 
 exit 0;
 
@@ -33,6 +33,8 @@ sub read {
     my $self     = shift;
     my $filename = shift;
 
+    $self->{filename} = $filename;
+
     open( my $file, '<', $filename ) or die "Can't read $filename: $!";
 
     my $block;
@@ -49,16 +51,12 @@ sub read {
             $section = undef;
         }
         elsif ( $line eq 'END' ) {
-            {use Data::Dumper; local $Data::Dumper::Sortkeys=1; local $Data::Dumper::Trailingcomma=1; warn Dumper( $block )}
             push( @{$self->{blocks}}, $block );
             $block = undef;
             $section = undef;
         }
         elsif ( $line eq 'RUN' || $line eq 'YES' || $line eq 'NO' || $line eq 'YESLINES' ) {
             $section = $line;
-        }
-        elsif ( $section eq 'YESLINES' ) {
-            $block->add_line( $section, $line );
         }
         else {
             $block->add_line( $section, $line );
@@ -70,13 +68,25 @@ sub read {
 
 
 sub run {
-    my $self = shift;
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    pass();
+    my $self = shift;
+    my $msg  = shift // die 'Must pass a message to Barfly->run';
+
+    return subtest $msg => sub {
+        my @blocks = @{$self->{blocks}} or return fail( 'No blocks found!' );
+
+        plan tests => scalar @blocks;
+        for my $block ( @blocks ) {
+            $block->run;
+        }
+    };
 }
 
 
 package Barfly::Block;
+
+use Test::More;
 
 sub new {
     my $class = shift;
@@ -95,4 +105,16 @@ sub add_line {
     push @{$self->{$section}}, $line;
 
     return;
+}
+
+
+sub run {
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+
+    my $self = shift;
+
+    return subtest $self->{label} => sub {
+        my @command_lines = @{$self->{RUN}} or die 'No RUN lines specified!';
+        pass( $_ ) for @command_lines;
+    };
 }

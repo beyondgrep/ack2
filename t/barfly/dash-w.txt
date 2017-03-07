@@ -100,8 +100,8 @@ END
 
 BEGIN -w and alternation
 RUN
--w 'foo|bar'
--w '(foo|bar)'
+ack -w 'foo|bar'
+ack -w '(foo|bar)'
 
 YES
 foo
