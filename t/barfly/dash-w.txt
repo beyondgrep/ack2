@@ -54,6 +54,7 @@ Trampled underfoot
 foobarf
 foo-bar
 foo-bart
+football
 
 END
 
@@ -78,7 +79,8 @@ I pity da foo'.
 
 NO
 Trampled underfoot
-foobarf
+football
+foobar
 foo-bar
 foo-bart
 
