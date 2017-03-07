@@ -114,6 +114,8 @@ t/r-lang-ext.t
 t/runtests.pl
 t/zero.t
 
+t/barfly/dash-w.txt
+
 t/etc/buttonhook.xml.xxx
 t/etc/shebang.empty.xxx
 t/etc/shebang.foobar.xxx

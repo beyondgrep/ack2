@@ -1,0 +1,137 @@
+# BEGIN comment here
+#
+# ACK
+# arguments to ack
+#
+# YESLINES
+# Lines that should match with underlines shown
+#                              ^^^^^^^^^^
+# YES
+# Lines that should match, but without the underlines.
+#
+# NO
+# Lines that should not match.
+#
+# END
+#
+# Blank lines are always ignored.
+
+
+
+BEGIN Straight -w
+
+ACK
+-w foo
+
+YESLINES
+foo
+^^^
+
+End of the line foo
+                ^^^
+
+I pity da foo'.
+          ^^^
+
+NO
+foobar
+foot
+underfoot
+
+END
+
+
+BEGIN -w and optional character
+ACK
+-w 'foot?'
+
+YES
+foo
+foot
+
+YESLINES
+foo
+^^^
+
+By the foot
+       ^^^^
+
+I pity da foo'.
+          ^^^
+
+NO
+Trampled underfoot
+foobarf
+foo-bar
+foo-bart
+
+END
+
+
+BEGIN -w and optional group
+ACK
+-w 'foo(bar)?'
+
+YES
+foo
+foobar
+
+YESLINES
+foobar
+^^^^^^
+
+x foobar x
+  ^^^^^^
+
+I pity da foo'.
+          ^^^
+
+Now everything's all foobar.
+                     ^^^^^^
+
+NO
+Trampled underfoot
+foobarf
+foo-bar
+foo-bart
+
+END
+
+
+BEGIN -w and alternation
+ACK
+-w 'foo|bar'
+-w '(foo|bar)'
+
+YES
+foo
+bar
+
+NO
+schmfoo
+schmofool
+barfly
+fubar
+barometric
+subarometric
+
+END
+
+
+BEGIN -w and a function definition
+ACK
+ack -w '(set|get)_user_(name|perm)'
+
+YES
+set_user_name
+et_user_perm
+
+YESLINES
+my $foo = set_user_name( $bar );
+          ^^^^^^^^^^^^^
+
+NO
+reset_user_name
+get_user_permission
+
+END
