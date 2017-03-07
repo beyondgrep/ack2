@@ -87,6 +87,7 @@ sub run {
 package Barfly::Block;
 
 use Test::More;
+use Util;
 
 sub new {
     my $class = shift;
@@ -114,7 +115,32 @@ sub run {
     my $self = shift;
 
     return subtest $self->{label} => sub {
-        my @command_lines = @{$self->{RUN}} or die 'No RUN lines specified!';
-        pass( $_ ) for @command_lines;
+        my @command_lines = @{$self->{RUN} // []} or die 'No RUN lines specified!';
+
+        # Set up scratch file
+        my @yes = @{$self->{YES} // []};
+        my @no  = @{$self->{NO} // []};
+
+        my $tempfile = File::Temp->new();
+        print {$tempfile} join( "\n", @yes, @no );
+        close $tempfile;
+
+        diag $tempfile->filename;
+
+        for my $command_line ( @command_lines ) {
+            subtest $command_line => sub {
+                plan tests => 2;
+
+                $command_line =~ /(.*)/;
+                $command_line = $1;
+
+                my @args = split( / /, $command_line );
+                @args > 1 or die "Invalid command line: $command_line";
+                shift @args eq 'ack' or die 'Command line must begin with ack';
+
+                my @results = main::run_ack( @args, $tempfile->filename );
+                main::lists_match( \@results, \@yes, $command_line );
+            };
+        }
     };
 }
