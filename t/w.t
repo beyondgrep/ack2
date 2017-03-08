@@ -11,8 +11,7 @@ use Util;
 
 prep_environment();
 
-my $barfly = Barfly->new( 't/barfly/dash-w.txt' );
-$barfly->run( 'Dash W tests' );
+Barfly->run( 't/barfly/dash-w.txt' );
 
 exit 0;
 
@@ -21,7 +20,7 @@ package Barfly;
 
 use Test::More;
 
-sub new {
+sub run {
     my $class    = shift;
     my $filename = shift;
 
@@ -58,21 +57,12 @@ sub new {
         }
     }
 
-    return $self;
-}
-
-
-sub run {
-    local $Test::Builder::Level = $Test::Builder::Level + 1;
-
-    my $self = shift;
-    my $msg  = shift // die 'Must pass a message to Barfly->run';
-
-    my @blocks = @{$self->{blocks}} or return fail( 'No blocks found!' );
-
+    my @blocks = @{$self->{blocks}} or return fail( "No blocks found in $filename!" );
     for my $block ( @blocks ) {
         $block->run;
     }
+
+    return;
 }
 
 
