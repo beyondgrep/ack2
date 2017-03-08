@@ -11,8 +11,7 @@ use Util;
 
 prep_environment();
 
-my $barfly = Barfly->new;
-$barfly->read( 't/barfly/dash-w.txt' );
+my $barfly = Barfly->new( 't/barfly/dash-w.txt' );
 $barfly->run( 'Dash W tests' );
 
 exit 0;
@@ -23,17 +22,13 @@ package Barfly;
 use Test::More;
 
 sub new {
-    my $class = shift;
-
-    return bless { blocks => [] }, $class;
-}
-
-
-sub read {
-    my $self     = shift;
+    my $class    = shift;
     my $filename = shift;
 
-    $self->{filename} = $filename;
+    my $self = bless {
+        blocks => [],
+        filename => $filename,
+    }, $class;
 
     open( my $file, '<', $filename ) or die "Can't read $filename: $!";
 
@@ -63,7 +58,7 @@ sub read {
         }
     }
 
-    return 1;
+    return $self;
 }
 
 
