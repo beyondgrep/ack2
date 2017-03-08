@@ -316,7 +316,7 @@ sub build_regex {
 
     $str = quotemeta( $str ) if $opt->{Q};
     if ( $opt->{w} ) {
-        $str = "\\b(?:$str)\\b";
+        $str = '(?:^|\b|\s)\K' . "(?:$str)" . '(?=\s|\b|$)';
     }
 
     my $re;

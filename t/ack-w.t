@@ -28,7 +28,10 @@ PLAIN_WORD: {
 }
 
 PLAIN_WORD_WITH_TRAILING_PUNC: {
-    my @expected = ();
+    my @expected = (
+        'And I said: "My name is Sue! How do you do! Now you gonna die!"',
+        'Bill or George! Anything but Sue! I still hate that name!',
+    );
 
     my @files = qw( t/text );
     my @args = qw( Sue! -w -h --sort-files );
