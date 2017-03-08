@@ -263,6 +263,10 @@ sub _options_block {
 # http://groovy.codehaus.org/
 --type-add=groovy:ext:groovy,gtmpl,gpp,grunit,gradle
 
+# GSP
+# http://groovy.codehaus.org/GSP
+--type-add=gsp:ext:gsp
+
 # Haskell
 # http://www.haskell.org/
 --type-add=haskell:ext:hs,lhs
@@ -310,7 +314,7 @@ sub _options_block {
 
 # OCaml
 # http://caml.inria.fr/
---type-add=ocaml:ext:ml,mli
+--type-add=ocaml:ext:ml,mli,mll,mly
 
 # Matlab
 # http://en.wikipedia.org/wiki/MATLAB
@@ -383,6 +387,11 @@ sub _options_block {
 # Stylus
 # http://learnboost.github.io/stylus/
 --type-add=stylus:ext:styl
+
+# Swift
+# https://developer.apple.com/swift/
+--type-add=swift:ext:swift
+--type-add=swift:firstlinematch:/^#!.*\bswift/
 
 # Tcl
 # http://www.tcl.tk/

@@ -1,16 +1,29 @@
 History file for ack.  http://beyondgrep.com/
 
-NEXT
-====
+
+2.15_03 Sun Feb 26 23:07:35 CST 2017
+====================================
 
 [ENHANCEMENTS]
 Include .cljs, .cljc and .edn files with the --clojure filetype.  Thanks,
 Austin Chamberlin.
 
-Added .xsd to the --xml filetype.  Thaniks, Nick Morrott.
+Added .xsd to the --xml filetype.  Thanks, Nick Morrott.
+
+Added support for Swift language.  Thanks, Nikolaj Schumacher. (GH #512)
+
+The MSYS2 project is now seen as Windows.  Thanks, Ray Donnelly. (GH #450)
+
+Expand the definition of OCaml files.  Thanks, Marek Kubica. (GH #511)
+
+Add support for Groovy Server Pages.  Thanks, Ethan Mallove. (GH #469)
 
 [INTERNALS]
 Added test to test --output. Thanks, Varadinsky! (GH #587, GH #590)
+
+[DOCUMENTATION]
+Expanded the explanation of how the -w flag works.  Thanks, Ed Avis.
+(GH #585)
 
 
 2.15_02 Thu Dec 17 15:51:15 CST 2015

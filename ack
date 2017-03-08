@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-our $VERSION = '2.15_02'; # Check http://beyondgrep.com/ for updates
+our $VERSION = '2.15_03'; # Check http://beyondgrep.com/ for updates
 
 use 5.008008;
 use Getopt::Long 2.38 ();
@@ -1477,6 +1477,21 @@ Display version and copyright information.
 
 =item B<-w>, B<--word-regexp>
 
+=item B<-w>, B<--word-regexp>
+
+Turn on "words mode".  This sometimes matches a whole word, but the
+semantics is quite subtle.  If the passed regexp begins with a word
+character, then a word boundary is required before the match.  If the
+passed regexp ends with a word character, or with a word character
+followed by newline, then a word boundary is required after the match.
+
+Thus, for example, B<-w> with the regular expression C<ox> will not
+match the strings C<box> or C<oxen>.  However, if the regular
+expression is C<(ox|ass)> then it will match those strings.  Because
+the regular expression's first character is C<(>, the B<-w> flag has
+no effect at the start, and because the last character is C<)>, it has
+no effect at the end.
+
 Force PATTERN to match only whole words.  The PATTERN is wrapped with
 C<\b> metacharacters.
 
@@ -2241,6 +2256,11 @@ L<https://github.com/petdance/ack2>
 How appropriate to have I<ack>nowledgements!
 
 Thanks to everyone who has contributed to ack in any way, including
+Ethan Mallove,
+Marek Kubica,
+Ray Donnelly,
+Nikolaj Schumacher,
+Ed Avis,
 Nick Morrott,
 Austin Chamberlin,
 Varadinsky,
@@ -2348,7 +2368,7 @@ Rob Hoelz.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2005-2015 Andy Lester.
+Copyright 2005-2017 Andy Lester.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the Artistic License v2.0.

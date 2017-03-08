@@ -9,15 +9,15 @@ App::Ack - A container for functions for the ack program
 
 =head1 VERSION
 
-Version 2.15_02
+Version 2.15_03
 
 =cut
 
 our $VERSION;
 our $COPYRIGHT;
 BEGIN {
-    $VERSION = '2.15_02';
-    $COPYRIGHT = 'Copyright 2005-2015 Andy Lester.';
+    $VERSION = '2.15_03';
+    $COPYRIGHT = 'Copyright 2005-2017 Andy Lester.';
 }
 
 our $fh;
@@ -46,7 +46,7 @@ BEGIN {
     $output_to_pipe  = not -t *STDOUT;
     $is_filter_mode = -p STDIN;
 
-    $is_cygwin       = ($^O eq 'cygwin');
+    $is_cygwin       = ($^O eq 'cygwin' || $^O eq 'msys');
     $is_windows      = ($^O eq 'MSWin32');
     $dir_sep_chars   = $is_windows ? quotemeta( '\\/' ) : quotemeta( File::Spec->catfile( '', '' ) );
 }
