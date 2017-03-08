@@ -119,7 +119,9 @@ NEITHER_BEGINS_NOR_ENDS_WITH_WORD_CHAR: {
 
 # Test for issue #443
 ALTERNATING_NUMBERS: {
-    my @expected = ();
+    my @expected = (
+        '650',
+    );
 
     my @files = qw( t/text/number.txt );
 
