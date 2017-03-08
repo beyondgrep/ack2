@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 6;
+use Test::More tests => 7;
 
 use lib 't';
 use Util;
@@ -121,8 +121,6 @@ sub run {
         my $tempfile = File::Temp->new();
         print {$tempfile} join( "\n", @yes, @no );
         close $tempfile;
-
-        diag $tempfile->filename;
 
         for my $command_line ( @command_lines ) {
             subtest $command_line => sub {

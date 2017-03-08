@@ -1,6 +1,14 @@
 History file for ack.  http://beyondgrep.com/
 
 
+NEXT
+====================================
+[FIXES]
+Removed the logic that says that -w can't work if the word ends
+with punctuation.  We're back to the original way of doing it where
+"ack -w foo" becomes "ack -w \b(?:foo)\b".
+
+
 2.15_03 Sun Feb 26 23:07:35 CST 2017
 ====================================
 

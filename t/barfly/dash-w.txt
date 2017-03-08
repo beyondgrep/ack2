@@ -66,6 +66,8 @@ ack -w foot?
 YES
 foo
 foot
+foo-bar
+foot-bar
 
 YESLINES
 foo
@@ -81,8 +83,6 @@ NO
 Trampled underfoot
 football
 foobar
-foo-bar
-foo-bart
 
 END
 
@@ -94,6 +94,12 @@ ack -w foo(bar)?
 YES
 foo
 foobar
+foo-bar
+foo-bart
+
+NO
+Trampled underfoot
+foobarf
 
 YESLINES
 foobar
@@ -107,12 +113,6 @@ I pity da foo'.
 
 Now everything's all foobar.
                      ^^^^^^
-
-NO
-Trampled underfoot
-foobarf
-foo-bar
-foo-bart
 
 END
 
