@@ -2,8 +2,7 @@
 
 use strict;
 use warnings;
-
-our $VERSION = '2.15_03'; # Check http://beyondgrep.com/ for updates
+our $VERSION = '2.16'; # Check http://beyondgrep.com/ for updates
 
 use 5.008008;
 use Getopt::Long 2.38 ();
@@ -1532,7 +1531,7 @@ might look like this:
     # Always sort the files
     --sort-files
 
-    # Always color, even if piping to a another program
+    # Always color, even if piping to another program
     --color
 
     # Use "less -r" as my pager

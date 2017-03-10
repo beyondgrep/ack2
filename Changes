@@ -9,9 +9,31 @@ with punctuation.  We're back to the original way of doing it where
 "ack -w foo" becomes "ack -w \b(?:foo)\b".
 
 
+2.16    Fri Mar 10 13:32:39 CST 2017
+====================================
+No changes since 2.15_03.
+
+[CONFUSING BEHAVIOR & UPCOMING CHANGES]
+The -w has a confusing behavior that it's had since back to ack 1.x
+that will be changing in the future.  It's not changing in this
+version, but this is a heads-up that it's coming.
+
+ack -w is "match a whole word", and ack does this by putting turning
+your PATTERN into \bPATTERN\b.  So "ack -w foo" effectively becomes
+"ack \bfoo\b".  Handy.
+
+The problem is that ack doesn't put a \b before PATTERN if it begins
+with a non-word character, and won't put a \b after PATTERN if it
+ends with a non-word character.
+
+The problem is that if you're searching for "fool" or "foot", but
+only as a word, and you do "ack -w foo[lt]" or "ack -w (fool|foot)",
+you'll get matches for "football and foolish" which certainly should
+not match if you're using -w.
+
+
 2.15_03 Sun Feb 26 23:07:35 CST 2017
 ====================================
-
 [ENHANCEMENTS]
 Include .cljs, .cljc and .edn files with the --clojure filetype.  Thanks,
 Austin Chamberlin.
