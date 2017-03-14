@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-our $VERSION = '2.16'; # Check http://beyondgrep.com/ for updates
+our $VERSION = '2.17_01'; # Check https://beyondgrep.com/ for updates
 
 use 5.008008;
 use Getopt::Long 2.38 ();
