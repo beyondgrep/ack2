@@ -1732,7 +1732,7 @@ these values.
 
 =head1 ACK & OTHER TOOLS
 
-=head2 Vim integration
+=head2 Simple vim integration
 
 F<ack> integrates easily with the Vim text editor. Set this in your
 F<.vimrc> to use F<ack> instead of F<grep>:
@@ -1745,27 +1745,10 @@ with F<ack> and easily step through the results in Vim:
 
   :grep Dumper perllib
 
-Miles Sterrett has written a Vim plugin for F<ack> which allows you to use
-C<:Ack> instead of C<:grep>, as well as several other advanced features.
+=head2 Editor integration
 
-L<https://github.com/mileszs/ack.vim>
-
-=head2 Emacs integration
-
-Phil Jackson put together an F<ack.el> extension that "provides a
-simple compilation mode ... has the ability to guess what files you
-want to search for based on the major-mode."
-
-L<http://www.shellarchive.co.uk/content/emacs.html>
-
-=head2 TextMate integration
-
-Pedro Melo is a TextMate user who writes "I spend my day mostly
-inside TextMate, and the built-in find-in-project sucks with large
-projects.  So I hacked a TextMate command that was using find +
-grep to use ack.  The result is the Search in Project with ack, and
-you can find it here:
-L<http://www.simplicidade.org/notes/archives/2008/03/search_in_proje.html>"
+Many users have integrated ack into their preferred text editors.
+For details and links, see L<https://beyondgrep.com/more-tools/>.
 
 =head2 Shell and Return Code
 
