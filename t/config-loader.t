@@ -5,7 +5,7 @@ use warnings;
 use lib 't';
 use Util;
 
-use Test::More;
+use Test::More tests => 19;
 
 use Carp qw(croak);
 use File::Temp;
@@ -82,6 +82,20 @@ test_loader(
     expected_opts    => { %defaults, before_context => 15 },
     expected_targets => [],
     '--before-context should set before_context'
+);
+
+test_loader(
+    argv             => ['--context=5'],
+    expected_opts    => { %defaults, after_context => 5, before_context => 5 },
+    expected_targets => [],
+    '--context sets both before_context and after_context'
+);
+
+test_loader(
+    argv             => ['--context'],
+    expected_opts    => { %defaults, after_context => 2, before_context => 2 },
+    expected_targets => [],
+    '--context sets both before_context and after_context, with default'
 );
 
 # XXX These tests should all be replicated to work off of the ack command line
