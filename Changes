@@ -8,6 +8,10 @@ NEXT
 of 0.  This means that a command-line --context=0 couldn't override
 a --context=5 in your ackrc.  Thanks, Ed Avis.  (GH #595)
 
+t/ack-s.t would fail in non-English locales.  Thanks, Olivier Mengué.
+(GH #485, GH #515)
+
+
 [ENHANCEMENTS]
 --after-context and --before-context (and their short counterparts
 -A and -B) no longer require a value to be passed.  If no value is
