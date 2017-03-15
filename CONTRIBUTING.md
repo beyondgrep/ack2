@@ -1,6 +1,6 @@
 # Before You Report an Issue...
 
-Before you report an issue, please consult the [FAQ](http://beyondgrep.com/documentation/ack-2.12-man.html#faq).
+Before you report an issue, please consult the [FAQ](https://beyondgrep.com/documentation/ack-2.16-man.html#faq).
 
 # Asking to add a new filetype, or any enhancement
 

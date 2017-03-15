@@ -380,7 +380,7 @@ Miscellaneous:
 
 Exit status is 0 if match, 1 if no match.
 
-ack's home page is at http://beyondgrep.com/
+ack's home page is at https://beyondgrep.com/
 
 The full ack manual is available by running "ack --man".
 

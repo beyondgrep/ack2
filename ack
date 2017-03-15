@@ -2207,7 +2207,7 @@ Support for and information about F<ack> can be found at:
 
 =item * The ack homepage
 
-L<http://beyondgrep.com/>
+L<https://beyondgrep.com/>
 
 =item * The ack-users mailing list
 
