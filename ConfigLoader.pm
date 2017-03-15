@@ -278,12 +278,18 @@ EOT
 
 =cut
 
+    sub _context_value {
+        my $val = shift;
+
+        # Contexts default to 2.
+        return (!defined($val) || ($val < 0)) ? 2 : $val;
+    }
+
     return {
         1                   => sub { $opt->{1} = $opt->{m} = 1 },
-        'A|after-context=i' => \$opt->{after_context},
-        'B|before-context=i'
-                            => \$opt->{before_context},
-        'C|context:i'       => sub { shift; my $val = shift; $opt->{before_context} = $opt->{after_context} = ($val || 2) },
+        'A|after-context:-1'  => sub { shift; $opt->{after_context}  = _context_value(shift) },
+        'B|before-context:-1' => sub { shift; $opt->{before_context} = _context_value(shift) },
+        'C|context:-1'        => sub { shift; $opt->{before_context} = $opt->{after_context} = _context_value(shift) },
         'a'                 => removed_option('-a', $dash_a_explanation),
         'all'               => removed_option('--all', $dash_a_explanation),
         'break!'            => \$opt->{break},

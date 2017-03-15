@@ -3,6 +3,15 @@ History file for ack.  http://beyondgrep.com/
 
 NEXT
 ====================================
+[FIXES]
+--context=0 (and its short counterpart -C 0) did not set to context
+of 0.  This means that a command-line --context=0 couldn't override
+a --context=5 in your ackrc.  Thanks, Ed Avis.  (GH #595)
+
+[ENHANCEMENTS]
+--after-context and --before-context (and their short counterparts
+-A and -B) no longer require a value to be passed.  If no value is
+set, they default to 2. (GH #351)
 
 
 2.16    Fri Mar 10 13:32:39 CST 2017

@@ -1169,6 +1169,8 @@ when used interactively.
 =item B<-C [I<NUM>]>, B<--context[=I<NUM>]>
 
 Print I<NUM> lines (default 2) of context around matching lines.
+You can specify zero lines of context to override another context
+specified in an ackrc.
 
 =item B<-c>, B<--count>
 
