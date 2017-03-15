@@ -1872,10 +1872,10 @@ This shows how to pick out particular parts of a match using ( ) within regular 
   input file contains "=head1 NAME"
   output  "1 : NAME"
 
-=head2 Share your knowledge
+=head1 COMMUNITY
 
-Join the ack-users mailing list.  Send me your tips and I may add
-them here.
+There are ack mailing lists and a Slack channel for ack.  See
+L<https://beyondgrep.com/community/> for details.
 
 =head1 FAQ
 
