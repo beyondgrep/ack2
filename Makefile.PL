@@ -41,6 +41,7 @@ my %parms = (
     PREREQ_PM => {
         'Carp'              => '1.04',
         'Cwd'               => '3.00',
+        'Errno'             => 0,
         'File::Basename'    => '1.00015',
         'File::Glob'        => '1.00015',
         'File::Next'        => '1.16',
