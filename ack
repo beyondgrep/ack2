@@ -1068,9 +1068,9 @@ ack - grep-like text finder
 
 Ack is designed as an alternative to F<grep> for programmers.
 
-Ack searches the named input FILEs (or standard input if no files
-are named, or the file name - is given) for lines containing a match
-to the given PATTERN.  By default, ack prints the matching lines.
+Ack searches the named input FILEs or DIRECTORYs for lines containing a
+match to the given PATTERN.  By default, ack prints the matching lines.
+If no FILE or DIRECTORY is given, the current directory will be searched.
 
 PATTERN is a Perl regular expression.  Perl regular expressions
 are commonly found in other programming languages, but for the particulars
@@ -2227,6 +2227,10 @@ L<http://cpanratings.perl.org/d/ack>
 
 L<http://search.cpan.org/dist/ack>
 
+=item * MetaCPAN
+
+L<http://metacpan.org/release/ack>
+
 =item * Git source repository
 
 L<https://github.com/petdance/ack2>
@@ -2238,6 +2242,7 @@ L<https://github.com/petdance/ack2>
 How appropriate to have I<ack>nowledgements!
 
 Thanks to everyone who has contributed to ack in any way, including
+Gerhard Poul,
 Ethan Mallove,
 Marek Kubica,
 Ray Donnelly,
