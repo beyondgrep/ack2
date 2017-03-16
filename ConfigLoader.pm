@@ -241,7 +241,7 @@ sub removed_option {
 
     $explanation ||= '';
     return sub {
-        warn "Option '$option' is not valid in ack 2\n$explanation";
+        warn "Option '$option' is not valid in ack 2.\n$explanation";
         exit 1;
     };
 }
@@ -251,10 +251,13 @@ sub get_arg_spec {
     my ( $opt, $extra_specs ) = @_;
 
     my $dash_a_explanation = <<'EOT';
-This is because we now have -k/--known-types which makes it only select files
-of known types, rather than any text file (which is the behavior of ack 1.x).
-You may have options in a .ackrc, or in the ACKRC_OPTIONS environment variable.
-Try using the --dump flag.
+You don't need -a, ack 1.x users.  This is because ack 2.x has
+-k/--known-types which makes it only select files of known types, rather
+than any text file (which is the behavior of ack 1.x).
+
+If you're surprised to see this message because you didn't put -a on the
+command line, you may have options in an .ackrc, or in the ACKRC_OPTIONS
+environment variable.  Try using the --dump flag to help find it.
 EOT
 
 =begin Adding-Options
