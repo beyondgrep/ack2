@@ -139,6 +139,8 @@ sub uninvert_filter {
             $i--;
         }
     }
+
+    return;
 }
 
 
@@ -696,6 +698,8 @@ sub check_for_mutually_exclusive_options {
             }
         }
     }
+
+    return;
 }
 
 
