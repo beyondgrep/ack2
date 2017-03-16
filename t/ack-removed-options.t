@@ -26,10 +26,9 @@ foreach my $option (@options) {
     my ( $stdout, $stderr ) = run_ack_with_stderr( @args );
 
     subtest "options = @args" => sub {
+        plan tests => 2;
+
         is_empty_array( $stdout, 'Nothing in stdout' );
         like( $stderr->[0], qr/Option '$option' is not valid in ack 2/, 'Found error message' );
-        if ( '-a' eq $option or '--all' eq $option ) {
-            like( $stderr->[1], qr/-k/, 'Error mentions -k' );
-        }
     };
 }
