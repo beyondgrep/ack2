@@ -272,7 +272,7 @@ sub _options_block {
 --type-add=haskell:ext:hs,lhs
 
 # HTML
---type-add=html:ext:htm,html
+--type-add=html:ext:htm,html,xhtml
 
 # Jade
 # http://jade-lang.com/
@@ -421,7 +421,7 @@ sub _options_block {
 
 # XML
 # http://www.w3.org/TR/REC-xml/
---type-add=xml:ext:xml,dtd,xsd,xsl,xslt,ent
+--type-add=xml:ext:xml,dtd,xsd,xsl,xslt,ent,wsdl
 --type-add=xml:firstlinematch:/<[?]xml/
 
 # YAML
