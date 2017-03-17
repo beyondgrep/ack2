@@ -1253,9 +1253,26 @@ This is off by default.
 
 =item B<-g I<PATTERN>>
 
-Print files where the relative path + filename matches I<PATTERN>.
-This option can be combined with B<--color> to make it easier to spot
-the match.
+Print searchable files where the relative path + filename matches
+I<PATTERN>.
+
+Note that
+
+    ack -g foo
+
+is exactly the same as
+
+    ack -f | ack foo
+
+This means that just as ack will not search, for example, F<.jpg>
+files, C<-g> will not list F<.jpg> files either.  ack is not intended
+to be a general-purpose file finder.
+
+Note also that if you have C<-i> in your .ackrc that the filenames
+to be matched will be case-insensitive as well.
+
+This option can be combined with B<--color> to make it easier to
+spot the match.
 
 =item B<--[no]group>
 
