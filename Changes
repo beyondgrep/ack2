@@ -3,6 +3,8 @@ History file for ack.  https://beyondgrep.com/
 
 NEXT
 ====================================
+[INTERNALS]
+Removed dependency on File::Glob which isn't used.
 
 
 2.17_01 Wed Mar 15 23:25:28 CDT 2017

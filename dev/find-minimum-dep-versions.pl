@@ -108,7 +108,6 @@ my @dependencies = (
     'Carp',
     'Cwd',
     'File::Basename',
-    'File::Glob',
     'File::Next',
     'File::Spec',
     'File::Temp',

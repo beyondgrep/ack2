@@ -43,7 +43,6 @@ my %parms = (
         'Cwd'               => '3.00',
         'Errno'             => 0,
         'File::Basename'    => '1.00015',
-        'File::Glob'        => '1.00015',
         'File::Next'        => '1.16',
         'File::Spec'        => '3.00',
         'File::Temp'        => '0.19', # For newdir()
