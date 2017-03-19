@@ -3,57 +3,13 @@
 use warnings;
 use strict;
 
-use Test::More;
+use Test::More tests => 19;
 use File::Next;
 
 use lib 't';
 use Util;
 
 my %types_for_file;
-
-sub populate_filetypes {
-    my ( $type_lines, undef ) = run_ack_with_stderr('--help-types');
-
-    my @types_to_try;
-
-    foreach my $line (@{$type_lines}) {
-        if($line =~ /^\s+--\[no\](\w+)/) {
-            push @types_to_try, $1;
-        }
-    }
-
-    foreach my $type (@types_to_try) {
-        my ( $filenames, undef ) = run_ack_with_stderr('-f', "--$type",
-            't/swamp', 't/etc');
-
-        foreach my $filename ( @{$filenames} ) {
-            push @{ $types_for_file{$filename} }, $type;
-        }
-    }
-
-    return;
-}
-
-# XXX implement me with --show-types!
-sub filetypes {
-    my $filename = File::Next::reslash(shift);
-
-    if ( !%types_for_file ) {
-        populate_filetypes();
-    }
-
-    return @{ $types_for_file{$filename} || [] };
-}
-
-sub is_filetype {
-    my ( $filename, $wanted_type ) = @_;
-
-    for my $maybe_type ( filetypes( $filename ) ) {
-        return 1 if $maybe_type eq $wanted_type;
-    }
-
-    return;
-}
 
 prep_environment();
 
@@ -89,3 +45,47 @@ MATCH_VIA_CONTENT: {
 }
 
 done_testing;
+
+sub populate_filetypes {
+    my ( $type_lines, undef ) = run_ack_with_stderr('--help-types');
+
+    my @types_to_try;
+
+    foreach my $line ( @{$type_lines} ) {
+        if ( $line =~ /^\s+--\[no\](\w+)/ ) {
+            push @types_to_try, $1;
+        }
+    }
+
+    foreach my $type (@types_to_try) {
+        my ( $filenames, undef ) = run_ack_with_stderr('-f', "--$type",
+            't/swamp', 't/etc');
+
+        foreach my $filename ( @{$filenames} ) {
+            push @{ $types_for_file{$filename} }, $type;
+        }
+    }
+
+    return;
+}
+
+# XXX Implement me with --show-types.
+sub filetypes {
+    my $filename = File::Next::reslash(shift);
+
+    if ( !%types_for_file ) {
+        populate_filetypes();
+    }
+
+    return @{ $types_for_file{$filename} || [] };
+}
+
+sub is_filetype {
+    my ( $filename, $wanted_type ) = @_;
+
+    for my $maybe_type ( filetypes( $filename ) ) {
+        return 1 if $maybe_type eq $wanted_type;
+    }
+
+    return 0;
+}
