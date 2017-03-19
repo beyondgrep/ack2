@@ -13,13 +13,11 @@ use File::Next ();
 
 prep_environment();
 
-my @source_files = qw(
+my @source_files = map { File::Next::reslash($_) } qw(
     t/swamp/options-crlf.pl
     t/swamp/options.pl
     t/swamp/options.pl.bak
 );
-
-$_ = File::Next::reslash($_) for @source_files;
 
 JUST_THE_DIR: {
     my @expected = split( /\n/, <<"EOF" );
@@ -40,7 +38,10 @@ $source_files[1]:19:notawordhere
 $source_files[2]:19:notawordhere
 EOF
 
-    my @files = qw( t/swamp/options.pl t/swamp/options.pl.bak );
+    my @files = qw(
+        t/swamp/options.pl
+        t/swamp/options.pl.bak
+    );
     my @args = qw( notaword );
 
     ack_sets_match( [ @args, @files ], \@expected, q{Two hits for specifying the file} );

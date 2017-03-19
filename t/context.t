@@ -303,10 +303,10 @@ EOF
 # Grouping works with context and multiple files.
 # i.e. a separator line between different matches in the same file and no separator between files
 GROUPING_MULTIPLE_FILES: {
-    my @target_file = (
-        File::Next::reslash( 't/text/boy-named-sue.txt' ),
-        File::Next::reslash( 't/text/me-and-bobbie-mcgee.txt' ),
-        File::Next::reslash( 't/text/science-of-myth.txt' ),
+    my @target_file = map { File::Next::reslash($_) } qw(
+        t/text/boy-named-sue.txt
+        t/text/me-and-bobbie-mcgee.txt
+        t/text/science-of-myth.txt
     );
     my @expected = split( /\n/, <<"EOF" );
 $target_file[0]

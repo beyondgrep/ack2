@@ -66,9 +66,9 @@ WITH_OUTPUT: {
     my @files = qw( t/text/ );
     my @args = qw/ --output=x$1x question(\\S+) --sort-files /;
 
-    my @target_file = (
-        File::Next::reslash( 't/text/science-of-myth.txt' ),
-        File::Next::reslash( 't/text/shut-up-be-happy.txt' ),
+    my @target_file = map { File::Next::reslash($_) } qw(
+        t/text/science-of-myth.txt
+        t/text/shut-up-be-happy.txt
     );
     my @expected = (
         "$target_file[0]:1:xedx",
@@ -83,9 +83,9 @@ OUTPUT_DOUBLE_QUOTES: {
     my @files = qw( t/text/ );
     my @args  = ( '--output="$1"', 'question(\\S+)', '--sort-files' );
 
-    my @target_file = (
-        File::Next::reslash( 't/text/science-of-myth.txt' ),
-        File::Next::reslash( 't/text/shut-up-be-happy.txt' ),
+    my @target_file = map { File::Next::reslash($_) } qw(
+        t/text/science-of-myth.txt
+        t/text/shut-up-be-happy.txt
     );
     my @expected = (
         qq{$target_file[0]:1:"ed"},
