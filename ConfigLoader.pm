@@ -443,7 +443,8 @@ sub process_other {
                 die "Options --output, --pager and --match are forbidden in project .ackrc files.\n";
             };
 
-            $args_for_source = { %$args_for_source,
+            $args_for_source = {
+                %{$args_for_source},
                 'output=s' => $illegal,
                 'pager:s'  => $illegal,
                 'match=s'  => $illegal,
