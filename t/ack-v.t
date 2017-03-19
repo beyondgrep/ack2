@@ -4,7 +4,6 @@ use warnings;
 use strict;
 
 use Test::More tests => 5;
-use File::Next ();
 
 use lib 't';
 use Util;
