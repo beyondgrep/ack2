@@ -7,6 +7,7 @@ use App::Ack ();
 use App::Ack::ConfigDefault ();
 use App::Ack::ConfigFinder ();
 use App::Ack::Filter;
+use App::Ack::Filter::Collection;
 use App::Ack::Filter::Default;
 use Carp 1.04 ();
 use Getopt::Long 2.38 ();
