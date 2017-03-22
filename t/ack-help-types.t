@@ -17,7 +17,10 @@ my @types = (
     ruby   => [qw{.rb Rakefile}],
 );
 
-my @options = ('--help-types', '--help=types');
+my @options = qw(
+    --help-types
+    --help=types
+);
 
 plan tests => 12;
 

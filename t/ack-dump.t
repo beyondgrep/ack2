@@ -21,9 +21,7 @@ DUMP: {
     is( $results[0], 'Defaults', 'header should be Defaults' );
     splice @results, 0, 2; # remove header (2 lines)
 
-    foreach my $result ( @results ) {
-        $result =~ s/^\s*//;
-    }
+    s/^\s*// for @results;
 
     sets_match( \@results, \@expected, __FILE__ );
 

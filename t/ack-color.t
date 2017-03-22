@@ -58,7 +58,6 @@ ADJACENT_CAPTURE_COLORING: {
     my @results = run_ack( @args, @files );
 
     is( @results, 1, 'backref pattern matches once' );
-    # the double end + start is kinda weird; this test could probably be
-    # more robust
+    # The double end + start is kinda weird; this test could probably be more robust.
     is( $results[0], "I ${match_start}cal${match_end}${match_start}led${match_end} him my pa, and he ${match_start}cal${match_end}${match_start}led${match_end} me his son,", 'adjacent capture groups should highlight correctly');
 }
