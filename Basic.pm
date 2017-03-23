@@ -115,12 +115,12 @@ is true.
 sub reset {
     my $self = shift;
 
-    # return if we haven't opened the file yet
+    # Return if we haven't opened the file yet.
     if ( !defined($self->{fh}) ) {
         return;
     }
 
-    if( !seek( $self->{fh}, 0, 0 ) && $App::Ack::report_bad_filenames ) {
+    if ( !seek( $self->{fh}, 0, 0 ) && $App::Ack::report_bad_filenames ) {
         App::Ack::warn( "$self->{filename}: $!" );
     }
 
@@ -136,7 +136,7 @@ API: Close the resource.
 sub close {
     my $self = shift;
 
-    # return if we haven't opened the file yet
+    # Return if we haven't opened the file yet.
     if ( !defined($self->{fh}) ) {
         return;
     }
