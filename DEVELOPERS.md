@@ -66,13 +66,6 @@ Runs the test suite using the `ack-standalone` script.
 Can be used to run individual test files.  This relies on the module files being
 placed under `blib/lib`, so be sure to run `make` before running `prove`!
 
-### Getting debug output from a test
-
-ack's test suite captures standard output and standard error, so writing debug messages
-to standard error will show up in the captured output, and cause the test suite to fail.
-We have an `App::Ack::Debug` module for emitting test-safe debugging output, but it doesn't
-get placed under `blib` by default.
-
 ## Branching
 
 Development is *not* done on master.  We use a dev branch named
@@ -223,11 +216,6 @@ files.
 ### ConfigLoader.pm
 
 A module that contains the logic for loading configuration files.
-
-### Debug.pm
-
-Contains a single routine for printing to the console while being run
-in the test suite.
 
 ### Default.pm
 

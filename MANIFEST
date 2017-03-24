@@ -12,7 +12,6 @@ Collection.pm
 ConfigDefault.pm
 ConfigFinder.pm
 ConfigLoader.pm
-# Debug.pm  This is a reminder for us to NOT put Debug.pm in MANIFEST
 Default.pm
 Extension.pm
 ExtensionGroup.pm
