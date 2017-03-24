@@ -115,19 +115,15 @@ sub filetypes_supported {
     return keys %mappings;
 }
 
-sub _get_thpppt {
+sub thpppt {
     my $y = q{_   /|,\\'!.x',=(www)=,   U   };
     $y =~ tr/,x!w/\nOo_/;
-    return $y;
-}
 
-sub _thpppt {
-    my $y = _get_thpppt();
     App::Ack::print( "$y ack $_[0]!\n" );
     exit 0;
 }
 
-sub _bar {
+sub ackbar {
     my $x;
     $x = <<'_BAR';
  6?!I'7!I"?%+!
@@ -170,10 +166,10 @@ sub _bar {
 77I!+!7!?!7!I"71+!7,
 _BAR
 
-    return App::Ack::__pic($x);
+    return _pic_decode($x);
 }
 
-sub _cathy {
+sub cathy {
     my $x = <<'CATHY';
  0+!--+!
  0|! "C!H!O!C!O!L!A!T!E!!! !|!
@@ -226,10 +222,10 @@ sub _cathy {
  0?!$! &N! )." .,! %."M! ":!M!.! 0
  0N!:! %?!O! #.! ..! &,! &.!D!,! "N!I! 0
 CATHY
-    return App::Ack::__pic($x);
+    return _pic_decode($x);
 }
 
-sub __pic {
+sub _pic_decode {
     my($compressed) = @_;
     $compressed =~ s/(.)(.)/$1x(ord($2)-32)/eg;
     App::Ack::print( $compressed );

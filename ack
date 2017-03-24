@@ -66,9 +66,9 @@ MAIN: {
         last if ( $arg eq '--' );
 
         # Get the --thpppt, --bar, --cathy checking out of the way.
-        $arg =~ /^--th[pt]+t+$/ and App::Ack::_thpppt($arg);
-        $arg eq '--bar'         and App::Ack::_bar();
-        $arg eq '--cathy'       and App::Ack::_cathy();
+        $arg =~ /^--th[pt]+t+$/ and App::Ack::thpppt($arg);
+        $arg eq '--bar'         and App::Ack::ackbar();
+        $arg eq '--cathy'       and App::Ack::cathy();
 
         # See if we want to ignore the environment. (Don't tell Al Gore.)
         $arg eq '--env'         and $env_is_usable = 1;
