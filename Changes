@@ -1,8 +1,17 @@
 History file for ack.  https://beyondgrep.com/
 
 
-NEXT
+2.18    Fri Mar 24 14:53:19 CDT 2017
 ====================================
+ack 2.18 will probably be the final release in the ack 2.x series.
+I'm going to be starting work on ack 3.000 in earnest.  Still,
+if you discover problems with ack 2, please report them to
+https://github.com/petdance/ack2/issues
+
+If you're interested in ack 3 development, please sign up
+for the ack-dev mailing list and/or join the ack Slack.  See
+https://beyondgrep.com/community/ for details.
+
 [INTERNALS]
 Removed the abstraction of App::Ack::Resource and its subclass
 App::Ack::Resource::Basic.  We are abandoning the idea that we'll have
