@@ -1,5 +1,15 @@
 package App::Ack::Resources;
 
+=head1 NAME
+
+App::Ack::Resources
+
+=head1 SYNOPSIS
+
+A factory object for creating a stream of L<App::Ack::Resource> objects.
+
+=cut
+
 use App::Ack;
 
 use File::Next 1.16;
@@ -27,11 +37,6 @@ sub _generate_error_handler {
         };
     }
 }
-
-=head1 SYNOPSIS
-
-This is the base class for App::Ack::Resources, an iterator factory
-for App::Ack::Resource objects.
 
 =head1 METHODS
 

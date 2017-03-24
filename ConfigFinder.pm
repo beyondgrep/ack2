@@ -1,6 +1,13 @@
 package App::Ack::ConfigFinder;
 
-=head1 App::Ack::ConfigFinder
+=head1 NAME
+
+App::Ack::ConfigFinder
+
+=head1 DESCRIPTION
+
+A module that contains the logic for locating the various configuration
+files.
 
 =head1 LOCATING CONFIG FILES
 

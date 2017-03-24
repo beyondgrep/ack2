@@ -1,5 +1,15 @@
 package App::Ack::Filter::IsPath;
 
+=head1 NAME
+
+App::Ack::Filter::IsPath
+
+=head1 DESCRIPTION
+
+Filters based on path.
+
+=cut
+
 use strict;
 use warnings;
 use base 'App::Ack::Filter';

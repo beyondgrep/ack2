@@ -1,9 +1,5 @@
 package App::Ack::Resource::Basic;
 
-=head1 App::Ack::Resource::Basic
-
-=cut
-
 use warnings;
 use strict;
 
@@ -13,6 +9,14 @@ use File::Spec ();
 use base 'App::Ack::Resource';
 
 use App::Ack;
+
+=head1 NAME
+
+App::Ack::Resource::Basic
+
+=head1 DESCRIPTION
+
+Implements a basic L<App::Ack::Resource> object.
 
 =head1 METHODS
 

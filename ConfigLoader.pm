@@ -13,6 +13,14 @@ use Carp 1.04 ();
 use Getopt::Long 2.38 ();
 use Text::ParseWords 3.1 ();
 
+=head1 NAME
+
+App::Ack::ConfigLoader
+
+=head1 DESCRIPTION
+
+Logic for loading configuration files.
+
 =head1 FUNCTIONS
 
 =head2 process_args( @sources )

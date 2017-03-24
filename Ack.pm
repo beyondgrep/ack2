@@ -5,7 +5,11 @@ use strict;
 
 =head1 NAME
 
-App::Ack - A container for functions for the ack program
+App::Ack
+
+=head1 DESCRIPTION
+
+A container for functions for the ack program.
 
 =head1 VERSION
 

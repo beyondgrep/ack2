@@ -1,5 +1,15 @@
 package App::Ack::Filter::Extension;
 
+=head1 NAME
+
+App::Ack::Filter::Extension
+
+=head1 DESCRIPTION
+
+Implements filters based on extensions.
+
+=cut
+
 use strict;
 use warnings;
 use base 'App::Ack::Filter';

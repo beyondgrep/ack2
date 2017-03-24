@@ -7,6 +7,16 @@ use base 'App::Ack::Filter';
 use File::Spec 3.00;
 use App::Ack::Filter::MatchGroup ();
 
+=head1 NAME
+
+App::Ack::Filter::Match
+
+=head1 DESCRIPTION
+
+Implements filtering resources by their filename (regular expression).
+
+=cut
+
 sub new {
     my ( $class, $re ) = @_;
 

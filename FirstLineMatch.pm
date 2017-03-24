@@ -1,5 +1,16 @@
 package App::Ack::Filter::FirstLineMatch;
 
+=head1 NAME
+
+App::Ack::Filter::FirstLineMatch
+
+=head1 DESCRIPTION
+
+The class that implements filtering resources by their first line.
+
+=cut
+
+
 use strict;
 use warnings;
 use base 'App::Ack::Filter';

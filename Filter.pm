@@ -1,5 +1,15 @@
 package App::Ack::Filter;
 
+=head1 NAME
+
+App::Ack::Filter
+
+=head1 DESCRIPTION
+
+An abstract superclass that represents objects that can filter `App::Ack::Resource` objects.
+
+=cut
+
 use strict;
 use warnings;
 

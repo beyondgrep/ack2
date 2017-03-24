@@ -6,6 +6,16 @@ use strict;
 use App::Ack ();
 
 
+=head1 NAME
+
+App::Ack::ConfigDefault
+
+=head1 DESCRIPTION
+
+A module that contains the default configuration for ack.
+
+=cut
+
 sub options {
     return split( /\n/, _options_block() );
 }

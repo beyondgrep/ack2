@@ -1,6 +1,10 @@
 package App::Ack::Filter::MatchGroup;
 
-=for Developers
+=head1 NAME
+
+App::Ack::Filter::MatchGroup
+
+=head1 DESCRIPTION
 
 The App::Ack::Filter::MatchGroup class optimizes multiple ::Match calls
 into one container.  See App::Ack::Filter::IsGroup for details.

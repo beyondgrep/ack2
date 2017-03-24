@@ -12,6 +12,10 @@ sub FAIL {
     Carp::confess( 'Must be overloaded' );
 }
 
+=head1 NAME
+
+App::Ack::Resource
+
 =head1 SYNOPSIS
 
 This is the base class for App::Ack::Resource and any resources

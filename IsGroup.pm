@@ -1,11 +1,15 @@
 package App::Ack::Filter::IsGroup;
 
-=for Developers
+=head1 NAME
 
-The App::Ack::Filter::IsPathGroup class optimizes multiple ::IsPath
-calls into one container.
+App::Ack::Filter::IsGroup
 
-Let's say you have 100 --type-add=is:... filters.
+=head1 DESCRIPTION
+
+The App::Ack::Filter::IsGroup class optimizes multiple
+App::Ack::Filter::Is calls into one container.
+
+Let's say you have 100 C<--type-add=is:...> filters.
 
 You could have
 
@@ -16,8 +20,8 @@ and then do
     if ( any { $_->filter($rsrc) } @filters ) { ... }
 
 but that's slow, because of of method lookup overhead, function call
-overhead, etc.  So Is*.pm filters know how to organized themselves into
-an Is*Group.pm filter.
+overhead, etc.  So ::Is filters know how to organize themselves into an
+::IsGroup filter.
 
 =cut
 
