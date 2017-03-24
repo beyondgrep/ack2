@@ -7,6 +7,9 @@ NEXT
 ack no longer throws an undefined variable warning if it's called
 from a directory that doesn't exist. (GH #634)
 
+[DOCUMENTATION]
+Explain that filetypes must be two characters or longer. (GH #389)
+
 [INTERNALS]
 Removed dependency on File::Glob which isn't used.
 

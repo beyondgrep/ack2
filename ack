@@ -1567,6 +1567,12 @@ an F<.ackrc> file - then you do not have to define your types over and
 over again. In the following examples the options will always be shown
 on one command line so that they can be easily copy & pasted.
 
+File types can be specified both with the the I<--type=xxx> option,
+or the file type as an option itself.  For example, if you create
+a filetype of "cobol", you can specify I<--type=cobol> or simply
+I<--cobol>.  File types must be at least two characters long.  This
+is why the C language is I<--cc> and the R language is I<--rr>.
+
 I<ack --perl foo> searches for foo in all perl files. I<ack --help=types>
 tells you, that perl files are files ending
 in .pl, .pm, .pod or .t. So what if you would like to include .xs
@@ -1597,7 +1603,6 @@ or writing on separate lines
 The following does B<NOT> work in the F<.ackrc> file:
 
   --type-set eiffel:ext:e,eiffel
-
 
 In order to see all currently defined types, use I<--help-types>, e.g.
 I<ack --type-set backup:ext:bak --type-add perl:ext:perl --help-types>
