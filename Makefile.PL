@@ -18,7 +18,6 @@ my %parms = (
         'Ack.pm'            => '$(INST_LIBDIR)/App/Ack.pm',
         'Resource.pm'       => '$(INST_LIBDIR)/App/Ack/Resource.pm',
         'Resources.pm'      => '$(INST_LIBDIR)/App/Ack/Resources.pm',
-        'Basic.pm'          => '$(INST_LIBDIR)/App/Ack/Resource/Basic.pm',
         'ConfigDefault.pm'  => '$(INST_LIBDIR)/App/Ack/ConfigDefault.pm',
         'ConfigFinder.pm'   => '$(INST_LIBDIR)/App/Ack/ConfigFinder.pm',
         'ConfigLoader.pm'   => '$(INST_LIBDIR)/App/Ack/ConfigLoader.pm',
@@ -93,7 +92,7 @@ sub MY::postamble {
 ACK    = ack
 ALL_PM = \
     Ack.pm \
-    Resource.pm Resources.pm Basic.pm \
+    Resource.pm Resources.pm \
     ConfigDefault.pm ConfigFinder.pm ConfigLoader.pm \
     Filter.pm Extension.pm FirstLineMatch.pm Is.pm Match.pm Default.pm Inverse.pm Collection.pm IsGroup.pm ExtensionGroup.pm MatchGroup.pm IsPath.pm IsPathGroup.pm
 

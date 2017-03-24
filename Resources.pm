@@ -11,6 +11,7 @@ A factory object for creating a stream of L<App::Ack::Resource> objects.
 =cut
 
 use App::Ack;
+use App::Ack::Resource;
 
 use File::Next 1.16;
 use Errno qw(EACCES);
@@ -124,7 +125,7 @@ sub next {
 
     my $file = $self->{iter}->() or return;
 
-    return App::Ack::Resource::Basic->new( $file );
+    return App::Ack::Resource->new( $file );
 }
 
 1;

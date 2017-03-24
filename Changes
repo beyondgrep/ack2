@@ -3,6 +3,10 @@ History file for ack.  https://beyondgrep.com/
 
 NEXT
 ====================================
+[INTERNALS]
+Removed the abstraction of App::Ack::Resource and its subclass
+App::Ack::Resource::Basic.  We are abandoning the idea that we'll have
+plugins.
 
 
 2.17_02 Thu Mar 23 22:25:13 CDT 2017

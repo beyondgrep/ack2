@@ -7,7 +7,6 @@ Makefile.PL
 
 ack
 Ack.pm
-Basic.pm
 Collection.pm
 ConfigDefault.pm
 ConfigFinder.pm
@@ -124,7 +123,6 @@ t/etc/shebang.sh.xxx
 
 t/lib/00-coverage.t
 t/lib/Ack.t
-t/lib/Basic.t
 t/lib/Collection.t
 t/lib/ConfigDefault.t
 t/lib/ConfigFinder.t

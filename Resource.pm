@@ -7,19 +7,13 @@ use strict;
 use overload
     '""' => 'name';
 
-sub FAIL {
-    require Carp;
-    Carp::confess( 'Must be overloaded' );
-}
-
 =head1 NAME
 
 App::Ack::Resource
 
-=head1 SYNOPSIS
+=head1 DESCRIPTION
 
-This is the base class for App::Ack::Resource and any resources
-that derive from it.
+Abstracts a file from the filesystem.
 
 =head1 METHODS
 
@@ -33,8 +27,23 @@ If there's a failure, it throws a warning and returns an empty list.
 =cut
 
 sub new {
-    return FAIL();
+    my $class    = shift;
+    my $filename = shift;
+
+    my $self = bless {
+        filename => $filename,
+        fh       => undef,
+        opened   => 0,
+    }, $class;
+
+    if ( $self->{filename} eq '-' ) {
+        $self->{fh}     = *STDIN;
+        $self->{opened} = 1;
+    }
+
+    return $self;
 }
+
 
 =head2 $res->name()
 
@@ -43,8 +52,9 @@ Returns the name of the resource.
 =cut
 
 sub name {
-    return FAIL();
+    return $_[0]->{filename};
 }
+
 
 =head2 $res->basename()
 
@@ -54,19 +64,16 @@ of the resource.
 =cut
 
 sub basename {
-    return FAIL();
+    my ( $self ) = @_;
+
+    # XXX Definedness? Pre-populate the slot with an undef?
+    unless ( exists $self->{basename} ) {
+        $self->{basename} = (File::Spec->splitpath($self->name))[2];
+    }
+
+    return $self->{basename};
 }
 
-=head2 $res->is_binary()
-
-Tells whether the resource is binary.  If it is, and ack finds a
-match in the file, then ack will not try to display a match line.
-
-=cut
-
-sub is_binary {
-    return FAIL();
-}
 
 =head2 $res->open()
 
@@ -77,8 +84,19 @@ C<close $fh>, C<$res-E<gt>close> should be called.
 =cut
 
 sub open {
-    return FAIL();
+    my ( $self ) = @_;
+
+    return $self->{fh} if $self->{opened};
+
+    if ( ! open $self->{fh}, '<', $self->{filename} ) {
+        return;
+    }
+
+    $self->{opened} = 1;
+
+    return $self->{fh};
 }
+
 
 =head2 $res->needs_line_scan( \%opts )
 
@@ -95,8 +113,31 @@ have to do the line-by-line, too.
 =cut
 
 sub needs_line_scan {
-    return FAIL();
+    my $self  = shift;
+    my $opt   = shift;
+
+    return 1 if $opt->{v};
+
+    my $size = -s $self->{fh};
+    if ( $size == 0 ) {
+        return 0;
+    }
+    elsif ( $size > 100_000 ) {
+        return 1;
+    }
+
+    my $buffer;
+    my $rc = sysread( $self->{fh}, $buffer, $size );
+    if ( !defined($rc) && $App::Ack::report_bad_filenames ) {
+        App::Ack::warn( "$self->{filename}: $!" );
+        return 1;
+    }
+    return 0 unless $rc && ( $rc == $size );
+
+    my $regex = $opt->{regex};
+    return $buffer =~ /$regex/m;
 }
+
 
 =head2 $res->reset()
 
@@ -107,38 +148,84 @@ is true.
 =cut
 
 sub reset {
-    return FAIL();
+    my $self = shift;
+
+    # Return if we haven't opened the file yet.
+    if ( !defined($self->{fh}) ) {
+        return;
+    }
+
+    if ( !seek( $self->{fh}, 0, 0 ) && $App::Ack::report_bad_filenames ) {
+        App::Ack::warn( "$self->{filename}: $!" );
+    }
+
+    return;
 }
+
 
 =head2 $res->close()
 
-API: Close the resource.
+Close the file.
 
 =cut
 
 sub close {
-    return FAIL();
+    my $self = shift;
+
+    # Return if we haven't opened the file yet.
+    if ( !defined($self->{fh}) ) {
+        return;
+    }
+
+    if ( !close($self->{fh}) && $App::Ack::report_bad_filenames ) {
+        App::Ack::warn( $self->name() . ": $!" );
+    }
+
+    $self->{opened} = 0;
+
+    return;
 }
 
-=head2 $res->clone
+
+=head2 $res->clone()
 
 Clones this resource.
 
 =cut
 
 sub clone {
-    return FAIL();
+    my ( $self ) = @_;
+
+    return __PACKAGE__->new($self->name);
 }
+
 
 =head2 $res->firstliney
 
 Returns the first line (or first 250 characters, whichever comes first of a
-resource).  Resource subclasses are encouraged to cache this value.
+resource).
 
 =cut
 
 sub firstliney {
-    return FAIL();
+    my ( $self ) = @_;
+
+    my $fh = $self->open();
+
+    if ( !exists $self->{firstliney} ) {
+        my $buffer = '';
+        my $rc     = sysread( $fh, $buffer, 250 );
+        unless($rc) { # XXX handle this better?
+            $buffer = '';
+        }
+        $buffer =~ s/[\r\n].*//s;
+        $self->{firstliney} = $buffer;
+        $self->reset;
+    }
+
+    $self->close;
+
+    return $self->{firstliney};
 }
 
 1;

@@ -14,7 +14,7 @@ use File::Next ();
 use App::Ack ();
 use App::Ack::ConfigLoader ();
 use App::Ack::Resources;
-use App::Ack::Resource::Basic ();
+use App::Ack::Resource ();
 
 # XXX Don't make this so brute force
 # See also: https://github.com/petdance/ack2/issues/89
@@ -122,7 +122,7 @@ sub _compile_descend_filter {
     $idirs = $opt->{idirs};
 
     return sub {
-        my $resource = App::Ack::Resource::Basic->new($File::Next::dir);
+        my $resource = App::Ack::Resource->new($File::Next::dir);
         return !grep { $_->filter($resource) } @{$idirs};
     };
 }
@@ -182,7 +182,7 @@ sub _compile_file_filter {
                 my $is_ignoring = 0;
 
                 for ( my $i = 0; $i < @dirs; $i++) {
-                    my $dir_rsrc = App::Ack::Resource::Basic->new(File::Spec->catfile(@dirs[0 .. $i]));
+                    my $dir_rsrc = App::Ack::Resource->new(File::Spec->catfile(@dirs[0 .. $i]));
 
                     my $j = 0;
                     for my $filter (@ignore_dir_filter) {
@@ -220,7 +220,7 @@ sub _compile_file_filter {
             }
         }
 
-        my $resource = App::Ack::Resource::Basic->new($File::Next::name);
+        my $resource = App::Ack::Resource->new($File::Next::name);
 
         if ( $ifiles_filters && $ifiles_filters->filter($resource) ) {
             return 0;
