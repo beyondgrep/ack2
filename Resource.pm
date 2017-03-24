@@ -86,13 +86,14 @@ C<close $fh>, C<$res-E<gt>close> should be called.
 sub open {
     my ( $self ) = @_;
 
-    return $self->{fh} if $self->{opened};
-
-    if ( ! open $self->{fh}, '<', $self->{filename} ) {
-        return;
+    if ( !$self->{opened} ) {
+        if ( open $self->{fh}, '<', $self->{filename} ) {
+            $self->{opened} = 1;
+        }
+        else {
+            $self->{fh} = undef;
+        }
     }
-
-    $self->{opened} = 1;
 
     return $self->{fh};
 }
@@ -100,15 +101,15 @@ sub open {
 
 =head2 $res->needs_line_scan( \%opts )
 
-API: Tells if the resource needs a line-by-line scan.  This is a big
+Tells if the file needs a line-by-line scan.  This is a big
 optimization because if you can tell from the outset that the pattern
 is not found in the resource at all, then there's no need to do the
-line-by-line iteration.  If in doubt, return true.
+line-by-line iteration.
 
-Base: Slurp up an entire file up to 100K, see if there are any
-matches in it, and if so, let us know so we can iterate over it
-directly.  If it's bigger than 100K or the match is inverted, we
-have to do the line-by-line, too.
+Slurp up an entire file up to 100K, see if there are any matches
+in it, and if so, let us know so we can iterate over it directly.
+If it's bigger than 100K or the match is inverted, we have to do
+the line-by-line, too.
 
 =cut
 
@@ -134,8 +135,7 @@ sub needs_line_scan {
     }
     return 0 unless $rc && ( $rc == $size );
 
-    my $regex = $opt->{regex};
-    return $buffer =~ /$regex/m;
+    return $buffer =~ /$opt->{regex}/m;
 }
 
 
@@ -202,8 +202,8 @@ sub clone {
 
 =head2 $res->firstliney
 
-Returns the first line (or first 250 characters, whichever comes first of a
-resource).
+Returns the first line of a file (or first 250 characters, whichever
+comes first).
 
 =cut
 
