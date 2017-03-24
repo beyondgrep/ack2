@@ -1,5 +1,13 @@
 package App::Ack::Filter::IsPathGroup;
 
+=for Developers
+
+The App::Ack::Filter::IsPathGroup class optimizes multiple ::IsPath
+calls into one container.  See App::Ack::Filter::IsGroup for details.
+
+=cut
+
+
 use strict;
 use warnings;
 use base 'App::Ack::Filter';

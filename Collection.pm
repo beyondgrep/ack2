@@ -1,5 +1,16 @@
 package App::Ack::Filter::Collection;
 
+=for Developers
+
+The Ack::Filter::Collection class can contain filters and internally sort
+them into groups. The groups can then be optimized for faster filtering.
+
+Currently "is" and "ext" filters are grouped and replaced by a fast hash
+lookup. This leads to improved performance when many such filters are
+active, like when using the --known command line option.
+
+=cut
+
 use strict;
 use warnings;
 use base 'App::Ack::Filter';

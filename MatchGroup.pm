@@ -1,5 +1,12 @@
 package App::Ack::Filter::MatchGroup;
 
+=for Developers
+
+The App::Ack::Filter::MatchGroup class optimizes multiple ::Match calls
+into one container.  See App::Ack::Filter::IsGroup for details.
+
+=cut
+
 use strict;
 use warnings;
 use base 'App::Ack::Filter';
@@ -34,10 +41,14 @@ sub filter {
 
 sub inspect {
     my ( $self ) = @_;
+
+    # XXX Needs an explicit return.
 }
 
 sub to_string {
     my ( $self ) = @_;
+
+    # XXX Needs an explicit return.
 }
 
 1;
