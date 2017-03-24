@@ -3,6 +3,10 @@ History file for ack.  https://beyondgrep.com/
 
 NEXT
 ====================================
+[FIXES]
+ack no longer throws an undefined variable warning if it's called
+from a directory that doesn't exist. (GH #634)
+
 [INTERNALS]
 Removed dependency on File::Glob which isn't used.
 
