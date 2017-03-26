@@ -2,7 +2,7 @@ language: perl
 perl:
   - "5.10"
 notifications:
-install: "cpanm --installdeps --notest . && cpanm --notest Perl::Critic && cpanm --notest IO::Pty Test::Tester Test::Whitespaces Test::Pod Test::Perl::Critic::Progressive Perl::Critic::More Perl::Critic::Pulp"
+install: "cpanm --installdeps --notest . && cpanm --notest Perl::Critic && cpanm --notest IO::Pty Test::Whitespaces Test::Pod Test::Perl::Critic::Progressive Perl::Critic::More Perl::Critic::Pulp Perl::Critic::Bangs"
 script:  "perl Makefile.PL && make fulltest"
 email:
   recipients:
