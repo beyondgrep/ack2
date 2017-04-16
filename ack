@@ -62,8 +62,10 @@ MAIN: {
 
     # Do preliminary arg checking;
     my $env_is_usable = 1;
-    for my $arg ( @ARGV ) {
-        last if ( $arg eq '--' );
+    my $arg;
+    for (my $i = 0; $i != @ARGV; ++$i) {
+        $arg = $ARGV[$i];
+        last if $arg eq '--';
 
         # Get the --thpppt, --bar, --cathy checking out of the way.
         $arg =~ /^--th[pt]+t+$/ and App::Ack::thpppt($arg);
@@ -73,6 +75,19 @@ MAIN: {
         # See if we want to ignore the environment. (Don't tell Al Gore.)
         $arg eq '--env'         and $env_is_usable = 1;
         $arg eq '--noenv'       and $env_is_usable = 0;
+
+        # XXX remove these at some point
+        if ( $arg eq '--filter' ) {
+            App::Ack::warn( '--filter has been removed, use - to read stdin instead' );
+            splice @ARGV, $i, 1, '-';
+        }
+        elsif ( $arg eq '--nofilter' ) {
+            App::Ack::warn( '--nofilter has been removed, redirect stdin from "'.File::Spec->devnull().'" instead' );
+            $App::Ack::is_stdin_pipe = 0;
+            open STDIN, File::Spec->devnull();
+            splice @ARGV, $i, 1;
+            --$i;
+        }
     }
 
     if ( !$env_is_usable ) {
@@ -312,6 +327,9 @@ sub build_regex {
     my $opt = shift;
 
     defined $str or App::Ack::die( 'No regular expression found.' );
+    if ( $str eq '' ) {
+        App::Ack::die( 'Empty regular expression.' );
+    }
 
     $str = quotemeta( $str ) if $opt->{Q};
     if ( $opt->{w} ) {
@@ -322,12 +340,14 @@ sub build_regex {
         $str = "$str\\b" if $pristine_str =~ /\w$/;
     }
 
+    my $re;
     my $regex_is_lc = $str eq lc $str;
     if ( $opt->{i} || ($opt->{smart_case} && $regex_is_lc) ) {
-        $str = "(?i)$str";
+        $re = eval { qr/$str/mi };
     }
-
-    my $re = eval { qr/$str/m };
+    else {
+        $re = eval { qr/$str/m };
+    }
     if ( !$re ) {
         die "Invalid regex '$str':\n  $@";
     }
@@ -887,7 +907,7 @@ sub main {
     }
 
     my $resources;
-    if ( $App::Ack::is_filter_mode && !$opt->{files_from} ) { # probably -x
+    if ( $App::Ack::is_stdin_pipe && @ARGV == 1 && !$opt->{files_from} && !$opt->{f} ) { # probably -x
         $resources    = App::Ack::Resources->from_stdin( $opt );
         $opt_regex = shift @ARGV if not defined $opt_regex;
         $opt_regex = $opt->{regex} = build_regex( $opt_regex, $opt );
@@ -923,7 +943,12 @@ sub main {
         else {
             @start = ('.') unless @start;
             foreach my $target (@start) {
-                if ( !-e $target && $App::Ack::report_bad_filenames) {
+                if ( $target eq "-" ) {
+                    if ( -e $target ) {
+                        App::Ack::warn('literal file "-" exists and will be ignored, stdin will be used instead!');
+                    }
+                }
+                elsif ( !-e $target && $App::Ack::report_bad_filenames) {
                     App::Ack::warn( "$target: No such file or directory" );
                 }
             }
@@ -1235,10 +1260,6 @@ as a path to search.
 The list of files to be searched is specified in I<FILE>.  The list of
 files are separated by newlines.  If I<FILE> is C<->, the list is loaded
 from standard input.
-
-=item B<--[no]filter>
-
-Forces ack to act as if it were receiving input via a pipe.
 
 =item B<--[no]follow>
 

@@ -36,7 +36,7 @@ our %type_wanted;
 our %mappings;
 our %ignore_dirs;
 
-our $is_filter_mode;
+our $is_stdin_pipe;
 our $output_to_pipe;
 
 our $dir_sep_chars;
@@ -48,7 +48,7 @@ use File::Spec 1.00015 ();
 BEGIN {
     # These have to be checked before any filehandle diddling.
     $output_to_pipe  = not -t *STDOUT;
-    $is_filter_mode = -p STDIN;
+    $is_stdin_pipe   = -p STDIN;
 
     $is_cygwin       = ($^O eq 'cygwin' || $^O eq 'msys');
     $is_windows      = ($^O eq 'MSWin32');
@@ -370,8 +370,6 @@ Miscellaneous:
   --help-types                  Display all known types
   --dump                        Dump information on which options are loaded
                                 from which RC files
-  --[no]filter                  Force ack to treat standard input as a pipe
-                                (--filter) or tty (--nofilter)
   --man                         Man page
   --version                     Display version & copyright
   --thpppt                      Bill the Cat

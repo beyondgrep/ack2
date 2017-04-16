@@ -324,7 +324,6 @@ EOT
         },
         f                   => \$opt->{f},
         'files-from=s'      => \$opt->{files_from},
-        'filter!'           => \$App::Ack::is_filter_mode,
         flush               => \$opt->{flush},
         'follow!'           => \$opt->{follow},
         g                   => \$opt->{g},

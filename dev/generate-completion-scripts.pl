@@ -33,7 +33,6 @@ my %ZSH_DESCRIPTIONS = (
     '--files-from'            => 'specifies the list of files to search within FILE',
     '--files-with-matches'    => 'only print filenames of matching files',
     '--files-without-matches' => 'only print filenames of non-matching files',
-    '--filter'                => 'force ack to behave as if it were receiving input via a pipe',
     '--flush'                 => 'flushes output immediately',
     '--follow'                => 'follow symlinks',
     '--group'                 => 'group matches by filename',
