@@ -356,6 +356,10 @@ sub _options_block {
 # http://docutils.sourceforge.net/rst.html
 --type-add=rst:ext:rst
 
+# RPM Package Manager
+# http://www.rpm.org/
+--type-add=rpm:ext:spec
+
 # Ruby
 # http://www.ruby-lang.org/
 --type-add=ruby:ext:rb,rhtml,rjs,rxml,erb,rake,spec
