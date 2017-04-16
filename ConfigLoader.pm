@@ -256,6 +256,13 @@ sub removed_option {
 }
 
 
+sub strip_quotes {
+    my ( $incoming ) = @_;
+    $incoming =~ s/['"]//g;
+    return $incoming;
+}
+
+
 sub get_arg_spec {
     my ( $opt, $extra_specs ) = @_;
 
@@ -309,9 +316,9 @@ EOT
         'break!'            => \$opt->{break},
         c                   => \$opt->{count},
         'color|colour!'     => \$opt->{color},
-        'color-match=s'     => \$ENV{ACK_COLOR_MATCH},
-        'color-filename=s'  => \$ENV{ACK_COLOR_FILENAME},
-        'color-lineno=s'    => \$ENV{ACK_COLOR_LINENO},
+        'color-match=s'     => sub { shift; $ENV{ACK_COLOR_MATCH} = strip_quotes(shift); },
+        'color-filename=s'  => sub { shift; $ENV{ACK_COLOR_FILENAME} = strip_quotes(shift); },
+        'color-lineno=s'    => sub { shift; $ENV{ACK_COLOR_LINENO} = strip_quotes(shift); },
         'column!'           => \$opt->{column},
         count               => \$opt->{count},
         'create-ackrc'      => sub { print "$_\n" for ( '--ignore-ack-defaults', App::Ack::ConfigDefault::options() ); exit; },
