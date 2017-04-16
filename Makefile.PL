@@ -1,3 +1,5 @@
+#!/usr/bin/env perl
+
 package main;
 
 require 5.008008;
