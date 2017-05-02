@@ -491,49 +491,9 @@ sub get_copyright {
 }
 
 
-# print*() subs added in order to make it easy for a third party
-# module (such as App::Wack) to redefine the display methods
-# and show the results in a different way.
 sub print                   { print {$fh} @_; return; }
-sub print_first_filename    { App::Ack::print( $_[0], "\n" ); return; }
 sub print_blank_line        { App::Ack::print( "\n" ); return; }
-sub print_separator         { App::Ack::print( "--\n" ); return; }
 sub print_filename          { App::Ack::print( $_[0], $_[1] ); return; }
-sub print_line_no           { App::Ack::print( $_[0], $_[1] ); return; }
-sub print_column_no         { App::Ack::print( $_[0], $_[1] ); return; }
-sub print_count {
-    my $filename = shift;
-    my $nmatches = shift;
-    my $ors = shift;
-    my $count = shift;
-    my $show_filename = shift;
-
-    if ($show_filename) {
-        App::Ack::print( $filename );
-        App::Ack::print( ':', $nmatches ) if $count;
-    }
-    else {
-        App::Ack::print( $nmatches ) if $count;
-    }
-    App::Ack::print( $ors );
-
-    return;
-}
-
-sub print_count0 {
-    my $filename = shift;
-    my $ors = shift;
-    my $show_filename = shift;
-
-    if ($show_filename) {
-        App::Ack::print( $filename, ':0', $ors );
-    }
-    else {
-        App::Ack::print( '0', $ors );
-    }
-
-    return;
-}
 
 sub set_up_pager {
     my $command = shift;
