@@ -29,5 +29,5 @@ DUMP: {
     is( scalar @perl, 2, 'Two specs for Perl' );
 
     my @ignore_dir = grep { /ignore-dir/ } @results;
-    is( scalar @ignore_dir, 24, 'Twenty-four specs for ignoring directories' );
+    is( scalar @ignore_dir, 25, 'Twenty-five specs for ignoring directories' );
 }

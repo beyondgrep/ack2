@@ -76,6 +76,10 @@ sub _options_block {
 # http://subversion.tigris.org/
 --ignore-directory=is:.svn
 
+# Tox
+# https://testrun.org/tox/
+--ignore-directory=is:.tox
+
 # Monotone
 # http://www.monotone.ca/
 --ignore-directory=is:_MTN
