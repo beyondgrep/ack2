@@ -343,6 +343,10 @@ sub _options_block {
 # http://plone.org/
 --type-add=plone:ext:pt,cpt,metadata,cpy,py
 
+# Portable Object (gettext)
+# https://www.gnu.org/software/gettext/manual/html_node/PO-Files.html
+--type-add=po:ext:po
+
 # Python
 # http://www.python.org/
 --type-add=python:ext:py
