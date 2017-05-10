@@ -31,6 +31,7 @@ groovy
 gsp
 haskell
 hh
+i18n
 html
 java
 js
