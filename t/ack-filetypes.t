@@ -32,6 +32,7 @@ gsp
 haskell
 hh
 html
+idea
 java
 js
 json
