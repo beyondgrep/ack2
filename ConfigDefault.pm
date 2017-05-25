@@ -269,6 +269,10 @@ sub _options_block {
 # http://golang.org/
 --type-add=go:ext:go
 
+# Graphviz
+# http://www.graphviz.org
+--type-add=graphviz:ext:gv,dot
+
 # Groovy
 # http://groovy.codehaus.org/
 --type-add=groovy:ext:groovy,gtmpl,gpp,grunit,gradle
