@@ -1,3 +1,9 @@
+# Build status of dev branch
+
+* Linux [![Build Status](https://travis-ci.org/petdance/ack2.png?branch=dev)](https://travis-ci.org/petdance/ack2)
+* Windows [![Build Status](https://ci.appveyor.com/api/projects/status/github/petdance/ack2)](https://ci.appveyor.com/project/petdance/ack2)
+* [CPAN Testers](http://cpantesters.org/distro/A/ack.html)
+
 # ack 2
 
 ack is a code-searching tool, similar to grep but optimized for
@@ -26,16 +32,8 @@ ack requires Perl 5.8.8 or higher.  Perl 5.8.8 was released January 2006.
     make ack-standalone
     cp ack-standalone ~/bin/ack2 # for a personal installation
 
-Build status: [![Build Status](https://travis-ci.org/petdance/ack2.png?branch=dev)](https://travis-ci.org/petdance/ack2)
-
-[CPAN Testers](http://cpantesters.org/distro/A/ack.html)
-
 # Development
 
 [Developer's Guide](DEVELOPERS.md)
 
 [Design Guide](DESIGN.md)
-
-# Community
-
-TODO
