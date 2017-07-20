@@ -1,9 +1,17 @@
 package App::Ack::Filter;
 
+=head1 NAME
+
+App::Ack::Filter
+
+=head1 DESCRIPTION
+
+An abstract superclass that represents objects that can filter `App::Ack::Resource` objects.
+
+=cut
+
 use strict;
 use warnings;
-use overload
-    '""' => 'to_string';
 
 use App::Ack::Filter::Inverse ();
 use Carp 1.04 ();

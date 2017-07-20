@@ -53,9 +53,8 @@ LINE_1_COMMA_5: {
     ack_sets_match( [ @args, @files ], \@expected, 'Looking for lines 1, 5' );
 }
 
-LINE_1_TO_5: {
+LINES_2_TO_5: {
     my @expected = split( /\n/, <<'EOF' );
-Well, my daddy left home when I was three
 And he didn't leave very much for my Ma and me
 'cept an old guitar and an empty bottle of booze.
 Now, I don't blame him 'cause he run and hid
@@ -63,9 +62,9 @@ But the meanest thing that he ever did
 EOF
 
     my @files = qw( t/text/boy-named-sue.txt );
-    my @args = qw( --lines=1-5 );
+    my @args = qw( --lines=2-5 );
 
-    ack_sets_match( [ @args, @files ], \@expected, 'Looking for lines 1 to 5' );
+    ack_sets_match( [ @args, @files ], \@expected, 'Looking for lines 2 to 5' );
 }
 
 LINE_1_TO_5_CONTEXT: {
@@ -110,9 +109,9 @@ EOF
 
 
 LINE_1_MULTIPLE_FILES: {
-    my @target_file = (
-        File::Next::reslash( 't/swamp/c-header.h' ),
-        File::Next::reslash( 't/swamp/c-source.c' )
+    my @target_file = map { File::Next::reslash( $_ ) } qw(
+        t/swamp/c-header.h
+        t/swamp/c-source.c
     );
     my @expected = split( /\n/, <<"EOF" );
 $target_file[0]:1:/*    perl.h
@@ -127,9 +126,9 @@ EOF
 
 
 LINE_1_CONTEXT: {
-    my @target_file = (
-        File::Next::reslash( 't/swamp/c-header.h' ),
-        File::Next::reslash( 't/swamp/c-source.c' )
+    my @target_file = map { File::Next::reslash( $_ ) } qw(
+        t/swamp/c-header.h
+        t/swamp/c-source.c
     );
     my @expected = split( /\n/, <<"EOF" );
 $target_file[0]:1:/*    perl.h

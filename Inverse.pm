@@ -1,5 +1,16 @@
 package App::Ack::Filter::Inverse;
 
+=head1 NAME
+
+App::Ack::Filter::Inverse
+
+=head1 DESCRIPTION
+
+The filter class that inverts another filter.
+
+=cut
+
+
 use strict;
 use warnings;
 use base 'App::Ack::Filter';

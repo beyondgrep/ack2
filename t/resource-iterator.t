@@ -54,6 +54,15 @@ UNFILTERED: {
             t/swamp/groceries/another_subdir/RCS/fruit
             t/swamp/groceries/another_subdir/RCS/junk
             t/swamp/groceries/another_subdir/RCS/meat
+            t/swamp/groceries/dir.d/CVS/fruit
+            t/swamp/groceries/dir.d/CVS/junk
+            t/swamp/groceries/dir.d/CVS/meat
+            t/swamp/groceries/dir.d/fruit
+            t/swamp/groceries/dir.d/junk
+            t/swamp/groceries/dir.d/meat
+            t/swamp/groceries/dir.d/RCS/fruit
+            t/swamp/groceries/dir.d/RCS/junk
+            t/swamp/groceries/dir.d/RCS/meat
             t/swamp/groceries/CVS/fruit
             t/swamp/groceries/CVS/junk
             t/swamp/groceries/CVS/meat
@@ -104,6 +113,7 @@ UNFILTERED: {
             t/swamp/solution8.tar
             t/swamp/stuff.cmake
             t/swamp/CMakeLists.txt
+            t/swamp/swamp/ignoreme.txt
             ),
             't/swamp/#emacs-workfile.pl#',
             't/swamp/not-an-#emacs-workfile#',

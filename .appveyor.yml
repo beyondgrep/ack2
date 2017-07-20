@@ -1,0 +1,29 @@
+branches:
+  except:
+    - /travis/
+skip_tags: true
+
+cache:
+
+  - C:\strawberry
+
+
+install:
+
+  - if not exist "C:\strawberry" cinst strawberryperl
+  - set PATH=C:\strawberry\perl\bin;C:\strawberry\perl\site\bin;C:\strawberry\c\bin;%PATH%
+  - cd C:\projects\%APPVEYOR_PROJECT_NAME%
+
+  - cpanm File::Next
+
+
+build_script:
+
+  - perl Makefile.PL
+
+  - dmake test
+
+    # Add an author test target too.
+
+
+# Started from http://blogs.perl.org/users/eserte/2016/04/testing-with-appveyor.html

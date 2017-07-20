@@ -1,4 +1,5 @@
 Changes
+CONTRIBUTING.md
 LICENSE.md
 MANIFEST
 README.md
@@ -6,12 +7,10 @@ Makefile.PL
 
 ack
 Ack.pm
-Basic.pm
 Collection.pm
 ConfigDefault.pm
 ConfigFinder.pm
 ConfigLoader.pm
-# Debug.pm  This is a reminder for us to NOT put Debug.pm in MANIFEST
 Default.pm
 Extension.pm
 ExtensionGroup.pm
@@ -20,7 +19,10 @@ FirstLineMatch.pm
 Inverse.pm
 Is.pm
 IsGroup.pm
+IsPath.pm
+IsPathGroup.pm
 Match.pm
+MatchGroup.pm
 Resource.pm
 Resources.pm
 
@@ -47,6 +49,7 @@ t/ack-help.t
 t/ack-help-types.t
 t/ack-h.t
 t/ack-ignore-dir.t
+t/ack-ignore-file.t
 t/ack-interactive.t
 t/ack-invalid-ackrc.t
 t/ack-i.t
@@ -58,6 +61,7 @@ t/ack-m.t
 t/ack-named-pipes.t
 t/ack-n.t
 t/ack-o.t
+t/ack-output.t
 t/ack-pager.t
 t/ack-passthru.t
 t/ack-print0.t
@@ -90,7 +94,14 @@ t/illegal-regex.t
 t/incomplete-last-line.t
 t/inverted-file-filter.t
 t/is-filter.t
+t/issue244.t
+t/issue276.t
+t/issue491.t
+t/issue522.t
+t/issue562.t
+t/issue571.t
 t/longopts.t
+t/lua-shebang.t
 t/match-filter.t
 t/mutex-options.t
 t/noackrc.t
@@ -112,7 +123,6 @@ t/etc/shebang.sh.xxx
 
 t/lib/00-coverage.t
 t/lib/Ack.t
-t/lib/Basic.t
 t/lib/Collection.t
 t/lib/ConfigDefault.t
 t/lib/ConfigFinder.t
@@ -125,7 +135,10 @@ t/lib/FirstLineMatch.t
 t/lib/Inverse.t
 t/lib/Is.t
 t/lib/IsGroup.t
+t/lib/IsPath.t
+t/lib/IsPathGroup.t
 t/lib/Match.t
+t/lib/MatchGroup.t
 t/lib/Resource.t
 t/lib/Resources.t
 
@@ -166,6 +179,15 @@ t/swamp/groceries/another_subdir/RCS/meat
 t/swamp/groceries/another_subdir/fruit
 t/swamp/groceries/another_subdir/junk
 t/swamp/groceries/another_subdir/meat
+t/swamp/groceries/dir.d/CVS/fruit
+t/swamp/groceries/dir.d/CVS/junk
+t/swamp/groceries/dir.d/CVS/meat
+t/swamp/groceries/dir.d/fruit
+t/swamp/groceries/dir.d/junk
+t/swamp/groceries/dir.d/meat
+t/swamp/groceries/dir.d/RCS/fruit
+t/swamp/groceries/dir.d/RCS/junk
+t/swamp/groceries/dir.d/RCS/meat
 t/swamp/groceries/fruit
 t/swamp/groceries/junk
 t/swamp/groceries/meat
@@ -204,6 +226,7 @@ t/swamp/sample.rake
 t/swamp/service.svc
 t/swamp/solution8.tar
 t/swamp/stuff.cmake
+t/swamp/swamp/ignoreme.txt
 t/text/4th-of-july.txt
 t/text/boy-named-sue.txt
 t/text/freedom-of-choice.txt

@@ -1,13 +1,155 @@
-History file for ack.  http://beyondgrep.com/
+History file for ack.  https://beyondgrep.com/
 
 NEXT
+====================================
+
+2.18    Fri Mar 24 14:53:19 CDT 2017
+====================================
+ack 2.18 will probably be the final release in the ack 2.x series.
+I'm going to be starting work on ack 3.000 in earnest.  Still,
+if you discover problems with ack 2, please report them to
+https://github.com/petdance/ack2/issues
+
+If you're interested in ack 3 development, please sign up
+for the ack-dev mailing list and/or join the ack Slack.  See
+https://beyondgrep.com/community/ for details.
+
+[INTERNALS]
+Removed the abstraction of App::Ack::Resource and its subclass
+App::Ack::Resource::Basic.  We are abandoning the idea that we'll have
+plugins.
+
+
+2.17_02 Thu Mar 23 22:25:13 CDT 2017
+====================================
+[FIXES]
+ack no longer throws an undefined variable warning if it's called
+from a directory that doesn't exist. (GH #634)
+
+[DOCUMENTATION]
+Explain that filetypes must be two characters or longer. (GH #389)
+
+[INTERNALS]
+Removed dependency on File::Glob which isn't used.
+
+
+2.17_01 Wed Mar 15 23:25:28 CDT 2017
+====================================
+[FIXES]
+--context=0 (and its short counterpart -C 0) did not set to context
+of 0.  This means that a command-line --context=0 couldn't override
+a --context=5 in your ackrc.  Thanks, Ed Avis.  (GH #595)
+
+t/ack-s.t would fail in non-English locales.  Thanks, Olivier Mengué.
+(GH #485, GH #515)
+
+[ENHANCEMENTS]
+--after-context and --before-context (and their short counterparts
+-A and -B) no longer require a value to be passed.  If no value is
+set, they default to 2. (GH #351)
+
+Added .xhtml to the --html filetype.  Added .wsdl to the --xml filetype.
+Thanks, H.Merijn Brand.  (GH #456)
+
+[DOCUMENTATION]
+Updated incorrect docs about how ack works.  Thanks, Gerhard Poul.
+(GH #543)
+
+
+2.16    Fri Mar 10 13:32:39 CST 2017
+====================================
+No changes since 2.15_03.
+
+[CONFUSING BEHAVIOR & UPCOMING CHANGES]
+The -w has a confusing behavior that it's had since back to ack 1.x
+that will be changing in the future.  It's not changing in this
+version, but this is a heads-up that it's coming.
+
+ack -w is "match a whole word", and ack does this by putting turning
+your PATTERN into \bPATTERN\b.  So "ack -w foo" effectively becomes
+"ack \bfoo\b".  Handy.
+
+The problem is that ack doesn't put a \b before PATTERN if it begins
+with a non-word character, and won't put a \b after PATTERN if it
+ends with a non-word character.
+
+The problem is that if you're searching for "fool" or "foot", but
+only as a word, and you do "ack -w foo[lt]" or "ack -w (fool|foot)",
+you'll get matches for "football and foolish" which certainly should
+not match if you're using -w.
+
+
+2.15_03 Sun Feb 26 23:07:35 CST 2017
+====================================
+[ENHANCEMENTS]
+Include .cljs, .cljc and .edn files with the --clojure filetype.  Thanks,
+Austin Chamberlin.
+
+Added .xsd to the --xml filetype.  Thanks, Nick Morrott.
+
+Added support for Swift language.  Thanks, Nikolaj Schumacher. (GH #512)
+
+The MSYS2 project is now seen as Windows.  Thanks, Ray Donnelly. (GH #450)
+
+Expand the definition of OCaml files.  Thanks, Marek Kubica. (GH #511)
+
+Add support for Groovy Server Pages.  Thanks, Ethan Mallove. (GH #469)
+
+[INTERNALS]
+Added test to test --output. Thanks, Varadinsky! (GH #587, GH #590)
+
+[DOCUMENTATION]
+Expanded the explanation of how the -w flag works.  Thanks, Ed Avis.
+(GH #585)
+
+
+2.15_02 Thu Dec 17 15:51:15 CST 2015
+====================================
+This is the first dev version in nine months.  Many changes have gone
+into this, probably more than have been listed here.  We need to update
+this list, but for now these are fixes we know are in here.  My apologies
+for not having this changelog accurate.
+
+[FIXES]
+Reverted an optimization to make \s work properly again. (GH #572,
+GH #571, GH #562, GH #491, GH #498)
+
+Fixed an out-of-date FAQ entry.  Thanks, Jakub Wilk.  (GH #580)
+
+[ENHANCEMENTS]
+The JSP filetype (--jsp) now recognizes .jspf files.  Thanks, Sebastien
+Feugere.  (GH #586)
+
+[INTERNALS]
+Added test to make sure subdirs of target subdirs are ignored if
+--ignore-dir applies to them.  Thanks, Pete Houston. (GH #570)
+
+
+2.15_01 Fri Feb 13 16:23:54 CST 2015
 ====================================
 [FIXES]
 The -l and -c flags would sometimes return inaccurate results due to
 a bug introduced in 2.14.  Thanks to Elliot Shank for the report! (GH #491)
 
+Behavior when using newlines in a search was inconsistent.  Thanks to Yves Chevallier
+for the report! (GH #522)
+
+Add minimal requirement of Getopt::Long 2.38, not 2.35, for GetOptionsFromString.
+
+Don't ignore directories that are specified as command line targets (GH #524)
+
+Fix a bug where a regular expression that matches the empty string could cause ack
+to go into an infinite loop (GH #542)
+
 [ENHANCEMENTS]
-Many optimizations.
+Many optimizations and code cleanups.  Thanks, Stephan Hohe.
+
+Added --hpp option for C++ header files.  Thankis, Steffen Jaeckel.
+
+ack now supports --ignore-dir=match:....  Thanks, Ailin Nemui! (GitHub ticket #42)
+
+ack also supports --ignore-dir=ext:..., and --noignore-dir supports match/ext as well
+
 
 2.14    Wed Sep  3 22:48:00 CDT 2014
 ====================================
@@ -104,7 +246,7 @@ errors in the Windows builds.
 2.12    Tue Dec  3 07:05:02 CST 2013
 ====================================
 [SECURITY FIXES]
-This verison of ack prevents the --pager, --regex and --output
+This version of ack prevents the --pager, --regex and --output
 options from being used from project-level ackrc files.  It is
 possible to execute malicious code with these options, and we want
 to prevent the security risk of acking through a potentially malicious

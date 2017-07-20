@@ -18,7 +18,6 @@ my %parms = (
         'Ack.pm'            => '$(INST_LIBDIR)/App/Ack.pm',
         'Resource.pm'       => '$(INST_LIBDIR)/App/Ack/Resource.pm',
         'Resources.pm'      => '$(INST_LIBDIR)/App/Ack/Resources.pm',
-        'Basic.pm'          => '$(INST_LIBDIR)/App/Ack/Resource/Basic.pm',
         'ConfigDefault.pm'  => '$(INST_LIBDIR)/App/Ack/ConfigDefault.pm',
         'ConfigFinder.pm'   => '$(INST_LIBDIR)/App/Ack/ConfigFinder.pm',
         'ConfigLoader.pm'   => '$(INST_LIBDIR)/App/Ack/ConfigLoader.pm',
@@ -33,18 +32,20 @@ my %parms = (
         'IsGroup.pm'        => '$(INST_LIBDIR)/App/Ack/Filter/IsGroup.pm',
         'ExtensionGroup.pm' => '$(INST_LIBDIR)/App/Ack/Filter/ExtensionGroup.pm',
         'MatchGroup.pm'     => '$(INST_LIBDIR)/App/Ack/Filter/MatchGroup.pm',
+        'IsPath.pm'         => '$(INST_LIBDIR)/App/Ack/Filter/IsPath.pm',
+        'IsPathGroup.pm'    => '$(INST_LIBDIR)/App/Ack/Filter/IsPathGroup.pm',
     },
     EXE_FILES               => [ 'ack' ],
 
     PREREQ_PM => {
         'Carp'              => '1.04',
         'Cwd'               => '3.00',
+        'Errno'             => 0,
         'File::Basename'    => '1.00015',
-        'File::Glob'        => '1.00015',
-        'File::Next'        => '1.10',
+        'File::Next'        => '1.16',
         'File::Spec'        => '3.00',
         'File::Temp'        => '0.19', # For newdir()
-        'Getopt::Long'      => '2.35',
+        'Getopt::Long'      => '2.38',
         'Pod::Usage'        => '1.26',
         'Term::ANSIColor'   => '1.10',
         'Test::Harness'     => '2.50', # Something reasonably newish
@@ -64,11 +65,11 @@ if ( $ExtUtils::MakeMaker::VERSION =~ /^\d\.\d\d$/ and $ExtUtils::MakeMaker::VER
 if ( $ExtUtils::MakeMaker::VERSION ge '6.46' ) {
     $parms{META_MERGE} = {
         resources => {
-            homepage    => 'http://beyondgrep.com/',
-            bugtracker  => 'http://github.com/petdance/ack2',
+            homepage    => 'https://beyondgrep.com/',
+            bugtracker  => 'https://github.com/petdance/ack2',
             license     => 'http://www.perlfoundation.org/artistic_license_2_0',
             repository  => 'git://github.com/petdance/ack2.git',
-            MailingList => 'http://groups.google.com/group/ack-users',
+            MailingList => 'https://groups.google.com/group/ack-users',
         }
     };
 }
@@ -81,7 +82,7 @@ WriteMakefile( %parms );
 
 package MY;
 
-# supress EU::MM test rule
+# suppress EU::MM test rule
 sub MY::test {
     return '';
 }
@@ -91,9 +92,9 @@ sub MY::postamble {
 ACK    = ack
 ALL_PM = \
     Ack.pm \
-    Resource.pm Resources.pm Basic.pm \
+    Resource.pm Resources.pm \
     ConfigDefault.pm ConfigFinder.pm ConfigLoader.pm \
-    Filter.pm Extension.pm FirstLineMatch.pm Is.pm Match.pm Default.pm Inverse.pm Collection.pm IsGroup.pm ExtensionGroup.pm MatchGroup.pm
+    Filter.pm Extension.pm FirstLineMatch.pm Is.pm Match.pm Default.pm Inverse.pm Collection.pm IsGroup.pm ExtensionGroup.pm MatchGroup.pm IsPath.pm IsPathGroup.pm
 
 TEST_VERBOSE=0
 TEST_FILES=t/*.t t/lib/*.t

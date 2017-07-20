@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 32;
+use Test::More tests => 36;
 use File::Next (); # for reslash function
 
 use lib 't';
@@ -44,7 +44,7 @@ EOF
 
     my $regex = 'laugh';
     my @files = qw( t/text );
-    my @args = ( '-B2', $regex );
+    my @args = ( '--sort-files', '-B2', $regex );
 
     ack_lists_match( [ @args, @files ], \@expected, "Looking for $regex - before with line numbers" );
 }
@@ -81,6 +81,34 @@ EOF
     my @args = ( '-C', $regex );
 
     ack_lists_match( [ @args, @files ], \@expected, "Looking for $regex - context defaults to 2" );
+}
+
+# Try context 1.
+CONTEXT_ONE: {
+    my @expected = split( /\n/, <<"EOF" );
+It seems I had to fight my whole life through.
+Some gal would giggle and I'd turn red
+And some guy'd laugh and I'd bust his head,
+EOF
+
+    my $regex = 'giggle';
+    my @files = qw( t/text/boy-named-sue.txt );
+    my @args = ( '-C', 1, $regex );
+
+    ack_lists_match( [ @args, @files ], \@expected, "Looking for $regex - context=1" );
+}
+
+# --context=0 means no context.
+CONTEXT_ONE: {
+    my @expected = split( /\n/, <<"EOF" );
+Some gal would giggle and I'd turn red
+EOF
+
+    my $regex = 'giggle';
+    my @files = qw( t/text/boy-named-sue.txt );
+    my @args = ( '-C', 0, $regex );
+
+    ack_lists_match( [ @args, @files ], \@expected, "Looking for $regex - context=0" );
 }
 
 # -1 must not stop the ending context from displaying.
@@ -275,10 +303,10 @@ EOF
 # Grouping works with context and multiple files.
 # i.e. a separator line between different matches in the same file and no separator between files
 GROUPING_MULTIPLE_FILES: {
-    my @target_file = (
-        File::Next::reslash( 't/text/boy-named-sue.txt' ),
-        File::Next::reslash( 't/text/me-and-bobbie-mcgee.txt' ),
-        File::Next::reslash( 't/text/science-of-myth.txt' ),
+    my @target_file = map { File::Next::reslash($_) } qw(
+        t/text/boy-named-sue.txt
+        t/text/me-and-bobbie-mcgee.txt
+        t/text/science-of-myth.txt
     );
     my @expected = split( /\n/, <<"EOF" );
 $target_file[0]

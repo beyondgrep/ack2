@@ -5,19 +5,23 @@ use strict;
 
 =head1 NAME
 
-App::Ack - A container for functions for the ack program
+App::Ack
+
+=head1 DESCRIPTION
+
+A container for functions for the ack program.
 
 =head1 VERSION
 
-Version 2.14
+Version 2.19_01
 
 =cut
 
 our $VERSION;
 our $COPYRIGHT;
 BEGIN {
-    $VERSION = '2.14';
-    $COPYRIGHT = 'Copyright 2005-2014 Andy Lester.';
+    $VERSION = '2.19_01';
+    $COPYRIGHT = 'Copyright 2005-2017 Andy Lester.';
 }
 
 our $fh;
@@ -46,7 +50,7 @@ BEGIN {
     $output_to_pipe  = not -t *STDOUT;
     $is_filter_mode = -p STDIN;
 
-    $is_cygwin       = ($^O eq 'cygwin');
+    $is_cygwin       = ($^O eq 'cygwin' || $^O eq 'msys');
     $is_windows      = ($^O eq 'MSWin32');
     $dir_sep_chars   = $is_windows ? quotemeta( '\\/' ) : quotemeta( File::Spec->catfile( '', '' ) );
 }
@@ -111,19 +115,15 @@ sub filetypes_supported {
     return keys %mappings;
 }
 
-sub _get_thpppt {
+sub thpppt {
     my $y = q{_   /|,\\'!.x',=(www)=,   U   };
     $y =~ tr/,x!w/\nOo_/;
-    return $y;
-}
 
-sub _thpppt {
-    my $y = _get_thpppt();
     App::Ack::print( "$y ack $_[0]!\n" );
     exit 0;
 }
 
-sub _bar {
+sub ackbar {
     my $x;
     $x = <<'_BAR';
  6?!I'7!I"?%+!
@@ -166,10 +166,10 @@ sub _bar {
 77I!+!7!?!7!I"71+!7,
 _BAR
 
-    return App::Ack::__pic($x);
+    return _pic_decode($x);
 }
 
-sub _cathy {
+sub cathy {
     my $x = <<'CATHY';
  0+!--+!
  0|! "C!H!O!C!O!L!A!T!E!!! !|!
@@ -222,10 +222,10 @@ sub _cathy {
  0?!$! &N! )." .,! %."M! ":!M!.! 0
  0N!:! %?!O! #.! ..! &,! &.!D!,! "N!I! 0
 CATHY
-    return App::Ack::__pic($x);
+    return _pic_decode($x);
 }
 
-sub __pic {
+sub _pic_decode {
     my($compressed) = @_;
     $compressed =~ s/(.)(.)/$1x(ord($2)-32)/eg;
     App::Ack::print( $compressed );
@@ -381,7 +381,7 @@ Miscellaneous:
 
 Exit status is 0 if match, 1 if no match.
 
-ack's home page is at http://beyondgrep.com/
+ack's home page is at https://beyondgrep.com/
 
 The full ack manual is available by running "ack --man".
 
@@ -492,49 +492,9 @@ sub get_copyright {
 }
 
 
-# print*() subs added in order to make it easy for a third party
-# module (such as App::Wack) to redefine the display methods
-# and show the results in a different way.
 sub print                   { print {$fh} @_; return; }
-sub print_first_filename    { App::Ack::print( $_[0], "\n" ); return; }
 sub print_blank_line        { App::Ack::print( "\n" ); return; }
-sub print_separator         { App::Ack::print( "--\n" ); return; }
 sub print_filename          { App::Ack::print( $_[0], $_[1] ); return; }
-sub print_line_no           { App::Ack::print( $_[0], $_[1] ); return; }
-sub print_column_no         { App::Ack::print( $_[0], $_[1] ); return; }
-sub print_count {
-    my $filename = shift;
-    my $nmatches = shift;
-    my $ors = shift;
-    my $count = shift;
-    my $show_filename = shift;
-
-    if ($show_filename) {
-        App::Ack::print( $filename );
-        App::Ack::print( ':', $nmatches ) if $count;
-    }
-    else {
-        App::Ack::print( $nmatches ) if $count;
-    }
-    App::Ack::print( $ors );
-
-    return;
-}
-
-sub print_count0 {
-    my $filename = shift;
-    my $ors = shift;
-    my $show_filename = shift;
-
-    if ($show_filename) {
-        App::Ack::print( $filename, ':0', $ors );
-    }
-    else {
-        App::Ack::print( '0', $ors );
-    }
-
-    return;
-}
 
 sub set_up_pager {
     my $command = shift;
@@ -579,7 +539,7 @@ sub exit_from_ack {
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2005-2014 Andy Lester.
+Copyright 2005-2017 Andy Lester.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the Artistic License v2.0.

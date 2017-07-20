@@ -13,13 +13,11 @@ use Test::More;
 
 my @pms = glob( '*.pm' );
 
-@pms = grep { !/Debug.pm/ } @pms;
-
 plan tests => scalar @pms;
 
 for my $pm ( @pms ) {
     my $t = $pm;
-    $t =~ s/\.pm$/.t/;
+    $t =~ s/\.pm$/.t/ or die;
     ok( -r "t/lib/$t", "$pm has a corresponding $t" );
 }
 

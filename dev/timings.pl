@@ -15,6 +15,10 @@ use Time::HiRes qw(gettimeofday tv_interval);
 
 my $SOURCE_DIR = File::Spec->catdir($ENV{HOME}, 'parrot');
 
+unless ( -d $SOURCE_DIR ) {
+    die "Expecting to find parrot in $SOURCE_DIR - get it from github.com/parrot/parrot";
+}
+
 sub grab_versions {
     my @acks = @_;
 
@@ -102,7 +106,7 @@ sub time_ack {
             return if $has_error_lines;
         } else {
             close $read;
-            close STDOUT;
+            open STDOUT, '>', File::Spec->devnull;
             open STDERR, '>&', $write;
             exec @args;
             exit 255;
@@ -162,6 +166,24 @@ my @invocations = (
     [ 'foo', '-c', '--cc', $SOURCE_DIR ],   # where there are a lot of matches
     [ 'foo', '-c', '--rust', $SOURCE_DIR ], # where there are little/none
     [ 'foo', '-c', '--known', $SOURCE_DIR ],
+
+    # -A
+    [ 'foo', '-A10', $SOURCE_DIR ],
+    [ 'foo', '-A10', '--cc', $SOURCE_DIR ],   # where there are a lot of matches
+    [ 'foo', '-A10', '--rust', $SOURCE_DIR ], # where there are little/none
+    [ 'foo', '-A10', '--known', $SOURCE_DIR ],
+
+    # -B
+    [ 'foo', '-B10', $SOURCE_DIR ],
+    [ 'foo', '-B10', '--cc', $SOURCE_DIR ],   # where there are a lot of matches
+    [ 'foo', '-B10', '--rust', $SOURCE_DIR ], # where there are little/none
+    [ 'foo', '-B10', '--known', $SOURCE_DIR ],
+
+    # -C
+    [ 'foo', '-C10', $SOURCE_DIR ],
+    [ 'foo', '-C10', '--cc', $SOURCE_DIR ],   # where there are a lot of matches
+    [ 'foo', '-C10', '--rust', $SOURCE_DIR ], # where there are little/none
+    [ 'foo', '-C10', '--known', $SOURCE_DIR ],
 );
 
 my $perform_store;

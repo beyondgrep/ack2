@@ -6,6 +6,16 @@ use strict;
 use App::Ack ();
 
 
+=head1 NAME
+
+App::Ack::ConfigDefault
+
+=head1 DESCRIPTION
+
+A module that contains the default configuration for ack.
+
+=cut
+
 sub options {
     return split( /\n/, _options_block() );
 }
@@ -205,7 +215,7 @@ sub _options_block {
 
 # Clojure
 # http://clojure.org/
---type-add=clojure:ext:clj
+--type-add=clojure:ext:clj,cljs,edn,cljc
 
 # C
 # .xs are Perl C files
@@ -220,6 +230,9 @@ sub _options_block {
 
 # C++
 --type-add=cpp:ext:cpp,cc,cxx,m,hpp,hh,h,hxx
+
+# C++ header files
+--type-add=hpp:ext:hpp,hh,h,hxx
 
 # C#
 --type-add=csharp:ext:cs
@@ -260,12 +273,16 @@ sub _options_block {
 # http://groovy.codehaus.org/
 --type-add=groovy:ext:groovy,gtmpl,gpp,grunit,gradle
 
+# GSP
+# http://groovy.codehaus.org/GSP
+--type-add=gsp:ext:gsp
+
 # Haskell
 # http://www.haskell.org/
 --type-add=haskell:ext:hs,lhs
 
 # HTML
---type-add=html:ext:htm,html
+--type-add=html:ext:htm,html,xhtml
 
 # Jade
 # http://jade-lang.com/
@@ -280,7 +297,7 @@ sub _options_block {
 
 # JSP
 # http://www.oracle.com/technetwork/java/javaee/jsp/index.html
---type-add=jsp:ext:jsp,jspx,jhtm,jhtml
+--type-add=jsp:ext:jsp,jspx,jspf,jhtm,jhtml
 
 # JSON
 # http://www.json.org/
@@ -307,7 +324,7 @@ sub _options_block {
 
 # OCaml
 # http://caml.inria.fr/
---type-add=ocaml:ext:ml,mli
+--type-add=ocaml:ext:ml,mli,mll,mly
 
 # Matlab
 # http://en.wikipedia.org/wiki/MATLAB
@@ -381,6 +398,11 @@ sub _options_block {
 # http://learnboost.github.io/stylus/
 --type-add=stylus:ext:styl
 
+# Swift
+# https://developer.apple.com/swift/
+--type-add=swift:ext:swift
+--type-add=swift:firstlinematch:/^#!.*\bswift/
+
 # Tcl
 # http://www.tcl.tk/
 --type-add=tcl:ext:tcl,itcl,itk
@@ -409,7 +431,7 @@ sub _options_block {
 
 # XML
 # http://www.w3.org/TR/REC-xml/
---type-add=xml:ext:xml,dtd,xsl,xslt,ent
+--type-add=xml:ext:xml,dtd,xsd,xsl,xslt,ent,wsdl
 --type-add=xml:firstlinematch:/<[?]xml/
 
 # YAML

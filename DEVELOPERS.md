@@ -1,5 +1,8 @@
 # Ack Developer's Guide
 
+This is a guide intended to help new developers work on ack.  You may also want to read
+[CONTRIBUTING.md](https://github.com/petdance/ack2/blob/dev/CONTRIBUTING.md).
+
 ## Helper Scripts
 
 ### tack
@@ -62,13 +65,6 @@ Runs the test suite using the `ack-standalone` script.
 
 Can be used to run individual test files.  This relies on the module files being
 placed under `blib/lib`, so be sure to run `make` before running `prove`!
-
-### Getting debug output from a test
-
-ack's test suite captures standard output and standard error, so writing debug messages
-to standard error will show up in the captured output, and cause the test suite to fail.
-We have an `App::Ack::Debug` module for emitting test-safe debugging output, but it doesn't
-get placed under `blib` by default.
 
 ## Branching
 
@@ -136,30 +132,11 @@ TODO
 
 Our issues are hosted on GitHub.
 
+https://github.com/petdance/ack2/issues
+
 ### Tags
 
 TODO
-
-### Milestones
-
-#### 2.0x
-
-Issues with this milestone should be resolved on the `dev` branch.  These
-are usually bug fixes.
-
-#### 2.1
-
-XXX I want to not call this "2.1" because it conflates with "2.10"
-which is coming soon.  Let's give it some easy-to-type textual name,
-like "goober" or "lemon" or who knows what.
-
-Issues with this milestone should be resolved on the `2.1-work` branch.  These
-are usually new features.
-
-#### Indefinite future
-
-Issues with this milestone are either questionable features, or features that are too far
-out to schedule on another milestone.
 
 ## But I Can't Contribute to ack, because...
 
@@ -178,78 +155,6 @@ TODO Mention http://perl-begin.org/
 ### ...I don't know where to start.
 
 TODO
-
-## Source file overview
-
-### ack
-
-This is the main entry point for ack.  It contains a great deal of the code,
-as well as the POD documentation that is used to generate man pages.
-
-### Ack.pm
-
-This contains the App::Ack package, which stores more of the general "helper" code
-for ack.  Chances are that if you want to change something, it'll be in `Ack.pm`
-or `ack`.
-
-### Resource.pm
-
-An abstract superclass that represents a searchable "resource" (usually a file on a filesystem).
-
-### Resources.pm
-
-A factory object for creating a stream of `Resource` objects.
-
-### Filter.pm
-
-An abstract superclass that represents objects that can filter `Resource` objects.
-
-### Basic.pm
-
-Implements a basic (on-filesystem) `Resource` object.
-
-### ConfigDefault.pm
-
-A module that contains the default configuration for ack.
-
-### ConfigFinder.pm
-
-A module that contains the logic for locating the various configuration
-files.
-
-### ConfigLoader.pm
-
-A module that contains the logic for loading configuration files.
-
-### Debug.pm
-
-Contains a single routine for printing to the console while being run
-in the test suite.
-
-### Default.pm
-
-The class that implements the filter that ack uses by
-default if you don't specify any filters on the command line.
-
-### Extension.pm
-
-The class that implements filtering resources by file extension.
-
-### FirstLineMatch.pm
-
-The class that implements filtering resources by their first line.
-
-### Inverse.pm
-
-The class that inverts another filter.
-
-### Is.pm
-
-The class that implements filtering resources by their filename (exact match).
-
-### Match.pm
-
-The class that implements filtering resources by their filename (regular expression).
 
 ## How do I...?
 

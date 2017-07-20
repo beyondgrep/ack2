@@ -1,6 +1,13 @@
 package App::Ack::ConfigFinder;
 
-=head1 App::Ack::ConfigFinder
+=head1 NAME
+
+App::Ack::ConfigFinder
+
+=head1 DESCRIPTION
+
+A module that contains the logic for locating the various configuration
+files.
 
 =head1 LOCATING CONFIG FILES
 
@@ -117,8 +124,10 @@ sub find_config_files {
         push @config_files, map { +{ path => $_ } } _check_for_ackrc($ENV{'HOME'});
     }
 
-    # XXX This should go through some untainted cwd-fetching function, and not get untainted inline like this.
     my $cwd = Cwd::getcwd();
+    return () unless defined $cwd;
+
+    # XXX This should go through some untainted cwd-fetching function, and not get untainted brute-force like this.
     $cwd =~ /(.+)/;
     $cwd = $1;
     my @dirs = File::Spec->splitdir( $cwd );

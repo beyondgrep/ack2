@@ -28,6 +28,7 @@ erlang
 fortran
 go
 groovy
+gsp
 haskell
 hh
 html
@@ -57,6 +58,7 @@ scheme
 shell
 smalltalk
 sql
+swift
 tcl
 tex
 tt

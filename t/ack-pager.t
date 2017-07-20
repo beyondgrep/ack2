@@ -20,7 +20,7 @@ plan tests => 15;
 prep_environment();
 
 NO_PAGER: {
-    my @args = qw(--nocolor Sue t/text);
+    my @args = qw(--nocolor --sort-files Sue t/text);
 
     my @expected = split /\n/, <<'END_TEXT';
 t/text/boy-named-sue.txt
@@ -39,7 +39,7 @@ END_TEXT
 }
 
 PAGER: {
-    my @args = qw(--nocolor --pager=./test-pager Sue t/text);
+    my @args = qw(--nocolor --pager=./test-pager --sort-files Sue t/text);
 
     my @expected = split /\n/, <<'END_TEXT';
 t/text/boy-named-sue.txt
@@ -58,7 +58,7 @@ END_TEXT
 }
 
 PAGER_WITH_OPTS: {
-    my @args = ('--nocolor', '--pager=./test-pager --skip=2', 'Sue', 't/text');
+    my @args = ('--nocolor', '--pager=./test-pager --skip=2', '--sort-files', 'Sue', 't/text');
 
     my @expected = split /\n/, <<'END_TEXT';
 t/text/boy-named-sue.txt
@@ -73,7 +73,7 @@ END_TEXT
 }
 
 FORCE_NO_PAGER: {
-    my @args = ('--nocolor', '--pager=./test-pager --skip=2', '--nopager',
+    my @args = ('--nocolor', '--pager=./test-pager --skip=2', '--nopager', '--sort-files',
         'Sue', 't/text');
 
     my @expected = split /\n/, <<'END_TEXT';
@@ -96,7 +96,7 @@ PAGER_ENV: {
     local $ENV{'ACK_PAGER'} = './test-pager --skip=2';
     local $TODO             = q{Setting ACK_PAGER in tests won't work for the time being};
 
-    my @args = ('--nocolor', 'Sue', 't/text');
+    my @args = ('--nocolor', '--sort-files', 'Sue', 't/text');
 
     my @expected = split /\n/, <<'END_TEXT';
 t/text/boy-named-sue.txt
@@ -113,7 +113,7 @@ END_TEXT
 PAGER_ENV_OVERRIDE: {
     local $ENV{'ACK_PAGER'} = './test-pager --skip=2';
 
-    my @args = ('--nocolor', '--nopager', 'Sue', 't/text');
+    my @args = ('--nocolor', '--nopager', '--sort-files', 'Sue', 't/text');
 
     my @expected = split /\n/, <<'END_TEXT';
 t/text/boy-named-sue.txt
@@ -132,7 +132,7 @@ END_TEXT
 }
 
 PAGER_ACKRC: {
-    my @args = ('--nocolor', 'Sue', 't/text');
+    my @args = ('--nocolor', '--sort-files', 'Sue', 't/text');
 
     my $ackrc = <<'END_ACKRC';
 --pager=./test-pager --skip=2
@@ -153,7 +153,7 @@ END_TEXT
 }
 
 PAGER_ACKRC_OVERRIDE: {
-    my @args = ('--nocolor', '--nopager', 'Sue', 't/text');
+    my @args = ('--nocolor', '--nopager', '--sort-files', 'Sue', 't/text');
 
     my $ackrc = <<'END_ACKRC';
 --pager=./test-pager --skip=2
@@ -180,7 +180,7 @@ END_TEXT
 PAGER_NOENV: {
     local $ENV{'ACK_PAGER'} = './test-pager --skip=2';
 
-    my @args = ('--nocolor', '--noenv', 'Sue', 't/text');
+    my @args = ('--nocolor', '--noenv', '--sort-files', 'Sue', 't/text');
 
     my @expected = split /\n/, <<'END_TEXT';
 t/text/boy-named-sue.txt

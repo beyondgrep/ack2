@@ -14,6 +14,9 @@ prep_environment();
 my $freedom = File::Next::reslash( 't/text/freedom-of-choice.txt' );
 my $bobbie  = File::Next::reslash( 't/text/me-and-bobbie-mcgee.txt' );
 
+my @TEXT_FILES = sort map { untaint($_) } glob( 't/text/*.txt' );
+
+
 NO_GROUPING: {
     my @expected = split( /\n/, <<"EOF" );
 $freedom:2:Nobody ever said life was free
@@ -27,16 +30,12 @@ $bobbie:12:    Nothin' don't mean nothin' if it ain't free
 $bobbie:27:    Nothin' don't mean nothin' if it ain't free
 EOF
 
-    my @files = sort map {
-        untaint($_)
-    } glob( 't/text/*.txt' );
-
     my @cases = (
         [qw( --nogroup --nocolor free )],
         [qw( --nobreak --noheading --nocolor free )],
     );
     for my $args ( @cases ) {
-        my @results = run_ack( @{$args}, @files );
+        my @results = run_ack( @{$args}, @TEXT_FILES );
         lists_match( \@results, \@expected, 'No grouping' );
     }
 }
@@ -58,15 +57,12 @@ $bobbie
 27:    Nothin' don't mean nothin' if it ain't free
 EOF
 
-    my @files = sort map {
-        untaint($_)
-    } glob( 't/text/*.txt' );
     my @cases = (
         [qw( --group --nocolor free )],
         [qw( --heading --break --nocolor free )],
     );
     for my $args ( @cases ) {
-        my @results = run_ack( @{$args}, @files );
+        my @results = run_ack( @{$args}, @TEXT_FILES );
         lists_match( \@results, \@expected, 'Standard grouping' );
     }
 }
@@ -86,14 +82,11 @@ $bobbie
 27:    Nothin' don't mean nothin' if it ain't free
 EOF
 
-    my @files = sort map {
-        untaint($_)
-    } glob( 't/text/*.txt' );
     my @arg_sets = (
         [qw( --heading --nobreak --nocolor free )],
     );
     for my $set ( @arg_sets ) {
-        my @results = run_ack( @{$set}, @files );
+        my @results = run_ack( @{$set}, @TEXT_FILES );
         lists_match( \@results, \@expected, 'Standard grouping' );
     }
 }
@@ -112,15 +105,15 @@ $bobbie:12:    Nothin' don't mean nothin' if it ain't free
 $bobbie:27:    Nothin' don't mean nothin' if it ain't free
 EOF
 
-    my @files = sort map {
-        untaint($_)
-    }glob( 't/text/*.txt' );
-
     my @arg_sets = (
         [qw( --break --noheading --nocolor free )],
     );
     for my $set ( @arg_sets ) {
-        my @results = run_ack( @{$set}, @files );
+        my @results = run_ack( @{$set}, @TEXT_FILES );
         lists_match( \@results, \@expected, 'No grouping' );
     }
 }
+
+done_testing();
+
+exit 0;

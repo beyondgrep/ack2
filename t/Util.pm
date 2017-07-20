@@ -43,7 +43,7 @@ sub is_windows {
 }
 
 sub is_cygwin {
-    return $^O eq 'cygwin';
+    return ($^O eq 'cygwin' || $^O eq 'msys');
 }
 
 sub is_empty_array {
@@ -328,7 +328,7 @@ sub run_cmd {
 
     my ($sig,$core,$rc) = (($? & 127),  ($? & 128) , ($? >> 8));
     $ack_return_code = $rc;
-    ## XXX what do do with $core or $sig?
+    ## XXX what to do with $core or $sig?
 
     chomp @stdout;
     chomp @stderr;

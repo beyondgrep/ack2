@@ -1,5 +1,16 @@
 package App::Ack::Filter::ExtensionGroup;
 
+=head1 NAME
+
+App::Ack::Filter::ExtensionGroup
+
+=head1 DESCRIPTION
+
+The App::Ack::Filter::ExtensionGroup class optimizes multiple ::Extension
+calls into one container.  See App::Ack::Filter::IsGroup for details.
+
+=cut
+
 use strict;
 use warnings;
 use base 'App::Ack::Filter';

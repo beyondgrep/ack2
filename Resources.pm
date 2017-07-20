@@ -1,8 +1,20 @@
 package App::Ack::Resources;
 
-use App::Ack;
+=head1 NAME
 
-use File::Next 1.10;
+App::Ack::Resources
+
+=head1 SYNOPSIS
+
+A factory object for creating a stream of L<App::Ack::Resource> objects.
+
+=cut
+
+use App::Ack;
+use App::Ack::Resource;
+
+use File::Next 1.16;
+use Errno qw(EACCES);
 
 use warnings;
 use strict;
@@ -13,9 +25,7 @@ sub _generate_error_handler {
     if ( $opt->{dont_report_bad_filenames} ) {
         return sub {
             my $msg = shift;
-            # XXX restricting to specific error messages for now; I would
-            #     prefer a different way of doing this
-            if ( $msg =~ /Permission denied/ ) {
+            if ( $! == EACCES ) {
                 return;
             }
             App::Ack::warn( $msg );
@@ -28,11 +38,6 @@ sub _generate_error_handler {
         };
     }
 }
-
-=head1 SYNOPSIS
-
-This is the base class for App::Ack::Resources, an iterator factory
-for App::Ack::Resource objects.
 
 =head1 METHODS
 
@@ -120,7 +125,7 @@ sub next {
 
     my $file = $self->{iter}->() or return;
 
-    return App::Ack::Resource::Basic->new( $file );
+    return App::Ack::Resource->new( $file );
 }
 
 1;

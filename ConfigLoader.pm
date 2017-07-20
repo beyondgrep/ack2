@@ -7,10 +7,19 @@ use App::Ack ();
 use App::Ack::ConfigDefault ();
 use App::Ack::ConfigFinder ();
 use App::Ack::Filter;
+use App::Ack::Filter::Collection;
 use App::Ack::Filter::Default;
 use Carp 1.04 ();
-use Getopt::Long 2.35 ();
+use Getopt::Long 2.38 ();
 use Text::ParseWords 3.1 ();
+
+=head1 NAME
+
+App::Ack::ConfigLoader
+
+=head1 DESCRIPTION
+
+Logic for loading configuration files.
 
 =head1 FUNCTIONS
 
@@ -45,6 +54,57 @@ BEGIN {
     );
 }
 
+sub _generate_ignore_dir {
+    my ( $option_name, $opt ) = @_;
+
+    my $is_inverted = $option_name =~ /^--no/;
+
+    return sub {
+        my ( undef, $dir ) = @_;
+
+        $dir = App::Ack::remove_dir_sep( $dir );
+        if ( $dir !~ /:/ ) {
+            $dir = 'is:' . $dir;
+        }
+
+        my ( $filter_type, $args ) = split /:/, $dir, 2;
+
+        if ( $filter_type eq 'firstlinematch' ) {
+            Carp::croak( qq{Invalid filter specification "$filter_type" for option '$option_name'} );
+        }
+
+        my $filter = App::Ack::Filter->create_filter($filter_type, split(/,/, $args));
+        my $collection;
+
+        my $previous_inversion_matches = $opt->{idirs} && !($is_inverted xor $opt->{idirs}[-1]->is_inverted());
+
+        if ( $previous_inversion_matches ) {
+            $collection = $opt->{idirs}[-1];
+
+            if ( $is_inverted ) {
+                # XXX this relies on invert of an inverted filter
+                #     to return the original
+                $collection = $collection->invert()
+            }
+        }
+        else {
+            $collection = App::Ack::Filter::Collection->new();
+
+            if ( $is_inverted ) {
+                push @{ $opt->{idirs} }, $collection->invert();
+            }
+            else {
+                push @{ $opt->{idirs} }, $collection;
+            }
+        }
+
+        $collection->add($filter);
+
+        if ( $filter_type eq 'is' ) {
+            $collection->add(App::Ack::Filter::IsPath->new($args));
+        }
+    };
+}
 
 sub process_filter_spec {
     my ( $spec ) = @_;
@@ -88,6 +148,8 @@ sub uninvert_filter {
             $i--;
         }
     }
+
+    return;
 }
 
 
@@ -192,7 +254,7 @@ sub removed_option {
 
     $explanation ||= '';
     return sub {
-        warn "Option '$option' is not valid in ack 2\n$explanation";
+        warn "Option '$option' is not valid in ack 2.\n$explanation";
         exit 1;
     };
 }
@@ -202,13 +264,16 @@ sub get_arg_spec {
     my ( $opt, $extra_specs ) = @_;
 
     my $dash_a_explanation = <<'EOT';
-This is because we now have -k/--known-types which makes it only select files
-of known types, rather than any text file (which is the behavior of ack 1.x).
-You may have options in a .ackrc, or in the ACKRC_OPTIONS environment variable.
-Try using the --dump flag.
+You don't need -a, ack 1.x users.  This is because ack 2.x has
+-k/--known-types which makes it only select files of known types, rather
+than any text file (which is the behavior of ack 1.x).
+
+If you're surprised to see this message because you didn't put -a on the
+command line, you may have options in an .ackrc, or in the ACKRC_OPTIONS
+environment variable.  Try using the --dump flag to help find it.
 EOT
 
-=for Adding-Options
+=begin Adding-Options
 
     *** IF YOU ARE MODIFYING ACK PLEASE READ THIS ***
 
@@ -227,14 +292,22 @@ EOT
       whether your new option can be considered mutually exclusive
       with another option.
 
+=end Adding-Options
+
 =cut
+
+    sub _context_value {
+        my $val = shift;
+
+        # Contexts default to 2.
+        return (!defined($val) || ($val < 0)) ? 2 : $val;
+    }
 
     return {
         1                   => sub { $opt->{1} = $opt->{m} = 1 },
-        'A|after-context=i' => \$opt->{after_context},
-        'B|before-context=i'
-                            => \$opt->{before_context},
-        'C|context:i'       => sub { shift; my $val = shift; $opt->{before_context} = $opt->{after_context} = ($val || 2) },
+        'A|after-context:-1'  => sub { shift; $opt->{after_context}  = _context_value(shift) },
+        'B|before-context:-1' => sub { shift; $opt->{before_context} = _context_value(shift) },
+        'C|context:-1'        => sub { shift; $opt->{before_context} = $opt->{after_context} = _context_value(shift) },
         'a'                 => removed_option('-a', $dash_a_explanation),
         'all'               => removed_option('--all', $dash_a_explanation),
         'break!'            => \$opt->{break},
@@ -265,18 +338,18 @@ EOT
         'h|no-filename'     => \$opt->{h},
         'H|with-filename'   => \$opt->{H},
         'i|ignore-case'     => \$opt->{i},
-        'ignore-directory|ignore-dir=s' => sub {
-                                    my ( undef, $dir ) = @_;
-
-                                    $dir = App::Ack::remove_dir_sep( $dir );
-                                    if ( $dir !~ /^(?:is|match):/ ) {
-                                        $dir = 'is:' . $dir;
-                                    }
-                                    push @{ $opt->{idirs} }, $dir;
-        },
+        'ignore-directory|ignore-dir=s' => _generate_ignore_dir('--ignore-dir', $opt),
         'ignore-file=s'     => sub {
                                     my ( undef, $file ) = @_;
-                                    push @{ $opt->{ifiles} }, $file;
+
+                                    my ( $filter_type, $args ) = split /:/, $file, 2;
+
+                                    my $filter = App::Ack::Filter->create_filter($filter_type, split(/,/, $args));
+
+                                    if ( !$opt->{ifiles} ) {
+                                        $opt->{ifiles} = App::Ack::Filter::Collection->new();
+                                    }
+                                    $opt->{ifiles}->add($filter);
                                },
         'lines=s'           => sub { shift; my $val = shift; push @{$opt->{lines}}, $val },
         'l|files-with-matches'
@@ -293,25 +366,7 @@ EOT
 
             $opt->{pager} = $value || $ENV{PAGER};
         },
-        'noignore-directory|noignore-dir=s'
-                            => sub {
-                                my ( undef, $dir ) = @_;
-
-                                # XXX can you do --noignore-dir=match,...?
-                                $dir = App::Ack::remove_dir_sep( $dir );
-                                if ( $dir !~ /^(?:is|match):/ ) {
-                                    $dir = 'is:' . $dir;
-                                }
-                                if ( $dir !~ /^(?:is|match):/ ) {
-                                    Carp::croak("invalid noignore-directory argument: '$dir'");
-                                }
-
-                                @{ $opt->{idirs} } = grep {
-                                    $_ ne $dir
-                                } @{ $opt->{idirs} };
-
-                                push @{ $opt->{no_ignore_dirs} }, $dir;
-                            },
+        'noignore-directory|noignore-dir=s' => _generate_ignore_dir('--noignore-dir', $opt),
         'nopager'           => sub { $opt->{pager} = undef },
         'passthru'          => \$opt->{passthru},
         'print0'            => \$opt->{print0},
@@ -400,7 +455,8 @@ sub process_other {
                 die "Options --output, --pager and --match are forbidden in project .ackrc files.\n";
             };
 
-            $args_for_source = { %$args_for_source,
+            $args_for_source = {
+                %{$args_for_source},
                 'output=s' => $illegal,
                 'pager:s'  => $illegal,
                 'match=s'  => $illegal,
@@ -659,6 +715,8 @@ sub check_for_mutually_exclusive_options {
             }
         }
     }
+
+    return;
 }
 
 

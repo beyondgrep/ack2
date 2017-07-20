@@ -1,5 +1,15 @@
 package App::Ack::Filter::Is;
 
+=head1 NAME
+
+App::Ack::Filter::Is
+
+=head1 DESCRIPTION
+
+Filters based on exact filename match.
+
+=cut
+
 use strict;
 use warnings;
 use base 'App::Ack::Filter';
