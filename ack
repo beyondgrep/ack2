@@ -308,28 +308,33 @@ sub get_file_id {
 # Dies when the regex $str is undefined (i.e. not given on command line).
 
 sub build_regex {
-    my $str = shift;
+    my $pat = shift;
     my $opt = shift;
 
-    defined $str or App::Ack::die( 'No regular expression found.' );
+    defined $pat or App::Ack::die( 'No regular expression found.' );
+    my @pat = split /\n/, $pat;
 
-    $str = quotemeta( $str ) if $opt->{Q};
-    if ( $opt->{w} ) {
-        my $pristine_str = $str;
+    for my $str (@pat) {
+        $str = quotemeta( $str ) if $opt->{Q};
+        if ( $opt->{w} ) {
+            my $pristine_str = $str;
 
-        $str = "(?:$str)";
-        $str = "\\b$str" if $pristine_str =~ /^\w/;
-        $str = "$str\\b" if $pristine_str =~ /\w$/;
+            $str = "(?:$str)";
+            $str = "\\b$str" if $pristine_str =~ /^\w/;
+            $str = "$str\\b" if $pristine_str =~ /\w$/;
+        }
+
+        my $regex_is_lc = $str eq lc $str;
+        if ( $opt->{i} || ($opt->{smart_case} && $regex_is_lc) ) {
+            $str = "(?i)$str";
+        }
     }
 
-    my $regex_is_lc = $str eq lc $str;
-    if ( $opt->{i} || ($opt->{smart_case} && $regex_is_lc) ) {
-        $str = "(?i)$str";
-    }
+    $pat = join '|', @pat;
 
-    my $re = eval { qr/$str/m };
+    my $re = eval { qr/$pat/m };
     if ( !$re ) {
-        die "Invalid regex '$str':\n  $@";
+        die "Invalid regex '$pat':\n  $@";
     }
 
     return $re;
@@ -1068,9 +1073,9 @@ ack searches the named input FILEs or DIRECTORYs for lines containing a
 match to the given PATTERN.  By default, ack prints the matching lines.
 If no FILE or DIRECTORY is given, the current directory will be searched.
 
-PATTERN is a Perl regular expression.  Perl regular expressions
-are commonly found in other programming languages, but for the particulars
-of their behavior, please consult
+PATTERN is one or more newline-separated Perl regular expressions.  Perl
+regular expressions are commonly found in other programming languages, but
+for the particulars of their behavior, please consult
 L<http://perldoc.perl.org/perlreref.html|perlreref>.  If you don't know
 how to use regular expression but are interested in learning, you may
 consult L<http://perldoc.perl.org/perlretut.html|perlretut>.  If you do not
