@@ -1064,7 +1064,7 @@ ack - grep-like text finder
 
 ack is designed as an alternative to F<grep> for programmers.
 
-ack searches the named input FILEs or DIRECTORYs for lines containing a
+ack searches the named input files or directories for lines containing a
 match to the given PATTERN.  By default, ack prints the matching lines.
 If no FILE or DIRECTORY is given, the current directory will be searched.
 

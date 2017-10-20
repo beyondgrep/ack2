@@ -2,6 +2,9 @@ History file for ack.  https://beyondgrep.com/
 
 NEXT
 ====================================
+[FIXES]
+Changed a construction in the docs that Ubuntu flagged as a misspelling.
+
 
 2.18    Fri Mar 24 14:53:19 CDT 2017
 ====================================
