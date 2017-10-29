@@ -63,6 +63,8 @@ sub _options_block {
 # Git
 # http://git-scm.com/
 --ignore-directory=is:.git
+# When using submodules, .git is a file.
+--ignore-file=is:.git
 
 # Mercurial
 # http://mercurial.selenic.com/

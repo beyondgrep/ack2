@@ -6,6 +6,13 @@ NEXT
 Changed a construction in the docs that Ubuntu flagged as a misspelling.
 
 
+NEXT
+====================================
+[ENHANCEMENTS]
+When using submodules, the .git directory will be a file.  Make ack
+ignore this by default.  Thanks, Michele Campeotto. (GH#653)
+
+
 2.18    Fri Mar 24 14:53:19 CDT 2017
 ====================================
 ack 2.18 will probably be the final release in the ack 2.x series.
