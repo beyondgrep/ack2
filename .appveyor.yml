@@ -21,7 +21,7 @@ build_script:
 
   - perl Makefile.PL
 
-  - dmake test
+  - gmake test
 
     # Add an author test target too.
 
