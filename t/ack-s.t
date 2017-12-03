@@ -46,5 +46,6 @@ WITH_RESTRICTED_DIR: {
 
     is_empty_array( $stderr );
 
+    chmod 0755, 'foo', 'baz';
     chdir $wd;
 }
