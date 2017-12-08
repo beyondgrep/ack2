@@ -1,7 +1,7 @@
 # Ack Developer's Guide
 
 This is a guide intended to help new developers work on ack.  You may also want to read
-[CONTRIBUTING.md](https://github.com/petdance/ack2/blob/dev/CONTRIBUTING.md).
+[CONTRIBUTING.md](https://github.com/beyondgrep/ack2/blob/dev/CONTRIBUTING.md).
 
 ## Helper Scripts
 
@@ -114,7 +114,7 @@ Do all of the above for a development release, plus:
 
 * Put a version of standalone into the garage.
 * Update beyondgrep.com
-    * https://github.com/petdance/beyondgrep
+    * https://github.com/beyondgrep/website
     * Front page version number
     * man page archive
 * Announce it
@@ -132,7 +132,7 @@ TODO
 
 Our issues are hosted on GitHub.
 
-https://github.com/petdance/ack2/issues
+https://github.com/beyondgrep/ack2/issues
 
 ### Tags
 

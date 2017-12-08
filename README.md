@@ -1,7 +1,7 @@
 # Build status of dev branch
 
-* Linux [![Build Status](https://travis-ci.org/petdance/ack2.png?branch=dev)](https://travis-ci.org/petdance/ack2)
-* Windows [![Build Status](https://ci.appveyor.com/api/projects/status/github/petdance/ack2)](https://ci.appveyor.com/project/petdance/ack2)
+* Linux [![Build Status](https://travis-ci.org/beyondgrep/ack2.png?branch=dev)](https://travis-ci.org/beyondgrep/ack2)
+* Windows [![Build Status](https://ci.appveyor.com/api/projects/status/github/beyondgrep/ack2)](https://ci.appveyor.com/project/beyondgrep/ack2)
 * [CPAN Testers](http://cpantesters.org/distro/A/ack.html)
 
 # ack 2
@@ -13,8 +13,8 @@ Perl, is highly portable, and runs on any platform that runs Perl.
 ack is written and maintained by Andy Lester (andy@petdance.com).
 
 * Project home page: https://beyondgrep.com/
-* Code home page: https://github.com/petdance/ack2
-* Issue tracker: https://github.com/petdance/ack2/issues
+* Code home page: https://github.com/beyondgrep/ack2
+* Issue tracker: https://github.com/beyondgrep/ack2/issues
 * Mailing list for announcements: https://groups.google.com/d/forum/ack-announcements
 * Mailing list for users: https://groups.google.com/d/forum/ack-users
 * Mailing list for developers: https://groups.google.com/d/forum/ack-dev

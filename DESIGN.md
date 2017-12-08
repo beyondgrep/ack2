@@ -18,7 +18,7 @@ that have already been made, so that we don't keep rehashing them.
 ## Would ack be faster if we used the integer pragma?
 
 It seems not.  Brian M. Carlson investigated this and reported his
-findings here: https://github.com/petdance/ack2/issues/398
+findings here: https://github.com/beyondgrep/ack2/issues/398
 
 There seemed to be no effect.
 

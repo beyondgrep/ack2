@@ -629,7 +629,7 @@ BEGIN {
             Test::More::fail(<<'END_FAIL');
 Your system doesn't seem to have IO::Pty, and the developers
 forgot to check in this test file.  Please file a bug report
-at https://github.com/petdance/ack2/issues with the name of
+at https://github.com/beyondgrep/ack2/issues with the name of
 the file that generated this failure.
 END_FAIL
         };

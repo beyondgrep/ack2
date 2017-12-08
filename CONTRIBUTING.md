@@ -9,7 +9,7 @@ From the man page:
 > All enhancement requests MUST first be posted to the ack-users mailing list at <http://groups.google.com/group/ack-users>.  I will not consider a request without it first getting seen by other ack users.  This includes
 > requests for new filetypes.
 >
-> There is a list of enhancements I want to make to ack in the ack issues list at Github: <https://github.com/petdance/ack2/issues>
+> There is a list of enhancements I want to make to ack in the ack issues list at Github: <https://github.com/beyondgrep/ack2/issues>
 >
 > Patches are always welcome, but patches with tests get the most attention.
 
@@ -26,7 +26,7 @@ that probably means someone needs to make a release. =)
 
 Also appreciated with an issue are the following:
 
-  - Example invocations along with expected vs received output (see [#439](https://github.com/petdance/ack2/issues/439), great job!)
+  - Example invocations along with expected vs received output (see [#439](https://github.com/beyondgrep/ack2/issues/439), great job!)
   - A `.t` test file that tests and verifies the behavior you expect
   - A patch that fixes your issue
 

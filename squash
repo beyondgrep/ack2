@@ -23,7 +23,7 @@ my $NO_EDIT_COMMENT = <<'EOCOMMENT';
 # Please DO NOT EDIT or send patches for it.
 #
 # Please take a look at the source from
-# https://github.com/petdance/ack2
+# https://github.com/beyondgrep/ack2
 # and submit patches against the individual files
 # that build ack.
 #

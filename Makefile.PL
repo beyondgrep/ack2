@@ -66,9 +66,9 @@ if ( $ExtUtils::MakeMaker::VERSION ge '6.46' ) {
     $parms{META_MERGE} = {
         resources => {
             homepage    => 'https://beyondgrep.com/',
-            bugtracker  => 'https://github.com/petdance/ack2',
+            bugtracker  => 'https://github.com/beyondgrep/ack2',
             license     => 'http://www.perlfoundation.org/artistic_license_2_0',
-            repository  => 'git://github.com/petdance/ack2.git',
+            repository  => 'git://github.com/beyondgrep/ack2.git',
             MailingList => 'https://groups.google.com/group/ack-users',
         }
     };

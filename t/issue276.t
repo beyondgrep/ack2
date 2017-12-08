@@ -1,6 +1,6 @@
 #!perl -T
 
-# https://github.com/petdance/ack2/issues/276
+# https://github.com/beyondgrep/ack2/issues/276
 
 use strict;
 use warnings;
