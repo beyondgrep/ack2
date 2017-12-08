@@ -56,47 +56,31 @@ sub do_parent {
 
 prep_environment();
 
-my $freedom = File::Next::reslash( 't/text/freedom-of-choice.txt' );
-my $fourth  = File::Next::reslash( 't/text/4th-of-july.txt' );
-my $science = File::Next::reslash( 't/text/science-of-myth.txt' );
+my $ozy__ = File::Next::reslash( 't/text/ozymandias.txt' );
+my $raven = File::Next::reslash( 't/text/raven.txt' );
 
-my @expected = split /\n/, <<"EOF";
-$freedom:1:A victim of collision on the open sea
-$freedom:3:Sink, swim, go down with the ship
-$freedom:6:I'll say it again in the land of the free
-$freedom:15:He licked the other
-$freedom:24:Seems to be the rule of thumb
-$freedom:28:I'll say it again in the land of the free
-$freedom:41:He licked the other
-$fourth:1:Alone with the morning burning red
-$fourth:2:On the canvas in my head
-$fourth:6:Just the road and its majesty
-$fourth:8:With the world in the rear view
-$fourth:11:You were pretty as can be, sitting in the front seat
-$fourth:13:And you're happy to be with me on the 4th of July
-$fourth:14:We sang "Stranglehold" to the stereo
-$fourth:19:Get drawn into the sun
-$fourth:22:And there you were
-$fourth:25:Staking a claim on the world we found
-$fourth:28:You were out of the blue to a boy like me
-$fourth:33:In the silence that we shared
-$science:3:In the case of Christianity and Judaism there exists the belief
-$science:6:The Buddhists believe that the functional aspects override the myth
-$science:7:While other religions use the literal core to build foundations with
-$science:8:See, half the world sees the myth as fact, and it's seen as a lie by the other half
-$science:9:And the simple truth is that it's none of that 'cause
-$science:10:Somehow no matter what the world keeps turning
-$science:14:In fact, for better understanding we take the facts of science and apply them
-$science:15:And if both factors keep evolving then we continue getting information
-$science:16:But closing off the possibilities makes it hard to see the bigger picture
-$science:18:Consider the case of the woman whose faith helped her make it through
-$science:22:And if it works, then it gets the job done
-$science:23:Somehow no matter what the world keeps turning
+my @expected = split( /\n/, <<"EOF" );
+$ozy__:6:Tell that its sculptor well those passions read
+$ozy__:8:The hand that mocked them, and the heart that fed:
+$ozy__:13:Of that colossal wreck, boundless and bare
+$raven:17:So that now, to still the beating of my heart, I stood repeating
+$raven:26:That I scarce was sure I heard you" -- here I opened wide the door: --
+$raven:29:Deep into that darkness peering, long I stood there wondering, fearing,
+$raven:38:"Surely," said I, "surely that is something at my window lattice;
+$raven:59:For we cannot help agreeing that no living human being
+$raven:65:That one word, as if his soul in that one word he did outpour.
+$raven:75:Till the dirges of his Hope that melancholy burden bore
+$raven:88:On the cushion's velvet lining that the lamplight gloated o'er,
+$raven:107:By that Heaven that bends above us, by that God we both adore,
+$raven:113:"Be that word our sign of parting, bird or fiend!" I shrieked, upstarting:
+$raven:115:Leave no black plume as a token of that lie thy soul hath spoken!
+$raven:122:And his eyes have all the seeming of a demon's that is dreaming,
+$raven:124:And my soul from out that shadow that lies floating on the floor
 EOF
 
 my $perl = caret_X();
-my @lhs_args = ( $perl, '-Mblib', build_ack_invocation( '--sort-files', '-g', 'of', 't/text' ) );
-my @rhs_args = ( $perl, '-Mblib', build_ack_invocation( '-x', 'the' ) ); # for now
+my @lhs_args = ( $perl, '-Mblib', build_ack_invocation( '--sort-files', '-g', '[vz]', 't/text' ) );
+my @rhs_args = ( $perl, '-Mblib', build_ack_invocation( '-x', '-i', 'that' ) );
 
 if ( $ENV{'ACK_TEST_STANDALONE'} ) {
     @lhs_args = grep { $_ ne '-Mblib' } @lhs_args;

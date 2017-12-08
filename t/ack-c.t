@@ -12,24 +12,24 @@ prep_environment();
 
 DASH_L: {
     my @expected = qw(
-        t/text/science-of-myth.txt
+        t/text/amontillado.txt
+        t/text/gettysburg.txt
+        t/text/raven.txt
     );
 
-    my @args  = qw( religion -i -l --sort-files );
+    my @args  = qw( God -i -l --sort-files );
     my @files = qw( t/text );
 
-    ack_sets_match( [ @args, @files ], \@expected, 'Looking for religion with -l' );
+    ack_sets_match( [ @args, @files ], \@expected, 'Looking for God with -l' );
 }
 
 DASH_CAPITAL_L: {
     my @expected = qw(
-        t/text/4th-of-july.txt
-        t/text/boy-named-sue.txt
-        t/text/me-and-bobbie-mcgee.txt
+        t/text/bill-of-rights.txt
+        t/text/constitution.txt
         t/text/number.txt
         t/text/numbered-text.txt
-        t/text/freedom-of-choice.txt
-        t/text/shut-up-be-happy.txt
+        t/text/ozymandias.txt
     );
 
     my @switches = (
@@ -39,22 +39,22 @@ DASH_CAPITAL_L: {
 
     for my $switches ( @switches ) {
         my @files = qw( t/text );
-        my @args  = ( 'religion', @{$switches}, '--sort-files' );
+        my @args  = ( 'God', @{$switches}, '--sort-files' );
 
-        ack_sets_match( [ @args, @files ], \@expected, "Looking for religion with @{$switches}" );
+        ack_sets_match( [ @args, @files ], \@expected, "Looking for God with @{$switches}" );
     }
 }
 
 DASH_LV: {
     my @expected = qw(
-        t/text/4th-of-july.txt
-        t/text/boy-named-sue.txt
-        t/text/me-and-bobbie-mcgee.txt
+        t/text/amontillado.txt
+        t/text/bill-of-rights.txt
+        t/text/constitution.txt
+        t/text/gettysburg.txt
         t/text/number.txt
         t/text/numbered-text.txt
-        t/text/freedom-of-choice.txt
-        t/text/science-of-myth.txt
-        t/text/shut-up-be-happy.txt
+        t/text/ozymandias.txt
+        t/text/raven.txt
     );
     my @switches = (
         ['-l','-v'],
@@ -67,49 +67,50 @@ DASH_LV: {
         my @files = qw( t/text );
         my @args  = ( 'religion', @{$switches}, '--sort-files' );
 
-        ack_sets_match( [ @args, @files ], \@expected, '-l -v will mostly likely match all input files' );
+        ack_sets_match( [ @args, @files ], \@expected, '-l -v will match all input files because "religion" will not be on every line' );
     }
 }
 
 DASH_C: {
     my @expected = qw(
-        t/text/4th-of-july.txt:1
-        t/text/boy-named-sue.txt:2
-        t/text/freedom-of-choice.txt:0
-        t/text/me-and-bobbie-mcgee.txt:0
+        t/text/amontillado.txt:2
+        t/text/bill-of-rights.txt:0
+        t/text/constitution.txt:0
+        t/text/gettysburg.txt:1
         t/text/number.txt:0
         t/text/numbered-text.txt:0
-        t/text/science-of-myth.txt:0
-        t/text/shut-up-be-happy.txt:0
+        t/text/ozymandias.txt:0
+        t/text/raven.txt:2
     );
 
-    my @args  = qw( boy -i -c --sort-files );
+    my @args  = qw( God -c --sort-files );
     my @files = qw( t/text );
 
-    ack_sets_match( [ @args, @files ], \@expected, 'Boy counts' );
+    ack_sets_match( [ @args, @files ], \@expected, 'God counts' );
 }
 
 DASH_LC: {
     my @expected = qw(
-        t/text/science-of-myth.txt:2
+        t/text/bill-of-rights.txt:1
+        t/text/constitution.txt:29
     );
 
-    my @args  = qw( religion -i -l -c --sort-files );
+    my @args  = qw( congress -i -l -c --sort-files );
     my @files = qw( t/text );
 
-    ack_sets_match( [ @args, @files ], \@expected, 'Religion counts -l -c' );
+    ack_sets_match( [ @args, @files ], \@expected, 'congress counts with -l -c' );
 }
 
 PIPE_INTO_C: {
-    my $file = 't/text/science-of-myth.txt';
-    my @args = qw( religion -i -c );
+    my $file = 't/text/raven.txt';
+    my @args = qw( nevermore -i -c );
     my @results = pipe_into_ack( $file, @args );
 
-    is_deeply( \@results, [2], 'Piping into ack --count should return one line of results' );
+    is_deeply( \@results, [ 11 ], 'Piping into ack --count should return one line of results' );
 }
 
 DASH_HC: {
-    my @args     = qw( boy -i -c -h );
+    my @args     = qw( Montresor -c -h );
     my @files    = qw( t/text );
     my @expected = ( '3' );
 
@@ -117,9 +118,9 @@ DASH_HC: {
 }
 
 SINGLE_FILE_COUNT: {
-    my @args     = qw( boy -i -c -h );
-    my @files    = ( 't/text/boy-named-sue.txt' );
-    my @expected = ( '2' );
+    my @args     = qw( Montresor -c -h );
+    my @files    = ( 't/text/amontillado.txt' );
+    my @expected = ( '3' );
 
     ack_sets_match( [ @args, @files ], \@expected, 'ack -c -h should return one line of results' );
 }

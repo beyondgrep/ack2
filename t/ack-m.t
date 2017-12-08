@@ -11,29 +11,30 @@ use File::Next;
 
 prep_environment();
 
-my @text  = sort map {
-    untaint($_)
-} glob( 't/text/s*.txt' );
+LIMIT_MATCHES_RETURNED: {
+    my @text = sort map { untaint($_) } glob( 't/text/[bc]*.txt' );
 
-my $myth  = File::Next::reslash( 't/text/science-of-myth.txt' );
-my $happy = File::Next::reslash( 't/text/shut-up-be-happy.txt' );
+    my $bill_ = File::Next::reslash( 't/text/bill-of-rights.txt' );
+    my $const = File::Next::reslash( 't/text/constitution.txt' );
 
-my @expected = split( /\n/, <<"EOF" );
-$myth:3:In the case of Christianity and Judaism there exists the belief
-$myth:6:The Buddhists believe that the functional aspects override the myth
-$myth:7:While other religions use the literal core to build foundations with
-$happy:10:Anyone caught outside the gates of their subdivision sector after curfew will be shot.
-$happy:12:Your neighborhood watch officer will be by to collect urine samples in the morning.
-$happy:13:Anyone gaught intefering with the collection of urine samples will be shot.
+    my @expected = split( /\n/, <<"EOF" );
+$bill_:4:or prohibiting the free exercise thereof; or abridging the freedom of
+$bill_:5:speech, or of the press; or the right of the people peaceably to assemble,
+$bill_:6:and to petition the Government for a redress of grievances.
+$const:3:We the People of the United States, in Order to form a more perfect
+$const:4:Union, establish Justice, insure domestic Tranquility, provide for the
+$const:5:common defense, promote the general Welfare, and secure the Blessings
 EOF
 
-ack_lists_match( [ '-m', 3, '-w', 'the', @text ], \@expected, 'Should show only 3 lines per file' );
+    ack_lists_match( [ '-m', 3, '-w', 'the', @text ], \@expected, 'Should show only 3 lines per file' );
 
-@expected = split( /\n/, <<"EOF" );
-$myth:3:In the case of Christianity and Judaism there exists the belief
+    @expected = split( /\n/, <<"EOF" );
+$bill_:4:or prohibiting the free exercise thereof; or abridging the freedom of
 EOF
 
 ack_lists_match( [ '-1', '-w', 'the', @text ], \@expected, 'We should only get one line back for the entire run, not just per file.' );
+}
+
 
 DASH_L: {
     my $target   = 'the';
@@ -41,7 +42,7 @@ DASH_L: {
     my @args     = ( '-m', 3, '-l', '--sort-files', $target );
     my @results  = run_ack( @args, @files );
     my @expected = map { File::Next::reslash( "t/text/$_" ) } (
-        '4th-of-july.txt', 'boy-named-sue.txt', 'freedom-of-choice.txt'
+        'amontillado.txt', 'bill-of-rights.txt', 'constitution.txt'
     );
 
     is_deeply(\@results, \@expected);

@@ -26,7 +26,7 @@ test_match( @{$_} ) for @tests;
 run_ack( '--match', 'Sue' );
 
 # Not giving a regex when piping into ack should result in an error.
-my ($stdout, $stderr) = pipe_into_ack_with_stderr( 't/text/4th-of-july.txt', '--perl' );
+my ($stdout, $stderr) = pipe_into_ack_with_stderr( 't/text/amontillado.txt', '--perl' );
 isnt( get_rc(), 0, 'ack should return an error when piped into without a regex' );
 is_empty_array( $stdout, 'ack should return no STDOUT when piped into without a regex' );
 is( scalar @{$stderr}, 1, 'ack should return one line of error message when piped into without a regex' ) or diag(explain($stderr));

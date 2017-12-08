@@ -140,59 +140,33 @@ subtest 'File on command line is always searched, even with wrong filetype' => s
 };
 
 subtest '-Q works on -g' => sub {
-    my @expected = qw(
-    );
+    my @expected = ();
     my $regex = 'ack-g.t$';
 
     my @files = qw( t );
     my @args  = ( '-Q', '-g', $regex );
 
     ack_sets_match( [ @args, @files ], \@expected, "Looking for $regex with quotemeta." );
-
-    @expected = (
-        't/text/4th-of-july.txt',
-        't/text/freedom-of-choice.txt',
-        't/text/science-of-myth.txt',
-    );
-    $regex = 'of';
-
-    @files = qw( t/text );
-    @args  = ( '-Q', '-g', $regex, '--sort-files' );
-
-    ack_sets_match( [ @args, @files ], \@expected, "Looking for $regex with quotemeta." );
 };
 
 subtest '-w works on -g' => sub {
-    my @expected = qw();
-    my $regex = 'free';
-
-    my @args  = ( '-w', '-g', $regex, '--sort-files' ); # The -w means "free" won't match "freedom"
-    my @files = qw( t/text/ );
-
-    ack_sets_match( [ @args, @files ], \@expected, "Looking for $regex with '-w'." );
-
-    @expected = (
-        't/text/4th-of-july.txt',
-        't/text/freedom-of-choice.txt',
-        't/text/science-of-myth.txt',
+    my @expected = qw(
+        t/text/number.txt
     );
-    $regex = 'of';
+    my $regex = 'number';  # "number" shouldn't match "numbered"
 
-    @files = qw( t/text );
-    @args  = ( '-w', '-g', $regex, '--sort-files' );
+    my @files = qw( t/text );
+    my @args  = ( '-w', '-g', $regex, '--sort-files' );
 
     ack_sets_match( [ @args, @files ], \@expected, "Looking for $regex with '-w'." );
 };
 
 subtest '-v works on -g' => sub {
     my @expected = qw(
-        t/text/boy-named-sue.txt
-        t/text/me-and-bobbie-mcgee.txt
-        t/text/number.txt
-        t/text/numbered-text.txt
-        t/text/shut-up-be-happy.txt
+        t/text/bill-of-rights.txt
+        t/text/gettysburg.txt
     );
-    my $file_regex = 'of';
+    my $file_regex = 'n';
 
     my @args  = ( '-v', '-g', $file_regex, '--sort-files' );
     my @files = qw( t/text/ );
@@ -226,7 +200,7 @@ subtest 'test exit codes' => sub {
     run_ack( '-g', $file_regex, @files );
     is( get_rc(), 1, '-g with no matches must exit with 1' );
 
-    $file_regex = 'boy';
+    $file_regex = 'raven';
 
     run_ack( '-g', $file_regex, @files );
     is( get_rc(), 0, '-g with matches must exit with 0' );
@@ -234,16 +208,16 @@ subtest 'test exit codes' => sub {
 
 subtest 'test -g on a path' => sub {
     my $file_regex = 'text';
-    my @expected   = (
-        't/context.t',
-        't/text/4th-of-july.txt',
-        't/text/boy-named-sue.txt',
-        't/text/freedom-of-choice.txt',
-        't/text/me-and-bobbie-mcgee.txt',
-        't/text/number.txt',
-        't/text/numbered-text.txt',
-        't/text/science-of-myth.txt',
-        't/text/shut-up-be-happy.txt',
+    my @expected   = qw(
+        t/context.t
+        t/text/amontillado.txt
+        t/text/bill-of-rights.txt
+        t/text/constitution.txt
+        t/text/gettysburg.txt
+        t/text/number.txt
+        t/text/numbered-text.txt
+        t/text/ozymandias.txt
+        t/text/raven.txt
     );
     my @args = ( '--sort-files', '-g', $file_regex );
 
@@ -254,14 +228,14 @@ subtest 'test -g with --color' => sub {
     my $file_regex = 'text';
     my $expected_original = <<'END_COLOR';
 t/con(text).t
-t/(text)/4th-of-july.txt
-t/(text)/boy-named-sue.txt
-t/(text)/freedom-of-choice.txt
-t/(text)/me-and-bobbie-mcgee.txt
+t/(text)/amontillado.txt
+t/(text)/bill-of-rights.txt
+t/(text)/constitution.txt
+t/(text)/gettysburg.txt
 t/(text)/number.txt
 t/(text)/numbered-(text).txt
-t/(text)/science-of-myth.txt
-t/(text)/shut-up-be-happy.txt
+t/(text)/ozymandias.txt
+t/(text)/raven.txt
 END_COLOR
 
     $expected_original = windows_slashify( $expected_original ) if is_windows;
@@ -281,17 +255,19 @@ subtest q{test -g without --color; make sure colors don't show} => sub {
         return;
     }
 
+    plan tests => 1;
+
     my $file_regex = 'text';
     my $expected   = <<'END_OUTPUT';
 t/context.t
-t/text/4th-of-july.txt
-t/text/boy-named-sue.txt
-t/text/freedom-of-choice.txt
-t/text/me-and-bobbie-mcgee.txt
+t/text/amontillado.txt
+t/text/bill-of-rights.txt
+t/text/constitution.txt
+t/text/gettysburg.txt
 t/text/number.txt
 t/text/numbered-text.txt
-t/text/science-of-myth.txt
-t/text/shut-up-be-happy.txt
+t/text/ozymandias.txt
+t/text/raven.txt
 END_OUTPUT
 
     my @args = ( '--sort-files', '-g', $file_regex );

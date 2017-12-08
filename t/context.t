@@ -14,36 +14,33 @@ prep_environment();
 # Checks also beginning of file.
 BEFORE: {
     my @expected = split( /\n/, <<'EOF' );
-Well, my daddy left home when I was three
+I met a traveller from an antique land
 --
-But the meanest thing that he ever did
-Was before he left, he went and named me Sue.
+Stand in the desert... Near them, on the sand,
+Half sunk, a shattered visage lies, whose frown,
 EOF
 
-    my $regex = 'left';
-    my @files = qw( t/text/boy-named-sue.txt );
-    my @args = ( '-B1', $regex );
+    my $regex = 'a';
+    my @files = qw( t/text/ozymandias.txt );
+    my @args = ( '-w', '-B1', $regex );
 
     ack_lists_match( [ @args, @files ], \@expected, "Looking for $regex - before" );
 }
 
 BEFORE_WITH_LINE_NO: {
-    my $target_file = File::Next::reslash( 't/text/boy-named-sue.txt' );
+    my $target_file = File::Next::reslash( 't/text/ozymandias.txt' );
     my @expected = split( /\n/, <<"EOF" );
-$target_file-7-
-$target_file-8-Well, he must have thought that it was quite a joke
-$target_file:9:And it got a lot of laughs from a' lots of folks,
-$target_file-10-It seems I had to fight my whole life through.
-$target_file-11-Some gal would giggle and I'd turn red
-$target_file:12:And some guy'd laugh and I'd bust his head,
+$target_file-1-I met a traveller from an antique land
+$target_file-2-Who said: Two vast and trunkless legs of stone
+$target_file:3:Stand in the desert... Near them, on the sand,
 --
-$target_file-44-But I really can't remember when,
-$target_file-45-He kicked like a mule and he bit like a crocodile.
-$target_file:46:I heard him laugh and then I heard him cuss,
+$target_file-12-Nothing beside remains. Round the decay
+$target_file-13-Of that colossal wreck, boundless and bare
+$target_file:14:The lone and level sands stretch far away.
 EOF
 
-    my $regex = 'laugh';
-    my @files = qw( t/text );
+    my $regex = 'sand';
+    my @files = qw( t/text/ozymandias.txt t/text/bill-of-rights.txt );  # So we don't pick up constitution.txt
     my @args = ( '--sort-files', '-B2', $regex );
 
     ack_lists_match( [ @args, @files ], \@expected, "Looking for $regex - before with line numbers" );
@@ -51,16 +48,12 @@ EOF
 
 # Checks also end of file.
 AFTER: {
-    my @expected = split( /\n/, <<"EOF" );
-I tell ya, life ain't easy for a boy named Sue.
-
-Well, I grew up quick and I grew up mean,
---
-    -- "A Boy Named Sue", Johnny Cash
+    my @expected = split( /\n/, <<'EOF' );
+The lone and level sands stretch far away.
 EOF
 
-    my $regex = '[nN]amed Sue';
-    my @files = qw( t/text/boy-named-sue.txt );
+    my $regex = 'sands';
+    my @files = qw( t/text/ozymandias.txt );
     my @args = ( '-A2', $regex );
 
     ack_lists_match( [ @args, @files ], \@expected, "Looking for $regex - after" );
@@ -68,17 +61,17 @@ EOF
 
 # Context defaults to 2.
 CONTEXT_DEFAULT: {
-    my @expected = split( /\n/, <<"EOF" );
-And it got a lot of laughs from a' lots of folks,
-It seems I had to fight my whole life through.
-Some gal would giggle and I'd turn red
-And some guy'd laugh and I'd bust his head,
-I tell ya, life ain't easy for a boy named Sue.
+    my @expected = split( /\n/, <<'EOF' );
+"Yes,"I said, "let us be gone."
+
+"For the love of God, Montresor!"
+
+"Yes," I said, "for the love of God!"
 EOF
 
-    my $regex = 'giggle';
-    my @files = qw( t/text/boy-named-sue.txt );
-    my @args = ( '-C', $regex );
+    my $regex = 'Montresor';
+    my @files = qw( t/text/amontillado.txt );
+    my @args = ( '-w', '-C', $regex );
 
     ack_lists_match( [ @args, @files ], \@expected, "Looking for $regex - context defaults to 2" );
 }
@@ -86,27 +79,28 @@ EOF
 # Try context 1.
 CONTEXT_ONE: {
     my @expected = split( /\n/, <<"EOF" );
-It seems I had to fight my whole life through.
-Some gal would giggle and I'd turn red
-And some guy'd laugh and I'd bust his head,
+
+"For the love of God, Montresor!"
 EOF
 
-    my $regex = 'giggle';
-    my @files = qw( t/text/boy-named-sue.txt );
-    my @args = ( '-C', 1, $regex );
+    push( @expected, '' );  # Since split eats the last line.
+
+    my $regex = 'Montresor';
+    my @files = qw( t/text/amontillado.txt );
+    my @args = ( '-w', '-C', 1, $regex );
 
     ack_lists_match( [ @args, @files ], \@expected, "Looking for $regex - context=1" );
 }
 
 # --context=0 means no context.
 CONTEXT_ONE: {
-    my @expected = split( /\n/, <<"EOF" );
-Some gal would giggle and I'd turn red
+    my @expected = split( /\n/, <<'EOF' );
+"For the love of God, Montresor!"
 EOF
 
-    my $regex = 'giggle';
-    my @files = qw( t/text/boy-named-sue.txt );
-    my @args = ( '-C', 0, $regex );
+    my $regex = 'Montresor';
+    my @files = qw( t/text/amontillado.txt );
+    my @args = ( '-w', '-C', 0, $regex );
 
     ack_lists_match( [ @args, @files ], \@expected, "Looking for $regex - context=0" );
 }
@@ -114,16 +108,14 @@ EOF
 # -1 must not stop the ending context from displaying.
 CONTEXT_DEFAULT: {
     my @expected = split( /\n/, <<"EOF" );
-And it got a lot of laughs from a' lots of folks,
-It seems I had to fight my whole life through.
-Some gal would giggle and I'd turn red
-And some guy'd laugh and I'd bust his head,
-I tell ya, life ain't easy for a boy named Sue.
+or prohibiting the free exercise thereof; or abridging the freedom of
+speech, or of the press; or the right of the people peaceably to assemble,
+and to petition the Government for a redress of grievances.
 EOF
 
-    my $regex = 'giggle';
-    my @files = qw( t/text/boy-named-sue.txt );
-    my @args = ( '-1', '-C', $regex );
+    my $regex = 'right';
+    my @files = qw( t/text/bill-of-rights.txt );
+    my @args = ( '-1', '-C1', $regex );
 
     ack_lists_match( [ @args, @files ], \@expected, "Looking for $regex with -1" );
 }
@@ -252,37 +244,33 @@ EOF
 
 # -m3 should work properly and show only 3 matches with correct context
 #    even though there is a 4th match in the after context of the third match
-#    ("give _ya_ that name" in the last line)
+#    ("ratifying" in the last line)
 CONTEXT_MAX_COUNT: {
     my @expected = split( /\n/, <<"EOF" );
-And some guy'd laugh and I'd bust his head,
-I tell ya, life ain't easy for a boy named Sue.
-
+ratified by the Legislatures of three fourths of the several States, or
+by Conventions in three fourths thereof, as the one or the other Mode of
+Ratification may be proposed by the Congress; Provided that no Amendment
+which may be made prior to the Year One thousand eight hundred and eight
 --
-
-I tell ya, I've fought tougher men
-But I really can't remember when,
---
-And if a man's gonna make it, he's gotta be tough
-And I knew I wouldn't be there to help ya along.
-So I give ya that name and I said goodbye
+The Ratification of the Conventions of nine States, shall be sufficient
+for the Establishment of this Constitution between the States so ratifying
 EOF
 
-    my $regex = 'ya';
+    my $regex = 'ratif';
 
-    my @files = qw( t/text/boy-named-sue.txt );
-    my @args = ( '-m3', '-C1', $regex );
+    my @files = qw( t/text/constitution.txt );
+    my @args = ( '-i', '-m3', '-A1', $regex );
 
     ack_lists_match( [ @args, @files ], \@expected, "Looking for $regex with -m3" );
 }
 
 # Highlighting works with context.
 HIGHLIGHTING: {
-    my @ack_args = qw( July -C5 --color );
-    my @results = pipe_into_ack( 't/text/4th-of-july.txt', @ack_args );
+    my @ack_args = qw( wretch -i -C5 --color );
+    my @results = pipe_into_ack( 't/text/raven.txt', @ack_args );
     my @escaped_lines = grep { /\e/ } @results;
-    is( scalar @escaped_lines, 2, 'Only two lines are highlighted' );
-    is( scalar @results, 18, 'Expecting altogether 18 lines back' );
+    is( scalar @escaped_lines, 1, 'Only one line highlighted' );
+    is( scalar @results, 11, 'Expecting altogether 11 lines back' );
 }
 
 # Grouping works with context (single file).
@@ -303,33 +291,23 @@ EOF
 # Grouping works with context and multiple files.
 # i.e. a separator line between different matches in the same file and no separator between files
 GROUPING_MULTIPLE_FILES: {
-    my @target_file = map { File::Next::reslash($_) } qw(
-        t/text/boy-named-sue.txt
-        t/text/me-and-bobbie-mcgee.txt
-        t/text/science-of-myth.txt
-    );
-    my @expected = split( /\n/, <<"EOF" );
-$target_file[0]
-1:Well, my daddy left home when I was three
---
-5-But the meanest thing that he ever did
-6:Was before he left, he went and named me Sue.
+    my @expected = split( /\n/, <<'EOF' );
+t/text/amontillado.txt
+258-As I said these words I busied myself among the pile of bones of
+259:which I have before spoken. Throwing them aside, I soon uncovered
 
-$target_file[1]
-10-
-11:    Freedom's just another word for nothing left to lose
+t/text/raven.txt
+31-But the silence was unbroken, and the stillness gave no token,
+32:And the only word there spoken was the whispered word, "Lenore?"
 --
-25-
-26:    Freedom's just another word for nothing left to lose
-
-$target_file[2]
-18-Consider the case of the woman whose faith helped her make it through
-19:When she was raped and cut up, left for dead in her trunk, her beliefs held true
-20-It doesn't matter if it's real or not
-21:'cause some things are better left without a doubt
+70-
+71:Startled at the stillness broken by reply so aptly spoken,
+--
+114-"Get thee back into the tempest and the Night's Plutonian shore!
+115:Leave no black plume as a token of that lie thy soul hath spoken!
 EOF
 
-    my $regex = 'left';
+    my $regex = 'spoken';
     my @files = qw( t/text/ );
     my @args = ( '--group', '-B1', '--sort-files', $regex );
 
@@ -338,49 +316,29 @@ EOF
 
 # See https://github.com/petdance/ack2/issues/326 and links there for details.
 WITH_COLUMNS_AND_CONTEXT: {
-    my @files = qw( t/text/freedom-of-choice.txt );
-    my @expected = split( /\n/, <<"EOF" );
-$files[0]-2-Nobody ever said life was free
-$files[0]-3-Sink, swim, go down with the ship
-$files[0]:4:15:But use your freedom of choice
-$files[0]-5-
-$files[0]-6-I'll say it again in the land of the free
-$files[0]:7:11:Use your freedom of choice
-$files[0]:8:7:Your freedom of choice
-$files[0]-9-
-$files[0]-10-In ancient Rome
+    my @files = qw( t/text/ );
+    my @expected = split( /\n/, <<'EOF' );
+t/text/bill-of-rights.txt-1-# Amendment I
+t/text/bill-of-rights.txt-2-
+t/text/bill-of-rights.txt-3-Congress shall make no law respecting an establishment of religion,
+t/text/bill-of-rights.txt:4:60:or prohibiting the free exercise thereof; or abridging the freedom of
+t/text/bill-of-rights.txt-5-speech, or of the press; or the right of the people peaceably to assemble,
+t/text/bill-of-rights.txt-6-and to petition the Government for a redress of grievances.
+t/text/bill-of-rights.txt-7-
+t/text/bill-of-rights.txt-8-# Amendment II
+t/text/bill-of-rights.txt-9-
 --
-$files[0]-17-He dropped dead
-$files[0]-18-
-$files[0]:19:2:Freedom of choice
-$files[0]-20-Is what you got
-$files[0]:21:2:Freedom of choice!
-$files[0]-22-
-$files[0]-23-Then if you've got it, you don't want it
---
-$files[0]-27-
-$files[0]-28-I'll say it again in the land of the free
-$files[0]:29:11:Use your freedom of choice
-$files[0]:30:2:Freedom of choice
-$files[0]-31-
-$files[0]:32:2:Freedom of choice
-$files[0]-33-Is what you got
-$files[0]:34:2:Freedom of choice!
-$files[0]-35-
-$files[0]-36-In ancient Rome
---
-$files[0]-43-He dropped dead
-$files[0]-44-
-$files[0]:45:2:Freedom of choice
-$files[0]-46-Is what you got
-$files[0]:47:2:Freedom from choice
-$files[0]-48-Is what you want
-$files[0]-49-
-$files[0]:50:10:    -- "Freedom Of Choice", Devo
+t/text/gettysburg.txt-18-fought here have thus far so nobly advanced. It is rather for us to be
+t/text/gettysburg.txt-19-here dedicated to the great task remaining before us -- that from these
+t/text/gettysburg.txt-20-honored dead we take increased devotion to that cause for which they gave
+t/text/gettysburg.txt-21-the last full measure of devotion -- that we here highly resolve that
+t/text/gettysburg.txt-22-these dead shall not have died in vain -- that this nation, under God,
+t/text/gettysburg.txt:23:27:shall have a new birth of freedom -- and that government of the people,
+t/text/gettysburg.txt-24-by the people, for the people, shall not perish from the earth.
 EOF
 
-    my $regex = 'reedom';
-    my @args = ( '--column', '-C2', '-H', $regex );
+    my $regex = 'freedom';
+    my @args = ( '--column', '-C5', '-H', '--sort-files', $regex );
 
-    ack_lists_match( [ @args, @files ], \@expected, "Looking for $regex in file $files[0] with columns and context" );
+    ack_lists_match( [ @args, @files ], \@expected, "Looking for $regex" );
 }

@@ -15,12 +15,13 @@ prep_environment();
 my @HIGHLIGHT = qw( --color --group --sort-files );
 
 BASIC: {
-    my @args  = qw( --sort-files beliefs t/text/ );
+    my @args  = qw( --sort-files Montresor t/text/ );
 
     my $expected_original = <<'END';
-<t/text/science-of-myth.txt>
-{1}:If you've ever questioned (beliefs) that you've hold, you're not alone
-{19}:When she was raped and cut up, left for dead in her trunk, her (beliefs) held true
+<t/text/amontillado.txt>
+{99}:the catacombs of the (Montresor)s.
+{152}:"The (Montresor)s," I replied, "were a great and numerous family."
+{309}:"For the love of God, (Montresor)!"
 END
 
     $expected_original = windows_slashify( $expected_original ) if is_windows;
@@ -34,17 +35,17 @@ END
 
 
 METACHARACTERS: {
-    my @args  = qw( --sort-files \w*din\w* t/text/ );
+    my @args  = qw( --sort-files \w*rave\w* t/text/ );
     my $expected_original = <<'END';
-<t/text/4th-of-july.txt>
-{24}:(Riding) shotgun from town to town
+<t/text/gettysburg.txt>
+{13}:we can not hallow -- this ground. The (brave) men, living and dead, who
 
-<t/text/me-and-bobbie-mcgee.txt>
-{8}:(Holdin)' Bobbie's hand in mine
-{24}:To be (holding) Bobbie's body next to mine
+<t/text/ozymandias.txt>
+{1}:I met a (traveller) from an antique land
 
-<t/text/science-of-myth.txt>
-{14}:In fact, for better (understanding) we take the facts of science and apply them
+<t/text/raven.txt>
+{51}:By the (grave) and stern decorum of the countenance it wore,
+{52}:"Though thy crest be shorn and shaven, thou," I said, "art sure no (craven),
 END
 
     $expected_original = windows_slashify( $expected_original ) if is_windows;
@@ -58,18 +59,27 @@ END
 
 
 CONTEXT: {
-    my @args  = qw( --sort-files love -C1 t/text/ );
+    my @args  = qw( --sort-files free -C1 t/text/ );
 
     my $expected_original = <<'END';
-<t/text/4th-of-july.txt>
-{11}-You were pretty as can be, sitting in the front seat
-{12}:Looking at me, telling me you (love) me,
-{13}-And you're happy to be with me on the 4th of July
+<t/text/bill-of-rights.txt>
+{3}-Congress shall make no law respecting an establishment of religion,
+{4}:or prohibiting the (free) exercise thereof; or abridging the (free)dom of
+{5}-speech, or of the press; or the right of the people peaceably to assemble,
+--
+{9}-
+{10}:A well regulated Militia, being necessary to the security of a (free) State,
+{11}-the right of the people to keep and bear Arms, shall not be infringed.
 
-<t/text/shut-up-be-happy.txt>
-{4}-Stay in your homes.
-{5}:Do not attempt to contact (love)d ones, insurance agents or attorneys.
-{6}-Shut up.
+<t/text/constitution.txt>
+{31}-respective Numbers, which shall be determined by adding to the whole
+{32}:Number of (free) Persons, including those bound to Service for a Term
+{33}-of Years, and excluding Indians not taxed, three fifths of all other
+
+<t/text/gettysburg.txt>
+{22}-these dead shall not have died in vain -- that this nation, under God,
+{23}:shall have a new birth of (free)dom -- and that government of the people,
+{24}-by the people, for the people, shall not perish from the earth.
 END
 
     $expected_original = windows_slashify( $expected_original ) if is_windows;

@@ -17,16 +17,16 @@ my $match_end   = "\e[0m";
 my $line_end    = "\e[0m\e[K";
 
 NORMAL_COLOR: {
-    my @files = qw( t/text/boy-named-sue.txt );
-    my @args = qw( called --color );
+    my @files = qw( t/text/bill-of-rights.txt );
+    my @args = qw( free --color );
     my @results = run_ack( @args, @files );
 
     ok( grep { /\e/ } @results, 'normal match highlighted' ) or diag(explain(\@results));
 }
 
 MATCH_WITH_BACKREF: {
-    my @files = qw( t/text/boy-named-sue.txt );
-    my @args = qw( (called).*\1 --color );
+    my @files = qw( t/text/bill-of-rights.txt );
+    my @args = qw( (free).*\1 --color );
     my @results = run_ack( @args, @files );
 
     is( @results, 1, 'backref pattern matches once' );
@@ -35,29 +35,29 @@ MATCH_WITH_BACKREF: {
 }
 
 BRITISH_COLOR: {
-    my @files = qw( t/text/boy-named-sue.txt );
-    my @args = qw( called --colour );
+    my @files = qw( t/text/bill-of-rights.txt );
+    my @args = qw( free --colour );
     my @results = run_ack( @args, @files );
 
     ok( grep { /\e/ } @results, 'normal match highlighted' );
 }
 
 MULTIPLE_MATCHES: {
-    my @files = qw( t/text/freedom-of-choice.txt );
-    my @args = qw( v.+?m|c.+?n -w --color );
+    my @files = qw( t/text/amontillado.txt );
+    my @args = qw( az.+?e|ser.+?nt -w --color );
     my @results = run_ack( @args, @files );
 
     is( @results, 1, 'multiple matches on 1 line' );
-    is( $results[0], "A ${match_start}victim${match_end} of ${match_start}collision${match_end} on the open sea$line_end",
+    is( $results[0], "\"A huge human foot d'or, in a field ${match_start}azure${match_end}; the foot crushes a ${match_start}serpent${match_end}$line_end",
         'multiple matches highlighted' );
 }
 
 ADJACENT_CAPTURE_COLORING: {
-    my @files = qw( t/text/boy-named-sue.txt );
-    my @args = qw( (cal)(led) --color );
+    my @files = qw( t/text/raven.txt );
+    my @args = qw( (Temp)(ter) --color );
     my @results = run_ack( @args, @files );
 
     is( @results, 1, 'backref pattern matches once' );
     # The double end + start is kinda weird; this test could probably be more robust.
-    is( $results[0], "I ${match_start}cal${match_end}${match_start}led${match_end} him my pa, and he ${match_start}cal${match_end}${match_start}led${match_end} me his son,", 'adjacent capture groups should highlight correctly');
+    is( $results[0], "Whether ${match_start}Temp${match_end}${match_start}ter${match_end} sent, or whether tempest tossed thee here ashore,", 'adjacent capture groups should highlight correctly');
 }

@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 12;
+use Test::More tests => 11;
 use File::Next ();
 use File::Spec ();
 use File::Temp ();
@@ -14,20 +14,15 @@ use Util;
 prep_environment();
 
 NO_O: {
-    my @files = qw( t/text/boy-named-sue.txt );
+    my @files = qw( t/text/gettysburg.txt );
     my @args = qw( the\\s+\\S+ );
     my @expected = split( /\n/, <<'EOF' );
-        But the meanest thing that he ever did
-        But I made me a vow to the moon and stars
-        That I'd search the honky-tonks and bars
-        Sat the dirty, mangy dog that named me Sue.
-        Well, I hit him hard right between the eyes
-        And we crashed through the wall and into the street
-        Kicking and a-gouging in the mud and the blood and the beer.
-        And it's the name that helped to make you strong."
-        And I know you hate me, and you got the right
-        For the gravel in ya gut and the spit in ya eye
-        Cause I'm the son-of-a-bitch that named you Sue."
+        but it can never forget what they did here. It is for us the living,
+        rather, to be dedicated here to the unfinished work which they who
+        here dedicated to the great task remaining before us -- that from these
+        the last full measure of devotion -- that we here highly resolve that
+        shall have a new birth of freedom -- and that government of the people,
+        by the people, for the people, shall not perish from the earth.
 EOF
     s/^\s+// for @expected;
 
@@ -36,24 +31,17 @@ EOF
 
 
 WITH_O: {
-    my @files = qw( t/text/boy-named-sue.txt );
+    my @files = qw( t/text/gettysburg.txt );
     my @args = qw( the\\s+\\S+ -o );
     my @expected = split( /\n/, <<'EOF' );
-        the meanest
-        the moon
-        the honky-tonks
-        the dirty,
-        the eyes
-        the wall
-        the street
-        the mud
-        the blood
-        the beer.
-        the name
-        the right
-        the gravel
-        the spit
-        the son-of-a-bitch
+        the living,
+        the unfinished
+        the great
+        the last
+        the people,
+        the people,
+        the people,
+        the earth.
 EOF
     s/^\s+// for @expected;
 
@@ -61,36 +49,22 @@ EOF
 }
 
 
-# Give an output function and find match in multiple files (so print filenames, just like grep -o).
-WITH_OUTPUT: {
-    my @files = qw( t/text/ );
-    my @args = qw/ --output=x$1x question(\\S+) --sort-files /;
-
-    my @target_file = map { File::Next::reslash($_) } qw(
-        t/text/science-of-myth.txt
-        t/text/shut-up-be-happy.txt
-    );
-    my @expected = (
-        "$target_file[0]:1:xedx",
-        "$target_file[1]:15:xs.x",
-        "$target_file[1]:21:x.x",
-    );
-
-    ack_sets_match( [ @args, @files ], \@expected, 'Find all the things with --output function' );
-}
-
+# Find a match in multiple files, and output it in double quotes.
 OUTPUT_DOUBLE_QUOTES: {
     my @files = qw( t/text/ );
-    my @args  = ( '--output="$1"', 'question(\\S+)', '--sort-files' );
+    my @args  = ( '--output="$1"', '(free\\w*)', '--sort-files' );
 
     my @target_file = map { File::Next::reslash($_) } qw(
-        t/text/science-of-myth.txt
-        t/text/shut-up-be-happy.txt
+        t/text/bill-of-rights.txt
+        t/text/constitution.txt
+        t/text/gettysburg.txt
     );
     my @expected = (
-        qq{$target_file[0]:1:"ed"},
-        qq{$target_file[1]:15:"s."},
-        qq{$target_file[1]:21:"."},
+        qq{$target_file[0]:4:"free"},
+        qq{$target_file[0]:4:"freedom"},
+        qq{$target_file[0]:10:"free"},
+        qq{$target_file[1]:32:"free"},
+        qq{$target_file[2]:23:"freedom"},
     );
 
     ack_sets_match( [ @args, @files ], \@expected, 'Find all the things with --output function' );

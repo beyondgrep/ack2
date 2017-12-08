@@ -227,14 +227,14 @@ t/swamp/service.svc
 t/swamp/solution8.tar
 t/swamp/stuff.cmake
 t/swamp/swamp/ignoreme.txt
-t/text/4th-of-july.txt
-t/text/boy-named-sue.txt
-t/text/freedom-of-choice.txt
-t/text/me-and-bobbie-mcgee.txt
+t/text/amontillado.txt
+t/text/bill-of-rights.txt
+t/text/constitution.txt
+t/text/gettysburg.txt
 t/text/number.txt
 t/text/numbered-text.txt
-t/text/science-of-myth.txt
-t/text/shut-up-be-happy.txt
+t/text/ozymandias.txt
+t/text/raven.txt
 
 xt/man.t
 xt/pod.t
