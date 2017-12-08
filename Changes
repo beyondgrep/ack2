@@ -1,16 +1,16 @@
 History file for ack.  https://beyondgrep.com/
 
-NEXT
+2.19_01
 ====================================
 [FIXES]
 Changed a construction in the docs that Ubuntu flagged as a misspelling.
 
-
-NEXT
-====================================
 [ENHANCEMENTS]
 When using submodules, the .git directory will be a file.  Make ack
 ignore this by default.  Thanks, Michele Campeotto. (GH#653)
+
+[INTERNALS]
+Replaced all the test data for the test suite with public domain documents.
 
 
 2.18    Fri Mar 24 14:53:19 CDT 2017
