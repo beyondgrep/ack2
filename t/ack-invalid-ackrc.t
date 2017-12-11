@@ -25,7 +25,7 @@ my $wd = getcwd_clean();
 
 my $tempdir = File::Temp->newdir;
 
-chdir $tempdir->dirname;
+safe_chdir( $tempdir->dirname );
 write_file '.ackrc', "--frobnicate\n";
 
 my $output;
@@ -87,4 +87,4 @@ like $output, qr/CHOCOLATE/;
 $output = run_ack( '--env', '--version' );
 like $output, qr/ack 2[.]\d+/;
 
-chdir $wd;
+safe_chdir( $wd );

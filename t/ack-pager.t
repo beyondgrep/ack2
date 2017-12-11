@@ -233,13 +233,13 @@ END_TEXT
 my $wd      = getcwd_clean();
 my $tempdir = File::Temp->newdir;
 my $pager   = File::Spec->rel2abs('test-pager');
-mkdir File::Spec->catdir($tempdir->dirname, 'subdir');
+safe_mkdir( File::Spec->catdir($tempdir->dirname, 'subdir') );
 
 PROJECT_ACKRC_PAGER_FORBIDDEN: {
     my @files = untaint( File::Spec->rel2abs('t/text/') );
     my @args = qw/ --env question(\\S+) /;
 
-    chdir $tempdir->dirname;
+    safe_chdir( $tempdir->dirname );
     write_file '.ackrc', "--pager=$pager\n";
 
     my ( $stdout, $stderr ) = run_ack_with_stderr(@args, @files);
@@ -247,7 +247,7 @@ PROJECT_ACKRC_PAGER_FORBIDDEN: {
     is_empty_array( $stdout );
     first_line_like( $stderr, qr/\QOptions --output, --pager and --match are forbidden in project .ackrc files/ );
 
-    chdir $wd;
+    safe_chdir( $wd );
 }
 
 HOME_ACKRC_PAGER_PERMITTED: {
@@ -255,7 +255,7 @@ HOME_ACKRC_PAGER_PERMITTED: {
     my @args = qw/ --env question(\\S+) /;
 
     write_file(File::Spec->catfile($tempdir->dirname, '.ackrc'), "--pager=$pager\n");
-    chdir File::Spec->catdir($tempdir->dirname, 'subdir');
+    safe_chdir( File::Spec->catdir($tempdir->dirname, 'subdir') );
     local $ENV{'HOME'} = $tempdir->dirname;
 
     my ( $stdout, $stderr ) = run_ack_with_stderr(@args, @files);
@@ -263,7 +263,7 @@ HOME_ACKRC_PAGER_PERMITTED: {
     is_nonempty_array( $stdout );
     is_empty_array( $stderr );
 
-    chdir $wd;
+    safe_chdir( $wd );
 }
 
 ACKRC_ACKRC_PAGER_PERMITTED: {
@@ -271,7 +271,7 @@ ACKRC_ACKRC_PAGER_PERMITTED: {
     my @args = qw/ --env question(\\S+) /;
 
     write_file(File::Spec->catfile($tempdir->dirname, '.ackrc'), "--pager=$pager\n");
-    chdir File::Spec->catdir($tempdir->dirname, 'subdir');
+    safe_chdir( File::Spec->catdir($tempdir->dirname, 'subdir') );
     local $ENV{'ACKRC'} = File::Spec->catfile($tempdir->dirname, '.ackrc');
 
     my ( $stdout, $stderr ) = run_ack_with_stderr(@args, @files);
@@ -279,7 +279,7 @@ ACKRC_ACKRC_PAGER_PERMITTED: {
     is_nonempty_array( $stdout );
     is_empty_array( $stderr );
 
-    chdir $wd;
+    safe_chdir( $wd );
 }
 
 done_testing();

@@ -41,7 +41,7 @@ my $wd = getcwd_clean() or die;
 
 my $tempdir = File::Temp->newdir;
 
-chdir $tempdir->dirname or die;
+safe_chdir( $tempdir->dirname );
 
 write_file( '.ackrc', <<'ACKRC' );
 --type-add=perl:ext:pl,t,pm
@@ -97,4 +97,4 @@ NOENV_IN_CONFIG: {
     like( $stderr->[0], qr/--noenv found in (?:.*)[.]ackrc/ ) or diag(explain($stderr));
 }
 
-chdir $wd or die; # Go back to the original directory to avoid warnings
+safe_chdir( $wd ); # Go back to the original directory to avoid warnings

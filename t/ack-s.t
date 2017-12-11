@@ -33,9 +33,9 @@ WITH_RESTRICTED_DIR: {
     my $dir = File::Temp->newdir;
     my $wd  = getcwd_clean();
 
-    chdir $dir->dirname;
+    safe_chdir( $dir->dirname );
 
-    mkdir 'foo';
+    safe_mkdir( 'foo' );
     write_file 'foo/bar' => "hello\n";
     write_file 'baz'     => "hello\n";
 
@@ -46,5 +46,5 @@ WITH_RESTRICTED_DIR: {
 
     is_empty_array( $stderr );
 
-    chdir $wd;
+    safe_chdir( $wd );
 }

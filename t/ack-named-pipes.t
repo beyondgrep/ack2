@@ -17,7 +17,7 @@ local $SIG{'ALRM'} = sub {
 prep_environment();
 
 my $tempdir = File::Temp->newdir;
-mkdir "$tempdir/foo";
+safe_mkdir( "$tempdir/foo" );
 my $rc = eval { POSIX::mkfifo( "$tempdir/foo/test.pipe", oct(660) ) };
 if ( !$rc ) {
     dir_cleanup( $tempdir );
