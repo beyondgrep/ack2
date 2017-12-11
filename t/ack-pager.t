@@ -22,7 +22,7 @@ prep_environment();
 NO_PAGER: {
     my @args = qw(--nocolor --sort-files -i nevermore t/text);
 
-    my @expected = split /\n/, <<'END_TEXT';
+    my @expected = line_split( <<'END_TEXT' );
 t/text/raven.txt
 55:    Quoth the Raven, "Nevermore."
 62:    With such name as "Nevermore."
@@ -45,7 +45,7 @@ END_TEXT
 PAGER: {
     my @args = qw(--nocolor --pager=./test-pager --sort-files -i nevermore t/text);
 
-    my @expected = split /\n/, <<'END_TEXT';
+    my @expected = line_split( <<'END_TEXT' );
 t/text/raven.txt
 55:    Quoth the Raven, "Nevermore."
 62:    With such name as "Nevermore."
@@ -68,7 +68,7 @@ END_TEXT
 PAGER_WITH_OPTS: {
     my @args = ('--nocolor', '--pager=./test-pager --skip=2', '--sort-files', '-i', 'nevermore', 't/text');
 
-    my @expected = split /\n/, <<'END_TEXT';
+    my @expected = line_split( <<'END_TEXT' );
 t/text/raven.txt
 62:    With such name as "Nevermore."
 76:    Of 'Never -- nevermore.'
@@ -86,7 +86,7 @@ FORCE_NO_PAGER: {
     my @args = ('--nocolor', '--pager=./test-pager --skip=2', '--nopager', '--sort-files',
         '-i', 'nevermore', 't/text');
 
-    my @expected = split /\n/, <<'END_TEXT';
+    my @expected = line_split( <<'END_TEXT' );
 t/text/raven.txt
 55:    Quoth the Raven, "Nevermore."
 62:    With such name as "Nevermore."
@@ -112,7 +112,7 @@ PAGER_ENV: {
 
     my @args = ('--nocolor', '--sort-files', '-i', 'nevermore', 't/text');
 
-    my @expected = split /\n/, <<'END_TEXT';
+    my @expected = line_split( <<'END_TEXT' );
 t/text/raven.txt
 62:    With such name as "Nevermore."
 76:    Of 'Never -- nevermore.'
@@ -131,7 +131,7 @@ PAGER_ENV_OVERRIDE: {
 
     my @args = ('--nocolor', '--nopager', '--sort-files', '-i', 'nevermore', 't/text');
 
-    my @expected = split /\n/, <<'END_TEXT';
+    my @expected = line_split( <<'END_TEXT' );
 t/text/raven.txt
 55:    Quoth the Raven, "Nevermore."
 62:    With such name as "Nevermore."
@@ -159,7 +159,7 @@ PAGER_ACKRC: {
 --pager=./test-pager --skip=2
 END_ACKRC
 
-    my @expected = split /\n/, <<'END_TEXT';
+    my @expected = line_split( <<'END_TEXT' );
 t/text/raven.txt
 62:    With such name as "Nevermore."
 76:    Of 'Never -- nevermore.'
@@ -183,7 +183,7 @@ PAGER_ACKRC_OVERRIDE: {
 --pager=./test-pager --skip=2
 END_ACKRC
 
-    my @expected = split /\n/, <<'END_TEXT';
+    my @expected = line_split( <<'END_TEXT' );
 t/text/raven.txt
 55:    Quoth the Raven, "Nevermore."
 62:    With such name as "Nevermore."
@@ -210,7 +210,7 @@ PAGER_NOENV: {
 
     my @args = ('--nocolor', '--noenv', '--sort-files', '-i', 'nevermore', 't/text');
 
-    my @expected = split /\n/, <<'END_TEXT';
+    my @expected = line_split( <<'END_TEXT' );
 t/text/raven.txt
 55:    Quoth the Raven, "Nevermore."
 62:    With such name as "Nevermore."
@@ -281,3 +281,6 @@ ACKRC_ACKRC_PAGER_PERMITTED: {
 
     chdir $wd;
 }
+
+done_testing();
+exit 0;
