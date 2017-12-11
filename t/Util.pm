@@ -1,12 +1,62 @@
+package Util;
+
+use parent 'Exporter';
 
 use Carp ();
-use File::Next ();
-use App::Ack ();
 use Cwd ();
+use File::Next ();
 use File::Spec ();
 use File::Temp ();
 use Term::ANSIColor ();
 use Test::More;
+
+our @EXPORT = qw(
+    prep_environment
+    touch_ackrc
+
+    has_io_pty
+    is_windows
+    is_cygwin
+
+    is_empty_array
+    is_nonempty_array
+
+    first_line_like
+    build_ack_invocation
+
+    read_file
+    write_file
+    append_file
+
+    reslash
+    reslash_all
+    windows_slashify
+
+    run_cmd
+    run_ack
+    run_ack_with_stderr
+    run_ack_interactive
+    pipe_into_ack
+    pipe_into_ack_with_stderr
+
+    lists_match
+    sets_match
+    ack_lists_match
+    ack_sets_match
+
+    untaint
+
+    line_split
+    colorize
+    caret_X
+    get_rc
+    getcwd_clean
+
+    safe_chdir
+    safe_mkdir
+
+    get_options
+);
 
 my $orig_wd;
 my @temp_files; # We store temp files here to make sure they're properly reclaimed at interpreter shutdown.
@@ -171,10 +221,12 @@ sub _write_file {
     return;
 }
 
-sub break_up_lines {
-    my $str = shift;
+sub line_split {
+    return split( /\n/, $_[0] );
+}
 
-    return split( /\n/, $str );
+sub reslash {
+    return File::Next::reslash( shift );
 }
 
 sub reslash_all {
@@ -798,4 +850,28 @@ sub windows_slashify {
     return $str;
 }
 
+sub touch_ackrc {
+    my $filename = shift or die;
+    write_file( $filename, () );
+
+    return;
+}
+
+
+sub safe_chdir {
+    my $dir = shift;
+
+    CORE::chdir( $dir ) or die "Can't chdir to $dir: $!";
+
+    return;
+}
+
+
+sub safe_mkdir {
+    my $dir = shift;
+
+    CORE::mkdir( $dir ) or die "Can't mkdir $dir: $!";
+
+    return;
+}
 1;

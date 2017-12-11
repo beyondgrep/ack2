@@ -7,17 +7,16 @@ use Test::More tests => 6;
 
 use lib 't';
 use Util;
-use File::Next;
 
 prep_environment();
 
 LIMIT_MATCHES_RETURNED: {
     my @text = sort map { untaint($_) } glob( 't/text/[bc]*.txt' );
 
-    my $bill_ = File::Next::reslash( 't/text/bill-of-rights.txt' );
-    my $const = File::Next::reslash( 't/text/constitution.txt' );
+    my $bill_ = reslash( 't/text/bill-of-rights.txt' );
+    my $const = reslash( 't/text/constitution.txt' );
 
-    my @expected = split( /\n/, <<"EOF" );
+    my @expected = line_split( <<"EOF" );
 $bill_:4:or prohibiting the free exercise thereof; or abridging the freedom of
 $bill_:5:speech, or of the press; or the right of the people peaceably to assemble,
 $bill_:6:and to petition the Government for a redress of grievances.
@@ -28,7 +27,7 @@ EOF
 
     ack_lists_match( [ '-m', 3, '-w', 'the', @text ], \@expected, 'Should show only 3 lines per file' );
 
-    @expected = split( /\n/, <<"EOF" );
+    @expected = line_split( <<"EOF" );
 $bill_:4:or prohibiting the free exercise thereof; or abridging the freedom of
 EOF
 
@@ -38,10 +37,10 @@ ack_lists_match( [ '-1', '-w', 'the', @text ], \@expected, 'We should only get o
 
 DASH_L: {
     my $target   = 'the';
-    my @files    = File::Next::reslash( 't/text' );
+    my @files    = reslash( 't/text' );
     my @args     = ( '-m', 3, '-l', '--sort-files', $target );
     my @results  = run_ack( @args, @files );
-    my @expected = map { File::Next::reslash( "t/text/$_" ) } (
+    my @expected = map { reslash( "t/text/$_" ) } (
         'amontillado.txt', 'bill-of-rights.txt', 'constitution.txt'
     );
 

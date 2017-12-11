@@ -11,7 +11,7 @@ use Util;
 prep_environment();
 
 ARG: {
-    my @expected = split( /\n/, <<'HERE' );
+    my @expected = line_split( <<'HERE' );
 shall have a new birth of freedom -- and that government of the people,
 HERE
 
@@ -24,7 +24,7 @@ HERE
 
 ARG_MULTIPLE_FILES: {
     # Note the first line is there twice because it matches twice.
-    my @expected = split( /\n/, <<'HERE' );
+    my @expected = line_split( <<'HERE' );
 or prohibiting the free exercise thereof; or abridging the freedom of
 or prohibiting the free exercise thereof; or abridging the freedom of
 A well regulated Militia, being necessary to the security of a free State,
@@ -52,7 +52,7 @@ MATCH: {
 }
 
 MATCH_MULTIPLE_FILES: {
-    my @expected = split( /\n/, <<'HERE' );
+    my @expected = line_split( <<'HERE' );
 t/text/bill-of-rights.txt:4:free
 t/text/bill-of-rights.txt:4:free
 t/text/bill-of-rights.txt:10:free
@@ -95,7 +95,7 @@ PREMATCH_MULTIPLE_FILES: {
 }
 
 POSTMATCH: {
-    my @expected = split( /\n/, <<'HERE' );
+    my @expected = line_split( <<'HERE' );
  -- and that government of the people,
 HERE
 
@@ -107,7 +107,7 @@ HERE
 }
 
 POSTMATCH_MULTIPLE_FILES: {
-    my @expected = split( /\n/, <<'HERE' );
+    my @expected = line_split( <<'HERE' );
  of
  -- and that government of the people,
 HERE
@@ -132,7 +132,7 @@ SUBPATTERN_MATCH: {
 }
 
 SUBPATTERN_MATCH_MULTIPLE_FILES: {
-    my @expected = split( /\n/, <<'HERE' );
+    my @expected = line_split( <<'HERE' );
 the-free-exercise
 a-free-State
 of-free-Persons
@@ -158,7 +158,7 @@ INPUT_LINE_NUMBER: {
 }
 
 INPUT_LINE_NUMBER_MULTIPLE_FILES: {
-    my @expected = split( /\n/, <<'HERE' );
+    my @expected = line_split( <<'HERE' );
 t/text/bill-of-rights.txt:4:line:4
 t/text/bill-of-rights.txt:4:line:4
 t/text/bill-of-rights.txt:10:line:10

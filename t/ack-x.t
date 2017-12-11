@@ -3,7 +3,6 @@
 use strict;
 use warnings;
 
-use File::Next ();
 use Test::More tests => 2;
 
 use lib 't';
@@ -56,10 +55,10 @@ sub do_parent {
 
 prep_environment();
 
-my $ozy__ = File::Next::reslash( 't/text/ozymandias.txt' );
-my $raven = File::Next::reslash( 't/text/raven.txt' );
+my $ozy__ = reslash( 't/text/ozymandias.txt' );
+my $raven = reslash( 't/text/raven.txt' );
 
-my @expected = split( /\n/, <<"EOF" );
+my @expected = line_split( <<"EOF" );
 $ozy__:6:Tell that its sculptor well those passions read
 $ozy__:8:The hand that mocked them, and the heart that fed:
 $ozy__:13:Of that colossal wreck, boundless and bare

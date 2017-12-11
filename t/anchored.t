@@ -16,7 +16,7 @@ my @files = qw( t/text/constitution.txt );
 FRONT_ANCHORED: {
     my @args  = qw( --sort-files -h -i ^congress );
 
-    my @expected = split( /\n/, <<'EOF' );
+    my @expected = line_split( <<'EOF' );
 Congress prior to the Year one thousand eight hundred and eight, but
 EOF
 
@@ -26,7 +26,7 @@ EOF
 BACK_ANCHORED: {
     my @args  = qw( --sort-files -h -i congress$ );
 
-    my @expected = split( /\n/, <<'EOF' );
+    my @expected = line_split( <<'EOF' );
 All legislative Powers herein granted shall be vested in a Congress
 Fact, with such Exceptions, and under such Regulations as the Congress
 Records, and judicial Proceedings of every other State. And the Congress
@@ -38,7 +38,7 @@ EOF
 UNANCHORED: {
     my @args  = qw( --sort-files -h -i congress );
 
-    my @expected = split( /\n/, <<'EOF' );
+    my @expected = line_split( <<'EOF' );
 All legislative Powers herein granted shall be vested in a Congress
 the first Meeting of the Congress of the United States, and within
 thereof; but the Congress may at any time by Law make or alter such

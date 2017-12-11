@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 use Test::More tests => 12;
-use File::Next ();
 
 use lib 't';
 use Util;
@@ -12,7 +11,7 @@ use Util;
 prep_environment();
 
 NO_SWITCHES_ONE_FILE: {
-    my @expected = split( /\n/, <<'EOF' );
+    my @expected = line_split( <<'EOF' );
 use strict;
 EOF
 
@@ -25,8 +24,8 @@ EOF
 
 
 NO_SWITCHES_MULTIPLE_FILES: {
-    my $target_file = File::Next::reslash( 't/swamp/options.pl' );
-    my @expected = split( /\n/, <<"EOF" );
+    my $target_file = reslash( 't/swamp/options.pl' );
+    my @expected = line_split( <<"EOF" );
 $target_file:2:use strict;
 EOF
 
@@ -39,9 +38,9 @@ EOF
 
 
 WITH_SWITCHES_ONE_FILE: {
-    my $target_file = File::Next::reslash( 't/swamp/options.pl' );
+    my $target_file = reslash( 't/swamp/options.pl' );
     for my $opt ( qw( -H --with-filename ) ) {
-        my @expected = split( /\n/, <<"EOF" );
+        my @expected = line_split( <<"EOF" );
 $target_file:2:use strict;
 EOF
 
@@ -56,7 +55,7 @@ EOF
 
 WITH_SWITCHES_MULTIPLE_FILES: {
     for my $opt ( qw( -h --no-filename ) ) {
-        my @expected = split( /\n/, <<"EOF" );
+        my @expected = line_split( <<"EOF" );
 use strict;
 EOF
 

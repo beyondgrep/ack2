@@ -75,7 +75,7 @@ INTERACTIVE_GROUPING_COLOR: {
     my $CM       = color 'black on_yellow';
     my $LINE_END = "\e[0m\e[K";
 
-    my @expected_lines = split( /\n/, <<"EOF" );
+    my @expected_lines = line_split( <<"EOF" );
 ${CFN}t/text/bill-of-rights.txt${CRESET}
 ${CLN}4${CRESET}:or prohibiting the ${CM}free${CRESET} exercise thereof; or abridging the ${CM}free${CRESET}dom of$LINE_END
 ${CLN}10${CRESET}:A well regulated Militia, being necessary to the security of a ${CM}free${CRESET} State,$LINE_END

@@ -7,7 +7,6 @@ use Test::More tests => 12;
 
 use lib 't';
 use Util;
-use File::Next;
 
 prep_environment();
 
@@ -40,7 +39,7 @@ DASH_F: {
     my @files = qw( t/swamp );
     my @args = qw( -1 -f );
     my @results = run_ack( @args, @files );
-    my $test_path = File::Next::reslash( 't/swamp/' );
+    my $test_path = reslash( 't/swamp/' );
 
     is( scalar @results, 1, 'Should only get one file back' );
     like( $results[0], qr{^\Q$test_path\E}, 'One of the files from the swamp' );
@@ -52,7 +51,7 @@ DASH_G: {
     my @files = qw( t/ );
     my @args = ( '-1', '-g', $regex );
     my @results = run_ack( @args, @files );
-    my $test_path = File::Next::reslash( 't/swamp/Makefile' );
+    my $test_path = reslash( 't/swamp/Makefile' );
 
     is( scalar @results, 1, "Should only get one file back from $regex" );
     like( $results[0], qr{^\Q$test_path\E(?:[.]PL)?$}, 'The one file matches one of the two Makefile files' );
@@ -60,10 +59,10 @@ DASH_G: {
 
 DASH_L: {
     my $target   = 'the';
-    my @files    = File::Next::reslash( 't/text' );
+    my @files    = reslash( 't/text' );
     my @args     = ( '-1', '-l', '--sort-files', $target );
     my @results  = run_ack( @args, @files );
-    my $expected = File::Next::reslash( 't/text/amontillado.txt' );
+    my $expected = reslash( 't/text/amontillado.txt' );
 
     is_deeply( \@results, [$expected], 'Should only get one matching file back' );
 }

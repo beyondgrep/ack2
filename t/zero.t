@@ -13,8 +13,6 @@ use strict;
 
 use Test::More tests => 1;
 
-use File::Next 0.22;
-
 use lib 't';
 use Util;
 

@@ -4,20 +4,19 @@ use strict;
 use warnings;
 
 use Test::More tests => 12;
-use File::Next ();
 
 use lib 't';
 use Util;
 
 prep_environment();
 
-my ($bill_, $const, $getty) = map { File::Next::reslash( "t/text/$_" ) } qw( bill-of-rights.txt constitution.txt gettysburg.txt );
+my ($bill_, $const, $getty) = map { reslash( "t/text/$_" ) } qw( bill-of-rights.txt constitution.txt gettysburg.txt );
 
 my @TEXT_FILES = sort map { untaint($_) } glob( 't/text/*.txt' );
 
 
 NO_GROUPING: {
-    my @expected = split( /\n/, <<"EOF" );
+    my @expected = line_split( <<"EOF" );
 $bill_:4:or prohibiting the free exercise thereof; or abridging the freedom of
 $bill_:10:A well regulated Militia, being necessary to the security of a free State,
 $const:32:Number of free Persons, including those bound to Service for a Term
@@ -36,7 +35,7 @@ EOF
 
 
 STANDARD_GROUPING: {
-    my @expected = split( /\n/, <<"EOF" );
+    my @expected = line_split( <<"EOF" );
 $bill_
 4:or prohibiting the free exercise thereof; or abridging the freedom of
 10:A well regulated Militia, being necessary to the security of a free State,
@@ -59,7 +58,7 @@ EOF
 }
 
 HEADING_NO_BREAK: {
-    my @expected = split( /\n/, <<"EOF" );
+    my @expected = line_split( <<"EOF" );
 $bill_
 4:or prohibiting the free exercise thereof; or abridging the freedom of
 10:A well regulated Militia, being necessary to the security of a free State,
@@ -79,7 +78,7 @@ EOF
 }
 
 BREAK_NO_HEADING: {
-    my @expected = split( /\n/, <<"EOF" );
+    my @expected = line_split( <<"EOF" );
 $bill_:4:or prohibiting the free exercise thereof; or abridging the freedom of
 $bill_:10:A well regulated Militia, being necessary to the security of a free State,
 

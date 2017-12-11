@@ -6,7 +6,6 @@ use lib 't';
 
 use Cwd ();
 use Test::More tests => 16;
-use File::Next ();
 use Util;
 
 prep_environment();
@@ -14,7 +13,7 @@ prep_environment();
 my @SWAMP = qw( t/swamp );
 
 TEST_TYPE: {
-    my @expected = split( /\n/, <<'EOF' );
+    my @expected = line_split( <<'EOF' );
 t/swamp/0:1:#!/usr/bin/perl -w
 t/swamp/Makefile.PL:1:#!perl -T
 t/swamp/options-crlf.pl:1:#!/usr/bin/env perl
@@ -27,7 +26,7 @@ t/swamp/perl.pm:1:#!perl -T
 EOF
 
     foreach my $line ( @expected ) {
-        $line =~ s/^(.*?)(?=:)/File::Next::reslash( $1 )/ge;
+        $line =~ s/^(.*?)(?=:)/reslash( $1 )/ge;
     }
 
     my @args    = qw( --type=perl --nogroup --noheading --nocolor );
@@ -39,13 +38,13 @@ EOF
 }
 
 TEST_NOTYPE: {
-    my @expected = split( /\n/, <<'EOF' );
+    my @expected = line_split( <<'EOF' );
 t/swamp/c-header.h:1:/*    perl.h
 t/swamp/Makefile:1:# This Makefile is for the ack extension to perl.
 EOF
 
     foreach my $line ( @expected ) {
-        $line =~ s/^(.*?)(?=:)/File::Next::reslash( $1 )/ge;
+        $line =~ s/^(.*?)(?=:)/reslash( $1 )/ge;
     }
 
     my @args    = qw( --type=noperl --nogroup --noheading --nocolor );
@@ -80,8 +79,8 @@ TEST_NOTYPES: {
 
 TEST_NOTYPE_OVERRIDE: {
     my @expected = (
-        File::Next::reslash('t/swamp/html.htm') . ':2:<html><head><title>Boring test file </title></head>',
-        File::Next::reslash('t/swamp/html.html') . ':2:<html><head><title>Boring test file </title></head>',
+        reslash('t/swamp/html.htm') . ':2:<html><head><title>Boring test file </title></head>',
+        reslash('t/swamp/html.html') . ':2:<html><head><title>Boring test file </title></head>',
     );
 
     my @lines = run_ack( '--nohtml', '--html', '--sort-files', '<title>', @SWAMP );
@@ -99,8 +98,8 @@ TEST_NOTYPE_ACKRC_CMD_LINE_OVERRIDE: {
 END_ACKRC
 
     my @expected = (
-        File::Next::reslash('t/swamp/html.htm') . ':2:<html><head><title>Boring test file </title></head>',
-        File::Next::reslash('t/swamp/html.html') . ':2:<html><head><title>Boring test file </title></head>',
+        reslash('t/swamp/html.htm') . ':2:<html><head><title>Boring test file </title></head>',
+        reslash('t/swamp/html.html') . ':2:<html><head><title>Boring test file </title></head>',
     );
 
     my @lines = run_ack('--html', '--sort-files', '<title>', @SWAMP, {

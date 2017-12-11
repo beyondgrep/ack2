@@ -4,7 +4,6 @@ use warnings;
 use strict;
 
 use Test::More tests => 19;
-use File::Next;
 
 use lib 't';
 use Util;
@@ -71,7 +70,7 @@ sub populate_filetypes {
 
 # XXX Implement me with --show-types.
 sub filetypes {
-    my $filename = File::Next::reslash(shift);
+    my $filename = reslash(shift);
 
     if ( !%types_for_file ) {
         populate_filetypes();

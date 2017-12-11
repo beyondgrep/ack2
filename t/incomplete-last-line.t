@@ -27,7 +27,7 @@ VERIFY_LAST_LINE_IS_MISSING_NEWLINE: {
 
 
 INCOMPLETE_LAST_LINE: {
-    my @expected = split( /\n/, <<"EOF" );
+    my @expected = line_split( <<"EOF" );
 but no new line on the last line!
 the last full measure of devotion -- that we here highly resolve that
 EOF

@@ -8,7 +8,7 @@ use Test::More;
 use lib 't';
 use Util;
 
-plan tests => 13;
+plan tests => 11;
 
 prep_environment();
 
@@ -47,17 +47,19 @@ MULTIPLE_MATCHES: {
     my @args = qw( az.+?e|ser.+?nt -w --color );
     my @results = run_ack( @args, @files );
 
-    is( @results, 1, 'multiple matches on 1 line' );
-    is( $results[0], "\"A huge human foot d'or, in a field ${match_start}azure${match_end}; the foot crushes a ${match_start}serpent${match_end}$line_end",
-        'multiple matches highlighted' );
+    is_deeply( \@results, [
+        "\"A huge human foot d'or, in a field ${match_start}azure${match_end}; the foot crushes a ${match_start}serpent${match_end}$line_end",
+    ] );
 }
+
 
 ADJACENT_CAPTURE_COLORING: {
     my @files = qw( t/text/raven.txt );
     my @args = qw( (Temp)(ter) --color );
     my @results = run_ack( @args, @files );
 
-    is( @results, 1, 'backref pattern matches once' );
     # The double end + start is kinda weird; this test could probably be more robust.
-    is( $results[0], "Whether ${match_start}Temp${match_end}${match_start}ter${match_end} sent, or whether tempest tossed thee here ashore,", 'adjacent capture groups should highlight correctly');
+    is_deeply( \@results, [
+        "Whether ${match_start}Temp${match_end}${match_start}ter${match_end} sent, or whether tempest tossed thee here ashore,",
+    ] );
 }

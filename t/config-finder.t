@@ -34,13 +34,6 @@ $ENV{'HOME'} = realpath('t/home');
 # Clear the users ACKRC so it doesn't throw out expect_ackrcs().
 delete $ENV{'ACKRC'};
 
-sub touch_ackrc {
-    my $filename = shift || '.ackrc';
-    write_file( $filename, () );
-
-    return;
-}
-
 {
 # The tests blow up on Windows if the global files don't exist,
 # so here we create them if they don't, keeping track of the ones

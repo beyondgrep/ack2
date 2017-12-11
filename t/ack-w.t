@@ -11,7 +11,7 @@ use Util;
 prep_environment();
 
 TRAILING_PUNC: {
-    my @expected = split( /\n/, <<'HERE' );
+    my @expected = line_split( <<'HERE' );
 Respite-respite and nepenthe from thy memories of Lenore!"
 Clasp a rare and radiant maiden whom the angels name Lenore!"
 HERE
@@ -23,7 +23,7 @@ HERE
 }
 
 TRAILING_METACHAR_BACKSLASH_W: {
-    my @expected = split( /\n/, <<'HERE' );
+    my @expected = line_split( <<'HERE' );
 be a Majority of the whole Number of Electors appointed; and if there be
 President. But if there should remain two or more who have equal Votes,
 HERE
@@ -38,7 +38,7 @@ HERE
 TRAILING_METACHAR_DOT: {
     # Because the . at the end of the regular expression is not a word
     # character, a word boundary is not required after the match.
-    my @expected = split( /\n/, <<'HERE' );
+    my @expected = line_split( <<'HERE' );
 speech, or of the press; or the right of the people peaceably to assemble,
 the right of the people to keep and bear Arms, shall not be infringed.
 The right of the people to be secure in their persons, houses, papers,
@@ -56,7 +56,7 @@ HERE
 
 BEGINS_AND_ENDS_WITH_WORD_CHAR: {
     # Normal case of whole word match.
-    my @expected = split( /\n/, <<'HERE' );
+    my @expected = line_split( <<'HERE' );
 Each House shall be the Judge of the Elections, Returns and Qualifications
 shall judge necessary and expedient; he may, on extraordinary Occasions,
 HERE
@@ -69,7 +69,7 @@ HERE
 
 BEGINS_BUT_NOT_ENDS_WITH_WORD_CHAR: {
     # The last character of the regexp is not a word, disabling the word boundary check at the end of the match.
-    my @expected = split( /\n/, <<'HERE' );
+    my @expected = line_split( <<'HERE' );
 All legislative Powers herein granted shall be vested in a Congress
 and shall have the sole Power of Impeachment.
 The Senate shall have the sole Power to try all Impeachments. When
@@ -95,7 +95,7 @@ HERE
 
 ENDS_BUT_NOT_BEGINS_WITH_WORD_CHAR: {
     # The first character of the regexp is not a word, disabling the word boundary check at the start of the match.
-    my @expected = split( /\n/, <<'HERE' );
+    my @expected = line_split( <<'HERE' );
 each State shall have the Qualifications requisite for Electors of the
 Providence Plantations one, Connecticut five, New-York six, New Jersey
 The Times, Places and Manner of holding Elections for Senators and
@@ -123,7 +123,7 @@ HERE
 
 NEITHER_BEGINS_NOR_ENDS_WITH_WORD_CHAR: {
     # Because the regular expression doesn't begin or end with a word character, the 'words mode' doesn't affect the match.
-    my @expected = split( /\n/, <<'HERE' );
+    my @expected = line_split( <<'HERE' );
 Each House shall be the Judge of the Elections, Returns and Qualifications
 Session of their respective Houses, and in going to and returning from
 return it, with his Objections to that House in which it shall have

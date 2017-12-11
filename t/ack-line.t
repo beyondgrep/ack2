@@ -7,7 +7,6 @@ use Test::More;
 
 use lib 't';
 use Util;
-use File::Next;
 
 if ( not has_io_pty() ) {
     plan skip_all => q{You need to install IO::Pty to run this test};
@@ -19,7 +18,7 @@ plan tests => 16;
 prep_environment();
 
 LINE_6_AND_3: {
-    my @expected = split( /\n/, <<'EOF' );
+    my @expected = line_split( <<'EOF' );
 and to petition the Government for a redress of grievances.
 Congress shall make no law respecting an establishment of religion,
 EOF
@@ -31,7 +30,7 @@ EOF
 }
 
 LINES_WITH_A_COMMA: {
-    my @expected = split( /\n/, <<'EOF' );
+    my @expected = line_split( <<'EOF' );
 Congress shall make no law respecting an establishment of religion,
 and to petition the Government for a redress of grievances.
 EOF
@@ -43,7 +42,7 @@ EOF
 }
 
 LINES_WITH_A_RANGE: {
-    my @expected = split( /\n/, <<'EOF' );
+    my @expected = line_split( <<'EOF' );
 Congress shall make no law respecting an establishment of religion,
 or prohibiting the free exercise thereof; or abridging the freedom of
 speech, or of the press; or the right of the people peaceably to assemble,
@@ -57,7 +56,7 @@ EOF
 }
 
 LINES_WITH_CONTEXT: {
-    my @expected = split( /\n/, <<'EOF' );
+    my @expected = line_split( <<'EOF' );
 of that House shall agree to pass the Bill, it shall be sent, together
 with the Objections, to the other House, by which it shall likewise be
 reconsidered, and if approved by two thirds of that House, it shall become
@@ -74,7 +73,7 @@ EOF
 }
 
 LINES_THAT_MAY_BE_NON_EXISTENT: {
-    my @expected = split( /\n/, <<'EOF' );
+    my @expected = line_split( <<'EOF' );
 "For the love of God, Montresor!"
 "A mason," I replied.
 EOF
@@ -86,7 +85,7 @@ EOF
 }
 
 LINE_AND_PASSTHRU: {
-    my @expected = split( /\n/, <<'EOF' );
+    my @expected = line_split( <<'EOF' );
 =head1 Dummy document
 
 =head2 There's important stuff in here!
@@ -100,11 +99,11 @@ EOF
 
 
 LINE_1_MULTIPLE_FILES: {
-    my @target_file = map { File::Next::reslash( $_ ) } qw(
+    my @target_file = map { reslash( $_ ) } qw(
         t/swamp/c-header.h
         t/swamp/c-source.c
     );
-    my @expected = split( /\n/, <<"EOF" );
+    my @expected = line_split( <<"EOF" );
 $target_file[0]:1:/*    perl.h
 $target_file[1]:1:/*  A Bison parser, made from plural.y
 EOF
@@ -117,11 +116,11 @@ EOF
 
 
 LINE_1_CONTEXT: {
-    my @target_file = map { File::Next::reslash( $_ ) } qw(
+    my @target_file = map { reslash( $_ ) } qw(
         t/swamp/c-header.h
         t/swamp/c-source.c
     );
-    my @expected = split( /\n/, <<"EOF" );
+    my @expected = line_split( <<"EOF" );
 $target_file[0]:1:/*    perl.h
 $target_file[0]-2- *
 $target_file[0]-3- *    Copyright (C) 1993, 1994, 1995, 1996, 1997, 1998, 1999,

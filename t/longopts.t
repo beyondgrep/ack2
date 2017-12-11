@@ -10,7 +10,6 @@ This tests whether ack's command line options work as expected.
 =cut
 
 use Test::More;
-use File::Next (); # For the reslash() function
 
 # --no-recurse is inconsistent w/--nogroup
 
@@ -123,7 +122,7 @@ for my $arg ( qw( -Q --literal ) ) {
     );
 }
 
-my $expected = File::Next::reslash( 't/swamp/options.pl' );
+my $expected = reslash( 't/swamp/options.pl' );
 
 # Files with matches
 for my $arg ( qw( -l --files-with-matches ) ) {

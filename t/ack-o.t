@@ -4,7 +4,6 @@ use warnings;
 use strict;
 
 use Test::More tests => 11;
-use File::Next ();
 use File::Spec ();
 use File::Temp ();
 
@@ -16,7 +15,7 @@ prep_environment();
 NO_O: {
     my @files = qw( t/text/gettysburg.txt );
     my @args = qw( the\\s+\\S+ );
-    my @expected = split( /\n/, <<'EOF' );
+    my @expected = line_split( <<'EOF' );
         but it can never forget what they did here. It is for us the living,
         rather, to be dedicated here to the unfinished work which they who
         here dedicated to the great task remaining before us -- that from these
@@ -33,7 +32,7 @@ EOF
 WITH_O: {
     my @files = qw( t/text/gettysburg.txt );
     my @args = qw( the\\s+\\S+ -o );
-    my @expected = split( /\n/, <<'EOF' );
+    my @expected = line_split( <<'EOF' );
         the living,
         the unfinished
         the great
@@ -54,7 +53,7 @@ OUTPUT_DOUBLE_QUOTES: {
     my @files = qw( t/text/ );
     my @args  = ( '--output="$1"', '(free\\w*)', '--sort-files' );
 
-    my @target_file = map { File::Next::reslash($_) } qw(
+    my @target_file = map { reslash($_) } qw(
         t/text/bill-of-rights.txt
         t/text/constitution.txt
         t/text/gettysburg.txt

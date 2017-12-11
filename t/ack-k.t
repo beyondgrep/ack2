@@ -21,7 +21,7 @@ t/etc/shebang.py.xxx => python
 t/etc/shebang.rb.xxx => ruby
 t/etc/shebang.sh.xxx => shell
 HERE
-    my @expected = reslash_all( break_up_lines( $expected ) );
+    my @expected = reslash_all( line_split( $expected ) );
 
     my @args = qw( -f --show-types t/etc );
     ack_sets_match( [ @args ], \@expected, 'No restrictions on type' );
@@ -38,7 +38,7 @@ t/etc/shebang.py.xxx => python
 t/etc/shebang.rb.xxx => ruby
 t/etc/shebang.sh.xxx => shell
 HERE
-    my @expected = reslash_all( break_up_lines( $expected ) );
+    my @expected = reslash_all( line_split( $expected ) );
 
     my @args = qw( -f -k --show-types t/etc );
     ack_sets_match( [ @args ], \@expected, 'Only known types' );

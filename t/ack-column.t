@@ -5,18 +5,16 @@ use strict;
 
 use Test::More tests => 4;
 
-use File::Next ();
-
 use lib 't';
 use Util;
 
 prep_environment();
 
-my $raven = File::Next::reslash( 't/text/raven.txt' );
+my $raven = reslash( 't/text/raven.txt' );
 my @base_args = qw( nevermore -w -i --with-filename --noenv );
 
 WITH_COLUMNS: {
-    my @expected = split( /\n/, <<'HERE' );
+    my @expected = line_split( <<'HERE' );
 55:23:    Quoth the Raven, "Nevermore."
 62:24:    With such name as "Nevermore."
 69:26:    Then the bird said, "Nevermore."
@@ -40,7 +38,7 @@ HERE
 
 
 WITHOUT_COLUMNS: {
-    my @expected = split( /\n/, <<'HERE' );
+    my @expected = line_split( <<'HERE' );
 55:    Quoth the Raven, "Nevermore."
 62:    With such name as "Nevermore."
 69:    Then the bird said, "Nevermore."

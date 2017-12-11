@@ -6,7 +6,6 @@ use warnings;
 use lib 't';
 use Util;
 use File::Temp;
-use File::Next ();
 use Test::More tests => 3;
 
 prep_environment();
@@ -44,7 +43,7 @@ close $temp_config;
 
 my @args = ( '--ackrc=' . $temp_config->filename, '--md', 'One', 't/swamp/' );
 
-my $file = File::Next::reslash('t/swamp/notes.md');
+my $file = reslash('t/swamp/notes.md');
 my $line = 3;
 
 my ( $stdout, $stderr ) = run_ack_with_stderr( @args );
