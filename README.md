@@ -1,7 +1,7 @@
 # Build status of dev branch
 
 * Linux [![Build Status](https://travis-ci.org/beyondgrep/ack2.png?branch=dev)](https://travis-ci.org/beyondgrep/ack2)
-* Windows [![Build Status](https://ci.appveyor.com/api/projects/status/github/beyondgrep/ack2)](https://ci.appveyor.com/project/beyondgrep/ack2)
+* Windows [![Build Status](https://ci.appveyor.com/api/projects/status/github/beyondgrep/ack2)](https://ci.appveyor.com/project/petdance/ack2)
 * [CPAN Testers](http://cpantesters.org/distro/A/ack.html)
 
 # ack 2
