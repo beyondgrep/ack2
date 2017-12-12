@@ -30,7 +30,9 @@ my ($stdout, $stderr) = pipe_into_ack_with_stderr( 't/text/amontillado.txt', '--
 isnt( get_rc(), 0, 'ack should return an error when piped into without a regex' );
 is_empty_array( $stdout, 'ack should return no STDOUT when piped into without a regex' );
 cmp_ok( scalar @{$stderr}, '>', 0, 'Has to have at least one line of error message, but could have more under Appveyor' );
-is( $stderr->[0], 'ack: No regular expression found.', 'Error message matches' );
+
+my $name = $ENV{ACK_TEST_STANDALONE} ? 'ack-standalone' : 'ack';
+is( $stderr->[0], "$name: No regular expression found.", 'Error message matches' );
 
 my $wd      = getcwd_clean();
 my $tempdir = File::Temp->newdir;
