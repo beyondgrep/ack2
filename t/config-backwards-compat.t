@@ -10,7 +10,7 @@ use Test::More tests => 3;
 
 prep_environment();
 
-my $old_config = <<'END_CONFIG';
+my $old_config = <<'HERE';
 # Always sort
 --sort-files
 
@@ -35,7 +35,7 @@ my $old_config = <<'END_CONFIG';
 --smart-case
 
 --ignore-dir=nytprof
-END_CONFIG
+HERE
 
 my $temp_config = File::Temp->new;
 print { $temp_config } $old_config;

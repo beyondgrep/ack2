@@ -16,9 +16,9 @@ my @files = qw( t/text/constitution.txt );
 FRONT_ANCHORED: {
     my @args  = qw( --sort-files -h -i ^congress );
 
-    my @expected = line_split( <<'EOF' );
+    my @expected = line_split( <<'HERE' );
 Congress prior to the Year one thousand eight hundred and eight, but
-EOF
+HERE
 
     ack_lists_match( [ @args, @files ], \@expected, 'Looking for front-anchored "congress"' );
 }
@@ -26,11 +26,11 @@ EOF
 BACK_ANCHORED: {
     my @args  = qw( --sort-files -h -i congress$ );
 
-    my @expected = line_split( <<'EOF' );
+    my @expected = line_split( <<'HERE' );
 All legislative Powers herein granted shall be vested in a Congress
 Fact, with such Exceptions, and under such Regulations as the Congress
 Records, and judicial Proceedings of every other State. And the Congress
-EOF
+HERE
 
     ack_sets_match( [ @args, @files ], \@expected, 'Looking for back-anchored "congress"' );
 }
@@ -38,7 +38,7 @@ EOF
 UNANCHORED: {
     my @args  = qw( --sort-files -h -i congress );
 
-    my @expected = line_split( <<'EOF' );
+    my @expected = line_split( <<'HERE' );
 All legislative Powers herein granted shall be vested in a Congress
 the first Meeting of the Congress of the United States, and within
 thereof; but the Congress may at any time by Law make or alter such
@@ -68,7 +68,7 @@ concerned as well as of the Congress.
 The Congress shall have Power to dispose of and make all needful Rules and
 The Congress, whenever two thirds of both Houses shall deem it necessary,
 Ratification may be proposed by the Congress; Provided that no Amendment
-EOF
+HERE
 
     ack_lists_match( [ @args, @files ], \@expected, 'Looking for unanchored congress' );
 }

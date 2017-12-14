@@ -16,20 +16,20 @@ LIMIT_MATCHES_RETURNED: {
     my $bill_ = reslash( 't/text/bill-of-rights.txt' );
     my $const = reslash( 't/text/constitution.txt' );
 
-    my @expected = line_split( <<"EOF" );
+    my @expected = line_split( <<"HERE" );
 $bill_:4:or prohibiting the free exercise thereof; or abridging the freedom of
 $bill_:5:speech, or of the press; or the right of the people peaceably to assemble,
 $bill_:6:and to petition the Government for a redress of grievances.
 $const:3:We the People of the United States, in Order to form a more perfect
 $const:4:Union, establish Justice, insure domestic Tranquility, provide for the
 $const:5:common defense, promote the general Welfare, and secure the Blessings
-EOF
+HERE
 
     ack_lists_match( [ '-m', 3, '-w', 'the', @text ], \@expected, 'Should show only 3 lines per file' );
 
-    @expected = line_split( <<"EOF" );
+    @expected = line_split( <<"HERE" );
 $bill_:4:or prohibiting the free exercise thereof; or abridging the freedom of
-EOF
+HERE
 
 ack_lists_match( [ '-1', '-w', 'the', @text ], \@expected, 'We should only get one line back for the entire run, not just per file.' );
 }

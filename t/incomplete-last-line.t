@@ -27,10 +27,10 @@ VERIFY_LAST_LINE_IS_MISSING_NEWLINE: {
 
 
 INCOMPLETE_LAST_LINE: {
-    my @expected = line_split( <<"EOF" );
+    my @expected = line_split( <<"HERE" );
 but no new line on the last line!
 the last full measure of devotion -- that we here highly resolve that
-EOF
+HERE
 
     my @args  = qw( -h --nogroup last );
     my @files = qw( t/swamp/incomplete-last-line.txt t/text/gettysburg.txt );

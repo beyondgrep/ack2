@@ -15,14 +15,14 @@ prep_environment();
 NO_O: {
     my @files = qw( t/text/gettysburg.txt );
     my @args = qw( the\\s+\\S+ );
-    my @expected = line_split( <<'EOF' );
+    my @expected = line_split( <<'HERE' );
         but it can never forget what they did here. It is for us the living,
         rather, to be dedicated here to the unfinished work which they who
         here dedicated to the great task remaining before us -- that from these
         the last full measure of devotion -- that we here highly resolve that
         shall have a new birth of freedom -- and that government of the people,
         by the people, for the people, shall not perish from the earth.
-EOF
+HERE
     s/^\s+// for @expected;
 
     ack_lists_match( [ @args, @files ], \@expected, 'Find all the things without -o' );
@@ -32,7 +32,7 @@ EOF
 WITH_O: {
     my @files = qw( t/text/gettysburg.txt );
     my @args = qw( the\\s+\\S+ -o );
-    my @expected = line_split( <<'EOF' );
+    my @expected = line_split( <<'HERE' );
         the living,
         the unfinished
         the great
@@ -41,7 +41,7 @@ WITH_O: {
         the people,
         the people,
         the earth.
-EOF
+HERE
     s/^\s+// for @expected;
 
     ack_lists_match( [ @args, @files ], \@expected, 'Find all the things with -o' );

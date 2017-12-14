@@ -11,11 +11,11 @@ use Util;
 prep_environment();
 
 my $tempfile = File::Temp->new();
-print {$tempfile} <<'END_OF_FILE';
+print {$tempfile} <<'HERE';
 fo
 
 oo
-END_OF_FILE
+HERE
 close $tempfile;
 
 my @results = run_ack('-l', 'fo\s+oo', $tempfile->filename);

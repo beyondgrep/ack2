@@ -302,9 +302,9 @@ subtest q{Verify that "options" that follow -- aren't factored into the mutual e
 };
 
 subtest q{Verify that mutually exclusive options in different sources don't cause a problem} => sub {
-    my $ackrc = <<'END_ACKRC';
+    my $ackrc = <<'HERE';
 --group
-END_ACKRC
+HERE
 
     my @stdout = run_ack('--count', $file, {
         ackrc => \$ackrc,

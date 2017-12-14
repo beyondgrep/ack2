@@ -13,7 +13,7 @@ prep_environment();
 my @SWAMP = qw( t/swamp );
 
 TEST_TYPE: {
-    my @expected = line_split( <<'EOF' );
+    my @expected = line_split( <<'HERE' );
 t/swamp/0:1:#!/usr/bin/perl -w
 t/swamp/Makefile.PL:1:#!perl -T
 t/swamp/options-crlf.pl:1:#!/usr/bin/env perl
@@ -23,7 +23,7 @@ t/swamp/perl-without-extension:1:#!/usr/bin/perl -w
 t/swamp/perl.cgi:1:#!perl -T
 t/swamp/perl.pl:1:#!perl -T
 t/swamp/perl.pm:1:#!perl -T
-EOF
+HERE
 
     foreach my $line ( @expected ) {
         $line =~ s/^(.*?)(?=:)/reslash( $1 )/ge;
@@ -38,10 +38,10 @@ EOF
 }
 
 TEST_NOTYPE: {
-    my @expected = line_split( <<'EOF' );
+    my @expected = line_split( <<'HERE' );
 t/swamp/c-header.h:1:/*    perl.h
 t/swamp/Makefile:1:# This Makefile is for the ack extension to perl.
-EOF
+HERE
 
     foreach my $line ( @expected ) {
         $line =~ s/^(.*?)(?=:)/reslash( $1 )/ge;
@@ -93,9 +93,9 @@ TEST_TYPE_OVERRIDE: {
 }
 
 TEST_NOTYPE_ACKRC_CMD_LINE_OVERRIDE: {
-    my $ackrc = <<'END_ACKRC';
+    my $ackrc = <<'HERE';
 --nohtml
-END_ACKRC
+HERE
 
     my @expected = (
         reslash('t/swamp/html.htm') . ':2:<html><head><title>Boring test file </title></head>',
@@ -109,9 +109,9 @@ END_ACKRC
 }
 
 TEST_TYPE_ACKRC_CMD_LINE_OVERRIDE: {
-    my $ackrc = <<'END_ACKRC';
+    my $ackrc = <<'HERE';
 --html
-END_ACKRC
+HERE
 
     my @expected;
 

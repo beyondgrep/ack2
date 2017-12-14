@@ -16,12 +16,12 @@ my @TEXT_FILES = sort map { untaint($_) } glob( 't/text/*.txt' );
 
 
 NO_GROUPING: {
-    my @expected = line_split( <<"EOF" );
+    my @expected = line_split( <<"HERE" );
 $bill_:4:or prohibiting the free exercise thereof; or abridging the freedom of
 $bill_:10:A well regulated Militia, being necessary to the security of a free State,
 $const:32:Number of free Persons, including those bound to Service for a Term
 $getty:23:shall have a new birth of freedom -- and that government of the people,
-EOF
+HERE
 
     my @cases = (
         [qw( --nogroup --nocolor free )],
@@ -35,7 +35,7 @@ EOF
 
 
 STANDARD_GROUPING: {
-    my @expected = line_split( <<"EOF" );
+    my @expected = line_split( <<"HERE" );
 $bill_
 4:or prohibiting the free exercise thereof; or abridging the freedom of
 10:A well regulated Militia, being necessary to the security of a free State,
@@ -45,7 +45,7 @@ $const
 
 $getty
 23:shall have a new birth of freedom -- and that government of the people,
-EOF
+HERE
 
     my @cases = (
         [qw( --group --nocolor free )],
@@ -58,7 +58,7 @@ EOF
 }
 
 HEADING_NO_BREAK: {
-    my @expected = line_split( <<"EOF" );
+    my @expected = line_split( <<"HERE" );
 $bill_
 4:or prohibiting the free exercise thereof; or abridging the freedom of
 10:A well regulated Militia, being necessary to the security of a free State,
@@ -66,7 +66,7 @@ $const
 32:Number of free Persons, including those bound to Service for a Term
 $getty
 23:shall have a new birth of freedom -- and that government of the people,
-EOF
+HERE
 
     my @arg_sets = (
         [qw( --heading --nobreak --nocolor free )],
@@ -78,14 +78,14 @@ EOF
 }
 
 BREAK_NO_HEADING: {
-    my @expected = line_split( <<"EOF" );
+    my @expected = line_split( <<"HERE" );
 $bill_:4:or prohibiting the free exercise thereof; or abridging the freedom of
 $bill_:10:A well regulated Militia, being necessary to the security of a free State,
 
 $const:32:Number of free Persons, including those bound to Service for a Term
 
 $getty:23:shall have a new birth of freedom -- and that government of the people,
-EOF
+HERE
 
     my @arg_sets = (
         [qw( --break --noheading --nocolor free )],

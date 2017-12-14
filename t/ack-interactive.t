@@ -24,7 +24,7 @@ INTERACTIVE_GROUPING_NOCOLOR: {
 
     my $output = run_ack_interactive(@args, @files);
 
-    is $output, <<'END_OUTPUT';
+    is( $output, <<'HERE' );
 t/text/bill-of-rights.txt
 4:or prohibiting the free exercise thereof; or abridging the freedom of
 10:A well regulated Militia, being necessary to the security of a free State,
@@ -34,7 +34,7 @@ t/text/constitution.txt
 
 t/text/gettysburg.txt
 23:shall have a new birth of freedom -- and that government of the people,
-END_OUTPUT
+HERE
 }
 
 INTERACTIVE_NOHEADING_NOCOLOR: {
@@ -43,12 +43,12 @@ INTERACTIVE_NOHEADING_NOCOLOR: {
 
     my $output = run_ack_interactive(@args, @files);
 
-    is $output, <<'END_OUTPUT';
+    is( $output, <<'HERE' );
 t/text/bill-of-rights.txt:4:or prohibiting the free exercise thereof; or abridging the freedom of
 t/text/bill-of-rights.txt:10:A well regulated Militia, being necessary to the security of a free State,
 t/text/constitution.txt:32:Number of free Persons, including those bound to Service for a Term
 t/text/gettysburg.txt:23:shall have a new birth of freedom -- and that government of the people,
-END_OUTPUT
+HERE
 }
 
 INTERACTIVE_NOGROUP_NOCOLOR: {
@@ -57,12 +57,12 @@ INTERACTIVE_NOGROUP_NOCOLOR: {
 
     my $output = run_ack_interactive(@args, @files);
 
-    is $output, <<'END_OUTPUT';
+    is( $output, <<'HERE' );
 t/text/bill-of-rights.txt:4:or prohibiting the free exercise thereof; or abridging the freedom of
 t/text/bill-of-rights.txt:10:A well regulated Militia, being necessary to the security of a free State,
 t/text/constitution.txt:32:Number of free Persons, including those bound to Service for a Term
 t/text/gettysburg.txt:23:shall have a new birth of freedom -- and that government of the people,
-END_OUTPUT
+HERE
 }
 
 INTERACTIVE_GROUPING_COLOR: {
@@ -75,7 +75,7 @@ INTERACTIVE_GROUPING_COLOR: {
     my $CM       = color 'black on_yellow';
     my $LINE_END = "\e[0m\e[K";
 
-    my @expected_lines = line_split( <<"EOF" );
+    my @expected_lines = line_split( <<"HERE" );
 ${CFN}t/text/bill-of-rights.txt${CRESET}
 ${CLN}4${CRESET}:or prohibiting the ${CM}free${CRESET} exercise thereof; or abridging the ${CM}free${CRESET}dom of$LINE_END
 ${CLN}10${CRESET}:A well regulated Militia, being necessary to the security of a ${CM}free${CRESET} State,$LINE_END
@@ -85,7 +85,7 @@ ${CLN}32${CRESET}:Number of ${CM}free${CRESET} Persons, including those bound to
 
 ${CFN}t/text/gettysburg.txt${CRESET}
 ${CLN}23${CRESET}:shall have a new birth of ${CM}free${CRESET}dom -- and that government of the people,$LINE_END
-EOF
+HERE
 
     my @lines = run_ack_interactive(@args, @files);
 
@@ -98,7 +98,7 @@ INTERACTIVE_SINGLE_TARGET: {
 
     my $output = run_ack_interactive(@args, @files);
 
-    is $output, <<'END_OUTPUT';
+    is( $output, <<'HERE' );
     Quoth the Raven, "Nevermore."
     With such name as "Nevermore."
     Then the bird said, "Nevermore."
@@ -110,7 +110,7 @@ INTERACTIVE_SINGLE_TARGET: {
     Quoth the Raven, "Nevermore."
     Quoth the Raven, "Nevermore."
     Shall be lifted--nevermore!
-END_OUTPUT
+HERE
 }
 
 INTERACTIVE_NOCOLOR_REGEXP_CAPTURE: {
@@ -119,7 +119,7 @@ INTERACTIVE_NOCOLOR_REGEXP_CAPTURE: {
 
     my $output = run_ack_interactive(@args, @files);
 
-    is $output, <<'END_OUTPUT';
+    is( $output, <<'HERE' );
     Quoth the Raven, "Nevermore."
     With such name as "Nevermore."
     Then the bird said, "Nevermore."
@@ -131,5 +131,5 @@ INTERACTIVE_NOCOLOR_REGEXP_CAPTURE: {
     Quoth the Raven, "Nevermore."
     Quoth the Raven, "Nevermore."
     Shall be lifted--nevermore!
-END_OUTPUT
+HERE
 }

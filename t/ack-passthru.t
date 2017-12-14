@@ -14,10 +14,10 @@ my @full_speech = <DATA>;
 chomp @full_speech;
 
 NORMAL: {
-    my @expected = line_split( <<'EOF' );
+    my @expected = line_split( <<'HERE' );
 Now we are engaged in a great civil war, testing whether that nation,
 on a great battle-field of that war. We have come to dedicate a portion
-EOF
+HERE
 
     my @files = qw( t/text/gettysburg.txt );
     my @args = qw( war );

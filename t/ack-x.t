@@ -58,7 +58,7 @@ prep_environment();
 my $ozy__ = reslash( 't/text/ozymandias.txt' );
 my $raven = reslash( 't/text/raven.txt' );
 
-my @expected = line_split( <<"EOF" );
+my @expected = line_split( <<"HERE" );
 $ozy__:6:Tell that its sculptor well those passions read
 $ozy__:8:The hand that mocked them, and the heart that fed:
 $ozy__:13:Of that colossal wreck, boundless and bare
@@ -75,7 +75,7 @@ $raven:113:"Be that word our sign of parting, bird or fiend!" I shrieked, upstar
 $raven:115:Leave no black plume as a token of that lie thy soul hath spoken!
 $raven:122:And his eyes have all the seeming of a demon's that is dreaming,
 $raven:124:And my soul from out that shadow that lies floating on the floor
-EOF
+HERE
 
 my $perl = caret_X();
 my @lhs_args = ( $perl, '-Mblib', build_ack_invocation( '--sort-files', '-g', '[vz]', 't/text' ) );
