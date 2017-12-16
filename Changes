@@ -6,6 +6,9 @@ NEXT
 Avoid a fatal error that sometimes happened if a file was unreadable.
 (GH#520)
 
+[ENHANCEMENTS]
+Sped up file type detection for certain files.
+
 
 2.20    Sun Dec 10 21:54:55 CST 2017
 ====================================
