@@ -200,7 +200,7 @@ sub clone {
 }
 
 
-=head2 $res->firstliney
+=head2 $res->firstliney()
 
 Returns the first line of a file (or first 250 characters, whichever
 comes first).
@@ -211,6 +211,12 @@ sub firstliney {
     my ( $self ) = @_;
 
     my $fh = $self->open();
+    if ( !$fh ) {
+        if ( $App::Ack::report_bad_filenames ) {
+            App::Ack::warn( $self->name . ': ' . $! );
+        }
+        return '';
+    }
 
     if ( !exists $self->{firstliney} ) {
         my $buffer = '';
