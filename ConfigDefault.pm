@@ -305,6 +305,10 @@ sub _options_block {
 # http://www.json.org/
 --type-add=json:ext:json
 
+# Kotlin
+# https://kotlinlang.org/
+--type-add=kotlin:ext:kt,kts
+
 # Less
 # http://www.lesscss.org/
 --type-add=less:ext:less

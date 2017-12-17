@@ -7,6 +7,8 @@ Avoid a fatal error that sometimes happened if a file was unreadable.
 (GH#520)
 
 [ENHANCEMENTS]
+Added support for the Kotlin language.
+
 Sped up file type detection for certain files.
 
 
