@@ -33,9 +33,9 @@ for my $module ( @modules ) {
     diag( "Using $module $ver" );
 }
 
-print "\nEnvironment\n";
+diag "\nEnvironment\n";
 for my $key ( sort keys %ENV ) {
-    print "$key=$ENV{$key}\n";
+    diag "$key=$ENV{$key}\n";
 }
 
 done_testing();
