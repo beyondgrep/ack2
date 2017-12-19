@@ -1,6 +1,6 @@
 History file for ack.  https://beyondgrep.com/
 
-NEXT
+2.21_01 Mon Dec 18 23:40:45 CST 2017
 ====================================
 [FIXES]
 Avoid a fatal error that sometimes happened if a file was unreadable.
