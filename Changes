@@ -1,5 +1,11 @@
 History file for ack.  https://beyondgrep.com/
 
+NEXT
+====================================
+[FIXES]
+t/ack-n.t was not calling lists_match() correctly.
+
+
 2.22    Fri Dec 22 16:42:43 CST 2017
 ====================================
 No changes since 2.21_01.

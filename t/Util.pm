@@ -2,6 +2,9 @@ package Util;
 
 use parent 'Exporter';
 
+use warnings;
+use strict;
+
 use Carp ();
 use Cwd ();
 use File::Next ();
@@ -459,6 +462,7 @@ sub lists_match {
     return subtest "lists_match( $msg )" => sub {
         plan tests => 1;
 
+        my $ok;
         my $rc = eval 'use Test::Differences; 1;';
         if ( $rc ) {
             $ok = eq_or_diff( [@actual], [@expected], $msg );
