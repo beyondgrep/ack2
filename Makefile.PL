@@ -111,7 +111,7 @@ tags:
 		--languages=Perl --langmap=Perl:+.t \
 
 critic:
-	perlcritic -1 -q -profile perlcriticrc $(ACK) $(ALL_PM) t/*.t t/lib/*.t xt/*.t
+	perlcritic -1 -q -profile perlcriticrc $(ACK) $(ALL_PM) t/*.pm t/*.t t/lib/*.t xt/*.t
 
 ack-standalone : $(ACK) $(ALL_PM) squash Makefile
 	$(PERL) squash $(ACK) $(ALL_PM) File::Next %s > ack-standalone
