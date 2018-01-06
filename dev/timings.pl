@@ -146,43 +146,43 @@ my @invocations = (
     # normal mode
     [ 'foo', $SOURCE_DIR ],
     [ 'foo', '--cc', $SOURCE_DIR ],   # where there are a lot of matches
-    [ 'foo', '--rust', $SOURCE_DIR ], # where there are little/none
+    [ 'foo', '--lisp', $SOURCE_DIR ], # where there are little/none
     [ 'foo', '--known', $SOURCE_DIR ],
 
     # -f
     [ '-f', $SOURCE_DIR ],
     [ '-f', '--cc', $SOURCE_DIR ],   # where there are a lot of matches
-    [ '-f', '--rust', $SOURCE_DIR ], # where there are little/none
+    [ '-f', '--lisp', $SOURCE_DIR ], # where there are little/none
     [ '-f', '--known', $SOURCE_DIR ],
 
     # -l
     [ 'foo', '-l', $SOURCE_DIR ],
     [ 'foo', '-l', '--cc', $SOURCE_DIR ],   # where there are a lot of matches
-    [ 'foo', '-l', '--rust', $SOURCE_DIR ], # where there are little/none
+    [ 'foo', '-l', '--lisp', $SOURCE_DIR ], # where there are little/none
     [ 'foo', '-l', '--known', $SOURCE_DIR ],
 
     # -c
     [ 'foo', '-c', $SOURCE_DIR ],
     [ 'foo', '-c', '--cc', $SOURCE_DIR ],   # where there are a lot of matches
-    [ 'foo', '-c', '--rust', $SOURCE_DIR ], # where there are little/none
+    [ 'foo', '-c', '--lisp', $SOURCE_DIR ], # where there are little/none
     [ 'foo', '-c', '--known', $SOURCE_DIR ],
 
     # -A
     [ 'foo', '-A10', $SOURCE_DIR ],
     [ 'foo', '-A10', '--cc', $SOURCE_DIR ],   # where there are a lot of matches
-    [ 'foo', '-A10', '--rust', $SOURCE_DIR ], # where there are little/none
+    [ 'foo', '-A10', '--lisp', $SOURCE_DIR ], # where there are little/none
     [ 'foo', '-A10', '--known', $SOURCE_DIR ],
 
     # -B
     [ 'foo', '-B10', $SOURCE_DIR ],
     [ 'foo', '-B10', '--cc', $SOURCE_DIR ],   # where there are a lot of matches
-    [ 'foo', '-B10', '--rust', $SOURCE_DIR ], # where there are little/none
+    [ 'foo', '-B10', '--lisp', $SOURCE_DIR ], # where there are little/none
     [ 'foo', '-B10', '--known', $SOURCE_DIR ],
 
     # -C
     [ 'foo', '-C10', $SOURCE_DIR ],
     [ 'foo', '-C10', '--cc', $SOURCE_DIR ],   # where there are a lot of matches
-    [ 'foo', '-C10', '--rust', $SOURCE_DIR ], # where there are little/none
+    [ 'foo', '-C10', '--lisp', $SOURCE_DIR ], # where there are little/none
     [ 'foo', '-C10', '--known', $SOURCE_DIR ],
 );
 
