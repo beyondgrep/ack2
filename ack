@@ -1044,7 +1044,9 @@ RESOURCES:
             else {
                 $needs_line_scan = 1;
             }
-            $nmatches += print_matches_in_resource( $resource, $opt );
+            if ( $needs_line_scan ) {
+                $nmatches += print_matches_in_resource( $resource, $opt );
+            }
             if ( $nmatches && $only_first ) {
                 last RESOURCES;
             }
