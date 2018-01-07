@@ -1032,7 +1032,7 @@ RESOURCES:
             }
         }
         else {
-            my $needs_line_scan;
+            my $needs_line_scan = 1;
             if ( $opt->{regex} && !$opt->{passthru} ) {
                 if ( $resource->open ) {
                     $needs_line_scan = $resource->needs_line_scan( $opt );
@@ -1040,9 +1040,6 @@ RESOURCES:
                         $resource->reset();
                     }
                 }
-            }
-            else {
-                $needs_line_scan = 1;
             }
             if ( $needs_line_scan ) {
                 $nmatches += print_matches_in_resource( $resource, $opt );
