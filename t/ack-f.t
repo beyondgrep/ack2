@@ -15,6 +15,7 @@ DEFAULT_DIR_EXCLUSIONS: {
         t/swamp/0
         t/swamp/c-header.h
         t/swamp/c-source.c
+        t/swamp/constitution-100k.pl
         t/swamp/crystallography-weenies.f
         t/swamp/example.R
         t/swamp/file.bar
@@ -77,6 +78,7 @@ DEFAULT_DIR_EXCLUSIONS: {
 COMBINED_FILTERS: {
     my @expected = qw(
         t/swamp/0
+        t/swamp/constitution-100k.pl
         t/swamp/perl.pm
         t/swamp/Rakefile
         t/swamp/options-crlf.pl

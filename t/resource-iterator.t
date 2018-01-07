@@ -38,6 +38,7 @@ UNFILTERED: {
             t/swamp/blib/ignore.pod
             t/swamp/c-header.h
             t/swamp/c-source.c
+            t/swamp/constitution-100k.pl
             t/swamp/crystallography-weenies.f
             t/swamp/example.R
             t/swamp/file.bar

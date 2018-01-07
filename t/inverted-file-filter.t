@@ -64,6 +64,7 @@ EXCLUDE_ONLY: {
 INCLUDE_PLUS_EXCLUDE_ONLY: {
     my @expected = qw(
         t/swamp/0
+        t/swamp/constitution-100k.pl
         t/swamp/perl.pm
         t/swamp/options-crlf.pl
         t/swamp/options.pl

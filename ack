@@ -1032,6 +1032,18 @@ RESOURCES:
             }
         }
         else {
+            my $needs_line_scan;
+            if ( $opt->{regex} && !$opt->{passthru} ) {
+                if ( $resource->open ) {
+                    $needs_line_scan = $resource->needs_line_scan( $opt );
+                    if ( $needs_line_scan ) {
+                        $resource->reset();
+                    }
+                }
+            }
+            else {
+                $needs_line_scan = 1;
+            }
             $nmatches += print_matches_in_resource( $resource, $opt );
             if ( $nmatches && $only_first ) {
                 last RESOURCES;

@@ -12,6 +12,7 @@ prep_environment();
 
 my @files = qw(
 t/swamp/0
+t/swamp/constitution-100k.pl
 t/swamp/Rakefile
 t/swamp/parrot.pir
 t/swamp/options-crlf.pl

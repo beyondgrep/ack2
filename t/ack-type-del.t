@@ -14,7 +14,7 @@ my $help_types_output;
 
 # sanity check
 ( $stdout, $stderr ) = run_ack_with_stderr('--perl', '-f', 't/swamp');
-is( scalar(@{$stdout}), 11, 'Found initial 11 files' );
+is( scalar(@{$stdout}), 12, 'Found initial 11 files' );
 is_empty_array( $stderr, 'Nothing in stderr' );
 
 ( $stdout, $stderr ) = run_ack_with_stderr('--type-del=perl', '--type-del=perltest', '--perl', '-f', 't/swamp');

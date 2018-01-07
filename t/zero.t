@@ -22,6 +22,7 @@ my $swamp = 't/swamp';
 
 my @actual_swamp_perl = map { "$swamp/$_" } qw(
     0
+    constitution-100k.pl
     Makefile.PL
     options.pl
     options-crlf.pl

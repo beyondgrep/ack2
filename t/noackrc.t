@@ -11,6 +11,7 @@ prep_environment();
 
 my @expected = (
     't/swamp/Makefile.PL',
+    't/swamp/constitution-100k.pl',
     't/swamp/options-crlf.pl',
     't/swamp/options.pl',
     't/swamp/perl.pl',

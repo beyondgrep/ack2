@@ -5,6 +5,11 @@ NEXT
 [FIXES]
 t/ack-n.t was not calling lists_match() correctly.
 
+[ENHANCEMENTS]
+Added an optimization to make ack only do a line-by-line search of a
+file if there's a match somewhere in the file.  This gives ack a 20-30%
+in timings of common cases.
+
 
 2.22    Fri Dec 22 16:42:43 CST 2017
 ====================================

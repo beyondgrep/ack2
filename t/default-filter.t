@@ -15,6 +15,7 @@ filter_test(
     [ 'default' ], [
         't/swamp/#emacs-workfile.pl#',
         't/swamp/0',
+        't/swamp/constitution-100k.pl',
         't/swamp/c-header.h',
         't/swamp/c-source.c',
         't/swamp/crystallography-weenies.f',

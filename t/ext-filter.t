@@ -14,6 +14,7 @@ filter_test(
         't/swamp/Makefile.PL',
         't/swamp/blib/ignore.pm',
         't/swamp/blib/ignore.pod',
+        't/swamp/constitution-100k.pl',
         't/swamp/options-crlf.pl',
         't/swamp/options.pl',
         't/swamp/perl-test.t',
