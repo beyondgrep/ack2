@@ -1500,8 +1500,6 @@ Display version and copyright information.
 
 =item B<-w>, B<--word-regexp>
 
-=item B<-w>, B<--word-regexp>
-
 Turn on "words mode".  This sometimes matches a whole word, but the
 semantics is quite subtle.  If the passed regexp begins with a word
 character, then a word boundary is required before the match.  If the
