@@ -1,5 +1,11 @@
 History file for ack.  https://beyondgrep.com/
 
+NEXT
+====================================
+[ENHANCEMENTS]
+Added --ts for Typescript.
+
+
 2.23_02 Sat Jan  6 23:53:03 CST 2018
 ====================================
 [FIXES]

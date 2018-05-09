@@ -413,13 +413,17 @@ sub _options_block {
 # http://www.tcl.tk/
 --type-add=tcl:ext:tcl,itcl,itk
 
-# LaTeX
+# TeX & LaTeX
 # http://www.latex-project.org/
 --type-add=tex:ext:tex,cls,sty
 
 # Template Toolkit (Perl)
 # http://template-toolkit.org/
 --type-add=tt:ext:tt,tt2,ttml
+
+# Typescript
+# http://www.typescriptlang.org/
+--type-add=ts:ext:ts,tsx
 
 # Visual Basic
 --type-add=vb:ext:bas,cls,frm,ctl,vb,resx
