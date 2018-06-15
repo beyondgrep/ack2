@@ -11,7 +11,7 @@ we don't fall prey to that again.
 use warnings;
 use strict;
 
-use Test::More tests => 1;
+use Test::More tests => 2;
 
 use lib 't';
 use Util;
@@ -39,4 +39,15 @@ DASH_F: {
     my @args = qw( -f --perl );
 
     ack_sets_match( [ @args, $swamp ], \@actual_swamp_perl, 'DASH_F' );
+}
+
+DASH_F_CWD: {
+    my @args = qw( -f --perl --sort-files );
+
+    my @swamp_basenames = map { s{^$swamp/}{}r } @actual_swamp_perl;
+
+    my $wd = getcwd_clean();
+    safe_chdir('t/swamp');
+    ack_sets_match( [ @args, '.' ], \@swamp_basenames, 'DASH_F_CWD:' );
+    safe_chdir($wd);
 }
