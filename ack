@@ -945,7 +945,7 @@ sub main {
     set_up_line_context();
 
 RESOURCES:
-    while ( my $resource = $resources->next ) {
+    while ( defined(my $resource = $resources->next) ) {
         if ($is_tracking_context) {
             set_up_line_context_for_file();
         }
