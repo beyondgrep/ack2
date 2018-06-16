@@ -1,9 +1,13 @@
 History file for ack.  https://beyondgrep.com/
 
-NEXT
+2.23_03 Fri Jun 15 23:18:42 CDT 2018
 ====================================
 [ENHANCEMENTS]
 Added --ts for Typescript.
+
+[FIXES]
+ack would stop searching if there was a file called "0" in the current
+directory where ack was invoked. (GH #667)
 
 
 2.23_02 Sat Jan  6 23:53:03 CST 2018
