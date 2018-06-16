@@ -44,7 +44,7 @@ DASH_F: {
 DASH_F_CWD: {
     my @args = qw( -f --perl --sort-files );
 
-    my @swamp_basenames = map { s{^$swamp/}{}r } @actual_swamp_perl;
+    my @swamp_basenames = map { s{^$swamp/}{}; $_ } @actual_swamp_perl;
 
     my $wd = getcwd_clean();
     safe_chdir('t/swamp');
