@@ -13,14 +13,14 @@ A container for functions for the ack program.
 
 =head1 VERSION
 
-Version 2.23_03
+Version 2.24
 
 =cut
 
 our $VERSION;
 our $COPYRIGHT;
 BEGIN {
-    $VERSION = '2.23_03';
+    $VERSION = '2.24';
     $COPYRIGHT = 'Copyright 2005-2018 Andy Lester.';
 }
 
