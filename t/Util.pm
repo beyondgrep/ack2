@@ -289,8 +289,10 @@ sub run_cmd {
     if ( is_windows() ) {
         require Win32::ShellQuote;
         # Capture stderr & stdout output into these files (only on Win32).
-        my $catchout_file = 'stdout.log';
-        my $catcherr_file = 'stderr.log';
+        my $catchout = File::Temp->new;
+        my $catcherr = File::Temp->new;
+        my $catchout_file = $catchout->filename;
+        my $catcherr_file = $catcherr->filename;
 
         open(SAVEOUT, ">&STDOUT") or die "Can't dup STDOUT: $!";
         open(SAVEERR, ">&STDERR") or die "Can't dup STDERR: $!";
