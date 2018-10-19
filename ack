@@ -2269,6 +2269,7 @@ L<https://github.com/beyondgrep/ack2>
 How appropriate to have I<ack>nowledgements!
 
 Thanks to everyone who has contributed to ack in any way, including
+Tim Gim Yee,
 Michele Campeotto,
 H.Merijn Brand,
 Duke Leto,

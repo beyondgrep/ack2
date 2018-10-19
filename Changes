@@ -1,6 +1,13 @@
 History file for ack.  https://beyondgrep.com/
 
 
+NEXT
+====================================
+[FIXES]
+Use File::Temp for temp files during tests on Win32.  Thanks, Tim Gim Yee.
+(GH #671)
+
+
 2.24    Thu Jun 21 22:41:49 CDT 2018
 ====================================
 No changes since 2.23_03.
