@@ -10,6 +10,7 @@ This tests whether ack's command line options work as expected.
 =cut
 
 use Test::More;
+use charnames qw/ :full :short /;
 
 # --no-recurse is inconsistent w/--nogroup
 
@@ -80,7 +81,7 @@ SMART_CASE: {
 
     # Uppercase characters that aren't really uppercase.
     like(
-        +run_ack( $opt, '\Sll\Win\Dup\Bper\N{0,1}cas\N', @files ),
+        +run_ack( $opt, 'all\Win\Dup\Bper ca\Se', @files ),
         $re,
         qq{$opt ignores upper in meta-characters}
     );
@@ -116,11 +117,18 @@ SMART_CASE: {
         $re,
         qq{$opt sees upper "U" in octal escape}
     );
-    unlike(
-        +run_ack( $opt, 'all in uppe\o{122} case', @files ),
-        $re,
-        qq{$opt sees upper "R" in octal escape with brackets}
-    );
+    SKIP: {
+        {
+            no warnings;
+            skip "Bracketed octal escapes not implemented", 2
+                if "\o{122}" eq "o{122}";
+        }
+        unlike(
+            +run_ack( $opt, 'all in uppe\o{122} case', @files ),
+            $re,
+            qq{$opt sees upper "R" in bracketed octal escape}
+        );
+    }
     unlike(
         +run_ack( $opt, 'all in upper \N{U+0043}ase', @files ),
         $re,
