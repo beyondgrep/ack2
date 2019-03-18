@@ -13,15 +13,15 @@ A container for functions for the ack program.
 
 =head1 VERSION
 
-Version 2.24
+Version 2.26
 
 =cut
 
 our $VERSION;
 our $COPYRIGHT;
 BEGIN {
-    $VERSION = '2.24';
-    $COPYRIGHT = 'Copyright 2005-2018 Andy Lester.';
+    $VERSION = '2.26';
+    $COPYRIGHT = 'Copyright 2005-2019 Andy Lester.';
 }
 
 our $fh;
@@ -655,7 +655,7 @@ sub exit_from_ack {
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2005-2018 Andy Lester.
+Copyright 2005-2019 Andy Lester.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the Artistic License v2.0.
