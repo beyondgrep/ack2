@@ -1,5 +1,11 @@
 History file for ack.  https://beyondgrep.com/
 
+NEXT
+====================================
+[ENHANCEMENTS]
+The --help-rgb-colors option now displays the RGB codes organized by
+HSL values for easier picking.  Thanks, Bill Ricker.
+
 
 2.26    Sun Mar 17 22:00:00 CDT 2019
 ====================================
