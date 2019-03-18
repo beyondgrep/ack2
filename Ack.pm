@@ -318,6 +318,8 @@ File presentation:
   --color-match=COLOR
   --color-lineno=COLOR          Set the color for filenames, matches, and line
                                 numbers.
+  --help-colors                 Show a list of possible color combinations.
+  --help-rgb-colors             Show a list of advanced color specifications.
   --flush                       Flush output immediately, even when ack is used
                                 non-interactively (when output goes to a pipe or
                                 file).
@@ -368,6 +370,9 @@ Miscellaneous:
                                 to standard output.
   --help, -?                    This help
   --help-types                  Display all known types
+  --help-types                  Display all known types, and how they're defined.
+  --help-colors                 Show a list of possible color combinations.
+  --help-rgb-colors             Show a list of advanced color specifications.
   --dump                        Dump information on which options are loaded
                                 from which RC files
   --[no]filter                  Force ack to treat standard input as a pipe
@@ -389,6 +394,117 @@ END_OF_HELP
 
     return;
  }
+
+
+=head2 show_help_colors()
+
+Display the colors help subpage.
+
+=cut
+
+sub show_help_colors {
+    App::Ack::print( <<'END_OF_HELP' );
+ack allows customization of the colors it uses when presenting matches
+onscreen.  See the "ACK COLORS" section of the ack manual (ack --man).
+
+Here is a chart of how various color combinations appear: Each of the eight
+foreground colors, on each of the eight background colors or no background
+color, with and without the bold modifier.
+
+Run ack --help-rgb-colors for a chart of the RGB colors.
+
+END_OF_HELP
+
+    _show_color_grid();
+
+    return;
+}
+
+
+=head2 show_help_rgb()
+
+Display the RGB help subpage.
+
+=cut
+
+sub show_help_rgb {
+    App::Ack::print( <<'END_OF_HELP' );
+ack allows customization of the colors it uses when presenting matches
+onscreen.  See the "ACK COLORS" section of the ack manual (ack --man).
+
+Here is a grid of the 216 possible RGB colors.  For the standard color
+grid, run ack --help-colors.
+END_OF_HELP
+
+    _show_rgb_grid();
+
+   return;
+}
+
+
+sub _show_color_grid {
+    my $cell_width = 7;
+
+    my @fg_colors = qw( black red green yellow blue magenta cyan white );
+    my @bg_colors = map { "on_$_" } @fg_colors;
+
+    App::Ack::say(
+        _color_cell( '' ),
+        map { _color_cell( $_ ) } @fg_colors
+    );
+
+    App::Ack::say(
+        _color_cell( '' ),
+        map { _color_cell( '-' x $cell_width ) } @fg_colors
+    );
+
+    for my $bg ( '', @bg_colors ) {
+        App::Ack::say(
+            _color_cell( '' ),
+            ( map { _color_cell( $_, "$_ $bg" ) } @fg_colors ),
+           $bg
+        );
+
+        App::Ack::say(
+           _color_cell( 'bold' ),
+            ( map { _color_cell( $_, "bold $_ $bg" ) } @fg_colors ),
+            $bg
+        );
+       App::Ack::say();
+    }
+
+   return;
+}
+
+
+sub _color_cell {
+    my $text  = shift;
+    my $color = shift;
+
+    my $cell_width = 7;
+    $text = sprintf( '%-*s', $cell_width, $text );
+
+    return ($color ? Term::ANSIColor::colored( $text, $color ) : $text) . ' ';
+}
+
+
+sub _show_rgb_grid {
+    for my $r ( 0 .. 5 ) {
+        for my $g ( 0 .. 5 ) {
+            for my $b ( 0 ..5 ) {
+                my $rgb = "$r$g$b";
+                my $code = "rgb$r$g$b";
+
+                App::Ack::print(
+                    Term::ANSIColor::colored( $code, $code ),
+                    Term::ANSIColor::colored( $code, "reverse $code" ),
+                    ' '
+                );
+            }
+            App::Ack::say( '' );
+        }
+    }
+}
 
 
 =head2 show_help_types()
@@ -492,6 +608,7 @@ sub get_copyright {
 
 
 sub print                   { print {$fh} @_; return; }
+sub say                     { print {$fh} @_, "\n"; return; }
 sub print_blank_line        { App::Ack::print( "\n" ); return; }
 sub print_filename          { App::Ack::print( $_[0], $_[1] ); return; }
 

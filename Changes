@@ -3,6 +3,10 @@ History file for ack.  https://beyondgrep.com/
 
 NEXT
 ====================================
+[ENHANCEMENTS]
+Added --help-colors and --help-rgb-colors options to display colors
+available for color options.
+
 [FIXES]
 Use File::Temp for temp files during tests on Win32.  Thanks, Tim Gim Yee.
 (GH #671)

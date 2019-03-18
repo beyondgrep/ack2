@@ -398,6 +398,8 @@ EOT
         'version'           => sub { App::Ack::print_version_statement(); exit; },
         'help|?:s'          => sub { shift; App::Ack::show_help(@_); exit; },
         'help-types'        => sub { App::Ack::show_help_types(); exit; },
+        'help-colors'       => sub { App::Ack::show_help_colors(); exit; },
+        'help-rgb-colors'   => sub { App::Ack::show_help_rgb(); exit; },
         'man'               => sub { App::Ack::show_man(); exit; },
         $extra_specs ? %{$extra_specs} : (),
     }; # arg_specs
