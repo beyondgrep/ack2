@@ -1348,10 +1348,11 @@ equivalent to the default behavior found in ack 1.
 
 =item B<--lines=I<NUM>>
 
-Only print line I<NUM> of each file. Multiple lines can be given with multiple
-B<--lines> options or as a comma separated list (B<--lines=3,5,7>). B<--lines=4-7>
-also works. The lines are always output in ascending order, no matter the
-order given on the command line.
+Only print line I<NUM> of each file. Multiple lines can be given with
+multiple B<--lines> options or as a comma separated list (B<--lines=3,5,7>).
+B<--lines=4-7> also works, as well as any combination
+(B<--lines=3,15-20,43>) The lines are always output in ascending order, no
+matter the order given on the command line. No pattern is matched.
 
 =item B<-l>, B<--files-with-matches>
 

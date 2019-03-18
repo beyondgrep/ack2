@@ -268,7 +268,7 @@ Searching:
   -Q, --literal                 Quote all metacharacters; PATTERN is literal
 
 Search output:
-  --lines=NUM                   Only print line(s) NUM of each file
+  --lines=NUMS                  Only print line(s) NUMS of each file.
   -l, --files-with-matches      Only print filenames containing matches
   -L, --files-without-matches   Only print filenames with no matches
   --output=expr                 Output the evaluation of expr for each line

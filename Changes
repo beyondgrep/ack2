@@ -7,6 +7,8 @@ NEXT
 Added --help-colors and --help-rgb-colors options to display colors
 available for color options.
 
+Clarified the docs for --lines option. Thanks, Rob Hoelz.  (GH #673)
+
 [FIXES]
 Use File::Temp for temp files during tests on Win32.  Thanks, Tim Gim Yee.
 (GH #671)
