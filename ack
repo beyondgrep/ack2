@@ -98,6 +98,23 @@ MAIN: {
     main();
 }
 
+sub _parse_size {
+    my $s = $_[0] || return 0;
+
+    if ( $s =~ m/^\s*(\d+(?:\.\d+)?)(?:\s*([KMGT]?)(?:(i?)B)?)?\s*$/i ) {
+        my $n = $1;
+        if ($2) {
+            my $u = lc $2;
+            my $i = $3 ? 1024 : 1000; # 1KiB = 1024B; 1KB = 1000B
+            $n *= $i while $u =~ tr/tgmk/gmk/d;
+        }
+        return int $n;
+    }
+    else {
+        Carp::croak('Invalid size');
+    }
+}
+
 sub _compile_descend_filter {
     my ( $opt ) = @_;
 
@@ -145,6 +162,19 @@ sub _compile_file_filter {
             $direct_filters->add($filter);
         }
     }
+
+    # For the usual case where the user has not set this, it is faster if we can
+    # we can reduce to a single boolean test before we even make the method call
+    # if both of min and max are 0, don't test, accept all files
+
+    my ( $min_file_size, $max_file_size ) = map { _parse_size( $opt->{"${_}_file_size"} ) } qw ( min max );
+    my $size_filter = ( $min_file_size || $max_file_size )
+      ? sub {
+          my $size = (-s _) || 0; # paranoid?
+          return 0 if $max_file_size and $size > $max_file_size;
+          return $size >= $min_file_size;
+      }
+      : 0;
 
     my %is_member_of_starting_set = map { (get_file_id($_) => 1) } @{$start};
 
@@ -225,6 +255,13 @@ sub _compile_file_filter {
         if ( $ifiles_filters && $ifiles_filters->filter($resource) ) {
             return 0;
         }
+
+        # Warning: the size filter uses -s _: don't stat any other files
+        # or else you will break it.
+        #
+        # Also, it assumes we have a file name as named pipes are filtered out
+        # earlier.
+        return 0 if $size_filter && ! $size_filter->($resource);
 
         my $match_found = $direct_filters->filter($resource);
 
@@ -1383,6 +1420,21 @@ Print this manual page.
 =item B<-n>, B<--no-recurse>
 
 No descending into subdirectories.
+
+=item B<--max-file-size=I<NUM>>, B<--max-size=I<NUM>>
+
+The maximum size of files C<ack> is willing to search.
+
+This is useful for when you know you have a handful of extremely large files
+which you do not need to search, but whose distinguishing feature is their size.
+
+If not set, or set to 0, then there is no maximum.
+
+=item B<--min-file-size=I<NUM>>, B<--min-size=I<NUM>>
+
+The minimum size of files C<ack> is willing to search.
+
+If not set, or set to 0, then there is no maximum.
 
 =item B<-o>
 

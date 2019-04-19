@@ -34,6 +34,8 @@ my %defaults = (
     l                         => undef,
     L                         => undef,
     m                         => undef,
+    max_file_size             => undef,
+    min_file_size             => undef,
     n                         => undef,
     output                    => undef,
     pager                     => undef,
@@ -171,6 +173,34 @@ test_loader(
     expected_opts    => { %defaults, after_context => 2, before_context => 2 },
     expected_targets => [],
     '--context with invalid value sets both before_context and after_context to default'
+);
+
+test_loader(
+    argv             => ['--max-size=1500'],
+    expected_opts    => { %defaults, max_file_size => 1500 },
+    expected_targets => [],
+    '--max-size should set max_file_size'
+);
+
+test_loader(
+    argv             => ['--max-file-size=1500'],
+    expected_opts    => { %defaults, max_file_size => 1500 },
+    expected_targets => [],
+    '--max-file-size should set max_file_size'
+);
+
+test_loader(
+    argv             => ['--min-size=1500'],
+    expected_opts    => { %defaults, min_file_size => 1500 },
+    expected_targets => [],
+    '--min-size should set min_file_size'
+);
+
+test_loader(
+    argv             => ['--min-file-size=1500'],
+    expected_opts    => { %defaults, min_file_size => 1500 },
+    expected_targets => [],
+    '--min-file-size should set min_file_size'
 );
 
 # XXX These tests should all be replicated to work off of the ack command line
