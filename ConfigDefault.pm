@@ -178,6 +178,8 @@ sub _options_block {
 --type-add=make:ext:mak
 --type-add=make:is:makefile
 --type-add=make:is:Makefile
+--type-add=make:is:GNUmakefile
+--type-add=make:is:Makefile.am
 --type-add=make:is:Makefile.Debug
 --type-add=make:is:Makefile.Release
 
@@ -231,7 +233,7 @@ sub _options_block {
 --type-add=coffeescript:ext:coffee
 
 # C++
---type-add=cpp:ext:cpp,cc,cxx,m,hpp,hh,h,hxx
+--type-add=cpp:ext:cpp,cc,C,cxx,m,hpp,hh,h,H,hxx
 
 # C++ header files
 --type-add=hpp:ext:hpp,hh,h,hxx
