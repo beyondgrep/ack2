@@ -99,65 +99,107 @@ my %OPTION_ALIASES = (
 my %IS_AN_ALIAS = map { $_ => 1 } map { @$_ } values %OPTION_ALIASES;
 
 my $BASH_TEMPLATE = <<'END_TEMPLATE';
-declare -g -a _ack_options
-declare -g -a _ack_types=()
+_ack() {
+    local cur prev prog split=false
+    cur=$(_get_cword "=")
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    prog="${COMP_WORDS[0]}"
+    COMPREPLY=()
 
-_ack_options=(
-[% FOREACH option IN options -%]
-  "[% option -%]" \
-[% END -%]
-)
+    # Once user writes '--', just file completion after PATTERN
+    [ "$prev" = "--" ] && return 0
+    for word in ${COMP_WORDS[@]}; do
+        [ "$word" = "$prev" ] && break
+        [ "$word" = "--" ] && _filedir && return 0
+    done
 
-function __setup_ack() {
-    local type
-
-    while read LINE; do
-        case $LINE in
-            --*)
-                type="${LINE%% *}"
-                type=${type/--\[no\]/}
-                _ack_options[ ${#_ack_options[@]} ]="--$type"
-                _ack_options[ ${#_ack_options[@]} ]="--no$type"
-                _ack_types[ ${#_ack_types[@]} ]="$type"
-            ;;
-        esac
-    done < <(ack --help-types)
-}
-__setup_ack
-unset -f __setup_ack
-
-function _ack_complete() {
-    local current_word
-    local pattern
-
-    current_word=${COMP_WORDS[$COMP_CWORD]}
-
-    if [[ "$current_word" == -* ]]; then
-        pattern="${current_word}*"
-        for option in ${_ack_options[@]}; do
-            if [[ "$option" == $pattern ]]; then
-                COMPREPLY[ ${#COMPREPLY[@]} ]=$option
+    local opts types
+    if [ "${__COMP_CACHE_ACK}x" = "x" ]; then
+        for i in $("$prog" --help); do
+            i=${i%%=*}
+            if [ "${i:0:6}" = '--[no]' ]; then
+                i="${i#--\[no\]}"
+                opts="$opts --no$i --$i"
+            elif [[ "$i" =~ ^-[a-zA-Z0-9?-]+,? ]]; then
+                opts="$opts ${i//[\[.,\'\"]}"
             fi
         done
+        for t in $("$prog" --help-types); do
+            if [ "${t:0:6}" = '--[no]' ]; then
+                t="${t#--\[no\]}"
+                opts="$opts --no$t --$t"
+                types="$types no$t $t"
+            fi
+        done
+        __COMP_CACHE_ACK=( "$opts" "$types" )
+        export __COMP_CACHE_ACK
     else
-        local previous_word
-        previous_word=${COMP_WORDS[$(( $COMP_CWORD - 1 ))]}
-        if [[ "$previous_word" == "=" ]]; then
-            previous_word=${COMP_WORDS[$(( $COMP_CWORD - 2 ))]}
-        fi
-
-        if [ "$previous_word" == '--type' -o "$previous_word" == '--notype' ]; then
-            pattern="${current_word}*"
-            for type in ${_ack_types[@]}; do
-                if [[ "$type" == $pattern ]]; then
-                    COMPREPLY[ ${#COMPREPLY[@]} ]=$type
-                fi
-            done
-        fi
+        opts="${__COMP_CACHE_ACK[0]}"
+        types="${__COMP_CACHE_ACK[1]}"
     fi
+
+    _split_longopt && split=true
+
+    case "${prev}" in
+        # directory completion
+        --ignore-dir*)
+            _filedir -d
+            return 0
+            ;;
+        # file completion
+        --ackrc|--files-from)
+            _filedir
+            return 0
+            ;;
+        # command completion
+        --pager)
+            COMPREPLY=( $(compgen -c -- "${cur}") )
+            return 0
+            ;;
+        # search type completion
+        --type)
+            COMPREPLY=( $(compgen -W "${types}" -- "${cur}") )
+            return 0
+            ;;
+        # color completion
+        --color-*)
+            local colors="
+                black           on_black
+                blue            on_blue
+                cyan            on_cyan
+                green           on_green
+                magenta         on_magenta
+                red             on_red
+                white           on_white
+                yellow          on_yellow
+            "
+            COMPREPLY=( $(compgen -W "${colors}" -- "${cur}") )
+            return 0
+            ;;
+        # require args, no completion
+            -[ABCGgm]|--*context|--color|--colour|--ignore-file|\
+                --lines|--match|--max-count|--output|--type-*)
+            return 0
+            ;;
+    esac
+
+    $split && return 0
+
+    case "${cur}" in
+        -*)
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        *)
+            _filedir
+            return 0
+            ;;
+    esac
 }
 
-complete -o default -F _ack_complete ack ack2 ack-grep
+for i in "ack" "ack2" "ack-grep" "ack-standalone"; do
+    have "$i" && complete -F _ack ${nospace} "$i"
+done
 END_TEMPLATE
 
 my $ZSH_TEMPLATE = <<'END_TEMPLATE';
