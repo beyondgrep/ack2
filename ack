@@ -1346,6 +1346,12 @@ identically to file type filters as seen in L</"Defining your own types">.
 Limit selected files to those with types that ack knows about.  This is
 equivalent to the default behavior found in ack 1.
 
+=item B<-K>, B<--no-known-types>
+
+Do not limit selected files to those with types that ack knows about.  This is
+the default behavior found in ack 2, but this allows you to override an earlier
+specification of -k or --known-types
+
 =item B<--lines=I<NUM>>
 
 Only print line I<NUM> of each file. Multiple lines can be given with
