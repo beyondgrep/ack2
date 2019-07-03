@@ -5,6 +5,8 @@ use warnings;
 our $VERSION = '2.28'; # Check https://beyondgrep.com/ for updates
 
 use 5.008008;
+use charnames qw/ :full :short /;
+
 use Getopt::Long 2.38 ();
 use Carp 1.04 ();
 
@@ -322,18 +324,111 @@ sub build_regex {
         $str = "$str\\b" if $pristine_str =~ /\w$/;
     }
 
-    my $regex_is_lc = $str eq lc $str;
-    if ( $opt->{i} || ($opt->{smart_case} && $regex_is_lc) ) {
+    if ( $opt->{i} || ($opt->{smart_case} && regex_is_lc($str)) ) {
         $str = "(?i)$str";
     }
 
-    my $re = eval { qr/$str/m };
+    # Create a regex object.  Use eval-string so \N{NAME} will resolve.
+    my $re = eval "qr{$str}m";
     if ( !$re ) {
         die "Invalid regex '$str':\n  $@";
     }
 
     return $re;
 
+}
+
+# Return true if regex consists of only lowercase characters.
+# Excludes meta-characters (like /\S/ or /\W/), character escapes
+# (like /\xFF/ or /\N{LATIN SMALL LETTER E}/), and other contructs
+# that use uppercase characters.
+sub regex_is_lc {
+    my $str = shift;
+
+    # Group name has to alphanumeric but can't start with a number.
+    my $named_capture_re = qr/[^\W\d]\w*/;
+
+    # Keep track of number of capturing parenthesis.
+    my $capture = 0;
+
+    # Remove or replace anything that uses an uppercase character but
+    # isn't an uppercase character.
+    $str =~ s[
+        \\
+        (?:
+            (?<escape>
+                x
+                (?:
+                    [[:xdigit:]]{2}     # Hex escape
+                    |
+                    \{[[:xdigit:]]+\}   # Bracketed hex escape
+                )
+                |
+                (?<octal>[0-7]{3})      # Octal escape or back-reference
+                |
+                o\{[0-7]+\}             # Bracketed octal escape
+                |
+                c[\p{PosixPrint}]       # Control-X escape
+                |
+                N\{ (?:
+                    U\+[[:xdigit:]]+    # Numbered Unicode character
+                    |
+                    [^\W\d][^}]*        # Named Unicode character
+                ) \}
+            )
+            |
+            [pP]
+            (?:
+                [A-Z]                   # Single-letter Unicode property
+                |
+                \{[^}]+\}               # Unicode Property
+            )
+            |
+            [gk]\{$named_capture_re\}   # Named back-reference
+            |
+            k
+            (?:
+                <$named_capture_re>     # .Net named back-reference
+                |
+                '$named_capture_re'     # .Net named back-reference
+            )
+            |
+            .                           # Single character escape
+        )
+        |
+        \(\?
+        (?:
+            (?<capture>
+                <$named_capture_re>     # Named capture
+                |
+                '$named_capture_re'     # Named capture
+                |
+                P<$named_capture_re>    # Python named capture
+            )
+            |
+            P=$named_capture_re\)       # Python named back-reference
+        )
+        |
+        (?<capture>\((?!\?))            # Capturing parenthesis
+    ]{
+        my $esc;
+        if ($+{capture}) {
+            $capture++;
+        } elsif (my $oct = $+{octal}) {
+             $esc = $oct
+                 if length $oct > 1    # Single digit is back-reference
+                 and $oct =~ /^0/      # Leading zero is octal
+                  || $oct > $capture;  # Has capture group is back-reference
+        } elsif ($+{escape}) {
+            $esc = $+{escape};
+        }
+        $esc
+            ? eval qq/"\\$esc"/  # Replace escapes with characters
+            : '';                # Remove everything else
+    }gxe;
+
+    # Check if actual characters are all lowercase.
+    $str eq lc $str;
 }
 
 my $match_column_number;

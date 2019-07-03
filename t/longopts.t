@@ -10,10 +10,11 @@ This tests whether ack's command line options work as expected.
 =cut
 
 use Test::More;
+use charnames qw/ :full :short /;
 
 # --no-recurse is inconsistent w/--nogroup
 
-plan tests => 38;
+plan tests => 66;
 
 use lib 't';
 use Util;
@@ -60,21 +61,107 @@ for my $arg ( qw( -i --ignore-case ) ) {
 SMART_CASE: {
     my @files = 't/swamp/options.pl';
     my $opt = '--smart-case';
+    my $re = qr/ALL IN UPPER CASE/;
+
     like(
-        +run_ack( $opt, 'upper case', @files ),
-        qr{UPPER CASE},
+        +run_ack( $opt, 'all in upper case', @files ),
+        $re,
         qq{$opt turn on ignore-case when PATTERN has no upper}
     );
     unlike(
-        +run_ack( $opt, 'Upper case', @files ),
-        qr{UPPER CASE},
+        +run_ack( $opt, 'all in UPPER case', @files ),
+        $re,
         qq{$opt does nothing when PATTERN has upper}
     );
-
     like(
-        +run_ack( $opt, '-i', 'UpPer CaSe', @files ),
-        qr{UPPER CASE},
+        +run_ack( $opt, '-i', 'AlL In UpPer CaSe', @files ),
+        $re,
         qq{-i overrides $opt, forcing ignore case, even when PATTERN has upper}
+    );
+
+    # Uppercase characters that aren't really uppercase.
+    like(
+        +run_ack( $opt, 'all\Win\Dup\Bper ca\Se', @files ),
+        $re,
+        qq{$opt ignores upper in meta-characters}
+    );
+    like(
+        +run_ack( $opt, 'a\x6Cl i\x{006E} \N{U+0075}pper[^\cJ]cas\N{LATIN SMALL LETTER E}', @files ),
+        $re,
+        qq{$opt ignores upper in character escapes}
+    );
+    like(
+        +run_ack( $opt, '\pLll\p{PosixSpace}in\PNupper\P{PosixDigit}case', @files ),
+        $re,
+        qq{$opt ignores upper in Unicode properties}
+    );
+    like(
+        +run_ack( $opt, q[a(?<L>l)\k{L}(?<SPACE> )in\k'SPACE'u(?'P'p)\g{P}(?P<E>e)r(?P=SPACE)cas\k{E}], @files ),
+        $re,
+        qq{$opt ignores upper in named captures}
+    );
+
+    # Uppercase characters may have been escaped.
+    unlike(
+        +run_ack( $opt, '\x41ll in upper case', @files ),
+        $re,
+        qq{$opt sees upper "A" in hex escape}
+    );
+    unlike(
+        +run_ack( $opt, 'all \x{0049}n upper case', @files ),
+        $re,
+        qq{$opt sees upper "I" in bracketed hex escape}
+    );
+    unlike(
+        +run_ack( $opt, 'all in \125pper case', @files ),
+        $re,
+        qq{$opt sees upper "U" in octal escape}
+    );
+    SKIP: {
+        {
+            no warnings;
+            skip "Bracketed octal escapes not implemented", 2
+                if "\o{122}" eq "o{122}";
+        }
+        unlike(
+            +run_ack( $opt, 'all in uppe\o{122} case', @files ),
+            $re,
+            qq{$opt sees upper "R" in bracketed octal escape}
+        );
+    }
+    unlike(
+        +run_ack( $opt, 'all in upper \N{U+0043}ase', @files ),
+        $re,
+        qq{$opt sees upper "CU" in numbered Unicode character}
+    );
+    unlike(
+        +run_ack( $opt, 'all in upper cas\N{LATIN CAPITAL LETTER E}', @files ),
+        $re,
+        qq{$opt sees upper "E" in named Unicode character}
+    );
+
+    # \120 is either back-reference to 120th capture or the letter "P".
+    my $start = '(' x 119;
+    my $end   = ')' x 120;
+    unlike(
+        +run_ack( $opt, 'all in u(((p)))\120er case', @files ),
+        $re,
+        qq{$opt sees upper "P" in octal escape}
+    );
+    like(
+        +run_ack( $opt, "all in u$start(p$end\\120er case", @files ),
+        $re,
+        qq{$opt sees back-reference to 120th capture}
+        );
+    unlike(
+        +run_ack( $opt, "all in u$start(?:p$end\\120er case", @files ),
+        $re,
+        qq{$opt sees 119 capture groups - (?:non-capturing)}
+        );
+    like(
+        +run_ack( $opt, "all in u$start(?<NAME>p$end\\120er case", @files ),
+        $re,
+        qq{$opt sees 120 capture groups - (?<NAME>capturing)}
     );
 }
 
